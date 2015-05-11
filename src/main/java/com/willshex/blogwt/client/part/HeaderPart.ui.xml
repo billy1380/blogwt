@@ -1,0 +1,25 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="com.willshex.blogwt.client.pages.PageType.TestsPageType" />
+	<ui:import field="com.willshex.blogwt.client.pages.PageType.AddTestPageType" />
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel styleName="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<g:Button ui:field="btnExpand" styleName="navbar-toggle" />
+			<a class="navbar-brand" href="/">
+				<div>Load Test</div>
+			</a>
+			<div class="nav-collapse ">
+				<ul class="nav navbar-nav">
+					<li>
+						<g:InlineHyperlink ui:field="btnTests" targetHistoryToken="{TestsPageType.asTargetHistoryToken}">
+							Tests
+						</g:InlineHyperlink>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 
