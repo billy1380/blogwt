@@ -1,0 +1,162 @@
+//  
+//  Post.java
+//  xsdwsdl2code
+//
+//  Created by William Shakour on May 11, 2015.
+//  Copyright © 2015 WillShex Limited. All rights reserved.
+//
+package com.willshex.blogwt.shared.api.datatype;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.googlecode.objectify.annotation.Entity;
+
+@Entity
+public class Post extends DataType {
+	public User author;
+	public List<String> tags;
+	public Date published;
+	public String title;
+	public String summary;
+	public String content;
+	public Boolean visible;
+	public Boolean commentsEnabled;
+
+	@Override
+	public JsonObject toJson() {
+		JsonObject object = super.toJson();
+		JsonElement jsonAuthor = author == null ? JsonNull.INSTANCE : author.toJson();
+		object.add("author", jsonAuthor);
+		JsonElement jsonTags = JsonNull.INSTANCE;
+		if (tags != null) {
+			jsonTags = new JsonArray();
+			for (int i = 0; i < tags.size(); i++) {
+				JsonElement jsonTagsItem = tags.get(i) == null ? JsonNull.INSTANCE : new JsonPrimitive(tags.get(i));
+				((JsonArray) jsonTags).add(jsonTagsItem);
+			}
+		}
+		object.add("tags", jsonTags);
+		JsonElement jsonPublished = published == null ? JsonNull.INSTANCE : new JsonPrimitive(published.getTime());
+		object.add("published", jsonPublished);
+		JsonElement jsonTitle = title == null ? JsonNull.INSTANCE : new JsonPrimitive(title);
+		object.add("title", jsonTitle);
+		JsonElement jsonSummary = summary == null ? JsonNull.INSTANCE : new JsonPrimitive(summary);
+		object.add("summary", jsonSummary);
+		JsonElement jsonContent = content == null ? JsonNull.INSTANCE : new JsonPrimitive(content);
+		object.add("content", jsonContent);
+		JsonElement jsonVisible = visible == null ? JsonNull.INSTANCE : new JsonPrimitive(visible);
+		object.add("visible", jsonVisible);
+		JsonElement jsonCommentsEnabled = commentsEnabled == null ? JsonNull.INSTANCE : new JsonPrimitive(commentsEnabled);
+		object.add("commentsEnabled", jsonCommentsEnabled);
+		return object;
+	}
+
+	@Override
+	public void fromJson(JsonObject jsonObject) {
+		super.fromJson(jsonObject);
+		if (jsonObject.has("author")) {
+			JsonElement jsonAuthor = jsonObject.get("author");
+			if (jsonAuthor != null) {
+				author = new User();
+				author.fromJson(jsonAuthor.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("tags")) {
+			JsonElement jsonTags = jsonObject.get("tags");
+			if (jsonTags != null) {
+				tags = new ArrayList<String>();
+				String item = null;
+				for (int i = 0; i < jsonTags.getAsJsonArray().size(); i++) {
+					if (jsonTags.getAsJsonArray().get(i) != null) {
+						item = jsonTags.getAsJsonArray().get(i).getAsString();
+						tags.add(item);
+					}
+				}
+			}
+		}
+
+		if (jsonObject.has("published")) {
+			JsonElement jsonPublished = jsonObject.get("published");
+			if (jsonPublished != null) {
+				published = new Date(jsonPublished.getAsLong());
+			}
+		}
+		if (jsonObject.has("title")) {
+			JsonElement jsonTitle = jsonObject.get("title");
+			if (jsonTitle != null) {
+				title = jsonTitle.getAsString();
+			}
+		}
+		if (jsonObject.has("summary")) {
+			JsonElement jsonSummary = jsonObject.get("summary");
+			if (jsonSummary != null) {
+				summary = jsonSummary.getAsString();
+			}
+		}
+		if (jsonObject.has("content")) {
+			JsonElement jsonContent = jsonObject.get("content");
+			if (jsonContent != null) {
+				content = jsonContent.getAsString();
+			}
+		}
+		if (jsonObject.has("visible")) {
+			JsonElement jsonVisible = jsonObject.get("visible");
+			if (jsonVisible != null) {
+				visible = Boolean.valueOf(jsonVisible.getAsBoolean());
+			}
+		}
+		if (jsonObject.has("commentsEnabled")) {
+			JsonElement jsonCommentsEnabled = jsonObject.get("commentsEnabled");
+			if (jsonCommentsEnabled != null) {
+				commentsEnabled = Boolean.valueOf(jsonCommentsEnabled.getAsBoolean());
+			}
+		}
+	}
+
+	public Post author(User author) {
+		this.author = author;
+		return this;
+	}
+
+	public Post tags(List<String> tags) {
+		this.tags = tags;
+		return this;
+	}
+
+	public Post published(Date published) {
+		this.published = published;
+		return this;
+	}
+
+	public Post title(String title) {
+		this.title = title;
+		return this;
+	}
+
+	public Post summary(String summary) {
+		this.summary = summary;
+		return this;
+	}
+
+	public Post content(String content) {
+		this.content = content;
+		return this;
+	}
+
+	public Post visible(Boolean visible) {
+		this.visible = visible;
+		return this;
+	}
+
+	public Post commentsEnabled(Boolean commentsEnabled) {
+		this.commentsEnabled = commentsEnabled;
+		return this;
+	}
+}
