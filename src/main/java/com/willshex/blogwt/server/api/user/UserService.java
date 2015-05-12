@@ -1,9 +1,9 @@
 //  
 //  UserService.java
-//  xsdwsdl2code
+//  blogwt
 //
 //  Created by William Shakour on May 12, 2015.
-//  Copyright © 2015 SPACEHOPPER STUDIOS. All rights reserved.
+//  Copyright © 2015 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.server.api.user;
 

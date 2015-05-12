@@ -1,6 +1,6 @@
 //  
 //  Post.java
-//  xsdwsdl2code
+//  blogwt
 //
 //  Created by William Shakour on May 11, 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
@@ -20,6 +20,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfNotNull;
 import com.googlecode.objectify.condition.IfTrue;
 
 @Entity
@@ -29,14 +30,16 @@ public class Post extends DataType {
 
 	public List<String> tags;
 
-	@Index public Date published;
+	@Index(value = IfNotNull.class) public Date published;
 
 	public String title;
 
 	@Index public String slug;
 
 	public String summary;
-	public String content;
+
+	public Key<PostContent> contentKey;
+	@Ignore public PostContent content;
 
 	@Index(value = IfTrue.class) public Boolean visible;
 	public Boolean commentsEnabled;
@@ -69,8 +72,8 @@ public class Post extends DataType {
 		JsonElement jsonSummary = summary == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(summary);
 		object.add("summary", jsonSummary);
-		JsonElement jsonContent = content == null ? JsonNull.INSTANCE
-				: new JsonPrimitive(content);
+		JsonElement jsonContent = content == null ? JsonNull.INSTANCE : content
+				.toJson();
 		object.add("content", jsonContent);
 		JsonElement jsonVisible = visible == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(visible);
@@ -132,7 +135,8 @@ public class Post extends DataType {
 		if (jsonObject.has("content")) {
 			JsonElement jsonContent = jsonObject.get("content");
 			if (jsonContent != null) {
-				content = jsonContent.getAsString();
+				content = new PostContent();
+				content.fromJson(jsonContent.getAsJsonObject());
 			}
 		}
 		if (jsonObject.has("visible")) {
@@ -180,7 +184,7 @@ public class Post extends DataType {
 		return this;
 	}
 
-	public Post content (String content) {
+	public Post content (PostContent content) {
 		this.content = content;
 		return this;
 	}

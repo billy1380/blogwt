@@ -1,6 +1,6 @@
 //  
 //  User.java
-//  xsdwsdl2code
+//  blogwt
 //
 //  Created by William Shakour on May 11, 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
@@ -25,13 +25,13 @@ import com.googlecode.objectify.annotation.Index;
 public class User extends DataType {
 	@Index public String username;
 	@Index public String email;
-	
+
 	public List<Key<Permission>> permissionKeys;
 	@Ignore public List<Permission> permissions;
-	
+
 	public List<Key<Role>> roleKeys;
 	@Ignore public List<Role> roles;
-	
+
 	@Index public String forename;
 	@Index public String surname;
 	@Ignore public String avatar;
@@ -39,8 +39,9 @@ public class User extends DataType {
 	public String password;
 	public Date lastLoggedIn;
 	public Boolean verified;
+	@Index public Date added;
 	public Date expires;
-	@Index public String code;
+	@Index public String actionCode;
 
 	@Override
 	public JsonObject toJson () {
@@ -92,12 +93,15 @@ public class User extends DataType {
 		JsonElement jsonVerified = verified == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(verified);
 		object.add("verified", jsonVerified);
+		JsonElement jsonAdded = added == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(added.getTime());
+		object.add("added", jsonAdded);
 		JsonElement jsonExpires = expires == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(expires.getTime());
 		object.add("expires", jsonExpires);
-		JsonElement jsonCode = code == null ? JsonNull.INSTANCE
-				: new JsonPrimitive(code);
-		object.add("code", jsonCode);
+		JsonElement jsonActionCode = actionCode == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(actionCode);
+		object.add("actionCode", jsonActionCode);
 		return object;
 	}
 
@@ -188,16 +192,22 @@ public class User extends DataType {
 				verified = Boolean.valueOf(jsonVerified.getAsBoolean());
 			}
 		}
+		if (jsonObject.has("added")) {
+			JsonElement jsonAdded = jsonObject.get("added");
+			if (jsonAdded != null) {
+				added = new Date(jsonAdded.getAsLong());
+			}
+		}
 		if (jsonObject.has("expires")) {
 			JsonElement jsonExpires = jsonObject.get("expires");
 			if (jsonExpires != null) {
 				expires = new Date(jsonExpires.getAsLong());
 			}
 		}
-		if (jsonObject.has("code")) {
-			JsonElement jsonCode = jsonObject.get("code");
-			if (jsonCode != null) {
-				code = jsonCode.getAsString();
+		if (jsonObject.has("actionCode")) {
+			JsonElement jsonActionCode = jsonObject.get("actionCode");
+			if (jsonActionCode != null) {
+				actionCode = jsonActionCode.getAsString();
 			}
 		}
 	}
@@ -257,13 +267,18 @@ public class User extends DataType {
 		return this;
 	}
 
+	public User added (Date added) {
+		this.added = added;
+		return this;
+	}
+
 	public User expires (Date expires) {
 		this.expires = expires;
 		return this;
 	}
 
-	public User code (String code) {
-		this.code = code;
+	public User actionCode (String actionCode) {
+		this.actionCode = actionCode;
 		return this;
 	}
 }

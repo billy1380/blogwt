@@ -3,7 +3,7 @@
 //  blogwt
 //
 //  Created by William Shakour (billy1380) on 21 Dec 2014.
-//  Copyright © 2014 WillShex Limited. All rights reserved.
+//  Copyright © 2015 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.client.part;
 

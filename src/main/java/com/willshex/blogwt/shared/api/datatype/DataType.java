@@ -2,8 +2,8 @@
 //  DataType.java
 //  blogwt
 //
-//  Created by William Shakour on 10 July 2013.
-//  Copyrights © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
+//  Created by William Shakour on May 11, 2015.
+//  Copyrights © 2015 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.shared.api.datatype;
 
@@ -21,17 +21,19 @@ public class DataType extends Jsonable {
 	public Date created;
 
 	@Override
-	public JsonObject toJson() {
+	public JsonObject toJson () {
 		JsonObject object = super.toJson();
-		JsonElement jsonId = id == null ? JsonNull.INSTANCE : new JsonPrimitive(id);
+		JsonElement jsonId = id == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(id);
 		object.add("id", jsonId);
-		JsonElement jsonCreated = created == null ? JsonNull.INSTANCE : new JsonPrimitive(created.getTime());
+		JsonElement jsonCreated = created == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(created.getTime());
 		object.add("created", jsonCreated);
 		return object;
 	}
 
 	@Override
-	public void fromJson(JsonObject jsonObject) {
+	public void fromJson (JsonObject jsonObject) {
 		super.fromJson(jsonObject);
 		if (jsonObject.has("id")) {
 			JsonElement jsonId = jsonObject.get("id");
@@ -47,12 +49,12 @@ public class DataType extends Jsonable {
 		}
 	}
 
-	public DataType id(Long id) {
+	public DataType id (Long id) {
 		this.id = id;
 		return this;
 	}
 
-	public DataType created(Date created) {
+	public DataType created (Date created) {
 		this.created = created;
 		return this;
 	}

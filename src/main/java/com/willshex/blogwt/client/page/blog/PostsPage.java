@@ -1,6 +1,6 @@
 //
 //  PostsPage.java
-//  com.willshex.blogwt
+//  blogwt
 //
 //  Created by William Shakour (billy1380) on 11 May 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
