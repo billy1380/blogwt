@@ -139,7 +139,7 @@
 
 					<runTarget>index.html</runTarget>
 					<modules>
-						<module>com.willshex.blogwt.Loadtest</module>
+						<module>com.willshex.blogwt.Blogwt</module>
 					</modules>
 				</configuration>
 			</plugin>

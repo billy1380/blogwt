@@ -1,5 +1,5 @@
 //
-//  Quickinvoice.java
+//  Blogwt.java
 //  blogwt
 //
 //  Created by billy1380 on 31 Jul 2013.
@@ -16,7 +16,7 @@ import com.willshex.blogwt.client.controller.NavigationController;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Loadtest extends ErrorHandlingEntryPoint implements EntryPoint {
+public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
 
 	private HTMLPanel content;
 
