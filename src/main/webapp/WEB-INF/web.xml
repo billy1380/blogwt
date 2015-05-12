@@ -4,23 +4,23 @@
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
 	<servlet>
-		<servlet-name>Core API</servlet-name>
-		<servlet-class>com.willshex.blogwt.server.api.core.CoreJsonServlet</servlet-class>
+		<servlet-name>Blog API</servlet-name>
+		<servlet-class>com.willshex.blogwt.server.api.blog.BlogJsonServlet</servlet-class>
 	</servlet>
 
 	<servlet>
-		<servlet-name>Admin API</servlet-name>
-		<servlet-class>com.willshex.blogwt.server.api.core.AdminJsonServlet</servlet-class>
+		<servlet-name>User API</servlet-name>
+		<servlet-class>com.willshex.blogwt.server.api.user.UserJsonServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>Core API</servlet-name>
-		<url-pattern>/core</url-pattern>
+		<servlet-name>Blog API</servlet-name>
+		<url-pattern>/blog</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>Admin API</servlet-name>
-		<url-pattern>/admin</url-pattern>
+		<servlet-name>User API</servlet-name>
+		<url-pattern>/user</url-pattern>
 	</servlet-mapping>
 
 	<security-constraint>
