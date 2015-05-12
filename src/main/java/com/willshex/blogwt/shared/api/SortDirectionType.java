@@ -2,8 +2,8 @@
 //  SortDirectionType.java
 //  blogwt
 //
-//  Created by William Shakour on 10 July 2013.
-//  Copyrights © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
+//  Created by William Shakour on May 12, 2015.
+//  Copyrights © 2015 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.shared.api;
 

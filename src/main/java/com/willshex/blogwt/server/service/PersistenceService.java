@@ -2,11 +2,16 @@
 //  PeristenceService.java
 //  blogwt
 //
-//  Created by William Shakour on 11 Jul 2013.
-//  Copyright © 2013 SPACEHOPPER STUDIOS LTD. All rights reserved.
+//  Created by William Shakour on 10 May 2015.
+//  Copyright © 2015 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.server.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
@@ -31,11 +36,19 @@ public class PersistenceService {
 		factory().register(Role.class);
 	}
 
-	public static Objectify ofy() {
+	public static Objectify ofy () {
 		return ObjectifyService.ofy();
 	}
 
-	private static ObjectifyFactory factory() {
+	private static ObjectifyFactory factory () {
 		return ObjectifyService.factory();
+	}
+
+	public static <T> Collection<Long> keysToIds (Collection<Key<T>> keys) {
+		List<Long> collection = new ArrayList<Long>();
+		for (Key<T> key : keys) {
+			collection.add(Long.valueOf(key.getId()));
+		}
+		return collection;
 	}
 }
