@@ -5,7 +5,7 @@
 //  Created by William Shakour on May 12, 2015.
 //  Copyright © 2015 SPACEHOPPER STUDIOS. All rights reserved.
 //
-package com.willshex.blogwt.shared.api.user;
+package com.willshex.blogwt.server.api.user;
 
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
