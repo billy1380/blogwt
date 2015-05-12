@@ -5,7 +5,7 @@
 //  Created by William Shakour on May 12, 2015.
 //  Copyright © 2015 SPACEHOPPER STUDIOS. All rights reserved.
 //
-package com.willshex.blogwt.shared.api.blog;
+package com.willshex.blogwt.server.api.blog;
 
 import java.util.logging.Logger;
 
