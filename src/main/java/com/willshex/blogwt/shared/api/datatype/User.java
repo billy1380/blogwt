@@ -16,36 +16,47 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Ignore;
+import com.googlecode.objectify.annotation.Index;
 
 @Entity
 public class User extends DataType {
-	public String username;
-	public String email;
-	public List<Permission> permissions;
-	public List<Role> roles;
-	public String forename;
-	public String surname;
-	public String avatar;
+	@Index public String username;
+	@Index public String email;
+	
+	public List<Key<Permission>> permissionKeys;
+	@Ignore public List<Permission> permissions;
+	
+	public List<Key<Role>> roleKeys;
+	@Ignore public List<Role> roles;
+	
+	@Index public String forename;
+	@Index public String surname;
+	@Ignore public String avatar;
 	public String group;
 	public String password;
 	public Date lastLoggedIn;
 	public Boolean verified;
 	public Date expires;
-	public String code;
+	@Index public String code;
 
 	@Override
-	public JsonObject toJson() {
+	public JsonObject toJson () {
 		JsonObject object = super.toJson();
-		JsonElement jsonUsername = username == null ? JsonNull.INSTANCE : new JsonPrimitive(username);
+		JsonElement jsonUsername = username == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(username);
 		object.add("username", jsonUsername);
-		JsonElement jsonEmail = email == null ? JsonNull.INSTANCE : new JsonPrimitive(email);
+		JsonElement jsonEmail = email == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(email);
 		object.add("email", jsonEmail);
 		JsonElement jsonPermissions = JsonNull.INSTANCE;
 		if (permissions != null) {
 			jsonPermissions = new JsonArray();
 			for (int i = 0; i < permissions.size(); i++) {
-				JsonElement jsonPermissionsItem = permissions.get(i) == null ? JsonNull.INSTANCE : permissions.get(i).toJson();
+				JsonElement jsonPermissionsItem = permissions.get(i) == null ? JsonNull.INSTANCE
+						: permissions.get(i).toJson();
 				((JsonArray) jsonPermissions).add(jsonPermissionsItem);
 			}
 		}
@@ -54,34 +65,44 @@ public class User extends DataType {
 		if (roles != null) {
 			jsonRoles = new JsonArray();
 			for (int i = 0; i < roles.size(); i++) {
-				JsonElement jsonRolesItem = roles.get(i) == null ? JsonNull.INSTANCE : roles.get(i).toJson();
+				JsonElement jsonRolesItem = roles.get(i) == null ? JsonNull.INSTANCE
+						: roles.get(i).toJson();
 				((JsonArray) jsonRoles).add(jsonRolesItem);
 			}
 		}
 		object.add("roles", jsonRoles);
-		JsonElement jsonForename = forename == null ? JsonNull.INSTANCE : new JsonPrimitive(forename);
+		JsonElement jsonForename = forename == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(forename);
 		object.add("forename", jsonForename);
-		JsonElement jsonSurname = surname == null ? JsonNull.INSTANCE : new JsonPrimitive(surname);
+		JsonElement jsonSurname = surname == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(surname);
 		object.add("surname", jsonSurname);
-		JsonElement jsonAvatar = avatar == null ? JsonNull.INSTANCE : new JsonPrimitive(avatar);
+		JsonElement jsonAvatar = avatar == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(avatar);
 		object.add("avatar", jsonAvatar);
-		JsonElement jsonGroup = group == null ? JsonNull.INSTANCE : new JsonPrimitive(group);
+		JsonElement jsonGroup = group == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(group);
 		object.add("group", jsonGroup);
-		JsonElement jsonPassword = password == null ? JsonNull.INSTANCE : new JsonPrimitive(password);
+		JsonElement jsonPassword = password == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(password);
 		object.add("password", jsonPassword);
-		JsonElement jsonLastLoggedIn = lastLoggedIn == null ? JsonNull.INSTANCE : new JsonPrimitive(lastLoggedIn.getTime());
+		JsonElement jsonLastLoggedIn = lastLoggedIn == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(lastLoggedIn.getTime());
 		object.add("lastLoggedIn", jsonLastLoggedIn);
-		JsonElement jsonVerified = verified == null ? JsonNull.INSTANCE : new JsonPrimitive(verified);
+		JsonElement jsonVerified = verified == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(verified);
 		object.add("verified", jsonVerified);
-		JsonElement jsonExpires = expires == null ? JsonNull.INSTANCE : new JsonPrimitive(expires.getTime());
+		JsonElement jsonExpires = expires == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(expires.getTime());
 		object.add("expires", jsonExpires);
-		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
+		JsonElement jsonCode = code == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(code);
 		object.add("code", jsonCode);
 		return object;
 	}
 
 	@Override
-	public void fromJson(JsonObject jsonObject) {
+	public void fromJson (JsonObject jsonObject) {
 		super.fromJson(jsonObject);
 		if (jsonObject.has("username")) {
 			JsonElement jsonUsername = jsonObject.get("username");
@@ -102,7 +123,8 @@ public class User extends DataType {
 				Permission item = null;
 				for (int i = 0; i < jsonPermissions.getAsJsonArray().size(); i++) {
 					if (jsonPermissions.getAsJsonArray().get(i) != null) {
-						(item = new Permission()).fromJson(jsonPermissions.getAsJsonArray().get(i).getAsJsonObject());
+						(item = new Permission()).fromJson(jsonPermissions
+								.getAsJsonArray().get(i).getAsJsonObject());
 						permissions.add(item);
 					}
 				}
@@ -116,7 +138,8 @@ public class User extends DataType {
 				Role item = null;
 				for (int i = 0; i < jsonRoles.getAsJsonArray().size(); i++) {
 					if (jsonRoles.getAsJsonArray().get(i) != null) {
-						(item = new Role()).fromJson(jsonRoles.getAsJsonArray().get(i).getAsJsonObject());
+						(item = new Role()).fromJson(jsonRoles.getAsJsonArray()
+								.get(i).getAsJsonObject());
 						roles.add(item);
 					}
 				}
@@ -179,67 +202,67 @@ public class User extends DataType {
 		}
 	}
 
-	public User username(String username) {
+	public User username (String username) {
 		this.username = username;
 		return this;
 	}
 
-	public User email(String email) {
+	public User email (String email) {
 		this.email = email;
 		return this;
 	}
 
-	public User permissions(List<Permission> permissions) {
+	public User permissions (List<Permission> permissions) {
 		this.permissions = permissions;
 		return this;
 	}
 
-	public User roles(List<Role> roles) {
+	public User roles (List<Role> roles) {
 		this.roles = roles;
 		return this;
 	}
 
-	public User forename(String forename) {
+	public User forename (String forename) {
 		this.forename = forename;
 		return this;
 	}
 
-	public User surname(String surname) {
+	public User surname (String surname) {
 		this.surname = surname;
 		return this;
 	}
 
-	public User avatar(String avatar) {
+	public User avatar (String avatar) {
 		this.avatar = avatar;
 		return this;
 	}
 
-	public User group(String group) {
+	public User group (String group) {
 		this.group = group;
 		return this;
 	}
 
-	public User password(String password) {
+	public User password (String password) {
 		this.password = password;
 		return this;
 	}
 
-	public User lastLoggedIn(Date lastLoggedIn) {
+	public User lastLoggedIn (Date lastLoggedIn) {
 		this.lastLoggedIn = lastLoggedIn;
 		return this;
 	}
 
-	public User verified(Boolean verified) {
+	public User verified (Boolean verified) {
 		this.verified = verified;
 		return this;
 	}
 
-	public User expires(Date expires) {
+	public User expires (Date expires) {
 		this.expires = expires;
 		return this;
 	}
 
-	public User code(String code) {
+	public User code (String code) {
 		this.code = code;
 		return this;
 	}

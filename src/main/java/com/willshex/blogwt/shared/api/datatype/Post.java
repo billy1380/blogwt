@@ -16,50 +16,73 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Ignore;
+import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfTrue;
 
 @Entity
 public class Post extends DataType {
-	public User author;
+	@Index public Key<User> authorKey;
+	@Ignore public User author;
+
 	public List<String> tags;
-	public Date published;
+
+	@Index public Date published;
+
 	public String title;
+
+	@Index public String slug;
+
 	public String summary;
 	public String content;
-	public Boolean visible;
+
+	@Index(value = IfTrue.class) public Boolean visible;
 	public Boolean commentsEnabled;
 
 	@Override
-	public JsonObject toJson() {
+	public JsonObject toJson () {
 		JsonObject object = super.toJson();
-		JsonElement jsonAuthor = author == null ? JsonNull.INSTANCE : author.toJson();
+		JsonElement jsonAuthor = author == null ? JsonNull.INSTANCE : author
+				.toJson();
 		object.add("author", jsonAuthor);
 		JsonElement jsonTags = JsonNull.INSTANCE;
 		if (tags != null) {
 			jsonTags = new JsonArray();
 			for (int i = 0; i < tags.size(); i++) {
-				JsonElement jsonTagsItem = tags.get(i) == null ? JsonNull.INSTANCE : new JsonPrimitive(tags.get(i));
+				JsonElement jsonTagsItem = tags.get(i) == null ? JsonNull.INSTANCE
+						: new JsonPrimitive(tags.get(i));
 				((JsonArray) jsonTags).add(jsonTagsItem);
 			}
 		}
 		object.add("tags", jsonTags);
-		JsonElement jsonPublished = published == null ? JsonNull.INSTANCE : new JsonPrimitive(published.getTime());
+		JsonElement jsonPublished = published == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(published.getTime());
 		object.add("published", jsonPublished);
-		JsonElement jsonTitle = title == null ? JsonNull.INSTANCE : new JsonPrimitive(title);
+		JsonElement jsonTitle = title == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(title);
 		object.add("title", jsonTitle);
-		JsonElement jsonSummary = summary == null ? JsonNull.INSTANCE : new JsonPrimitive(summary);
+		JsonElement jsonSlug = slug == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(slug);
+		object.add("slug", jsonSlug);
+		JsonElement jsonSummary = summary == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(summary);
 		object.add("summary", jsonSummary);
-		JsonElement jsonContent = content == null ? JsonNull.INSTANCE : new JsonPrimitive(content);
+		JsonElement jsonContent = content == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(content);
 		object.add("content", jsonContent);
-		JsonElement jsonVisible = visible == null ? JsonNull.INSTANCE : new JsonPrimitive(visible);
+		JsonElement jsonVisible = visible == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(visible);
 		object.add("visible", jsonVisible);
-		JsonElement jsonCommentsEnabled = commentsEnabled == null ? JsonNull.INSTANCE : new JsonPrimitive(commentsEnabled);
+		JsonElement jsonCommentsEnabled = commentsEnabled == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(commentsEnabled);
 		object.add("commentsEnabled", jsonCommentsEnabled);
 		return object;
 	}
 
 	@Override
-	public void fromJson(JsonObject jsonObject) {
+	public void fromJson (JsonObject jsonObject) {
 		super.fromJson(jsonObject);
 		if (jsonObject.has("author")) {
 			JsonElement jsonAuthor = jsonObject.get("author");
@@ -94,6 +117,12 @@ public class Post extends DataType {
 				title = jsonTitle.getAsString();
 			}
 		}
+		if (jsonObject.has("slug")) {
+			JsonElement jsonSlug = jsonObject.get("slug");
+			if (jsonSlug != null) {
+				slug = jsonSlug.getAsString();
+			}
+		}
 		if (jsonObject.has("summary")) {
 			JsonElement jsonSummary = jsonObject.get("summary");
 			if (jsonSummary != null) {
@@ -115,47 +144,53 @@ public class Post extends DataType {
 		if (jsonObject.has("commentsEnabled")) {
 			JsonElement jsonCommentsEnabled = jsonObject.get("commentsEnabled");
 			if (jsonCommentsEnabled != null) {
-				commentsEnabled = Boolean.valueOf(jsonCommentsEnabled.getAsBoolean());
+				commentsEnabled = Boolean.valueOf(jsonCommentsEnabled
+						.getAsBoolean());
 			}
 		}
 	}
 
-	public Post author(User author) {
+	public Post author (User author) {
 		this.author = author;
 		return this;
 	}
 
-	public Post tags(List<String> tags) {
+	public Post tags (List<String> tags) {
 		this.tags = tags;
 		return this;
 	}
 
-	public Post published(Date published) {
+	public Post published (Date published) {
 		this.published = published;
 		return this;
 	}
 
-	public Post title(String title) {
+	public Post title (String title) {
 		this.title = title;
 		return this;
 	}
 
-	public Post summary(String summary) {
+	public Post slug (String slug) {
+		this.slug = slug;
+		return this;
+	}
+
+	public Post summary (String summary) {
 		this.summary = summary;
 		return this;
 	}
 
-	public Post content(String content) {
+	public Post content (String content) {
 		this.content = content;
 		return this;
 	}
 
-	public Post visible(Boolean visible) {
+	public Post visible (Boolean visible) {
 		this.visible = visible;
 		return this;
 	}
 
-	public Post commentsEnabled(Boolean commentsEnabled) {
+	public Post commentsEnabled (Boolean commentsEnabled) {
 		this.commentsEnabled = commentsEnabled;
 		return this;
 	}

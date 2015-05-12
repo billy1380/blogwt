@@ -15,14 +15,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Ignore;
+import com.googlecode.objectify.annotation.Index;
 
 @Entity
 public class Role extends DataType {
-	public List<Permission> permissions;
+	public List<Key<Permission>> permissionKeys;
+	@Ignore public List<Permission> permissions;
 	public String name;
 	public String description;
-	public String code;
+	@Index public String code;
 
 	@Override
 	public JsonObject toJson() {

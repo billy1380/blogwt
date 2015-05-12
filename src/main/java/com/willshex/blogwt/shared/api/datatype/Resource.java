@@ -12,35 +12,51 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfNotEmpty;
 
 @Entity
 public class Resource extends DataType {
-	public String name;
+	@Index(value = IfNotEmpty.class) public String name;
+	public String data;
 	public String description;
 	public ResourceTypeType type;
 	public String properties;
 
 	@Override
-	public JsonObject toJson() {
+	public JsonObject toJson () {
 		JsonObject object = super.toJson();
-		JsonElement jsonName = name == null ? JsonNull.INSTANCE : new JsonPrimitive(name);
+		JsonElement jsonName = name == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(name);
 		object.add("name", jsonName);
-		JsonElement jsonDescription = description == null ? JsonNull.INSTANCE : new JsonPrimitive(description);
+		JsonElement jsonData = data == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(data);
+		object.add("data", jsonData);
+		JsonElement jsonDescription = description == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(description);
 		object.add("description", jsonDescription);
-		JsonElement jsonType = type == null ? JsonNull.INSTANCE : new JsonPrimitive(type.toString());
+		JsonElement jsonType = type == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(type.toString());
 		object.add("type", jsonType);
-		JsonElement jsonProperties = properties == null ? JsonNull.INSTANCE : new JsonPrimitive(properties);
+		JsonElement jsonProperties = properties == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(properties);
 		object.add("properties", jsonProperties);
 		return object;
 	}
 
 	@Override
-	public void fromJson(JsonObject jsonObject) {
+	public void fromJson (JsonObject jsonObject) {
 		super.fromJson(jsonObject);
 		if (jsonObject.has("name")) {
 			JsonElement jsonName = jsonObject.get("name");
 			if (jsonName != null) {
 				name = jsonName.getAsString();
+			}
+		}
+		if (jsonObject.has("data")) {
+			JsonElement jsonData = jsonObject.get("data");
+			if (jsonData != null) {
+				data = jsonData.getAsString();
 			}
 		}
 		if (jsonObject.has("description")) {
@@ -63,22 +79,27 @@ public class Resource extends DataType {
 		}
 	}
 
-	public Resource name(String name) {
+	public Resource name (String name) {
 		this.name = name;
 		return this;
 	}
 
-	public Resource description(String description) {
+	public Resource data (String data) {
+		this.data = data;
+		return this;
+	}
+
+	public Resource description (String description) {
 		this.description = description;
 		return this;
 	}
 
-	public Resource type(ResourceTypeType type) {
+	public Resource type (ResourceTypeType type) {
 		this.type = type;
 		return this;
 	}
 
-	public Resource properties(String properties) {
+	public Resource properties (String properties) {
 		this.properties = properties;
 		return this;
 	}

@@ -13,12 +13,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Ignore;
+import com.googlecode.objectify.annotation.Index;
 
 @Entity
 public class Session extends DataType {
 	public Date expires;
-	public User user;
+	@Index public Key<User> userKey;
+	@Ignore public User user;
 
 	@Override
 	public JsonObject toJson() {
