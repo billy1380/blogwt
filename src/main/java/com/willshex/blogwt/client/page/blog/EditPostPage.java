@@ -25,7 +25,7 @@ public class EditPostPage extends Page {
 	interface EditPostPageUiBinder extends UiBinder<Widget, EditPostPage> {}
 
 	public EditPostPage () {
-		super(PageType.BlogEditPostPageType);
+		super(PageType.EditPostPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 

@@ -241,11 +241,22 @@ public class NavigationController implements ValueChangeHandler<String> {
 	public void addPage (String value) {
 		Stack s = Stack.parse(value);
 
-		if (intended != null && intended.equals(s.toString())) {
-			intended = null;
-		}
+		if (PropertyController.get().blog() == null
+				&& PageType.fromString(s.getPage()) != PageType.SetupBlogPageType) {
+			PageType.SetupBlogPageType.show();
+		} else {
 
-		addStack(s);
+			if (PropertyController.get().blog() != null
+					&& PageType.fromString(s.getPage()) == PageType.SetupBlogPageType) {
+				PageType.PostsPageType.show();
+			} else {
+				if (intended != null && intended.equals(s.toString())) {
+					intended = null;
+				}
+
+				addStack(s);
+			}
+		}
 	}
 
 	private void addStack (Stack value) {
@@ -254,7 +265,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 		PageType stackPage = PageType.fromString(page);
 
 		if (stackPage == null) {
-			stackPage = PageType.BlogPostsPageType;
+			stackPage = PageType.PostsPageType;
 		}
 
 		final Stack previous = stack;
@@ -319,7 +330,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	public void showIntendedPage () {
 		if (intended == null) {
-			intended = PageType.BlogPostsPageType.toString();
+			intended = PageType.PostsPageType.toString();
 		}
 
 		addPage(intended);
@@ -334,7 +345,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 			PageType.fromString(stack.getNext().getPage()).show(
 					stack.getNext().toString(1));
 		} else {
-			PageType.BlogPostsPageType.show();
+			PageType.PostsPageType.show();
 		}
 
 	}
@@ -344,7 +355,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 			PageType.fromString(stack.getPrevious().getPage()).show(
 					stack.getPrevious().toString(1));
 		} else {
-			PageType.BlogPostsPageType.show();
+			PageType.PostsPageType.show();
 		}
 	}
 

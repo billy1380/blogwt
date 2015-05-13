@@ -25,7 +25,7 @@ public class PostsPage extends Page {
 	interface PostsPageUiBinder extends UiBinder<Widget, PostsPage> {}
 
 	public PostsPage () {
-		super(PageType.BlogPostsPageType);
+		super(PageType.PostsPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
