@@ -1,15 +1,17 @@
 //
 //  SetupBlogPage.java
-//  com.willshex.blogwt
+//  blogwt
 //
 //  Created by William Shakour (billy1380) on 13 May 2015.
-//  Copyright © 2015 SPACEHOPPER STUDIOS Ltd. All rights reserved.
+//  Copyright © 2015 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.client.page.blog;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
+import com.willshex.blogwt.client.controller.SetupController;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.page.wizard.WizardDialogPage;
 import com.willshex.blogwt.client.wizard.PagePlan.PagePlanBuilder;
@@ -17,14 +19,19 @@ import com.willshex.blogwt.client.wizard.PagePlanFinishedHandler;
 import com.willshex.blogwt.client.wizard.WizardPage;
 import com.willshex.blogwt.client.wizard.page.AddUserWizardPage;
 import com.willshex.blogwt.client.wizard.page.BlogPropertiesWizardPage;
+import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
+import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
+import com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class SetupBlogPage extends WizardDialogPage {
+public class SetupBlogPage extends WizardDialogPage implements
+		SetupBlogEventHandler {
 
 	/**
 	 * 
@@ -47,18 +54,50 @@ public class SetupBlogPage extends WizardDialogPage {
 	 * @param pages
 	 */
 	protected void finish (List<WizardPage<?>> pages) {
+		List<User> users = null;
+		List<Property> properties = null;
 		for (WizardPage<?> page : pages) {
 			if (page instanceof BlogPropertiesWizardPage) {
-				List<Property> blogProperties = ((BlogPropertiesWizardPage) page)
-						.getData();
-
-				GWT.log(Integer.toString(blogProperties.toArray().length));
+				properties = ((BlogPropertiesWizardPage) page).getData();
 			} else if (page instanceof AddUserWizardPage) {
-				User user = ((AddUserWizardPage) page).getData();
+				if (users == null) {
+					users = new ArrayList<User>();
+				}
 
-				GWT.log(user.toString());
+				users.add(((AddUserWizardPage) page).getData());
 			}
 		}
+
+		SetupController.get().setupBlog(properties, users);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler
+	 * #setupBlogSuccess
+	 * (com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest,
+	 * com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse) */
+	@Override
+	public void setupBlogSuccess (SetupBlogRequest input,
+			SetupBlogResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			Window.Location.reload();
+		} else {
+			// TODO: show errors
+		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler
+	 * #setupBlogFailure
+	 * (com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest,
+	 * java.lang.Throwable) */
+	@Override
+	public void setupBlogFailure (SetupBlogRequest input, Throwable caught) {
+		// TODO: show errors
 	}
 
 }

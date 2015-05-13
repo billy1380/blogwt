@@ -1,9 +1,9 @@
 //
 //  UiHelper.java
-//  com.willshex.blogwt
+//  blogwt
 //
 //  Created by William Shakour (billy1380) on 13 May 2015.
-//  Copyright © 2015 SPACEHOPPER STUDIOS Ltd. All rights reserved.
+//  Copyright © 2015 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.client.helper;
 
@@ -11,6 +11,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author William Shakour (billy1380)
@@ -46,5 +47,13 @@ public class UiHelper {
 		textBox.removeFromParent();
 
 		return newTextBox;
+	}
+
+	/**
+	 * @param txtCopyrightHolder
+	 * @param string
+	 */
+	public static void addPlaceholder (Widget widget, String placeholder) {
+		widget.getElement().setAttribute("placeholder", placeholder);
 	}
 }

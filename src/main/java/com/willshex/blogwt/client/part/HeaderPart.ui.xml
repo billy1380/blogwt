@@ -7,7 +7,7 @@
 		<div class="container">
 			<g:Button ui:field="btnExpand" styleName="navbar-toggle" />
 			<a class="navbar-brand" href="/">
-				<div>Blogwt</div>
+				<div ui:field="divName">Blogwt</div>
 			</a>
 			<div class="nav-collapse ">
 				<ul class="nav navbar-nav">
