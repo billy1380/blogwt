@@ -7,9 +7,7 @@
 	<g:HTMLPanel>
 		<hr />
 		<footer class="footer">
-			<div class="container" ui:field="divCopyright">
-				&copy; Copyright [year] - WillShex Limited.
-			</div>
+			<div class="container" ui:field="divCopyright" />
 		</footer>
 	</g:HTMLPanel>
 </ui:UiBinder> 

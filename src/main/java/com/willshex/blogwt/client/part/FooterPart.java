@@ -11,10 +11,14 @@ import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.controller.PropertyController;
 
 public class FooterPart extends Composite {
 
@@ -23,17 +27,38 @@ public class FooterPart extends Composite {
 
 	interface FooterPartUiBinder extends UiBinder<Widget, FooterPart> {}
 
+	public interface FooterTemplates extends SafeHtmlTemplates {
+		FooterTemplates FOOTER_TEMPLATES = GWT.create(FooterTemplates.class);
+
+		@Template("Copyright &copy; <a href=\"{0}\" target=\"_blank\">{1}</a> {2}. All rights reserved - {3}.")
+		SafeHtml copyrightNotice (SafeUri uri, String holder, String years,
+				String name);
+	}
+
 	@UiField DivElement divCopyright;
 
 	public FooterPart () {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		@SuppressWarnings("deprecation")
-		String copyrightNotice = "Copyright &copy; <a href=\"http://www.willshex.com\" target=\"_blank\">WillShex Limited.</a> 2008-"
-				+ (1900 + (new Date()).getYear())
-				+ ". All rights reserved - blogwt.";
+		PropertyController controller = PropertyController.get();
 
-		divCopyright.setInnerHTML(copyrightNotice);
+		divCopyright.setInnerSafeHtml(FooterTemplates.FOOTER_TEMPLATES
+				.copyrightNotice(controller.copyrightHolderUrl(),
+						controller.copyrightHolder(), years(controller),
+						controller.name()));
+	}
+
+	@SuppressWarnings("deprecation")
+	private String years (PropertyController controller) {
+		Date started = controller.started();
+		Date now = new Date();
+
+		if (started.getYear() == now.getYear()) {
+			return Integer.toString(1900 + now.getYear());
+		} else {
+			return Integer.toString(1900 + started.getYear()) + "-"
+					+ Integer.toString(1900 + now.getYear());
+		}
 	}
 
 }

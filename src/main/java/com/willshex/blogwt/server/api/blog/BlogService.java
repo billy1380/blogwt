@@ -17,6 +17,8 @@ import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
+import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
+import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
 import com.willshex.gson.json.service.server.ActionHandler;
@@ -88,6 +90,19 @@ public final class BlogService extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getPosts");
+		return output;
+	}
+
+	public SetupBlogResponse setupBlog (SetupBlogRequest input) {
+		LOG.finer("Entering setupBlog");
+		SetupBlogResponse output = new SetupBlogResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting setupBlog");
 		return output;
 	}
 }

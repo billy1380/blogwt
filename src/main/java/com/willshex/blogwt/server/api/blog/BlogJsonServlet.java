@@ -12,6 +12,7 @@ import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
+import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.gson.json.service.server.JsonServlet;
 
@@ -41,6 +42,10 @@ public final class BlogJsonServlet extends JsonServlet {
 			GetPostsRequest input = new GetPostsRequest();
 			input.fromJson(request);
 			output = service.getPosts(input).toString();
+		} else if ("SetupBlog".equals(action)) {
+			SetupBlogRequest input = new SetupBlogRequest();
+			input.fromJson(request);
+			output = service.setupBlog(input).toString();
 		}
 		return output;
 	}

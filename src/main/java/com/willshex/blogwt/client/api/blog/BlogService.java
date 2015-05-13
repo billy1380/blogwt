@@ -21,6 +21,8 @@ import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
+import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
+import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
 import com.willshex.gson.json.service.client.HttpException;
@@ -231,6 +233,48 @@ public final class BlogService extends JsonService {
 		} catch (RequestException exception) {
 			callback.onFailure(exception);
 			onCallFailure(BlogService.this, BlogMethodGetPosts, input,
+					exception);
+		}
+		return handle;
+	}
+
+	public static final String BlogMethodSetupBlog = "SetupBlog";
+
+	public Request setupBlog (final SetupBlogRequest input,
+			final AsyncCallback<SetupBlogResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(BlogMethodSetupBlog, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								SetupBlogResponse outputParameter = new SetupBlogResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(BlogService.this,
+										BlogMethodSetupBlog, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(BlogService.this,
+										BlogMethodSetupBlog, input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(BlogService.this,
+									BlogMethodSetupBlog, input, exception);
+						}
+					});
+			onCallStart(BlogService.this, BlogMethodSetupBlog, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodSetupBlog, input,
 					exception);
 		}
 		return handle;

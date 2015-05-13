@@ -5,7 +5,6 @@
 //  Created by billy1380 on 1 Aug 2013.
 //  Copyright © 2013 WillShex Limited. All rights reserved.
 //
-
 package com.willshex.blogwt.client.helper;
 
 import static com.google.gwt.user.client.Window.Location.getHost;
