@@ -25,7 +25,7 @@ public class PostDetailPage extends Page {
 	interface PostDetailPageUiBinder extends UiBinder<Widget, PostDetailPage> {}
 
 	public PostDetailPage () {
-		super(PageType.BlogPostDetailPageType);
+		super(PageType.PostDetailPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 

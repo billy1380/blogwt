@@ -21,6 +21,7 @@ import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.client.page.blog.EditPostPage;
 import com.willshex.blogwt.client.page.blog.PostDetailPage;
 import com.willshex.blogwt.client.page.blog.PostsPage;
+import com.willshex.blogwt.client.page.blog.SetupBlogPage;
 import com.willshex.blogwt.client.page.user.ChangeDetailsPage;
 import com.willshex.blogwt.client.page.user.ChangePasswordPage;
 import com.willshex.blogwt.client.page.user.LoginPage;
@@ -36,11 +37,13 @@ import com.willshex.blogwt.shared.api.helper.PermissionHelper;
  *
  */
 public enum PageType {
-	BlogEditPostPageType("blogedit", PermissionHelper.MANAGE_POSTS),
-	BlogPostsPageType("blog", false),
-	BlogPostDetailPageType("blogdetail", false),
+	SetupBlogPageType("setup", false),
+	EditPostPageType("blogedit", PermissionHelper.MANAGE_POSTS),
+	PostsPageType("posts", false),
+	PostDetailPageType("postdetail", false),
 	ChangeDetailsPageType("userdetail", true),
 	ChangePasswordPageType("changepassword", true),
+	ResetPasswordPageType("resetpassword", true),
 	RegisterPageType("register", false),
 	LoginPageType("login", false),
 	PermissionsPageType("permissions", PermissionHelper.MANAGE_PERMISSIONS),
@@ -174,13 +177,16 @@ public enum PageType {
 		case ChangeDetailsPageType:
 			page = new ChangeDetailsPage();
 			break;
-		case BlogEditPostPageType:
+		case SetupBlogPageType:
+			page = new SetupBlogPage();
+			break;
+		case EditPostPageType:
 			page = new EditPostPage();
 			break;
-		case BlogPostDetailPageType:
+		case PostDetailPageType:
 			page = new PostDetailPage();
 			break;
-		case BlogPostsPageType:
+		case PostsPageType:
 		default:
 			if (defaultPage == null) {
 				defaultPage = new PostsPage();
