@@ -11,11 +11,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Index;
 
+@Entity
 public class Property extends DataType {
-	public String name;
+	@Index public String name;
 	public String description;
-	public String value;
+	@Index public String value;
 	public String group;
 	public String type;
 

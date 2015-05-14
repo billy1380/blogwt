@@ -38,7 +38,8 @@ public class SetupController {
 
 	public void setupBlog (List<Property> properties, List<User> users) {
 		final SetupBlogRequest input = RemoteDataHelper
-				.setAccessCode(new SetupBlogRequest());
+				.setAccessCode(new SetupBlogRequest()).properties(properties)
+				.users(users);
 
 		BlogService blogService = RemoteDataHelper.createBlogClient();
 		blogService.setupBlog(input, new AsyncCallback<SetupBlogResponse>() {
