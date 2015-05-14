@@ -7,9 +7,10 @@
 //
 package com.willshex.blogwt.server.service.property;
 
-import java.util.Date;
-
 import static com.willshex.blogwt.server.service.PersistenceService.ofy;
+
+import java.util.Collection;
+import java.util.Date;
 
 import com.googlecode.objectify.Key;
 import com.willshex.blogwt.shared.api.datatype.Property;
@@ -72,6 +73,22 @@ final class PropertyService implements IPropertyService {
 	public Property getNamedProperty (String name) {
 		return ofy().load().type(Property.class).filter("name", name).first()
 				.now();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.property.IPropertyService#addPropertyBatch
+	 * (java.util.Collection) */
+	@Override
+	public void addPropertyBatch (Collection<Property> properties) {
+		for (Property property : properties) {
+			if (property.created == null) {
+				property.created = new Date();
+			}
+		}
+
+		ofy().save().entities(properties).now();
 	}
 
 }

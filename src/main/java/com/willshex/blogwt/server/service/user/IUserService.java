@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.service.user;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.spacehopperstudios.service.IService;
@@ -61,5 +62,11 @@ public interface IUserService extends IService {
 	 * @param userId
 	 */
 	public void updateUserIdLastLoggedIn (Long userId);
+
+	/**
+	 * 
+	 * @param users
+	 */
+	public void addUserBatch (Collection<User> users);
 
 }
