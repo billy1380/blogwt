@@ -17,6 +17,7 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Post;
+import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.Session;
@@ -34,6 +35,7 @@ public class PersistenceService {
 		factory().register(Resource.class);
 		factory().register(Permission.class);
 		factory().register(Role.class);
+		factory().register(Property.class);
 	}
 
 	public static Objectify ofy () {

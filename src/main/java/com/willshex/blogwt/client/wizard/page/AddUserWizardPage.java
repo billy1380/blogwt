@@ -7,12 +7,22 @@
 //
 package com.willshex.blogwt.client.wizard.page;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.wizard.WizardPage;
+import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.helper.RoleHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -26,53 +36,78 @@ public class AddUserWizardPage extends Composite implements WizardPage<User> {
 	interface AddUserWizardPageUiBinder extends
 			UiBinder<Widget, AddUserWizardPage> {}
 
+	@UiField public TextBox txtUsername;
+	@UiField public TextBox txtEmailAddress;
+	@UiField public TextBox txtForename;
+	@UiField public TextBox txtSurname;
+	@UiField public PasswordTextBox txtPassword;
+	@UiField public PasswordTextBox txtConfirmPassword;
+	@UiField public CheckBox cbxIsAdmin;
+
 	public AddUserWizardPage () {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		UiHelper.addPlaceholder(txtUsername, "Username");
+		txtUsername.getElement().setAttribute("autofocus", "");
+
+		UiHelper.addPlaceholder(txtEmailAddress, "E-mail address");
+		UiHelper.addPlaceholder(txtForename, "Forename");
+		UiHelper.addPlaceholder(txtSurname, "Surname");
+		UiHelper.addPlaceholder(txtPassword, "Password");
+		UiHelper.addPlaceholder(txtConfirmPassword, "Confirm Password");
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#isRepeatable()
-	 */
+	 * 
+	 * @see com.willshex.blogwt.client.wizard.WizardPage#isRepeatable() */
 	@Override
 	public boolean isRepeatable () {
 		return true;
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getData()
-	 */
+	 * 
+	 * @see com.willshex.blogwt.client.wizard.WizardPage#getData() */
 	@Override
 	public User getData () {
-		return new User();
+		List<Role> roles = null;
+		if (cbxIsAdmin.getValue().booleanValue()) {
+			(roles = new ArrayList<Role>()).add(RoleHelper.createAdmin());
+		}
+
+		return new User().username(txtUsername.getText())
+				.email(txtEmailAddress.getText())
+				.forename(txtForename.getText()).surname(txtSurname.getText())
+				.password(txtPassword.getText()).roles(roles);
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getPageTitle()
-	 */
+	 * 
+	 * @see com.willshex.blogwt.client.wizard.WizardPage#getPageTitle() */
 	@Override
 	public String getPageTitle () {
 		return "Add user";
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getBody()
-	 */
+	 * 
+	 * @see com.willshex.blogwt.client.wizard.WizardPage#getBody() */
 	@Override
 	public Widget getBody () {
 		return this;
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#another()
-	 */
+	 * 
+	 * @see com.willshex.blogwt.client.wizard.WizardPage#another() */
 	@Override
 	public WizardPage<?> another () {
 		return new AddUserWizardPage();
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#validate()
-	 */
+	 * 
+	 * @see com.willshex.blogwt.client.wizard.WizardPage#validate() */
 	@Override
 	public boolean validate () {
 		return true;

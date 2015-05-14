@@ -1,10 +1,17 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
-	/* Add CSS here. See the GWT docs on UI Binder for more details */
-	</ui:style>
-	<g:HTMLPanel>
-		<!-- Add GWT widgets here. Enter < and hit Ctrl-Space to auto-complete widget names. The ui:field attribute binds an element to a field in the owner class. See 
-			the GWT docs on UI Binder for more details. -->
-	</g:HTMLPanel>
+    <ui:style>
+    
+    </ui:style>
+    <g:HTMLPanel>
+        <g:HTMLPanel styleName="form-group">
+            <g:TextBox ui:field="txtUsername" styleName="form-control" />
+            <g:TextBox ui:field="txtEmailAddress" styleName="form-control" />
+            <g:TextBox ui:field="txtForename" styleName="form-control" />
+            <g:TextBox ui:field="txtSurname" styleName="form-control" />
+            <g:PasswordTextBox ui:field="txtPassword" styleName="form-control" />
+            <g:PasswordTextBox ui:field="txtConfirmPassword" styleName="form-control" />
+            <g:CheckBox text="Is Admin" ui:field="cbxIsAdmin" styleName="checkbox" checked="true" />
+        </g:HTMLPanel>
+    </g:HTMLPanel>
 </ui:UiBinder> 

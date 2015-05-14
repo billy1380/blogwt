@@ -17,9 +17,11 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.wizard.WizardPage;
 import com.willshex.blogwt.shared.api.datatype.Property;
+import com.willshex.blogwt.shared.api.helper.PropertyHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -37,12 +39,13 @@ public class BlogPropertiesWizardPage extends Composite implements
 	@UiField TextBox txtTitle;
 	@UiField TextArea txtExtendedTitle;
 	@UiField TextBox txtCopyrightHolder;
-	
+
 	public BlogPropertiesWizardPage () {
 		initWidget(uiBinder.createAndBindUi(this));
-		UiHelper.addPlaceholder(txtTitle, "Title");
-		UiHelper.addPlaceholder(txtExtendedTitle, "Extended Title");
-		UiHelper.addPlaceholder(txtCopyrightHolder, "Copyright Holder");
+		UiHelper.addPlaceholder(txtTitle, "Blog Title");
+		UiHelper.addPlaceholder(txtExtendedTitle,
+				"Extended Title (Short Description)");
+		UiHelper.addPlaceholder(txtCopyrightHolder, "Copyright Holder Name");
 	}
 
 	/* (non-Javadoc)
@@ -58,7 +61,17 @@ public class BlogPropertiesWizardPage extends Composite implements
 	 * @see com.willshex.blogwt.client.wizard.WizardPage#getData() */
 	@Override
 	public List<Property> getData () {
-		return new ArrayList<Property>();
+		List<Property> properties = new ArrayList<Property>();
+
+		properties.add(PropertyHelper.createTitle(txtTitle.getText()));
+		properties.add(PropertyHelper.createExtendedTitle(txtExtendedTitle
+				.getText()));
+		properties.add(PropertyHelper.createCopyrightHolder(txtCopyrightHolder
+				.getText()));
+		properties.add(PropertyHelper.createCopyrightUrl(PropertyController
+				.get().copyrightHolderUrl().asString()));
+
+		return properties;
 	}
 
 	/* (non-Javadoc)
