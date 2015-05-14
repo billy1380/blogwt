@@ -10,7 +10,9 @@ package com.willshex.blogwt.client.page.blog;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.SetupController;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.page.wizard.WizardDialogPage;
@@ -32,6 +34,14 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class SetupBlogPage extends WizardDialogPage implements
 		SetupBlogEventHandler {
+
+	@Override
+	protected void onAttach () {
+		super.onAttach();
+
+		register(DefaultEventBus.get().addHandlerToSource(
+				SetupBlogEventHandler.TYPE, SetupController.get(), this));
+	}
 
 	/**
 	 * 
@@ -84,7 +94,8 @@ public class SetupBlogPage extends WizardDialogPage implements
 		if (output.status == StatusType.StatusTypeSuccess) {
 			Window.Location.reload();
 		} else {
-			// TODO: show errors
+			GWT.log("setupBlogFailure - input:" + input.toString()
+					+ " - output:" + output);
 		}
 	}
 
@@ -97,7 +108,7 @@ public class SetupBlogPage extends WizardDialogPage implements
 	 * java.lang.Throwable) */
 	@Override
 	public void setupBlogFailure (SetupBlogRequest input, Throwable caught) {
-		// TODO: show errors
+		GWT.log("setupBlogFailure - input:" + input.toString(), caught);
 	}
 
 }

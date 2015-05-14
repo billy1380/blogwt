@@ -124,9 +124,14 @@ public final class BlogService extends ActionHandler {
 					input.properties, "input.properties");
 
 			propertyService.addPropertyBatch(input.properties);
-			
+
 			input.users = UserValidator.validateAll(input.users, "input.users");
-			
+
+			// users added at startup are verified
+			for (User user : input.users) {
+				user.verified = Boolean.TRUE;
+			}
+
 			UserServiceProvider.provide().addUserBatch(input.users);
 
 			output.status = StatusType.StatusTypeSuccess;
