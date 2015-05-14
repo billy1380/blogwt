@@ -88,7 +88,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.2</version>
 				<executions>
 					<execution>
 						<phase>validate</phase>
@@ -159,7 +159,7 @@
 					<jvmFlags>
 						<jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
 					</jvmFlags>
-					<version>1r7</version>
+					<version>1</version>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -178,7 +178,7 @@
 									<pluginExecutionFilter>
 										<groupId>org.codehaus.mojo</groupId>
 										<artifactId>versions-maven-plugin</artifactId>
-										<versionRange>[2.1,)</versionRange>
+										<versionRange>[2.2,)</versionRange>
 										<goals>
 											<goal>display-plugin-updates</goal>
 											<goal>display-dependency-updates</goal>
