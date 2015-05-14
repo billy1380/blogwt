@@ -9,6 +9,7 @@ package com.willshex.blogwt.server.service.user;
 
 import static com.willshex.blogwt.server.service.PersistenceService.ofy;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -143,6 +144,19 @@ final class UserService implements IUserService {
 		return user == null ? null : user
 				.avatar("https://secure.gravatar.com/avatar/"
 						+ StringUtils.md5Hash(user.email.trim().toLowerCase()));
+	}
+
+	@Override
+	public void addUserBatch (Collection<User> users) {
+		for (User user : users) {
+			if (user.created == null) {
+				user.added = user.created = new Date();
+			}
+
+			user.password = StringUtils.sha1Hash(user.password + SALT);
+		}
+
+		ofy().save().entities(users).now();
 	}
 
 }

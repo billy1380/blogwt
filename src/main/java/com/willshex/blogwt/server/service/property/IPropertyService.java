@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.service.property;
 
+import java.util.Collection;
+
 import com.spacehopperstudios.service.IService;
 import com.willshex.blogwt.shared.api.datatype.Property;
 
@@ -43,5 +45,11 @@ public interface IPropertyService extends IService {
 	 * @param property
 	 */
 	public void deleteProperty (Property property);
+
+	/**
+	 * 
+	 * @param properties
+	 */
+	public void addPropertyBatch (Collection<Property> properties);
 
 }

@@ -16,10 +16,14 @@ public enum ApiError {
 	JsonParseException(100000, "Invalid Json, could not be parsed"),
 	InvalidValueNull(100001, "Invalid value null {0}"),
 	TokenNoMatch(100002, "Invalid value does not match scheme for String: {0}"),
-	DataTypeNoLookup(100003, "Invalid data type lookup, need id or other key for {0}"),
+	DataTypeNoLookup(100003,
+			"Invalid data type lookup, need id or other key for {0}"),
 	DataTypeNotFound(100004, "Data type not found {0}"),
 	AuthenticationFailed(100005, "Authentication failed for username {0}"),
-	AuthorisationFailed(100006, "Authroisation failed for {0}"), ;
+	AuthorisationFailed(100006, "Authroisation failed for {0}"),
+	ExistingSetup(100007, "Setup has already been completed for: {0}"),
+	MissingProperties(100008,
+			"One or more properties were missing in: {0}"), ;
 
 	private static final String PARAM_0 = "\\{0\\}";
 	private static final String PARAM_1 = "\\{1\\}";
@@ -28,28 +32,30 @@ public enum ApiError {
 	private int code;
 	private String message;
 
-	ApiError(int code, String message) {
+	ApiError (int code, String message) {
 		this.code = code;
 		this.message = message;
 	}
 
-	public int getCode() {
+	public int getCode () {
 		return code;
 	}
 
-	public String getMessage() {
+	public String getMessage () {
 		return message;
 	}
 
-	public String getMessage(String parent) {
+	public String getMessage (String parent) {
 		return message.replaceAll(PARAM_0, parent == null ? "?" : parent);
 	}
 
-	public String getMessage(String parent, int minValue, int maxValue) {
-		return getMessage(parent).replaceAll(PARAM_1, Integer.toString(minValue)).replaceAll(PARAM_2, Integer.toString(maxValue));
+	public String getMessage (String parent, int minValue, int maxValue) {
+		return getMessage(parent).replaceAll(PARAM_1,
+				Integer.toString(minValue)).replaceAll(PARAM_2,
+				Integer.toString(maxValue));
 	}
 
-	public boolean isCode(int value) {
+	public boolean isCode (int value) {
 		return code == value;
 	}
 
