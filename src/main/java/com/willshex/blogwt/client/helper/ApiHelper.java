@@ -13,12 +13,14 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.BlogService;
 import com.willshex.blogwt.client.api.user.UserService;
 import com.willshex.blogwt.shared.api.Request;
+import com.willshex.blogwt.shared.api.validation.ApiError;
+import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
  * 
  */
-public class RemoteDataHelper {
+public class ApiHelper {
 
 	public static final String ACCESS_CODE = "2bfe5f0e-9138-401c-8619-9a66f6367c9a";
 	public static final String BLOG_END_POINT = "//" + getHost() + "/blog";
@@ -43,6 +45,16 @@ public class RemoteDataHelper {
 	public static <T extends Request> T setAccessCode (T input) {
 		input.accessCode = ACCESS_CODE;
 		return input;
+	}
+
+	/**
+	 * @param error
+	 * @param apiError
+	 * @return
+	 */
+	public static boolean isError (Error error, ApiError apiError) {
+		return error != null && error.code != null
+				&& error.code.intValue() == apiError.getCode();
 	}
 
 }
