@@ -3,9 +3,21 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel styleName="form-group">
-		<g:TextBox ui:field="txtTitle" styleName="form-control" />
-		<g:TextArea ui:field="txtExtendedTitle" styleName="form-control" visibleLines="3" />
-		<g:TextBox ui:field="txtCopyrightHolder" styleName="form-control" />
+	<g:HTMLPanel>
+		<g:HTMLPanel styleName="form-group">
+			<label class="control-label">Title</label>
+			<g:TextBox ui:field="txtTitle" styleName="form-control" />
+			<g:HTMLPanel styleName="control-label small" ui:field="pnlTitleNote" visible="false" />
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="form-group">
+		    <label class="control-label">Extended Title</label>
+			<g:TextArea ui:field="txtExtendedTitle" styleName="form-control" visibleLines="3" />
+			<g:HTMLPanel styleName="control-label small" ui:field="pnlExtendedTitleNote" visible="false" />
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="form-group">
+		    <label class="control-label">Copyright Holder</label>
+			<g:TextBox ui:field="txtCopyrightHolder" styleName="form-control" />
+			<g:HTMLPanel styleName="control-label small" ui:field="pnlCopyrightHolderNote" visible="false" />
+		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

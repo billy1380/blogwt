@@ -1,17 +1,28 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <ui:style>
-    
-    </ui:style>
-    <g:HTMLPanel>
-        <g:HTMLPanel styleName="form-group">
-            <g:TextBox ui:field="txtUsername" styleName="form-control" />
-            <g:TextBox ui:field="txtEmailAddress" styleName="form-control" />
-            <g:TextBox ui:field="txtForename" styleName="form-control" />
-            <g:TextBox ui:field="txtSurname" styleName="form-control" />
-            <g:PasswordTextBox ui:field="txtPassword" styleName="form-control" />
-            <g:PasswordTextBox ui:field="txtConfirmPassword" styleName="form-control" />
-            <g:CheckBox text="Is Admin" ui:field="cbxIsAdmin" styleName="checkbox" checked="true" />
-        </g:HTMLPanel>
-    </g:HTMLPanel>
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel>
+		<g:HTMLPanel ui:field="pnlUsername" styleName="form-group">
+			<label class="control-label">Username</label>
+			<g:HTMLPanel styleName="input-group">
+				<span class="input-group-addon">@</span>
+				<g:TextBox ui:field="txtUsername" styleName="form-control" />
+			</g:HTMLPanel>
+			<g:HTMLPanel styleName="control-label small" ui:field="pnlUsernameNote" visible="false" />
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="form-group">
+			<g:TextBox ui:field="txtEmailAddress" styleName="form-control" />
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="form-group">
+			<g:TextBox ui:field="txtForename" styleName="form-control" />
+			<g:TextBox ui:field="txtSurname" styleName="form-control" />
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="form-group">
+			<g:PasswordTextBox ui:field="txtPassword" styleName="form-control" />
+			<g:PasswordTextBox ui:field="txtConfirmPassword" styleName="form-control" />
+		</g:HTMLPanel>
+		<g:CheckBox text="Is Admin" ui:field="cbxIsAdmin" styleName="checkbox" checked="true" />
+	</g:HTMLPanel>
 </ui:UiBinder> 
