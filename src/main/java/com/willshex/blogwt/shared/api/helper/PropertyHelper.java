@@ -55,4 +55,9 @@ public class PropertyHelper {
 		return new Property().name(COPYRIGHT_URL)
 				.description(COPYRIGHT_URL_DESCRIPTION).value(value);
 	}
+
+	public static boolean empty (Property property) {
+		return property == null || property.value == null
+				|| property.value.length() == 0;
+	}
 }

@@ -45,7 +45,7 @@ public class FooterPart extends Composite {
 		divCopyright.setInnerSafeHtml(FooterTemplates.FOOTER_TEMPLATES
 				.copyrightNotice(controller.copyrightHolderUrl(),
 						controller.copyrightHolder(), years(controller),
-						controller.name()));
+						controller.title()));
 	}
 
 	@SuppressWarnings("deprecation")

@@ -13,6 +13,7 @@ import java.util.List;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
+import com.willshex.blogwt.client.controller.PropertyController;
 
 /**
  * @author William Shakour (billy1380)
@@ -56,7 +57,7 @@ public abstract class Page extends Composite {
 	}
 
 	public String getTitle () {
-		return "Blogwt";
+		return PropertyController.get().title();
 	}
 
 	protected PageType getPageType () {

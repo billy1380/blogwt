@@ -34,7 +34,7 @@ public class HeaderPart extends Composite {
 
 		Resources.RES.styles().ensureInjected();
 
-		divName.setInnerText(PropertyController.get().name());
+		divName.setInnerText(PropertyController.get().title());
 	}
 
 	@UiHandler("btnExpand")

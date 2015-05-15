@@ -137,7 +137,7 @@
 					<!-- mvn gwt:run-codeserver - won't have to use the bookmarklet -->
 					<launcherDir>${project.build.directory}/${project.build.finalName}</launcherDir>
 
-					<runTarget>index.html</runTarget>
+					<runTarget>index.jsp</runTarget>
 					<modules>
 						<module>com.willshex.blogwt.Blogwt</module>
 					</modules>
