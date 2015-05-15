@@ -1,0 +1,14 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	.backToTop {
+		position: fixed;
+		bottom: 40px;
+		right: 40px;
+		cursor: pointer;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<g:Button ui:field="btnBackToTop" styleName="{style.backToTop} btn btn-primary" visible="false" text="Back To Top" />
+	</g:HTMLPanel>
+</ui:UiBinder> 
