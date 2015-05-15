@@ -3,7 +3,7 @@
 //  com.willshex.codegen
 //
 //  Created by William Shakour (billy1380) on 14 May 2015.
-//  Copyright © 2015 SPACEHOPPER STUDIOS Ltd. All rights reserved.
+//  Copyright © 2015 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.client.part;
 

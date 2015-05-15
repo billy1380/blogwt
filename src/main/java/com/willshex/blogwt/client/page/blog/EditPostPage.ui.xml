@@ -1,10 +1,71 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
-	/* Add CSS here. See the GWT docs on UI Binder for more details */
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:com.willshex.blogwt.client.part">
+	<ui:style gss="true">
+	@external checkbox;
+	.form-post {
+		max-width: 330px;
+		padding: 15px;
+	}
+	
+	.form-post input[type="text"], .form-post input[type="password"] {
+		margin: 2px 0;
+	}
+	
+	.checkbox input[type=checkbox] {
+		margin-left: 0px;
+	}
+	
+	.form-post .btn {
+		margin-bottom: 10px;
+	}
 	</ui:style>
-	<g:HTMLPanel>
-		<!-- Add GWT widgets here. Enter < and hit Ctrl-Space to auto-complete widget names. The ui:field attribute binds an element to a field in the owner class. See 
-			the GWT docs on UI Binder for more details. -->
+	<g:HTMLPanel styleName="container">
+		<g:FormPanel>
+			<g:HTMLPanel styleName="{style.form-post}">
+				<h2>New Post</h2>
+				<g:HTMLPanel ui:field="pnlTitle" styleName="form-group">
+					<label>Title</label>
+					<g:TextBox styleName="form-control" ui:field="txtTitle" />
+					<g:HTMLPanel styleName="small" ui:field="pnlTitleNote" visible="true" />
+				</g:HTMLPanel>
+
+				<g:HTMLPanel ui:field="pnlSummary" styleName="form-group">
+					<label>Summary</label>
+					<g:TextArea styleName="form-control" ui:field="txtSummary" visibleLines="5" />
+				</g:HTMLPanel>
+
+				<g:HTMLPanel ui:field="pnlContent" styleName="form-group">
+					<label>Content</label>
+					<g:TextArea styleName="form-control" ui:field="txtContent" visibleLines="10" />
+				</g:HTMLPanel>
+
+				<g:HTMLPanel ui:field="pnlTags" styleName="form-group">
+					<label>Tags</label>
+					<g:TextBox styleName="form-control" ui:field="txtTags" />
+					<g:HTMLPanel styleName="small" ui:field="pnlTagsNote" visible="false" />
+				</g:HTMLPanel>
+
+				<g:HTMLPanel styleName="checkbox">
+					<g:CheckBox ui:field="cbxDirectOnly" checked="false">require direct link</g:CheckBox>
+				</g:HTMLPanel>
+
+				<g:HTMLPanel styleName="checkbox">
+					<g:CheckBox ui:field="cbxComments">
+						enable
+						<a href="http://disqus.com" target="_blank">disqus.com</a>
+						comments (no native comments yet)
+					</g:CheckBox>
+				</g:HTMLPanel>
+
+				<g:HTMLPanel styleName="checkbox">
+					<g:CheckBox ui:field="cbxPublish" checked="false">publish on submit</g:CheckBox>
+				</g:HTMLPanel>
+
+				<g:SubmitButton ui:field="btnSubmit" styleName="{style.btn} btn btn-primary pull-right" text="Submit">
+					Submit
+				</g:SubmitButton>
+			</g:HTMLPanel>
+		</g:FormPanel>
+		<p:BackToTop />
 	</g:HTMLPanel>
 </ui:UiBinder> 

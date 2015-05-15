@@ -56,4 +56,8 @@ public class UiHelper {
 	public static void addPlaceholder (Widget widget, String placeholder) {
 		widget.getElement().setAttribute("placeholder", placeholder);
 	}
+
+	public static void autoFocus (Widget widget) {
+		widget.getElement().setAttribute("autofocus", "");
+	}
 }

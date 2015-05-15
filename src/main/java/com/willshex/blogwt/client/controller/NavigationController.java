@@ -33,7 +33,7 @@ import com.willshex.blogwt.client.part.HeaderPart;
 public class NavigationController implements ValueChangeHandler<String> {
 	private static NavigationController one = null;
 
-	private HTMLPanel panel = null;
+	private HTMLPanel pageHolder = null;
 
 	/**
 	 * @return
@@ -49,13 +49,12 @@ public class NavigationController implements ValueChangeHandler<String> {
 	/**
 	 * @return
 	 */
-	public Widget getPageHolderPanel () {
-		if (panel == null) {
-			panel = new HTMLPanel("");
-			panel.addStyleName("container");
+	public Widget getPageHolder () {
+		if (pageHolder == null) {
+			pageHolder = new HTMLPanel("<!-- pages -->");
 		}
 
-		return panel;
+		return pageHolder;
 	}
 
 	public static final String ADD_ACTION_PARAMETER_VALUE = "add";
@@ -230,8 +229,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 		}
 
 		if (!page.isAttached()) {
-			panel.clear();
-			panel.add(page);
+			pageHolder.clear();
+			pageHolder.add(page);
 		}
 	}
 

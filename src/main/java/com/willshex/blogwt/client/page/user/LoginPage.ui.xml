@@ -25,15 +25,25 @@
 		<g:FormPanel styleName="{style.form-signin}">
 			<g:HTMLPanel styleName="form-group">
 				<h2>Sign in</h2>
-				<g:TextBox ui:field="txtUsername" styleName="form-control" />
-				<g:PasswordTextBox ui:field="txtPassword" styleName="form-control" />
-				<div class="text-right">
-					<g:InlineHyperlink text="Forgot password" targetHistoryToken="{ResetPasswordPageType.asTargetHistoryToken}" />
-				</div>
+				<g:HTMLPanel ui:field="pnlUsername" styleName="form-group">
+					<label>Username</label>
+					<g:TextBox ui:field="txtUsername" styleName="form-control" />
+					<g:HTMLPanel styleName="" ui:field="pnlUsernameNote" visible="false" />
+				</g:HTMLPanel>
+				<g:HTMLPanel ui:field="pnlPassword" styleName="form-group">
+					<label>Password</label>
+					<g:PasswordTextBox ui:field="txtPassword" styleName="form-control" />
+					<g:HTMLPanel styleName="" ui:field="pnlPasswordNote" visible="false" />
+					<div class="text-right">
+						<g:InlineHyperlink text="Forgot password" targetHistoryToken="{ResetPasswordPageType.asTargetHistoryToken}" />
+					</div>
+				</g:HTMLPanel>
 				<g:HTMLPanel styleName="checkbox">
 					<g:CheckBox text="remember me" ui:field="cbxRememberMe" />
 				</g:HTMLPanel>
-				<g:SubmitButton ui:field="btnSignIn" styleName="{style.btn} btn btn-primary pull-right" text="Sign in">Login</g:SubmitButton>
+				<g:SubmitButton ui:field="btnSignIn" styleName="{style.btn} btn btn-primary pull-right" text="Sign in">
+					Login
+				</g:SubmitButton>
 			</g:HTMLPanel>
 		</g:FormPanel>
 	</g:HTMLPanel>

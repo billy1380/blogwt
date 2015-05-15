@@ -35,8 +35,8 @@ final class UserService implements IUserService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.user.IUserService#addUser
-	 * (com.spacehopperstudios.blogwt.shared.api.datatypes.User) */
+	 * com.willshex.blogwt.server.services.user.IUserService#addUser
+	 * (com.willshex.blogwt.shared.api.datatypes.User) */
 	@Override
 	public User addUser (User user) {
 		if (user.created == null) {
@@ -54,8 +54,8 @@ final class UserService implements IUserService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.user.IUserService#updateUser
-	 * (com.spacehopperstudios.blogwt.shared.api.datatypes.User) */
+	 * com.willshex.blogwt.server.services.user.IUserService#updateUser
+	 * (com.willshex.blogwt.shared.api.datatypes.User) */
 	@Override
 	public User updateUser (User user) {
 		ofy().save().entity(user).now();
@@ -65,8 +65,8 @@ final class UserService implements IUserService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.user.IUserService#deleteUser
-	 * (com.spacehopperstudios.blogwt.shared.api.datatypes.User) */
+	 * com.willshex.blogwt.server.services.user.IUserService#deleteUser
+	 * (com.willshex.blogwt.shared.api.datatypes.User) */
 	@Override
 	public void deleteUser (User user) {
 		ofy().delete().entity(user);
@@ -75,10 +75,10 @@ final class UserService implements IUserService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.user.IUserService#getUsers
+	 * com.willshex.blogwt.server.services.user.IUserService#getUsers
 	 * (java.lang.Long, java.lang.Long,
-	 * com.spacehopperstudios.blogwt.shared.api.datatypes.UserSortType,
-	 * com.spacehopperstudios.blogwt.shared.api.SortDirectionType) */
+	 * com.willshex.blogwt.shared.api.datatypes.UserSortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
 	public List<User> getUsers (Long start, Long count, UserSortType sortBy,
 			SortDirectionType sortDirection) {
@@ -114,7 +114,7 @@ final class UserService implements IUserService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.user.IUserService#getLoginUser
+	 * com.willshex.blogwt.server.services.user.IUserService#getLoginUser
 	 * (java.lang.String, java.lang.String) */
 	@Override
 	public User getLoginUser (String username, String password) {
@@ -131,7 +131,7 @@ final class UserService implements IUserService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see com.spacehopperstudios.blogwt.server.services.user.IUserService#
+	 * @see com.willshex.blogwt.server.services.user.IUserService#
 	 * updateUserIdLastLoggedIn(java.lang.Long) */
 	@Override
 	public void updateUserIdLastLoggedIn (Long userId) {

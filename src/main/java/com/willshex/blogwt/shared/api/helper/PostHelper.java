@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.shared.api.helper;
 
+import com.willshex.blogwt.shared.api.datatype.Post;
+
 /**
  * @author William Shakour (billy1380)
  *
@@ -40,6 +42,11 @@ public class PostHelper {
 		}
 
 		return slug.toString();
+	}
+
+	public static String getSlug (Post post) {
+		return post.slug == null || post.slug.length() == 0 ? post.id
+				.toString() : post.slug;
 	}
 
 }
