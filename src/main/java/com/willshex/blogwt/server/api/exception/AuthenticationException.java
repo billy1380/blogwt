@@ -5,7 +5,7 @@
 //  Created by William Shakour (billy1380) on 15 May 2015.
 //  Copyright © 2015 SPACEHOPPER STUDIOS Ltd. All rights reserved.
 //
-package com.willshex.blogwt.shared.api.exception;
+package com.willshex.blogwt.server.api.exception;
 
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.json.service.server.ServiceException;

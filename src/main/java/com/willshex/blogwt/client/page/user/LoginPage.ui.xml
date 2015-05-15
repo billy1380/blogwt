@@ -3,11 +3,6 @@
 	<ui:import field="com.willshex.blogwt.client.page.PageType.ResetPasswordPageType" />
 	<ui:style>
 	@external checkbox;
-	.form-signin {
-		max-width: 330px;
-		padding: 15px;
-		margin: 0 auto;
-	}
 	
 	.checkbox input[type=checkbox] {
 		margin-left: 0px;
@@ -18,32 +13,34 @@
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">
-		<g:FormPanel styleName="{style.form-signin}">
-			<g:HTMLPanel styleName="form-group">
-				<h2>Sign in</h2>
-				<g:HTMLPanel ui:field="pnlUsername" styleName="form-group">
-					<label class="control-label">Username</label>
-					<g:HTMLPanel styleName="input-group">
-						<span class="input-group-addon">@</span>
-						<g:TextBox ui:field="txtUsername" styleName="form-control" />
+		<g:HTMLPanel styleName="row">
+			<g:FormPanel styleName="{style.form-signin} col-sm-4 col-md-offset-4">
+				<g:HTMLPanel>
+					<h2>Sign in</h2>
+					<g:HTMLPanel ui:field="pnlUsername" styleName="form-group">
+						<label class="control-label">Username</label>
+						<g:HTMLPanel styleName="input-group">
+							<span class="input-group-addon">@</span>
+							<g:TextBox ui:field="txtUsername" styleName="form-control" />
+						</g:HTMLPanel>
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlUsernameNote" visible="false" />
 					</g:HTMLPanel>
-					<g:HTMLPanel styleName="control-label small" ui:field="pnlUsernameNote" visible="false" />
+					<g:HTMLPanel ui:field="pnlPassword" styleName="form-group">
+						<label class="control-label">Password</label>
+						<g:PasswordTextBox ui:field="txtPassword" styleName="form-control" />
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlPasswordNote" visible="false" />
+						<div class="text-right">
+							<g:InlineHyperlink text="Forgot password" targetHistoryToken="{ResetPasswordPageType.asTargetHistoryToken}" />
+						</div>
+					</g:HTMLPanel>
+					<g:HTMLPanel styleName="checkbox">
+						<g:CheckBox text="remember me" ui:field="cbxRememberMe" />
+					</g:HTMLPanel>
+					<g:SubmitButton ui:field="btnSignIn" styleName="{style.btn} btn btn-primary pull-right" text="Sign in">
+						Login
+					</g:SubmitButton>
 				</g:HTMLPanel>
-				<g:HTMLPanel ui:field="pnlPassword" styleName="form-group">
-					<label class="control-label">Password</label>
-					<g:PasswordTextBox ui:field="txtPassword" styleName="form-control" />
-					<g:HTMLPanel styleName="control-label small" ui:field="pnlPasswordNote" visible="false" />
-					<div class="text-right">
-						<g:InlineHyperlink text="Forgot password" targetHistoryToken="{ResetPasswordPageType.asTargetHistoryToken}" />
-					</div>
-				</g:HTMLPanel>
-				<g:HTMLPanel styleName="checkbox">
-					<g:CheckBox text="remember me" ui:field="cbxRememberMe" />
-				</g:HTMLPanel>
-				<g:SubmitButton ui:field="btnSignIn" styleName="{style.btn} btn btn-primary pull-right" text="Sign in">
-					Login
-				</g:SubmitButton>
-			</g:HTMLPanel>
-		</g:FormPanel>
+			</g:FormPanel>
+		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

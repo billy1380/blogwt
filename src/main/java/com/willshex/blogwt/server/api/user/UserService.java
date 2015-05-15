@@ -10,6 +10,7 @@ package com.willshex.blogwt.server.api.user;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.exception.AuthenticationException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.service.session.ISessionService;
@@ -17,7 +18,6 @@ import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.server.service.user.IUserService;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.api.exception.AuthenticationException;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
