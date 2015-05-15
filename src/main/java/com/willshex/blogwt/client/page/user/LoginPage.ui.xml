@@ -26,14 +26,14 @@
 			<g:HTMLPanel styleName="form-group">
 				<h2>Sign in</h2>
 				<g:HTMLPanel ui:field="pnlUsername" styleName="form-group">
-					<label>Username</label>
+					<label class="control-label">Username</label>
 					<g:TextBox ui:field="txtUsername" styleName="form-control" />
-					<g:HTMLPanel styleName="" ui:field="pnlUsernameNote" visible="false" />
+					<g:HTMLPanel styleName="control-label small" ui:field="pnlUsernameNote" visible="false" />
 				</g:HTMLPanel>
 				<g:HTMLPanel ui:field="pnlPassword" styleName="form-group">
-					<label>Password</label>
+					<label class="control-label">Password</label>
 					<g:PasswordTextBox ui:field="txtPassword" styleName="form-control" />
-					<g:HTMLPanel styleName="" ui:field="pnlPasswordNote" visible="false" />
+					<g:HTMLPanel styleName="control-label small" ui:field="pnlPasswordNote" visible="false" />
 					<div class="text-right">
 						<g:InlineHyperlink text="Forgot password" targetHistoryToken="{ResetPasswordPageType.asTargetHistoryToken}" />
 					</div>

@@ -12,7 +12,7 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.BlogService;
-import com.willshex.blogwt.client.helper.RemoteDataHelper;
+import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler.SetupBlogFailure;
@@ -37,11 +37,11 @@ public class SetupController {
 	}
 
 	public void setupBlog (List<Property> properties, List<User> users) {
-		final SetupBlogRequest input = RemoteDataHelper
+		final SetupBlogRequest input = ApiHelper
 				.setAccessCode(new SetupBlogRequest()).properties(properties)
 				.users(users);
 
-		BlogService blogService = RemoteDataHelper.createBlogClient();
+		BlogService blogService = ApiHelper.createBlogClient();
 		blogService.setupBlog(input, new AsyncCallback<SetupBlogResponse>() {
 
 			@Override

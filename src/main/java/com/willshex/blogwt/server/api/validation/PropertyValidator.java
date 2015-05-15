@@ -13,10 +13,15 @@ import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
 
 public class PropertyValidator extends ApiValidator {
+	private static final String type = Property.class.getSimpleName();
 
 	public static List<Property> setupProperties (
 			Collection<Property> properties, String name)
 			throws ServiceException {
+		if (properties == null)
+			throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, type + "[]: " + name);
+
 		HashSet<String> notFound = new HashSet<String>();
 
 		notFound.add(PropertyHelper.TITLE);
@@ -58,6 +63,10 @@ public class PropertyValidator extends ApiValidator {
 
 	public static Property validate (Property property, String name)
 			throws InputValidationException {
+		if (property == null)
+			throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, type + ": " + name);
+
 		return property;
 	}
 
