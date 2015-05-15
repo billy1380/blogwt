@@ -35,19 +35,22 @@ public class LoginPage extends Page {
 	@UiField TextBox txtUsername;
 	@UiField PasswordTextBox txtPassword;
 	@UiField CheckBox cbxRememberMe;
-	
+
 	public LoginPage () {
 		super(PageType.LoginPageType);
 		initWidget(uiBinder.createAndBindUi(this));
-		
+
 		txtUsername = UiHelper.swap(txtUsername, "login-username");
 		txtPassword = UiHelper.swap(txtPassword, "login-password");
 
-		txtUsername.getElement().setAttribute("placeholder", "Username");
-		txtUsername.getElement().setAttribute("autofocus", "");
-		txtPassword.getElement().setAttribute("placeholder", "Password");
+		UiHelper.addPlaceholder(txtUsername, "Username");
+		UiHelper.autoFocus(txtUsername);
 
-		btnSignIn.getElement().setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE.nextButton("Sign in"));
+		UiHelper.addPlaceholder(txtPassword, "Password");
+
+		btnSignIn.getElement().setInnerSafeHtml(
+				WizardDialog.WizardDialogTemplates.INSTANCE
+						.nextButton("Sign in"));
 	}
 
 }

@@ -27,8 +27,8 @@ final class PropertyService implements IPropertyService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.property.IPropertyService
-	 * #addProperty(com.spacehopperstudios.blogwt.shared.api.datatypes.Property
+	 * com.willshex.blogwt.server.services.property.IPropertyService
+	 * #addProperty(com.willshex.blogwt.shared.api.datatypes.Property
 	 * ) */
 	@Override
 	public Property addProperty (Property property) {
@@ -44,8 +44,8 @@ final class PropertyService implements IPropertyService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.property.IPropertyService
-	 * #updateProperty(com.spacehopperstudios.blogwt.shared.api.datatypes
+	 * com.willshex.blogwt.server.services.property.IPropertyService
+	 * #updateProperty(com.willshex.blogwt.shared.api.datatypes
 	 * .Property) */
 	@Override
 	public Property updateProperty (Property property) {
@@ -56,8 +56,8 @@ final class PropertyService implements IPropertyService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.property.IPropertyService
-	 * #deleteProperty(com.spacehopperstudios.blogwt.shared.api.datatypes
+	 * com.willshex.blogwt.server.services.property.IPropertyService
+	 * #deleteProperty(com.willshex.blogwt.shared.api.datatypes
 	 * .Property) */
 	@Override
 	public void deleteProperty (Property property) {
@@ -67,7 +67,7 @@ final class PropertyService implements IPropertyService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.property.IPropertyService
+	 * com.willshex.blogwt.server.services.property.IPropertyService
 	 * #getNamedProperty(java.lang.String) */
 	@Override
 	public Property getNamedProperty (String name) {

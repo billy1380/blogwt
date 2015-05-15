@@ -31,9 +31,8 @@ final class SessionService implements ISessionService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.session.ISessionService
-	 * #addSession(com.spacehopperstudios.blogwt.shared.api.datatypes.Session) */
+	 * @see com.willshex.blogwt.server.services.session.ISessionService
+	 * #addSession(com.willshex.blogwt.shared.api.datatypes.Session) */
 	@Override
 	public Session addSession (Session session) {
 		if (session.created == null) {
@@ -54,10 +53,8 @@ final class SessionService implements ISessionService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.session.ISessionService
-	 * #updateSession(com.spacehopperstudios.blogwt.shared.api.datatypes.Session
-	 * ) */
+	 * @see com.willshex.blogwt.server.services.session.ISessionService
+	 * #updateSession(com.willshex.blogwt.shared.api.datatypes.Session ) */
 	@Override
 	public Session updateSession (Session session) {
 		ofy().save().entity(session);
@@ -82,10 +79,8 @@ final class SessionService implements ISessionService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.session.ISessionService
-	 * #deleteSession(com.spacehopperstudios.blogwt.shared.api.datatypes.Session
-	 * ) */
+	 * @see com.willshex.blogwt.server.services.session.ISessionService
+	 * #deleteSession(com.willshex.blogwt.shared.api.datatypes.Session ) */
 	@Override
 	public void deleteSession (Session session) {
 		ofy().delete().entity(session);
@@ -93,10 +88,9 @@ final class SessionService implements ISessionService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.session.ISessionService
-	 * #createUserSession(com.spacehopperstudios.blogwt.shared.api.datatypes
-	 * .User, java.lang.Boolean) */
+	 * @see com.willshex.blogwt.server.services.session.ISessionService
+	 * #createUserSession(com.willshex.blogwt.shared.api.datatypes .User,
+	 * java.lang.Boolean) */
 	@Override
 	public Session createUserSession (User user, Boolean longTerm) {
 		return addSession(new Session().expires(
@@ -106,9 +100,8 @@ final class SessionService implements ISessionService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.session.ISessionService
-	 * #getUserSession(com.spacehopperstudios.blogwt.shared.api.datatypes.User) */
+	 * @see com.willshex.blogwt.server.services.session.ISessionService
+	 * #getUserSession(com.willshex.blogwt.shared.api.datatypes.User) */
 	@Override
 	public Session getUserSession (User user) {
 		Session session = ofy().load().type(Session.class)
@@ -125,9 +118,8 @@ final class SessionService implements ISessionService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.spacehopperstudios.blogwt.server.services.session.ISessionService
-	 * #extendSession(com.spacehopperstudios.blogwt.shared.api.datatypes.Session
-	 * , java.lang.Long) */
+	 * com.willshex.blogwt.server.service.session.ISessionService#extendSession
+	 * (com.willshex.blogwt.shared.api.datatype.Session, java.lang.Long) */
 	@Override
 	public Session extendSession (Session session, Long duration) {
 		if (session.expires == null) {

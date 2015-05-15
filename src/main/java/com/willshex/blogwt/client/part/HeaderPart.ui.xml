@@ -3,7 +3,7 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel styleName="navbar navbar-inverse navbar-fixed-top">
+	<g:HTMLPanel styleName="navbar navbar-default">
 		<div class="container">
 			<g:Button ui:field="btnExpand" styleName="navbar-toggle" />
 			<a class="navbar-brand" href="/">

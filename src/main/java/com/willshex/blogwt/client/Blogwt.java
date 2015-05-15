@@ -28,15 +28,16 @@ public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
 		createContent();
 
 		content.add(NavigationController.get().getHeader());
-		content.add(NavigationController.get().getPageHolderPanel());
+		content.add(NavigationController.get().getPageHolder());
 		content.add(NavigationController.get().getFooter());
 
 		History.fireCurrentHistoryState();
 	}
 
 	private void createContent() {
-		content = new HTMLPanel("");
+		content = new HTMLPanel("<!-- content -->");
 		content.getElement().setId("content");
+		content.getElement().setClassName("container");
 		RootPanel.get().add(content);
 	}
 }

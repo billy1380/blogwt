@@ -48,7 +48,7 @@ public class AddUserWizardPage extends Composite implements WizardPage<User> {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		UiHelper.addPlaceholder(txtUsername, "Username");
-		txtUsername.getElement().setAttribute("autofocus", "");
+		UiHelper.autoFocus(txtUsername);
 
 		UiHelper.addPlaceholder(txtEmailAddress, "E-mail address");
 		UiHelper.addPlaceholder(txtForename, "Forename");
