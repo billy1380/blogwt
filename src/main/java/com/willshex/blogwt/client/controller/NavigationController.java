@@ -245,7 +245,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 				&& PageType.fromString(s.getPage()) != PageType.SetupBlogPageType) {
 			PageType.SetupBlogPageType.show();
 		} else {
-
 			if (PropertyController.get().blog() != null
 					&& PageType.fromString(s.getPage()) == PageType.SetupBlogPageType) {
 				PageType.PostsPageType.show();

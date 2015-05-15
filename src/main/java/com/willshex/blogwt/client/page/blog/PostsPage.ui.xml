@@ -1,10 +1,16 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
-	/* Add CSS here. See the GWT docs on UI Binder for more details */
-	</ui:style>
-	<g:HTMLPanel>
-		<!-- Add GWT widgets here. Enter < and hit Ctrl-Space to auto-complete widget names. The ui:field attribute binds an element to a field in the owner class. See 
-			the GWT docs on UI Binder for more details. -->
-	</g:HTMLPanel>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+    <ui:import field="com.willshex.blogwt.client.page.PageType.EditPostPageType" />
+    <ui:style>
+    
+    </ui:style>
+    <g:HTMLPanel>
+        <h1>
+            <div ui:field="divTitle">Posts</div>
+            <div ui:field="divExtendedTitle" class="small">Extended Title</div>
+        </h1>
+        <g:HTMLPanel>
+            <c:CellList ui:field="posts" />
+        </g:HTMLPanel>
+    </g:HTMLPanel>
 </ui:UiBinder> 
