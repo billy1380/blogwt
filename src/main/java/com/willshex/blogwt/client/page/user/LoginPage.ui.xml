@@ -9,10 +9,6 @@
 		margin: 0 auto;
 	}
 	
-	.form-signin input[type="text"], .form-signin input[type="password"] {
-		margin: 2px 0;
-	}
-	
 	.checkbox input[type=checkbox] {
 		margin-left: 0px;
 	}
@@ -27,7 +23,10 @@
 				<h2>Sign in</h2>
 				<g:HTMLPanel ui:field="pnlUsername" styleName="form-group">
 					<label class="control-label">Username</label>
-					<g:TextBox ui:field="txtUsername" styleName="form-control" />
+					<g:HTMLPanel styleName="input-group">
+						<span class="input-group-addon">@</span>
+						<g:TextBox ui:field="txtUsername" styleName="form-control" />
+					</g:HTMLPanel>
 					<g:HTMLPanel styleName="control-label small" ui:field="pnlUsernameNote" visible="false" />
 				</g:HTMLPanel>
 				<g:HTMLPanel ui:field="pnlPassword" styleName="form-group">
