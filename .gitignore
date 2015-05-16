@@ -33,3 +33,5 @@ www-test/
 .classpath
 
 .settings/
+
+.externalToolBuilders/
