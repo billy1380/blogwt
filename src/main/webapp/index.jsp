@@ -1,3 +1,16 @@
+<%@page
+	import="com.willshex.blogwt.server.service.permission.PermissionServiceProvider"%>
+<%@page import="com.willshex.blogwt.shared.api.datatype.Permission"%>
+<%@page import="com.willshex.blogwt.shared.api.datatype.Role"%>
+<%@page import="com.googlecode.objectify.Key"%>
+<%@page import="java.util.ArrayList"%>
+<%@page
+	import="com.willshex.blogwt.server.service.role.RoleServiceProvider"%>
+<%@page
+	import="com.willshex.blogwt.server.service.user.UserServiceProvider"%>
+<%@page
+	import="com.willshex.blogwt.server.service.session.SessionServiceProvider"%>
+<%@page import="com.willshex.blogwt.shared.api.datatype.Session"%>
 <%@page import="com.google.gson.JsonArray"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Arrays"%>
@@ -14,6 +27,7 @@
 	Property title = null, extendedTitle = null, copyrightHolder = null, copyrightUrl = null;
 	List<Property> properties = null;
 	title = propertyService.getNamedProperty(PropertyHelper.TITLE);
+	Session userSession = null;
 
 	if (title != null) {
 		extendedTitle = propertyService
@@ -23,10 +37,47 @@
 		copyrightUrl = propertyService
 				.getNamedProperty(PropertyHelper.COPYRIGHT_URL);
 
-		properties = Arrays.asList(new Property[] {
-				title, extendedTitle, copyrightHolder, copyrightUrl });
-		
-		
+		properties = Arrays.asList(new Property[] { title,
+				extendedTitle, copyrightHolder, copyrightUrl });
+
+		Cookie[] cookies = request.getCookies();
+		String sessionId = null;
+
+		if (cookies != null) {
+			for (Cookie currentCookie : cookies) {
+				if ("session.id".equals(currentCookie.getName())) {
+					sessionId = currentCookie.getValue();
+				}
+			}
+
+			if (sessionId != null) {
+				userSession = SessionServiceProvider.provide()
+						.getSession(Long.valueOf(sessionId));
+
+				if (userSession != null) {
+					userSession.user = UserServiceProvider.provide()
+							.getUser(userSession.userKey.getId());
+
+					if (userSession.user.roleKeys != null) {
+						List<Long> ids = new ArrayList<Long>();
+						for (Key<Role> key : userSession.user.roleKeys) {
+							ids.add(Long.valueOf(key.getId()));
+						}
+						userSession.user.roles = RoleServiceProvider
+								.provide().getIdRoles(ids);
+					}
+
+					if (userSession.user.permissionKeys != null) {
+						List<Long> ids = new ArrayList<Long>();
+						for (Key<Permission> key : userSession.user.permissionKeys) {
+							ids.add(Long.valueOf(key.getId()));
+						}
+						userSession.user.permissions = PermissionServiceProvider
+								.provide().getIdPermissionsBatch(ids);
+					}
+				}
+			}
+		}
 	}
 %>
 <!doctype html>
@@ -41,12 +92,11 @@
 	rel='stylesheet' type='text/css'>
 <title><%=title == null ? "Blogwt" : title.value%></title>
 <%
-
 	if (properties != null) {
 		out.println("<script type=\"text/javascript\" language=\"javascript\">");
 		out.print("var properties='[");
 		boolean first = true;
-		for (Property property: properties) {
+		for (Property property : properties) {
 			if (first) {
 				first = false;
 			} else {
@@ -55,9 +105,13 @@
 			out.print(property.toString().replace("'", "\\'"));
 		}
 		out.println("]';");
+
+		if (userSession != null) {
+			out.println("var session='"
+					+ userSession.toString().replace("'", "\\'") + "';");
+		}
 		out.println("</script>");
 	}
-
 %>
 <script type="text/javascript" language="javascript"
 	src="blogwt/blogwt.nocache.js"></script>
