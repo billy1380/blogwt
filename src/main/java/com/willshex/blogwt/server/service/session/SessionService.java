@@ -107,8 +107,8 @@ final class SessionService implements ISessionService {
 		Session session = ofy().load().type(Session.class)
 				.filter("userKey", user).first().now();
 
-		if (session != null && session.expires.getTime() > new Date().getTime()) {
-			ofy().delete().entity(session);
+		if (session != null && session.expires.getTime() < new Date().getTime()) {
+			deleteSession(session);
 			session = null;
 		}
 
