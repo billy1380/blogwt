@@ -20,7 +20,7 @@
 						</div>
 
 						<div class="pull-right btn-group">
-							<g:Button ui:field="btnNext" styleName="{style.btn} btn btn-primary" text="Next" />
+							<g:SubmitButton ui:field="btnNext" styleName="{style.btn} btn btn-primary" text="Next" />
 						</div>
 
 						<g:HTMLPanel styleName="pull-right btn-group" ui:field="pnlRepeatable">
