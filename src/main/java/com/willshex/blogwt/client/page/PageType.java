@@ -46,6 +46,7 @@ public enum PageType {
 	ResetPasswordPageType("resetpassword", true),
 	RegisterPageType("register", false),
 	LoginPageType("login", false),
+	LogoutPageType("logout", true),
 	PermissionsPageType("permissions", PermissionHelper.MANAGE_PERMISSIONS),
 	RolesPageType("roles", PermissionHelper.MANAGE_ROLES),
 	UsersPageType("users", PermissionHelper.MANAGE_USERS), ;
@@ -186,6 +187,7 @@ public enum PageType {
 		case PostDetailPageType:
 			page = new PostDetailPage();
 			break;
+		case LogoutPageType:
 		case PostsPageType:
 		default:
 			if (defaultPage == null) {
