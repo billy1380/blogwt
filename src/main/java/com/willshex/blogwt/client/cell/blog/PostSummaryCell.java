@@ -62,8 +62,8 @@ public class PostSummaryCell extends AbstractCell<Post> {
 
 		RENDERER.render(builder, link, value.title, SafeHtmlUtils
 				.fromTrustedString(value.summary), UserHelper
-				.handle(value.author), published,
-				value.visible ? SafeHtmlUtils.EMPTY_SAFE_HTML
-						: DateTemplate.INSTANCE.notVisible());
+				.handle(value.author), published, value.directOnly
+				.booleanValue() ? SafeHtmlUtils.EMPTY_SAFE_HTML
+				: DateTemplate.INSTANCE.notVisible());
 	}
 }
