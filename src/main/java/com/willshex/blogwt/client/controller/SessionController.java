@@ -58,9 +58,9 @@ public class SessionController {
 	public void login (String username, String password, boolean rememberMe) {
 		UserService userService = ApiHelper.createUserClient();
 
-		final LoginRequest input = ApiHelper
-				.setAccessCode(new LoginRequest()).username(username)
-				.password(password).longTerm(Boolean.valueOf(rememberMe));
+		final LoginRequest input = ApiHelper.setAccessCode(new LoginRequest())
+				.username(username).password(password)
+				.longTerm(Boolean.valueOf(rememberMe));
 
 		userService.login(input, createAsyncResponse(input));
 	}
@@ -68,8 +68,7 @@ public class SessionController {
 	public void restoreSession () {
 		UserService userService = ApiHelper.createUserClient();
 
-		final LoginRequest input = ApiHelper
-				.setAccessCode(new LoginRequest());
+		final LoginRequest input = ApiHelper.setAccessCode(new LoginRequest());
 		input.session = SessionController.get().sessionForApiCall();
 
 		userService.login(input, createAsyncResponse(input));
@@ -165,7 +164,7 @@ public class SessionController {
 		});
 
 		session = null;
-		PageType.LoginPageType.show();
+		PageType.PostsPageType.show();
 	}
 
 	/**
