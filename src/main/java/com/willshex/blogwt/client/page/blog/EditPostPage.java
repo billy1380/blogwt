@@ -17,6 +17,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SubmitButton;
@@ -39,7 +40,9 @@ import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.CreatePostEventHandler;
 import com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler;
 import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
+import com.willshex.blogwt.shared.api.helper.PostHelper;
 import com.willshex.blogwt.shared.api.helper.UserHelper;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
@@ -70,6 +73,13 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 
 	@UiField HTMLPanel pnlPreview;
 
+	private Timer updateTimer = new Timer() {
+		@Override
+		public void run () {
+			updatePreview();
+		}
+	};;
+
 	public EditPostPage () {
 		super(PageType.EditPostPageType);
 		initWidget(uiBinder.createAndBindUi(this));
@@ -93,11 +103,19 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		register(DefaultEventBus.get().addHandlerToSource(
 				UpdatePostEventHandler.TYPE, PostController.get(), this));
 
+		updateTimer.cancel();
+		updateTimer.schedule(250);
+
 		ready();
 	}
 
 	@UiHandler({ "txtTitle", "txtSummary", "txtContent", "txtTags" })
 	void onTxtKeyUp (KeyUpEvent e) {
+		updateTimer.cancel();
+		updateTimer.schedule(250);
+	}
+
+	private void updatePreview () {
 		pnlPreview.getElement().removeAllChildren();
 
 		Document d = Document.get();
@@ -133,6 +151,10 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	@UiHandler("btnSubmit")
 	void onBtnSubmitClicked (ClickEvent e) {
 		if (isValid()) {
+			PostController.get().createPost(txtTitle.getText(),
+					cbxDirectOnly.getValue(), cbxComments.getValue(),
+					txtSummary.getText(), txtContent.getText(),
+					cbxPublish.getValue(), txtTags.getText());
 			loading();
 		} else {
 			showErrors();
@@ -213,8 +235,14 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	@Override
 	public void createPostSuccess (CreatePostRequest input,
 			CreatePostResponse output) {
-		// TODO Auto-generated method stub
+		if (output.status == StatusType.StatusTypeFailure) {
 
+		} else {
+			PageType.PostDetailPageType.show(PostHelper
+					.slugify(input.post.title));
+		}
+
+		ready();
 	}
 
 	/* (non-Javadoc)
@@ -225,9 +253,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	 * (com.willshex.blogwt.shared.api.blog.call.CreatePostRequest,
 	 * java.lang.Throwable) */
 	@Override
-	public void createPostFailure (CreatePostRequest input, Throwable caught) {
-		// TODO Auto-generated method stub
-	}
+	public void createPostFailure (CreatePostRequest input, Throwable caught) {}
 
 	private boolean isValid () {
 		// do client validation

@@ -41,7 +41,7 @@ public class Post extends DataType {
 	public Key<PostContent> contentKey;
 	@Ignore public PostContent content;
 
-	@Index(value = IfTrue.class) public Boolean visible;
+	@Index(value = IfTrue.class) public Boolean directOnly;
 	public Boolean commentsEnabled;
 
 	@Override
@@ -75,9 +75,9 @@ public class Post extends DataType {
 		JsonElement jsonContent = content == null ? JsonNull.INSTANCE : content
 				.toJson();
 		object.add("content", jsonContent);
-		JsonElement jsonVisible = visible == null ? JsonNull.INSTANCE
-				: new JsonPrimitive(visible);
-		object.add("visible", jsonVisible);
+		JsonElement jsonDirectOnly = directOnly == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(directOnly);
+		object.add("directOnly", jsonDirectOnly);
 		JsonElement jsonCommentsEnabled = commentsEnabled == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(commentsEnabled);
 		object.add("commentsEnabled", jsonCommentsEnabled);
@@ -139,10 +139,10 @@ public class Post extends DataType {
 				content.fromJson(jsonContent.getAsJsonObject());
 			}
 		}
-		if (jsonObject.has("visible")) {
-			JsonElement jsonVisible = jsonObject.get("visible");
-			if (jsonVisible != null) {
-				visible = Boolean.valueOf(jsonVisible.getAsBoolean());
+		if (jsonObject.has("directOnly")) {
+			JsonElement jsonDirectOnly = jsonObject.get("directOnly");
+			if (jsonDirectOnly != null) {
+				directOnly = Boolean.valueOf(jsonDirectOnly.getAsBoolean());
 			}
 		}
 		if (jsonObject.has("commentsEnabled")) {
@@ -189,8 +189,8 @@ public class Post extends DataType {
 		return this;
 	}
 
-	public Post visible (Boolean visible) {
-		this.visible = visible;
+	public Post directOnly (Boolean directOnly) {
+		this.directOnly = directOnly;
 		return this;
 	}
 

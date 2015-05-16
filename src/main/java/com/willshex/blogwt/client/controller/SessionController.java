@@ -68,8 +68,8 @@ public class SessionController {
 	public void restoreSession () {
 		UserService userService = ApiHelper.createUserClient();
 
-		final LoginRequest input = ApiHelper.setAccessCode(new LoginRequest());
-		input.session = SessionController.get().sessionForApiCall();
+		final LoginRequest input = setSession(ApiHelper
+				.setAccessCode(new LoginRequest()));
 
 		userService.login(input, createAsyncResponse(input));
 	}
