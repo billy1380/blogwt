@@ -75,6 +75,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		initWidget(uiBinder.createAndBindUi(this));
 
 		UiHelper.addPlaceholder(txtTitle, "Title");
+		UiHelper.autoFocus(txtTitle);
 		UiHelper.addPlaceholder(txtSummary, "Short Summary");
 		UiHelper.addPlaceholder(txtContent, "Article Content");
 		UiHelper.addPlaceholder(txtTags, "Comma Separated Tags");
