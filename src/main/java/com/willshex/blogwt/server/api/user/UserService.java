@@ -103,7 +103,7 @@ public final class UserService extends ActionHandler {
 					output.session.user = user;
 				}
 			} else {
-				output.session = SessionValidator.lookup(input.session, "input.session");
+				output.session = SessionValidator.lookupAndExtend(input.session, "input.session");
 				input.session.user = UserServiceProvider.provide().getUser(Long.valueOf(input.session.userKey.getId()));
 
 			}

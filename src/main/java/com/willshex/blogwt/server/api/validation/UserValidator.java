@@ -7,6 +7,11 @@
 //
 package com.willshex.blogwt.server.api.validation;
 
+import java.util.Collection;
+
+import com.willshex.blogwt.server.api.exception.AuthorisationException;
+import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.gson.json.service.server.InputValidationException;
 
@@ -24,6 +29,19 @@ public class UserValidator extends ApiValidator {
 	public static <T extends Iterable<User>> T validateAll (T users, String name)
 			throws InputValidationException {
 		return users;
+	}
+
+	public static void authorisation (User user, Collection<Role> roles,
+			Collection<Permission> permissions) throws AuthorisationException {
+
+		for (Role role : roles) {}
+
+		for (Permission permission : permissions) {}
+	}
+
+	public static User lookup (User user, String name)
+			throws InputValidationException {
+		return user;
 	}
 
 }

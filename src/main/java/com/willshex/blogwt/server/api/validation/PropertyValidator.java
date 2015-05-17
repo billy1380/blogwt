@@ -12,14 +12,14 @@ import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
 
-public class PropertyValidator extends ApiValidator {
+public class PropertyValidator {
 	private static final String type = Property.class.getSimpleName();
 
 	public static List<Property> setupProperties (
 			Collection<Property> properties, String name)
 			throws ServiceException {
 		if (properties == null)
-			throwServiceError(InputValidationException.class,
+			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + "[]: " + name);
 
 		HashSet<String> notFound = new HashSet<String>();
@@ -44,7 +44,7 @@ public class PropertyValidator extends ApiValidator {
 		}
 
 		if (notFound.size() != 0)
-			throwServiceError(InputValidationException.class,
+			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.MissingProperties,
 					name + "(" + StringUtils.join(notFound) + ")");
 
@@ -64,7 +64,7 @@ public class PropertyValidator extends ApiValidator {
 	public static Property validate (Property property, String name)
 			throws InputValidationException {
 		if (property == null)
-			throwServiceError(InputValidationException.class,
+			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + ": " + name);
 
 		return property;
