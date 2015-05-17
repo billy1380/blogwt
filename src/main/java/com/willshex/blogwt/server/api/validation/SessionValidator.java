@@ -19,13 +19,13 @@ import com.willshex.gson.json.service.server.InputValidationException;
  * @author William Shakour (billy1380)
  *
  */
-public class SessionValidator extends ApiValidator {
+public class SessionValidator {
 	private static final String type = Session.class.getSimpleName();
 
 	public static Session lookupAndExtend (Session session, String name)
 			throws InputValidationException {
 		if (session == null)
-			throwServiceError(InputValidationException.class,
+			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + ": " + name);
 
 		boolean isIdLookup = false;
@@ -35,7 +35,7 @@ public class SessionValidator extends ApiValidator {
 		}
 
 		if (!isIdLookup)
-			throwServiceError(InputValidationException.class,
+			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.DataTypeNoLookup, type + ": " + name);
 
 		Session lookupSession = null;
@@ -47,7 +47,7 @@ public class SessionValidator extends ApiValidator {
 		Date now = new Date();
 		if (lookupSession == null
 				|| lookupSession.expires.getTime() < now.getTime())
-			throwServiceError(InputValidationException.class,
+			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.DataTypeNotFound, type + ": " + name);
 
 		if ((lookupSession.expires.getTime() - now.getTime()) < ISessionService.MILLIS_MINUTES) {
