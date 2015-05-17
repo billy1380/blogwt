@@ -13,6 +13,7 @@ import com.willshex.blogwt.server.api.exception.AuthorisationException;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.json.service.server.InputValidationException;
 
 /**
@@ -20,6 +21,7 @@ import com.willshex.gson.json.service.server.InputValidationException;
  *
  */
 public class UserValidator extends ApiValidator {
+	private static final String type = User.class.getSimpleName();
 
 	public static User validate (User user, String name)
 			throws InputValidationException {
@@ -32,7 +34,8 @@ public class UserValidator extends ApiValidator {
 	}
 
 	public static void authorisation (User user, Collection<Role> roles,
-			Collection<Permission> permissions) throws AuthorisationException {
+			Collection<Permission> permissions, String name)
+			throws AuthorisationException {
 
 		for (Role role : roles) {}
 
@@ -41,6 +44,9 @@ public class UserValidator extends ApiValidator {
 
 	public static User lookup (User user, String name)
 			throws InputValidationException {
+		if (user == null)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, type + ": " + name);
 		return user;
 	}
 

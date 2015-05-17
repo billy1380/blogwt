@@ -9,9 +9,12 @@ package com.willshex.blogwt.server.api.blog;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.exception.AuthorisationException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PostValidator;
 import com.willshex.blogwt.server.api.validation.PropertyValidator;
@@ -35,14 +38,18 @@ import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
 import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.api.datatype.Post;
+import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.helper.PagerHelper;
 import com.willshex.blogwt.shared.api.helper.PermissionHelper;
 import com.willshex.blogwt.shared.api.helper.PropertyHelper;
 import com.willshex.blogwt.shared.api.helper.RoleHelper;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.json.service.server.ActionHandler;
+import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -54,6 +61,25 @@ public final class BlogService extends ActionHandler {
 		LOG.finer("Entering getPost");
 		GetPostResponse output = new GetPostResponse();
 		try {
+			ApiValidator.notNull(input, CreatePostRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			if (input.session != null) {
+				try {
+					output.session = input.session = SessionValidator
+							.lookupAndExtend(input.session, "input.session");
+				} catch (InputValidationException ex) {
+					output.session = input.session = null;
+				}
+			}
+
+			output.post = PostValidator.lookup(input.post, "input.post");
+
+			if (output.post != null) {
+				output.post.author = UserServiceProvider.provide().getUser(
+						output.post.author.id);
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -67,6 +93,34 @@ public final class BlogService extends ActionHandler {
 		LOG.finer("Entering updatePost");
 		UpdatePostResponse output = new UpdatePostResponse();
 		try {
+			ApiValidator.notNull(input, UpdatePostRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			List<Role> roles = new ArrayList<Role>();
+			roles.add(RoleHelper.createAdmin());
+
+			List<Permission> permissions = new ArrayList<Permission>();
+			Permission postPermission = PermissionServiceProvider.provide()
+					.getCodePermission(PermissionHelper.MANAGE_POSTS);
+			permissions.add(postPermission);
+
+			UserValidator.authorisation(input.session.user, roles, permissions,
+					"input.session.user");
+
+			// we don't need the lookup but if the post does not exist then
+			// technically it should be create not update
+			PostValidator.lookup(input.post, "input.post");
+
+			input.post = PostValidator.validate(input.post, "input.post");
+
+			if (input.publish == Boolean.TRUE) {
+				input.post.published = new Date();
+			}
+
+			PostServiceProvider.provide().updatePost(input.post);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -93,7 +147,8 @@ public final class BlogService extends ActionHandler {
 					.getCodePermission(PermissionHelper.MANAGE_POSTS);
 			permissions.add(postPermission);
 
-			UserValidator.authorisation(input.session.user, roles, permissions);
+			UserValidator.authorisation(input.session.user, roles, permissions,
+					"input.session.user");
 
 			input.post = PostValidator.validate(input.post, "input.post");
 
@@ -123,6 +178,25 @@ public final class BlogService extends ActionHandler {
 		LOG.finer("Entering deletePost");
 		DeletePostResponse output = new DeletePostResponse();
 		try {
+			ApiValidator.notNull(input, UpdatePostRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			List<Role> roles = new ArrayList<Role>();
+			roles.add(RoleHelper.createAdmin());
+
+			List<Permission> permissions = new ArrayList<Permission>();
+			Permission postPermission = PermissionServiceProvider.provide()
+					.getCodePermission(PermissionHelper.MANAGE_POSTS);
+			permissions.add(postPermission);
+
+			UserValidator.authorisation(input.session.user, roles, permissions,
+					"input.session.user");
+
+			input.post = PostValidator.lookup(input.post, "input.post");
+
+			PostServiceProvider.provide().deletePost(input.post);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -136,6 +210,68 @@ public final class BlogService extends ActionHandler {
 		LOG.finer("Entering getPosts");
 		GetPostsResponse output = new GetPostsResponse();
 		try {
+			ApiValidator.notNull(input, GetPostsRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			Boolean showAll = Boolean.FALSE;
+			if (input.session != null) {
+				try {
+					output.session = input.session = SessionValidator
+							.lookupAndExtend(input.session, "input.session");
+
+					List<Role> roles = new ArrayList<Role>();
+					roles.add(RoleHelper.createAdmin());
+
+					List<Permission> permissions = new ArrayList<Permission>();
+					Permission postPermission = PermissionServiceProvider
+							.provide().getCodePermission(
+									PermissionHelper.MANAGE_POSTS);
+					permissions.add(postPermission);
+
+					try {
+						UserValidator.authorisation(input.session.user, roles,
+								permissions, "input.session.user");
+						showAll = Boolean.TRUE;
+					} catch (AuthorisationException aEx) {
+
+					}
+				} catch (InputValidationException ex) {
+					output.session = input.session = null;
+				}
+			}
+
+			if (input.summaryOnly == null) {
+				input.summaryOnly = Boolean.TRUE;
+			}
+
+			if (input.session != null && input.session.user != null) {
+				output.posts = PostServiceProvider.provide()
+						.getUserViewablePosts(input.session.user, showAll,
+								input.summaryOnly, input.pager.start,
+								input.pager.count,
+								PostSortType.fromString(input.pager.sortBy),
+								input.pager.sortDirection);
+			} else {
+				output.posts = PostServiceProvider.provide().getPosts(showAll,
+						input.summaryOnly, input.pager.start,
+						input.pager.count,
+						PostSortType.fromString(input.pager.sortBy),
+						input.pager.sortDirection);
+			}
+
+			Map<Long, User> users = new HashMap<Long, User>();
+
+			for (Post post : output.posts) {
+				if (users.get(post.author.id) == null) {
+					users.put(post.author.id, UserServiceProvider.provide()
+							.getUser(post.author.id));
+				}
+
+				post.author = users.get(post.author.id);
+			}
+
+			output.pager = PagerHelper.moveForward(input.pager);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

@@ -18,17 +18,18 @@ import com.willshex.blogwt.shared.api.SortDirectionType;
  */
 public class PagerHelper {
 
-	public static Long DEFAULT_START = Long.valueOf(0);
-	public static Long DEFAULT_COUNT = Long.valueOf(10);
+	public static Integer DEFAULT_START = Integer.valueOf(0);
+	public static Integer DEFAULT_COUNT = Integer.valueOf(10);
 	public static String DEFAULT_SORT_BY = null;
 
-	public static void updatePager(Pager pager, List<?> list) {
+	public static void updatePager (Pager pager, List<?> list) {
 		updatePager(pager, list, null);
 	}
 
-	public static void updatePager(Pager pager, List<?> list, Long total) {
+	public static void updatePager (Pager pager, List<?> list, Integer total) {
 		if (list != null) {
-			pager.start = Long.valueOf(pager.start.longValue() + (list.size()));
+			pager.start = Integer.valueOf(pager.start.intValue()
+					+ (list.size()));
 		} else {
 			// list is null so do nothing
 		}
@@ -38,15 +39,18 @@ public class PagerHelper {
 		}
 	}
 
-	public static Pager createInfinitePager() {
-		return new Pager().start(DEFAULT_START).count(Long.valueOf(Long.MAX_VALUE));
+	public static Pager createInfinitePager () {
+		return new Pager().start(DEFAULT_START).count(
+				Integer.valueOf(Integer.MAX_VALUE));
 	}
 
-	public static Pager createDefaultPager() {
-		return new Pager().start(DEFAULT_START).count(DEFAULT_COUNT).sortBy(DEFAULT_SORT_BY).sortDirection(SortDirectionType.SortDirectionTypeDescending);
+	public static Pager createDefaultPager () {
+		return new Pager().start(DEFAULT_START).count(DEFAULT_COUNT)
+				.sortBy(DEFAULT_SORT_BY)
+				.sortDirection(SortDirectionType.SortDirectionTypeDescending);
 	}
 
-	public static Pager moveForward(Pager pager) {
+	public static Pager moveForward (Pager pager) {
 		if (pager != null) {
 			if (pager.start == null) {
 				pager.start = DEFAULT_START;
@@ -56,10 +60,13 @@ public class PagerHelper {
 				pager.count = DEFAULT_COUNT;
 			}
 
-			pager.start = Long.valueOf(pager.start.longValue() + pager.count.longValue());
+			pager.start = Integer.valueOf(pager.start.intValue()
+					+ pager.count.intValue());
 
-			if (pager.totalCount != null && pager.totalCount.longValue() < pager.start.longValue()) {
-				pager.start = Long.valueOf(pager.totalCount.longValue() - pager.count.longValue());
+			if (pager.totalCount != null
+					&& pager.totalCount.intValue() < pager.start.intValue()) {
+				pager.start = Integer.valueOf(pager.totalCount.intValue()
+						- pager.count.intValue());
 			}
 
 			if (pager.start < 0) {
@@ -70,7 +77,7 @@ public class PagerHelper {
 		return pager;
 	}
 
-	public static Pager moveBackward(Pager pager) {
+	public static Pager moveBackward (Pager pager) {
 		if (pager != null) {
 			if (pager.start == null) {
 				pager.start = DEFAULT_START;
@@ -80,8 +87,9 @@ public class PagerHelper {
 				pager.count = DEFAULT_COUNT;
 			}
 
-			if (pager.start.longValue() > pager.count.longValue()) {
-				pager.start = Long.valueOf(pager.start.longValue() - pager.count.longValue());
+			if (pager.start.intValue() > pager.count.intValue()) {
+				pager.start = Integer.valueOf(pager.start.intValue()
+						- pager.count.intValue());
 			} else {
 				pager.start = DEFAULT_START;
 			}
