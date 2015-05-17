@@ -22,7 +22,7 @@ import com.willshex.gson.json.service.server.InputValidationException;
 public class SessionValidator extends ApiValidator {
 	private static final String type = Session.class.getSimpleName();
 
-	public static Session lookup (Session session, String name)
+	public static Session lookupAndExtend (Session session, String name)
 			throws InputValidationException {
 		if (session == null)
 			throwServiceError(InputValidationException.class,

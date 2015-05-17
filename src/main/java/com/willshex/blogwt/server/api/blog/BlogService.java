@@ -7,11 +7,18 @@
 //
 package com.willshex.blogwt.server.api.blog;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.validation.ApiValidator;
+import com.willshex.blogwt.server.api.validation.PostValidator;
 import com.willshex.blogwt.server.api.validation.PropertyValidator;
+import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
+import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
+import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
@@ -27,9 +34,13 @@ import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
+import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Property;
+import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.helper.PermissionHelper;
 import com.willshex.blogwt.shared.api.helper.PropertyHelper;
+import com.willshex.blogwt.shared.api.helper.RoleHelper;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.ServiceException;
@@ -69,6 +80,36 @@ public final class BlogService extends ActionHandler {
 		LOG.finer("Entering createPost");
 		CreatePostResponse output = new CreatePostResponse();
 		try {
+			ApiValidator.notNull(input, CreatePostRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			List<Role> roles = new ArrayList<Role>();
+			roles.add(RoleHelper.createAdmin());
+
+			List<Permission> permissions = new ArrayList<Permission>();
+			Permission postPermission = PermissionServiceProvider.provide()
+					.getCodePermission(PermissionHelper.MANAGE_POSTS);
+			permissions.add(postPermission);
+
+			UserValidator.authorisation(input.session.user, roles, permissions);
+
+			input.post = PostValidator.validate(input.post, "input.post");
+
+			input.post.author = input.session.user;
+
+			if (input.publish == Boolean.TRUE) {
+				input.post.published = new Date();
+			}
+
+			input.post.directOnly = (input.post.directOnly == null ? Boolean.FALSE
+					: input.post.directOnly);
+			input.post.commentsEnabled = (input.post.commentsEnabled == null ? Boolean.FALSE
+					: input.post.commentsEnabled);
+
+			PostServiceProvider.provide().addPost(input.post);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -108,6 +149,8 @@ public final class BlogService extends ActionHandler {
 		LOG.finer("Entering setupBlog");
 		SetupBlogResponse output = new SetupBlogResponse();
 		try {
+			ApiValidator.notNull(input, SetupBlogRequest.class, "input");
+
 			IPropertyService propertyService = PropertyServiceProvider
 					.provide();
 			if (propertyService.getNamedProperty(PropertyHelper.TITLE) != null)
