@@ -13,9 +13,9 @@ package com.willshex.blogwt.shared.api.helper;
  */
 public class PermissionHelper {
 
-	public static final String MANAGE_PERMISSIONS = null;
-	public static final String MANAGE_ROLES = null;
-	public static final String MANAGE_USERS = null;
-	public static final String MANAGE_POSTS = null;
+	public static final String MANAGE_PERMISSIONS = "MPR";
+	public static final String MANAGE_ROLES = "MRO";
+	public static final String MANAGE_USERS = "MUS";
+	public static final String MANAGE_POSTS = "MPO";
 
 }
