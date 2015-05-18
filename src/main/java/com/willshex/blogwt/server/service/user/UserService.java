@@ -9,6 +9,7 @@ package com.willshex.blogwt.server.service.user;
 
 import static com.willshex.blogwt.server.service.PersistenceService.ofy;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,8 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.shared.api.SortDirectionType;
+import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
 
@@ -34,8 +37,7 @@ final class UserService implements IUserService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.services.user.IUserService#addUser
+	 * @see com.willshex.blogwt.server.services.user.IUserService#addUser
 	 * (com.willshex.blogwt.shared.api.datatypes.User) */
 	@Override
 	public User addUser (User user) {
@@ -45,6 +47,21 @@ final class UserService implements IUserService {
 
 		user.password = StringUtils.sha1Hash(user.password + SALT);
 
+		if (user.roles != null) {
+			user.roleKeys = new ArrayList<Key<Role>>();
+
+			for (Role role : user.roles) {
+				user.roleKeys.add(Key.create(role));
+			}
+		}
+
+		if (user.permissions != null) {
+			user.permissionKeys = new ArrayList<Key<Permission>>();
+			for (Permission permission : user.permissions) {
+				user.permissionKeys.add(Key.create(permission));
+			}
+		}
+
 		Key<User> key = ofy().save().entity(user).now();
 		user.id = Long.valueOf(key.getId());
 
@@ -53,8 +70,7 @@ final class UserService implements IUserService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.services.user.IUserService#updateUser
+	 * @see com.willshex.blogwt.server.services.user.IUserService#updateUser
 	 * (com.willshex.blogwt.shared.api.datatypes.User) */
 	@Override
 	public User updateUser (User user) {
@@ -64,8 +80,7 @@ final class UserService implements IUserService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.services.user.IUserService#deleteUser
+	 * @see com.willshex.blogwt.server.services.user.IUserService#deleteUser
 	 * (com.willshex.blogwt.shared.api.datatypes.User) */
 	@Override
 	public void deleteUser (User user) {
@@ -74,8 +89,7 @@ final class UserService implements IUserService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.services.user.IUserService#getUsers
+	 * @see com.willshex.blogwt.server.services.user.IUserService#getUsers
 	 * (java.lang.Long, java.lang.Long,
 	 * com.willshex.blogwt.shared.api.datatypes.UserSortType,
 	 * com.willshex.blogwt.shared.api.SortDirectionType) */
@@ -113,8 +127,7 @@ final class UserService implements IUserService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.services.user.IUserService#getLoginUser
+	 * @see com.willshex.blogwt.server.services.user.IUserService#getLoginUser
 	 * (java.lang.String, java.lang.String) */
 	@Override
 	public User getLoginUser (String username, String password) {
@@ -151,6 +164,21 @@ final class UserService implements IUserService {
 		for (User user : users) {
 			if (user.created == null) {
 				user.added = user.created = new Date();
+			}
+
+			if (user.roles != null) {
+				user.roleKeys = new ArrayList<Key<Role>>();
+
+				for (Role role : user.roles) {
+					user.roleKeys.add(Key.create(role));
+				}
+			}
+
+			if (user.permissions != null) {
+				user.permissionKeys = new ArrayList<Key<Permission>>();
+				for (Permission permission : user.permissions) {
+					user.permissionKeys.add(Key.create(permission));
+				}
 			}
 
 			user.password = StringUtils.sha1Hash(user.password + SALT);
