@@ -18,12 +18,14 @@ import com.willshex.blogwt.server.api.exception.AuthorisationException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PostValidator;
 import com.willshex.blogwt.server.api.validation.PropertyValidator;
+import com.willshex.blogwt.server.api.validation.RoleValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
+import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostResponse;
@@ -299,15 +301,28 @@ public final class BlogService extends ActionHandler {
 					"input.properties");
 			ApiValidator.notNull(input.users, User.class, "input.users");
 
-			input.properties = PropertyValidator.setupProperties(
-					input.properties, "input.properties");
+			input.properties = PropertyValidator.setup(input.properties,
+					"input.properties");
 
 			propertyService.addPropertyBatch(input.properties);
 
+			RoleServiceProvider.provide().addRole(
+					RoleHelper
+							.createFull(RoleHelper.ADMIN,
+									RoleHelper.ADMIN_NAME,
+									RoleHelper.ADMIN_DESCRIPTION));
+			for (Permission permission : PermissionHelper.createAll()) {
+				PermissionServiceProvider.provide().addPermission(permission);
+			}
+
 			input.users = UserValidator.validateAll(input.users, "input.users");
 
-			// users added at startup are verified
 			for (User user : input.users) {
+				// users are either admins or nothing
+				user.roles = RoleValidator.lookupAll(user.roles,
+						"input.users[n].roles");
+
+				// users added at startup are verified
 				user.verified = Boolean.TRUE;
 			}
 
