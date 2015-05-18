@@ -146,7 +146,7 @@ public class LoginPage extends Page implements NavigationChangedEventHandler,
 				pnlPassword.addStyleName("has-error");
 			}
 		} else {
-			PageType.PostsPageType.show();
+			NavigationController.get().showNext();
 		}
 
 		ready();
