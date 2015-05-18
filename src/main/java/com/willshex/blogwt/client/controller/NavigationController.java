@@ -72,8 +72,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 	private String intended = null;
 
 	public static class Stack {
-		public static final String NEXT_KEY = "nextgoto:";
-		public static final String PREVIOUS_KEY = "prevgoto:";
+		public static final String NEXT_KEY = "nextgoto=";
+		public static final String PREVIOUS_KEY = "prevgoto=";
 
 		private String allParts;
 		private String[] parts;
@@ -239,13 +239,24 @@ public class NavigationController implements ValueChangeHandler<String> {
 	 */
 	public void addPage (String value) {
 		Stack s = Stack.parse(value);
+		PageType p = s == null ? null : PageType.fromString(s.getPage());
 
 		if (PropertyController.get().blog() == null
-				&& PageType.fromString(s.getPage()) != PageType.SetupBlogPageType) {
+				&& p != PageType.SetupBlogPageType) {
 			PageType.SetupBlogPageType.show();
 		} else {
 			if (PropertyController.get().blog() != null
-					&& PageType.fromString(s.getPage()) == PageType.SetupBlogPageType) {
+					&& p == PageType.SetupBlogPageType) {
+				PageType.PostsPageType.show();
+			} else if (p != null && p.requiresLogin()
+					&& !SessionController.get().isValidSession()) {
+				PageType.LoginPageType.show(s.asNextParameter());
+			} else if (p != null
+					&& p.requiresLogin()
+					&& p.getRequiredPermissions() != null
+					&& p.getRequiredPermissions().size() > 0
+					&& !SessionController.get().isAuthorised(
+							p.getRequiredPermissions())) {
 				PageType.PostsPageType.show();
 			} else {
 				if (intended != null && intended.equals(s.toString())) {

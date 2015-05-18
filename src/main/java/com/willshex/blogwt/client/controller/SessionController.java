@@ -7,7 +7,9 @@
 //
 package com.willshex.blogwt.client.controller;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -16,8 +18,11 @@ import com.willshex.blogwt.client.api.user.UserService;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.Request;
+import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.helper.PermissionHelper;
+import com.willshex.blogwt.shared.api.helper.RoleHelper;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
@@ -174,6 +179,39 @@ public class SessionController {
 	@SuppressWarnings("unchecked")
 	public <T extends Request> T setSession (T input) {
 		return (T) input.session(sessionForApiCall());
+	}
+
+	public boolean isAdmin () {
+		return isValidSession()
+				&& user().roles != null
+				&& RoleHelper.toLookup(user().roles).containsKey(
+						RoleHelper.ADMIN);
+	}
+
+	/**
+	 * @param requiredPermissions
+	 * @return
+	 */
+	public boolean isAuthorised (Collection<Permission> requiredPermissions) {
+		boolean authorised = isAdmin();
+
+		if (!authorised && isValidSession() && user().permissions != null) {
+			if (requiredPermissions == null || requiredPermissions.size() == 0) {
+				authorised = true;
+			} else {
+				Map<String, Permission> lookup = PermissionHelper
+						.toLookup(user().permissions);
+				for (Permission permission : requiredPermissions) {
+					if (permission.code != null
+							&& lookup.containsKey(permission.code)) {
+						authorised = true;
+						break;
+					}
+				}
+			}
+		}
+
+		return authorised;
 	}
 
 	/**
