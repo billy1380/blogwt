@@ -13,6 +13,9 @@ import java.util.logging.Logger;
 import com.willshex.blogwt.server.api.exception.AuthenticationException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
+import com.willshex.blogwt.server.service.PersistenceService;
+import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
+import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.server.service.user.IUserService;
@@ -63,7 +66,8 @@ public final class UserService extends ActionHandler {
 		LoginResponse output = new LoginResponse();
 		try {
 			input = ApiValidator.request(input, LoginRequest.class);
-			input.accessCode = ApiValidator.accessCode(input.accessCode, "input.accessCode");
+			input.accessCode = ApiValidator.accessCode(input.accessCode,
+					"input.accessCode");
 
 			boolean foundToken = false;
 
@@ -74,11 +78,14 @@ public final class UserService extends ActionHandler {
 			if (!foundToken) {
 				IUserService userService = UserServiceProvider.provide();
 
-				User user = userService.getLoginUser(input.username, input.password);
+				User user = userService.getLoginUser(input.username,
+						input.password);
 
-				if (user == null) throw new AuthenticationException(input.username);
+				if (user == null)
+					throw new AuthenticationException(input.username);
 
-				ISessionService sessionService = SessionServiceProvider.provide();
+				ISessionService sessionService = SessionServiceProvider
+						.provide();
 
 				if (LOG.isLoggable(Level.FINER)) {
 					LOG.finer("Getting user session");
@@ -91,23 +98,44 @@ public final class UserService extends ActionHandler {
 						LOG.finer("Existing session not found, creating new session");
 					}
 
-					output.session = sessionService.createUserSession(user, input.longTerm);
+					output.session = sessionService.createUserSession(user,
+							input.longTerm);
 
 					if (output.session != null) {
 						output.session.user = user;
 					} else {
-						throw new Exception("Unexpected blank session after creating user session.");
+						throw new Exception(
+								"Unexpected blank session after creating user session.");
 					}
 				} else {
-					output.session = SessionServiceProvider.provide().extendSession(output.session, ISessionService.MILLIS_MINUTES);
+					output.session = SessionServiceProvider.provide()
+							.extendSession(output.session,
+									ISessionService.MILLIS_MINUTES);
 					output.session.user = user;
 				}
 			} else {
-				output.session = SessionValidator.lookupAndExtend(input.session, "input.session");
-				input.session.user = UserServiceProvider.provide().getUser(Long.valueOf(input.session.userKey.getId()));
-
+				output.session = SessionValidator.lookupAndExtend(
+						input.session, "input.session");
+				input.session.user = UserServiceProvider.provide().getUser(
+						Long.valueOf(input.session.userKey.getId()));
 			}
-			
+
+			if (output.session.user.roleKeys != null) {
+				output.session.user.roles = RoleServiceProvider
+						.provide()
+						.getIdRolesBatch(
+								PersistenceService
+										.keysToIds(output.session.user.roleKeys));
+			}
+
+			if (output.session.user.permissionKeys != null) {
+				output.session.user.permissions = PermissionServiceProvider
+						.provide()
+						.getIdPermissionsBatch(
+								PersistenceService
+										.keysToIds(output.session.user.permissionKeys));
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

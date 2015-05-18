@@ -15,6 +15,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.Property;
@@ -52,5 +53,19 @@ public class PersistenceService {
 			collection.add(Long.valueOf(key.getId()));
 		}
 		return collection;
+	}
+
+	public static <T extends DataType> T dataType (Class<T> t, Key<T> key) {
+		T i = null;
+		if (key != null) {
+			try {
+				i = t.newInstance();
+				i.id(Long.valueOf(key.getId()));
+			} catch (InstantiationException | IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		return i;
 	}
 }
