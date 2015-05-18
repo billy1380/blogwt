@@ -102,7 +102,7 @@ final class RoleService implements IRoleService {
 	 * com.willshex.blogwt.server.service.role.IRoleService#getIdRoles(java
 	 * .util.Collection) */
 	@Override
-	public List<Role> getIdRoles (Collection<Long> roleIds) {
+	public List<Role> getIdRolesBatch (Collection<Long> roleIds) {
 		return new ArrayList<Role>(ofy().load().type(Role.class).ids(roleIds)
 				.values());
 	}

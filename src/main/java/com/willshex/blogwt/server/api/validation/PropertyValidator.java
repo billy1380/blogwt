@@ -15,9 +15,8 @@ import com.willshex.gson.json.service.server.ServiceException;
 public class PropertyValidator {
 	private static final String type = Property.class.getSimpleName();
 
-	public static List<Property> setupProperties (
-			Collection<Property> properties, String name)
-			throws ServiceException {
+	public static List<Property> setup (Collection<Property> properties,
+			String name) throws ServiceException {
 		if (properties == null)
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + "[]: " + name);
