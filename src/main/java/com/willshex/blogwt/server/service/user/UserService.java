@@ -99,11 +99,11 @@ final class UserService implements IUserService {
 		Query<User> query = ofy().load().type(User.class);
 
 		if (start != null) {
-			query.offset(start.intValue());
+			query = query.offset(start.intValue());
 		}
 
 		if (count != null) {
-			query.limit(count.intValue());
+			query = query.limit(count.intValue());
 		}
 
 		if (sortBy != null) {

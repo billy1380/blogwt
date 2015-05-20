@@ -85,21 +85,21 @@ final class PostService implements IPostService {
 		Query<Post> query = ofy().load().type(Post.class);
 
 		if (user != null && user.id != null) {
-			query.filter(PostSortType.PostSortTypeAuthor.toString() + "Key",
+			query = query.filter(PostSortType.PostSortTypeAuthor.toString() + "Key",
 					user);
 		}
 
 		if (showAll == null || !showAll.booleanValue()) {
-			query.filter(PostSortType.PostSortTypeVisible.toString(),
+			query = query.filter(PostSortType.PostSortTypeVisible.toString(),
 					Boolean.TRUE);
 		}
 
 		if (start != null) {
-			query.offset(start.intValue());
+			query = query.offset(start.intValue());
 		}
 
 		if (count != null) {
-			query.limit(count.intValue());
+			query = query.limit(count.intValue());
 		}
 
 		if (sortBy != null) {

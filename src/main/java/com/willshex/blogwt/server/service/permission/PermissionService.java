@@ -69,11 +69,11 @@ final class PermissionService implements IPermissionService {
 		Query<Permission> query = ofy().load().type(Permission.class);
 
 		if (start != null) {
-			query.offset(start.intValue());
+			query = query.offset(start.intValue());
 		}
 
 		if (count != null) {
-			query.limit(count.intValue());
+			query = query.limit(count.intValue());
 		}
 
 		if (sortBy != null) {
