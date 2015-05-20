@@ -61,11 +61,11 @@ final class RoleService implements IRoleService {
 		Query<Role> query = ofy().load().type(Role.class);
 
 		if (start != null) {
-			query.offset(start.intValue());
+			query = query.offset(start.intValue());
 		}
 
 		if (count != null) {
-			query.limit(count.intValue());
+			query = query.limit(count.intValue());
 		}
 
 		if (sortBy != null) {
