@@ -51,8 +51,9 @@ final class PostService implements IPostService {
 		}
 
 		post.slug = PostHelper.slugify(post.title);
-		post.contentKey = ofy().save().entity(post.content).now();
 		post.authorKey = Key.create(post.author);
+
+		post.contentKey = ofy().save().entity(post.content).now();
 
 		Key<Post> postKey = ofy().save().entity(post).now();
 		post.id = Long.valueOf(postKey.getId());
@@ -85,8 +86,8 @@ final class PostService implements IPostService {
 		Query<Post> query = ofy().load().type(Post.class);
 
 		if (user != null && user.id != null) {
-			query = query.filter(PostSortType.PostSortTypeAuthor.toString() + "Key",
-					user);
+			query = query.filter(PostSortType.PostSortTypeAuthor.toString()
+					+ "Key", user);
 		}
 
 		if (showAll == null || !showAll.booleanValue()) {
