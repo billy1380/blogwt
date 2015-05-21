@@ -149,6 +149,9 @@ public final class BlogService extends ActionHandler {
 					.getCodePermission(PermissionHelper.MANAGE_POSTS);
 			permissions.add(postPermission);
 
+			input.session.user = UserServiceProvider.provide().getUser(
+					Long.valueOf(input.session.userKey.getId()));
+
 			UserValidator.authorisation(input.session.user, roles, permissions,
 					"input.session.user");
 
@@ -164,7 +167,7 @@ public final class BlogService extends ActionHandler {
 					: input.post.directOnly);
 			input.post.commentsEnabled = (input.post.commentsEnabled == null ? Boolean.FALSE
 					: input.post.commentsEnabled);
-
+			
 			PostServiceProvider.provide().addPost(input.post);
 
 			output.status = StatusType.StatusTypeSuccess;
