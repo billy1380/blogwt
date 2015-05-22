@@ -30,13 +30,13 @@ public class PostSummaryCell extends AbstractCell<Post> {
 	interface DateTemplate extends SafeHtmlTemplates {
 		DateTemplate INSTANCE = GWT.create(DateTemplate.class);
 
-		@Template("<span class=\"label label-info\">NOT PUBLISHED</span>")
-		SafeHtml notPublished ();
+		@Template("<span class=\"label label-info\">Created {0} - Not published</span>")
+		SafeHtml notPublished (String formattedDate);
 
 		@Template("<span><span class=\"glyphicon glyphicon-time\" aria-hidden=\"true\"></span>{0}</span>")
 		SafeHtml publishedDate (String formattedDate);
 
-		@Template("<span class=\"label label-warning\">NOT VISIBLE</span>")
+		@Template("<span class=\"label label-warning\">Not visible</span>")
 		SafeHtml notVisible ();
 	}
 
@@ -53,7 +53,8 @@ public class PostSummaryCell extends AbstractCell<Post> {
 	public void render (Context context, Post value, SafeHtmlBuilder builder) {
 		SafeUri link = PageType.PostDetailPageType.asHref(PostHelper
 				.getSlug(value));
-		SafeHtml published = DateTemplate.INSTANCE.notPublished();
+		SafeHtml published = DateTemplate.INSTANCE.notPublished(DateTimeHelper
+				.ago(value.created));
 
 		if (value.published != null) {
 			published = DateTemplate.INSTANCE.publishedDate(DateTimeHelper
