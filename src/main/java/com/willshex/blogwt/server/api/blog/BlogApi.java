@@ -1,5 +1,5 @@
 //  
-//  BlogService.java
+//  BlogApi.java
 //  blogwt
 //
 //  Created by William Shakour on May 12, 2015.
@@ -57,8 +57,8 @@ import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
 import com.willshex.gson.json.service.shared.StatusType;
 
-public final class BlogService extends ActionHandler {
-	private static final Logger LOG = Logger.getLogger(BlogService.class
+public final class BlogApi extends ActionHandler {
+	private static final Logger LOG = Logger.getLogger(BlogApi.class
 			.getName());
 
 	public GetPostResponse getPost (GetPostRequest input) {
