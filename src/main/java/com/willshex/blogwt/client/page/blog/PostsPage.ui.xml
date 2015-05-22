@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
-	xmlns:p="urn:import:com.willshex.blogwt.client.part">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:import field="com.willshex.blogwt.client.page.PageType.EditPostPageType" />
 	<ui:style>
 	
@@ -13,7 +13,8 @@
 
 		<div class="btn-toolbar">
 			<div class="btn-group">
-				<g:InlineHyperlink ui:field="lnkNewPost" styleName="btn btn-default" targetHistoryToken="{EditPostPageType.asTargetHistoryToken}/new">
+				<g:InlineHyperlink ui:field="lnkNewPost" styleName="btn btn-default"
+					targetHistoryToken="{EditPostPageType.asTargetHistoryToken}/new">
 					<span class="glyphicon glyphicon-plus"></span>
 					New Post
 				</g:InlineHyperlink>
@@ -21,7 +22,11 @@
 		</div>
 
 		<g:HTMLPanel>
-			<c:CellList ui:field="posts" />
+			<c:CellList ui:field="clPosts" />
+		</g:HTMLPanel>
+
+		<g:HTMLPanel ui:field="pnlNoPosts">
+			<h2 class="text-center">No posts! :'(</h2>
 		</g:HTMLPanel>
 
 		<p:BackToTop />

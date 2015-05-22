@@ -148,9 +148,7 @@ final class UserService implements IUserService {
 	 * updateUserIdLastLoggedIn(java.lang.Long) */
 	@Override
 	public void updateUserIdLastLoggedIn (Long userId) {
-		User user = getUser(userId);
-		user.lastLoggedIn = new Date();
-		updateUser(user);
+		updateUser(getUser(userId).lastLoggedIn(new Date()));
 	}
 
 	private User addAvatar (User user) {

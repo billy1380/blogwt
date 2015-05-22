@@ -12,11 +12,13 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
+import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
@@ -38,7 +40,8 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 
 	@UiField Element elTitle;
 	@UiField Element elExtendedTitle;
-	@UiField(provided = true) CellList<Post> posts = new CellList<Post>(
+	@UiField HTMLPanel pnlNoPosts;
+	@UiField(provided = true) CellList<Post> clPosts = new CellList<Post>(
 			new PostSummaryCell(), BootstrapGwtCellList.INSTANCE);
 
 	public PostsPage () {
@@ -47,6 +50,12 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 
 		elTitle.setInnerText(PropertyController.get().title());
 		elExtendedTitle.setInnerText(PropertyController.get().extendedTitle());
+
+		pnlNoPosts.removeFromParent();
+		clPosts.setEmptyListWidget(pnlNoPosts);
+
+		PostController.get().addDataDisplay(clPosts);
+		refresh();
 	}
 
 	@Override
@@ -61,7 +70,13 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 	public void navigationChanged (Stack previous, Stack current) {
 		if (PageType.LogoutPageType.equals(current.getPage())) {
 			SessionController.get().logout();
+		} else {
+			refresh();
 		}
+	}
+
+	private void refresh () {
+		clPosts.setVisibleRangeAndClearData(clPosts.getVisibleRange(), true);
 	}
 
 }

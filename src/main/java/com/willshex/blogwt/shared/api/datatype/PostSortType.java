@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum PostSortType {
+	PostSortTypeCreated("created"),
 	PostSortTypeAuthor("author"),
 	PostSortTypePublished("published"),
 	PostSortTypeSlug("slug"),

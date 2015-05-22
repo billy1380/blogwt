@@ -250,7 +250,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 				PageType.PostsPageType.show();
 			} else if (p != null && p.requiresLogin()
 					&& !SessionController.get().isValidSession()) {
-				PageType.LoginPageType.show(s.asNextParameter());
+				SessionController.get().logout(PageType.LoginPageType,
+						s.asNextParameter());
 			} else if (p != null
 					&& p.requiresLogin()
 					&& p.getRequiredPermissions() != null

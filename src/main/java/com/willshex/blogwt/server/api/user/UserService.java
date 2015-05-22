@@ -21,6 +21,7 @@ import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.server.service.user.IUserService;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
@@ -52,6 +53,15 @@ public final class UserService extends ActionHandler {
 		LOG.finer("Entering getUsers");
 		GetUsersResponse output = new GetUsersResponse();
 		try {
+			ApiValidator.notNull(input, GetUsersRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+			
+			UserHelper.stripPassword(output.users);
+
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -136,6 +146,7 @@ public final class UserService extends ActionHandler {
 										.keysToIds(output.session.user.permissionKeys));
 			}
 
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -149,6 +160,14 @@ public final class UserService extends ActionHandler {
 		LOG.finer("Entering logout");
 		LogoutResponse output = new LogoutResponse();
 		try {
+			ApiValidator.notNull(input, LogoutRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			input.session = SessionValidator.lookup(input.session,
+					"input.session");
+
+			SessionServiceProvider.provide().deleteSession(input.session);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -162,6 +181,13 @@ public final class UserService extends ActionHandler {
 		LOG.finer("Entering changePassword");
 		ChangePasswordResponse output = new ChangePasswordResponse();
 		try {
+			ApiValidator.notNull(input, ChangePasswordRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -176,6 +202,14 @@ public final class UserService extends ActionHandler {
 		LOG.finer("Entering changeUserDetails");
 		ChangeUserDetailsResponse output = new ChangeUserDetailsResponse();
 		try {
+			ApiValidator
+					.notNull(input, ChangeUserDetailsRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -189,6 +223,9 @@ public final class UserService extends ActionHandler {
 		LOG.finer("Entering checkUsername");
 		CheckUsernameResponse output = new CheckUsernameResponse();
 		try {
+			ApiValidator.notNull(input, CheckUsernameRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -203,6 +240,14 @@ public final class UserService extends ActionHandler {
 		LOG.finer("Entering getRolesAndPermissions");
 		GetRolesAndPermissionsResponse output = new GetRolesAndPermissionsResponse();
 		try {
+			ApiValidator.notNull(input, GetRolesAndPermissionsRequest.class,
+					"input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -216,6 +261,13 @@ public final class UserService extends ActionHandler {
 		LOG.finer("Entering isAuthorised");
 		IsAuthorisedResponse output = new IsAuthorisedResponse();
 		try {
+			ApiValidator.notNull(input, IsAuthorisedRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -229,6 +281,13 @@ public final class UserService extends ActionHandler {
 		LOG.finer("Entering getUserDetails");
 		GetUserDetailsResponse output = new GetUserDetailsResponse();
 		try {
+			ApiValidator.notNull(input, GetUserDetailsRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -242,6 +301,13 @@ public final class UserService extends ActionHandler {
 		LOG.finer("Entering forgotPassword");
 		ForgotPasswordResponse output = new ForgotPasswordResponse();
 		try {
+			ApiValidator.notNull(input, ForgotPasswordRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
