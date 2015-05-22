@@ -14,11 +14,12 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 import com.willshex.gson.json.shared.Jsonable;
 
 public class DataType extends Jsonable {
 	@Id public Long id;
-	public Date created;
+	@Index public Date created;
 
 	@Override
 	public JsonObject toJson () {

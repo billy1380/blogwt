@@ -7,18 +7,28 @@
 //
 package com.willshex.blogwt.client.controller;
 
+import java.util.Collections;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.Range;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.BlogService;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.CreatePostEventHandler.CreatePostFailure;
 import com.willshex.blogwt.shared.api.blog.call.event.CreatePostEventHandler.CreatePostSuccess;
+import com.willshex.blogwt.shared.api.blog.call.event.GetPostsEventHandler.GetPostsFailure;
+import com.willshex.blogwt.shared.api.blog.call.event.GetPostsEventHandler.GetPostsSuccess;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
+import com.willshex.blogwt.shared.api.datatype.PostSortType;
+import com.willshex.blogwt.shared.api.helper.PagerHelper;
 import com.willshex.blogwt.shared.api.helper.TagHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -38,6 +48,54 @@ public class PostController extends AsyncDataProvider<Post> {
 		return one;
 	}
 
+	private Pager pager = PagerHelper.createDefaultPager().sortBy(
+			PostSortType.PostSortTypeCreated.toString());
+
+	private void fetchPosts () {
+		final GetPostsRequest input = ApiHelper
+				.setAccessCode(new GetPostsRequest());
+		input.pager = pager;
+		input.session = SessionController.get().sessionForApiCall();
+		input.summaryOnly = Boolean.TRUE;
+
+		ApiHelper.createBlogClient().getPosts(input,
+				new AsyncCallback<GetPostsResponse>() {
+
+					@Override
+					public void onSuccess (GetPostsResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {
+							if (output.posts != null && output.posts.size() > 0) {
+								pager = output.pager;
+								updateRowCount(
+										input.pager.count == null ? 0
+												: input.pager.count.intValue(),
+										input.pager.count == null
+												|| input.pager.count.intValue() == 0);
+								updateRowData(input.pager.start.intValue(),
+										output.posts);
+							} else {
+								updateRowCount(input.pager.start.intValue(),
+										true);
+								updateRowData(input.pager.start.intValue(),
+										Collections.<Post> emptyList());
+							}
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new GetPostsSuccess(input, output),
+								PostController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new GetPostsFailure(input, caught),
+								PostController.this);
+					}
+
+				});
+	}
+
 	/* (non-Javadoc)
 	 * 
 	 * @see
@@ -45,8 +103,11 @@ public class PostController extends AsyncDataProvider<Post> {
 	 * .gwt.view.client.HasData) */
 	@Override
 	protected void onRangeChanged (HasData<Post> display) {
-		// TODO Auto-generated method stub
+		Range range = display.getVisibleRange();
+		pager.start(Integer.valueOf(range.getStart())).count(
+				Integer.valueOf(range.getLength()));
 
+		fetchPosts();
 	}
 
 	public void createPost (String title, Boolean directOnly,

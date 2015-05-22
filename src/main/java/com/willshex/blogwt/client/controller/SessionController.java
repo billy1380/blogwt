@@ -142,6 +142,10 @@ public class SessionController {
 	}
 
 	public void logout () {
+		logout(PageType.PostsPageType);
+	}
+
+	public void logout (PageType pageType, String... params) {
 		UserService userService = ApiHelper.createUserClient();
 
 		final LogoutRequest input = setSession(ApiHelper
@@ -169,7 +173,9 @@ public class SessionController {
 		});
 
 		session = null;
-		PageType.PostsPageType.show();
+		if (pageType != null) {
+			pageType.show(params);
+		}
 	}
 
 	/**

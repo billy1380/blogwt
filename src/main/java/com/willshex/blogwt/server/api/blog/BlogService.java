@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.googlecode.objectify.Key;
 import com.willshex.blogwt.server.api.exception.AuthorisationException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PostValidator;
@@ -49,6 +50,7 @@ import com.willshex.blogwt.shared.api.helper.PagerHelper;
 import com.willshex.blogwt.shared.api.helper.PermissionHelper;
 import com.willshex.blogwt.shared.api.helper.PropertyHelper;
 import com.willshex.blogwt.shared.api.helper.RoleHelper;
+import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.InputValidationException;
@@ -80,6 +82,11 @@ public final class BlogService extends ActionHandler {
 			if (output.post != null) {
 				output.post.author = UserServiceProvider.provide().getUser(
 						output.post.author.id);
+				UserHelper.stripPassword(output.post.author);
+			}
+
+			if (output.session != null) {
+				UserHelper.stripPassword(output.session.user);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -123,6 +130,7 @@ public final class BlogService extends ActionHandler {
 
 			PostServiceProvider.provide().updatePost(input.post);
 
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -167,9 +175,17 @@ public final class BlogService extends ActionHandler {
 					: input.post.directOnly);
 			input.post.commentsEnabled = (input.post.commentsEnabled == null ? Boolean.FALSE
 					: input.post.commentsEnabled);
-			
-			PostServiceProvider.provide().addPost(input.post);
 
+			output.post = PostServiceProvider.provide().addPost(input.post);
+
+			if (output.post != null) {
+				output.post.author = UserServiceProvider.provide().getUser(
+						output.post.author.id);
+				UserHelper.stripPassword(output.post.author);
+			}
+
+			UserHelper.stripPassword(output.post.author);
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -202,6 +218,8 @@ public final class BlogService extends ActionHandler {
 			input.post = PostValidator.lookup(input.post, "input.post");
 
 			PostServiceProvider.provide().deletePost(input.post);
+
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -232,6 +250,9 @@ public final class BlogService extends ActionHandler {
 							.provide().getCodePermission(
 									PermissionHelper.MANAGE_POSTS);
 					permissions.add(postPermission);
+
+					input.session.user = UserServiceProvider.provide().getUser(
+							Long.valueOf(input.session.userKey.getId()));
 
 					try {
 						UserValidator.authorisation(input.session.user, roles,
@@ -264,19 +285,26 @@ public final class BlogService extends ActionHandler {
 						input.pager.sortDirection);
 			}
 
-			Map<Long, User> users = new HashMap<Long, User>();
+			Map<Key<User>, User> users = new HashMap<Key<User>, User>();
 
 			for (Post post : output.posts) {
-				if (users.get(post.author.id) == null) {
-					users.put(post.author.id, UserServiceProvider.provide()
-							.getUser(post.author.id));
+				if (users.get(post.authorKey) == null) {
+					users.put(
+							post.authorKey,
+							UserHelper.stripSensitive(UserServiceProvider
+									.provide()
+									.getUser(
+											Long.valueOf(post.authorKey.getId()))));
 				}
 
-				post.author = users.get(post.author.id);
+				post.author = users.get(post.authorKey);
 			}
 
 			output.pager = PagerHelper.moveForward(input.pager);
 
+			if (output.session != null) {
+				UserHelper.stripPassword(output.session.user);
+			}
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
