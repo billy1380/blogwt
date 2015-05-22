@@ -5,7 +5,7 @@
 	<groupId>com.willshex</groupId>
 	<artifactId>com.willshex.blogwt</artifactId>
 	<packaging>war</packaging>
-	<version>1</version>
+	<version>0v1</version>
 	<name>Blogwt</name>
 	<description>Blog application built with GWT on top of AppEngine</description>
 
@@ -159,7 +159,7 @@
 					<jvmFlags>
 						<jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
 					</jvmFlags>
-					<version>1</version>
+					<version>0v1</version>
 				</configuration>
 			</plugin>
 		</plugins>
