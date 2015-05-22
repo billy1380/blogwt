@@ -21,7 +21,7 @@ public final class BlogJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
-		BlogService service = new BlogService();
+		BlogApi service = new BlogApi();
 		if ("GetPost".equals(action)) {
 			GetPostRequest input = new GetPostRequest();
 			input.fromJson(request);

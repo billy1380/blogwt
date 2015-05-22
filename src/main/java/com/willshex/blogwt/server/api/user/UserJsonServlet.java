@@ -25,7 +25,7 @@ public final class UserJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
-		UserService service = new UserService();
+		UserApi service = new UserApi();
 		if ("GetUsers".equals(action)) {
 			GetUsersRequest input = new GetUsersRequest();
 			input.fromJson(request);

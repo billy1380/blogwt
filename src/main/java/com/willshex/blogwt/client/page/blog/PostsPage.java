@@ -13,8 +13,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
@@ -53,6 +55,8 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 
 		pnlNoPosts.removeFromParent();
 		clPosts.setEmptyListWidget(pnlNoPosts);
+		clPosts.setLoadingIndicator(new Image(Resources.CELL_TABLE_RES
+				.cellTableLoading()));
 
 		PostController.get().addDataDisplay(clPosts);
 		refresh();
