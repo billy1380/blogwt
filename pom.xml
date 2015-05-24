@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.willshex</groupId>
-	<artifactId>com.willshex.blogwt</artifactId>
+	<artifactId>blogwt</artifactId>
 	<packaging>war</packaging>
 	<version>0v1</version>
 	<name>Blogwt</name>
