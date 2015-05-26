@@ -9,6 +9,7 @@ package com.willshex.blogwt.client.page.blog;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
@@ -55,8 +56,13 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 
 		pnlNoPosts.removeFromParent();
 		clPosts.setEmptyListWidget(pnlNoPosts);
-		clPosts.setLoadingIndicator(new Image(Resources.CELL_TABLE_RES
-				.cellTableLoading()));
+
+		HTMLPanel loadingWidget = new HTMLPanel(SafeHtmlUtils.EMPTY_SAFE_HTML);
+		loadingWidget.addStyleName("text-center");
+		loadingWidget
+				.add(new Image(Resources.CELL_TABLE_RES.cellTableLoading()));
+
+		clPosts.setLoadingIndicator(loadingWidget);
 
 		PostController.get().addDataDisplay(clPosts);
 		refresh();
