@@ -12,6 +12,7 @@ import java.util.List;
 import com.spacehopperstudios.service.IService;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Post;
+import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 
@@ -107,5 +108,11 @@ public interface IPostService extends IService {
 	 * @throws DataAccessException
 	 */
 	public Post getSlugPost (String slug);
+
+	/**
+	 * @param post
+	 * @return
+	 */
+	public PostContent getPostContent (Post post);
 
 }

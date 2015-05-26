@@ -186,4 +186,15 @@ final class PostService implements IPostService {
 		return getUserViewablePostsCount(null, showAll);
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.post.IPostService#getPostContent(
+	 * com.willshex.blogwt.shared.api.datatype.Post) */
+	@Override
+	public PostContent getPostContent (Post post) {
+		return ofy().load().type(PostContent.class).id(post.contentKey.getId())
+				.now();
+	}
+
 }
