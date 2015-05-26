@@ -27,7 +27,7 @@ import com.willshex.blogwt.shared.api.helper.UserHelper;
  */
 public class PostSummaryCell extends AbstractCell<Post> {
 
-	interface DateTemplate extends SafeHtmlTemplates {
+	public interface DateTemplate extends SafeHtmlTemplates {
 		DateTemplate INSTANCE = GWT.create(DateTemplate.class);
 
 		@Template("<span class=\"label label-info\">Created {0} - Not published</span>")
