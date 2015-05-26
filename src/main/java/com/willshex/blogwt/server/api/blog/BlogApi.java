@@ -58,8 +58,7 @@ import com.willshex.gson.json.service.server.ServiceException;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public final class BlogApi extends ActionHandler {
-	private static final Logger LOG = Logger.getLogger(BlogApi.class
-			.getName());
+	private static final Logger LOG = Logger.getLogger(BlogApi.class.getName());
 
 	public GetPostResponse getPost (GetPostRequest input) {
 		LOG.finer("Entering getPost");
@@ -81,9 +80,11 @@ public final class BlogApi extends ActionHandler {
 
 			if (output.post != null) {
 				output.post.author = UserServiceProvider.provide().getUser(
-						output.post.author.id);
+						Long.valueOf(output.post.authorKey.getId()));
 				UserHelper.stripPassword(output.post.author);
 			}
+			
+			output.post.content = PostServiceProvider.provide().getPostContent(output.post);
 
 			if (output.session != null) {
 				UserHelper.stripPassword(output.session.user);
