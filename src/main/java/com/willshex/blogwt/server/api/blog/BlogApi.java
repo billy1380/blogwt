@@ -83,8 +83,9 @@ public final class BlogApi extends ActionHandler {
 						Long.valueOf(output.post.authorKey.getId()));
 				UserHelper.stripPassword(output.post.author);
 			}
-			
-			output.post.content = PostServiceProvider.provide().getPostContent(output.post);
+
+			output.post.content = PostServiceProvider.provide().getPostContent(
+					output.post);
 
 			if (output.session != null) {
 				UserHelper.stripPassword(output.session.user);
@@ -119,13 +120,23 @@ public final class BlogApi extends ActionHandler {
 			UserValidator.authorisation(input.session.user, roles, permissions,
 					"input.session.user");
 
-			// we don't need the lookup but if the post does not exist then
-			// technically it should be create not update
-			PostValidator.lookup(input.post, "input.post");
+			Post updatedPost = input.post;
 
-			input.post = PostValidator.validate(input.post, "input.post");
+			input.post = PostValidator.lookup(input.post, "input.post");
+			input.post.content = PostServiceProvider.provide().getPostContent(
+					input.post);
 
-			if (input.publish == Boolean.TRUE) {
+			updatedPost = PostValidator.validate(updatedPost, "input.post");
+
+			input.post.commentsEnabled = updatedPost.commentsEnabled;
+			input.post.content.body = updatedPost.content.body;
+			input.post.directOnly = updatedPost.directOnly;
+			input.post.summary = updatedPost.summary;
+			input.post.tags = updatedPost.tags;
+			input.post.title = updatedPost.title;
+
+			// don't change the original publish date
+			if (input.publish == Boolean.TRUE && input.post.published == null) {
 				input.post.published = new Date();
 			}
 

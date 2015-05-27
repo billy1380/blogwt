@@ -25,6 +25,8 @@ import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
+import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
+import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.CreatePostEventHandler.CreatePostFailure;
 import com.willshex.blogwt.shared.api.blog.call.event.CreatePostEventHandler.CreatePostSuccess;
 import com.willshex.blogwt.shared.api.blog.call.event.DeletePostEventHandler.DeletePostFailure;
@@ -33,6 +35,8 @@ import com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler.GetPos
 import com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler.GetPostSuccess;
 import com.willshex.blogwt.shared.api.blog.call.event.GetPostsEventHandler.GetPostsFailure;
 import com.willshex.blogwt.shared.api.blog.call.event.GetPostsEventHandler.GetPostsSuccess;
+import com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler.UpdatePostFailure;
+import com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler.UpdatePostSuccess;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
@@ -101,6 +105,41 @@ public class PostController extends AsyncDataProvider<Post> {
 								PostController.this);
 					}
 
+				});
+	}
+
+	public void updatePost (Post post, String title, Boolean directOnly,
+			Boolean commentsEnabled, String summary, String content,
+			Boolean publish, String tags) {
+		final UpdatePostRequest input = SessionController
+				.get()
+				.setSession(ApiHelper.setAccessCode(new UpdatePostRequest()))
+				.post(post.title(title).summary(summary).directOnly(directOnly)
+						.commentsEnabled(commentsEnabled)
+						.tags(TagHelper.convertToTagList(tags)))
+				.publish(publish);
+		input.post.content.body = content;
+
+		ApiHelper.createBlogClient().updatePost(input,
+				new AsyncCallback<UpdatePostResponse>() {
+
+					@Override
+					public void onSuccess (UpdatePostResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {
+							fetchPosts();
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new UpdatePostSuccess(input, output),
+								PostController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new UpdatePostFailure(input, caught),
+								PostController.this);
+					}
 				});
 	}
 
