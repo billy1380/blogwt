@@ -4,6 +4,13 @@
 	<ui:import field="com.willshex.blogwt.client.page.PageType.EditPostPageType" />
 	<ui:style gss="true">
 	
+	@external btn-toolbar;
+	
+	.btn-toolbar {
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+	
 	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel>
@@ -15,6 +22,11 @@
 			</div>
 
 			<div class="btn-toolbar">
+				<div class="btn-group pull-right">
+					<g:Button ui:field="btnDeletePost" styleName="btn btn-danger">
+						<span class="glyphicon glyphicon-trash"></span>
+					</g:Button>
+				</div>
 				<div class="btn-group pull-right">
 					<g:InlineHyperlink ui:field="lnkEditPost" styleName="btn btn-default"
 						targetHistoryToken="{EditPostPageType.asTargetHistoryToken}/xxx">

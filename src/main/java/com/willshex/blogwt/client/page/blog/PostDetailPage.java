@@ -10,9 +10,13 @@ package com.willshex.blogwt.client.page.blog;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,8 +28,11 @@ import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
+import com.willshex.blogwt.shared.api.blog.call.DeletePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
+import com.willshex.blogwt.shared.api.blog.call.event.DeletePostEventHandler;
 import com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
@@ -37,7 +44,8 @@ import com.willshex.gson.json.service.shared.StatusType;
  *
  */
 public class PostDetailPage extends Page implements
-		NavigationChangedEventHandler, GetPostEventHandler {
+		NavigationChangedEventHandler, GetPostEventHandler,
+		DeletePostEventHandler {
 
 	private static PostDetailPageUiBinder uiBinder = GWT
 			.create(PostDetailPageUiBinder.class);
@@ -54,10 +62,20 @@ public class PostDetailPage extends Page implements
 	@UiField HTMLPanel pnlContent;
 	boolean installed;
 	@UiField InlineHyperlink lnkEditPost;
+	@UiField Button btnDeletePost;
 
 	public PostDetailPage () {
 		super(PageType.PostDetailPageType);
 		initWidget(uiBinder.createAndBindUi(this));
+	}
+
+	@UiHandler("btnDeletePost")
+	void onBtnDeletePost (ClickEvent event) {
+		if (post != null
+				&& Window.confirm("Are you sure you want to delete \""
+						+ post.title + "\"")) {
+			PostController.get().deletePost(post);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -70,6 +88,8 @@ public class PostDetailPage extends Page implements
 				this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetPostEventHandler.TYPE, PostController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(
+				DeletePostEventHandler.TYPE, PostController.get(), this));
 
 		super.onAttach();
 	}
@@ -82,7 +102,7 @@ public class PostDetailPage extends Page implements
 	@Override
 	public void getPostSuccess (GetPostRequest input, GetPostResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			show(output.post);
+			show(post = output.post);
 		} else {
 			PageType.PostsPageType.show();
 		}
@@ -183,37 +203,50 @@ public class PostDetailPage extends Page implements
 	private static native void installDisqus (String discusShortName,
 			String categoryId, String postId, String url, String title,
 			String category) /*-{
-		$wnd.disqus_shortname = discusShortName;
+								$wnd.disqus_shortname = discusShortName;
 
-		// $wnd.disqus_identifier = postId;
-		$wnd.disqus_url = url;
-		$wnd.disqus_title = title;
-		$wnd.disqus_category_id = categoryId;
+								// $wnd.disqus_identifier = postId;
+								$wnd.disqus_url = url;
+								$wnd.disqus_title = title;
+								$wnd.disqus_category_id = categoryId;
 
-		($wnd.installDisqus = function() {
-			var dsq = $wnd.document.createElement('script');
-			dsq.type = 'text/javascript';
-			dsq.async = true;
-			dsq.src = '//' + $wnd.disqus_shortname + '.disqus.com/embed.js';
-			($wnd.document.getElementsByTagName('head')[0] || $wnd.document
-				.getElementsByTagName('body')[0]).appendChild(dsq);
-		})();
+								($wnd.installDisqus = function() {
+								var dsq = $wnd.document.createElement('script');
+								dsq.type = 'text/javascript';
+								dsq.async = true;
+								dsq.src = '//' + $wnd.disqus_shortname + '.disqus.com/embed.js';
+								($wnd.document.getElementsByTagName('head')[0] || $wnd.document
+								.getElementsByTagName('body')[0]).appendChild(dsq);
+								})();
 
-		$wnd.reset = function(resetPostId, resetUrl, resetTitle, categoryId) {
-			$wnd.DISQUS.reset({
-				reload : true,
-				config : function() {
-					// this.page.identifier = resetPostId;
-					this.page.url = resetUrl;
-					this.page.title = resetTitle;
-					this.page.category_id = categoryId;
-				}
-			});
-		};
-	}-*/;
+								$wnd.reset = function(resetPostId, resetUrl, resetTitle, categoryId) {
+								$wnd.DISQUS.reset({
+								reload : true,
+								config : function() {
+								// this.page.identifier = resetPostId;
+								this.page.url = resetUrl;
+								this.page.title = resetTitle;
+								this.page.category_id = categoryId;
+								}
+								});
+								};
+								}-*/;
 
 	private static native void resetDisqus (String postId, String url,
 			String title, String categoryId) /*-{
-		$wnd.reset(postId, url, title, categoryId);
-	}-*/;
+												$wnd.reset(postId, url, title, categoryId);
+												}-*/;
+
+	@Override
+	public void deletePostSuccess (DeletePostRequest input,
+			DeletePostResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			PageType.PostsPageType.show();
+		} else {
+
+		}
+	}
+
+	@Override
+	public void deletePostFailure (DeletePostRequest input, Throwable caught) {}
 }

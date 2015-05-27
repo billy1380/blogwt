@@ -143,12 +143,12 @@ public class PostController extends AsyncDataProvider<Post> {
 				});
 	}
 
-	public void deletePost (final String slug) {
+	public void deletePost (Post post) {
 		BlogService service = ApiHelper.createBlogClient();
 
 		final DeletePostRequest input = SessionController.get()
 				.setSession(ApiHelper.setAccessCode(new DeletePostRequest()))
-				.post(new Post().slug(slug));
+				.post(post);
 
 		if (input.post != null) {
 			service.deletePost(input, new AsyncCallback<DeletePostResponse>() {

@@ -91,6 +91,8 @@ final class PostService implements IPostService {
 	@Override
 	public void deletePost (Post post) {
 		ofy().delete().entity(post).now();
+
+		ofy().delete().key(post.contentKey).now();
 	}
 
 	@Override
