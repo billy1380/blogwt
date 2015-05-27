@@ -9,6 +9,7 @@ package com.willshex.blogwt.client.controller;
 
 import java.util.Collections;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -62,6 +63,8 @@ public class PostController extends AsyncDataProvider<Post> {
 
 	private Pager pager = PagerHelper.createDefaultPager().sortBy(
 			PostSortType.PostSortTypeCreated.toString());
+	private Request getPostsRequest;
+	private Request getPostRequest;
 
 	private void fetchPosts () {
 		final GetPostsRequest input = ApiHelper
@@ -70,11 +73,17 @@ public class PostController extends AsyncDataProvider<Post> {
 		input.session = SessionController.get().sessionForApiCall();
 		input.summaryOnly = Boolean.TRUE;
 
-		ApiHelper.createBlogClient().getPosts(input,
+		if (getPostsRequest != null) {
+			getPostsRequest.cancel();
+		}
+
+		getPostsRequest = ApiHelper.createBlogClient().getPosts(input,
 				new AsyncCallback<GetPostsResponse>() {
 
 					@Override
 					public void onSuccess (GetPostsResponse output) {
+						getPostsRequest = null;
+
 						if (output.status == StatusType.StatusTypeSuccess) {
 							if (output.posts != null && output.posts.size() > 0) {
 								pager = output.pager;
@@ -100,6 +109,8 @@ public class PostController extends AsyncDataProvider<Post> {
 
 					@Override
 					public void onFailure (Throwable caught) {
+						getPostsRequest = null;
+
 						DefaultEventBus.get().fireEventFromSource(
 								new GetPostsFailure(input, caught),
 								PostController.this);
@@ -144,36 +155,34 @@ public class PostController extends AsyncDataProvider<Post> {
 	}
 
 	public void deletePost (Post post) {
-		BlogService service = ApiHelper.createBlogClient();
 
 		final DeletePostRequest input = SessionController.get()
 				.setSession(ApiHelper.setAccessCode(new DeletePostRequest()))
 				.post(post);
 
-		if (input.post != null) {
-			service.deletePost(input, new AsyncCallback<DeletePostResponse>() {
+		ApiHelper.createBlogClient().deletePost(input,
+				new AsyncCallback<DeletePostResponse>() {
 
-				@Override
-				public void onSuccess (DeletePostResponse output) {
-					if (output.status == StatusType.StatusTypeSuccess) {
-						if (input.post != null) {
-							fetchPosts();
+					@Override
+					public void onSuccess (DeletePostResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {
+							if (input.post != null) {
+								fetchPosts();
+							}
 						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new DeletePostSuccess(input, output),
+								PostController.this);
 					}
 
-					DefaultEventBus.get().fireEventFromSource(
-							new DeletePostSuccess(input, output),
-							PostController.this);
-				}
-
-				@Override
-				public void onFailure (Throwable caught) {
-					DefaultEventBus.get().fireEventFromSource(
-							new DeletePostFailure(input, caught),
-							PostController.this);
-				}
-			});
-		}
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new DeletePostFailure(input, caught),
+								PostController.this);
+					}
+				});
 	}
 
 	/* (non-Javadoc)
@@ -229,30 +238,39 @@ public class PostController extends AsyncDataProvider<Post> {
 	 * @return
 	 */
 	public void getPost (String reference) {
-		BlogService service = ApiHelper.createBlogClient();
-
 		final GetPostRequest input = SessionController.get()
 				.setSession(ApiHelper.setAccessCode(new GetPostRequest()))
 				.post(setPostReference(new Post(), reference));
 
-		service.getPost(input, new AsyncCallback<GetPostResponse>() {
+		if (getPostRequest != null) {
+			getPostRequest.cancel();
+		}
 
-			@Override
-			public void onSuccess (GetPostResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					if (output.post != null) {}
-				}
+		getPostRequest = ApiHelper.createBlogClient().getPost(input,
+				new AsyncCallback<GetPostResponse>() {
 
-				DefaultEventBus.get().fireEventFromSource(
-						new GetPostSuccess(input, output), PostController.this);
-			}
+					@Override
+					public void onSuccess (GetPostResponse output) {
+						getPostRequest = null;
 
-			@Override
-			public void onFailure (Throwable caught) {
-				DefaultEventBus.get().fireEventFromSource(
-						new GetPostFailure(input, caught), PostController.this);
-			}
-		});
+						if (output.status == StatusType.StatusTypeSuccess) {
+							if (output.post != null) {}
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new GetPostSuccess(input, output),
+								PostController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						getPostRequest = null;
+
+						DefaultEventBus.get().fireEventFromSource(
+								new GetPostFailure(input, caught),
+								PostController.this);
+					}
+				});
 	}
 
 	/**
