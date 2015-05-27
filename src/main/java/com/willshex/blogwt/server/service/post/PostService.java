@@ -53,10 +53,17 @@ final class PostService implements IPostService {
 		post.slug = PostHelper.slugify(post.title);
 		post.authorKey = Key.create(post.author);
 
+		if (post.content.created == null) {
+			post.content.created = post.created;
+		}
+
 		post.contentKey = ofy().save().entity(post.content).now();
 
 		Key<Post> postKey = ofy().save().entity(post).now();
 		post.id = Long.valueOf(postKey.getId());
+
+		post.content.postKey = postKey;
+		ofy().save().entity(post.content).now();
 
 		return post;
 	}
@@ -66,6 +73,14 @@ final class PostService implements IPostService {
 		post.slug = PostHelper.slugify(post.title);
 
 		if (post.content != null) {
+			if (post.content.created == null) {
+				post.content.created = post.created;
+			}
+
+			if (post.content.postKey == null) {
+				post.content.postKey = Key.create(post);
+			}
+
 			ofy().save().entity(post.content).now();
 		}
 

@@ -26,19 +26,26 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.controller.NavigationController.Stack;
+import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
+import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.CreatePostEventHandler;
+import com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler;
 import com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler;
+import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.api.helper.PostHelper;
 import com.willshex.blogwt.shared.api.helper.UserHelper;
@@ -48,13 +55,16 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author William Shakour (billy1380)
  *
  */
-public class EditPostPage extends Page implements CreatePostEventHandler,
-		UpdatePostEventHandler {
+public class EditPostPage extends Page implements
+		NavigationChangedEventHandler, CreatePostEventHandler,
+		GetPostEventHandler, UpdatePostEventHandler {
 
 	private static EditPostPageUiBinder uiBinder = GWT
 			.create(EditPostPageUiBinder.class);
 
 	interface EditPostPageUiBinder extends UiBinder<Widget, EditPostPage> {}
+
+	private Post post;
 
 	@UiField HTMLPanel pnlTitle;
 	@UiField TextBox txtTitle;
@@ -99,9 +109,16 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		super.onAttach();
 
 		register(DefaultEventBus.get().addHandlerToSource(
+				NavigationChangedEventHandler.TYPE, NavigationController.get(),
+				this));
+		register(DefaultEventBus.get().addHandlerToSource(
 				CreatePostEventHandler.TYPE, PostController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				UpdatePostEventHandler.TYPE, PostController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(
+				GetPostEventHandler.TYPE, PostController.get(), this));
+
+		post = null;
 
 		updateTimer.cancel();
 		updateTimer.schedule(250);
@@ -151,11 +168,18 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	@UiHandler("btnSubmit")
 	void onBtnSubmitClicked (ClickEvent e) {
 		if (isValid()) {
-			PostController.get().createPost(txtTitle.getText(),
-					cbxDirectOnly.getValue(), cbxComments.getValue(),
-					txtSummary.getText(), txtContent.getText(),
-					cbxPublish.getValue(), txtTags.getText());
-			loading();
+			if (post == null) {
+				PostController.get().createPost(txtTitle.getText(),
+						cbxDirectOnly.getValue(), cbxComments.getValue(),
+						txtSummary.getText(), txtContent.getText(),
+						cbxPublish.getValue(), txtTags.getText());
+			} else {
+				PostController.get().updatePost(post, txtTitle.getText(),
+						cbxDirectOnly.getValue(), cbxComments.getValue(),
+						txtSummary.getText(), txtContent.getText(),
+						cbxPublish.getValue(), txtTags.getText());
+			}
+			submitting();
 		} else {
 			showErrors();
 		}
@@ -177,11 +201,6 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	}
 
 	private void loading () {
-		btnSubmit.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
-						"Submitting... ", Resources.RES.primaryLoader()
-								.getSafeUri()));
-
 		txtTitle.setEnabled(false);
 		txtSummary.setEnabled(false);
 		txtContent.setEnabled(false);
@@ -199,6 +218,15 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		pnlTagsNote.setVisible(false);
 	}
 
+	private void submitting () {
+		loading();
+
+		btnSubmit.getElement().setInnerSafeHtml(
+				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
+						"Submitting... ", Resources.RES.primaryLoader()
+								.getSafeUri()));
+	}
+
 	/* (non-Javadoc)
 	 * 
 	 * @see
@@ -209,7 +237,14 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	@Override
 	public void updatePostSuccess (UpdatePostRequest input,
 			UpdatePostResponse output) {
-		// TODO Auto-generated method stub
+		if (output.status == StatusType.StatusTypeFailure) {
+
+		} else {
+			PageType.PostDetailPageType.show(PostHelper
+					.slugify(input.post.title));
+		}
+
+		ready();
 	}
 
 	/* (non-Javadoc)
@@ -220,10 +255,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	 * (com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest,
 	 * java.lang.Throwable) */
 	@Override
-	public void updatePostFailure (UpdatePostRequest input, Throwable caught) {
-		// TODO Auto-generated method stub
-
-	}
+	public void updatePostFailure (UpdatePostRequest input, Throwable caught) {}
 
 	/* (non-Javadoc)
 	 * 
@@ -262,5 +294,49 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 
 	private void showErrors () {
 
+	}
+
+	private void show (Post post) {
+		txtTitle.setText(post.title);
+
+		StringBuffer tags = new StringBuffer();
+		for (String tag : post.tags) {
+			if (tags.length() > 0) {
+				tags.append(", ");
+			}
+
+			tags.append(tag);
+		}
+
+		txtTags.setText(tags.toString());
+		txtSummary.setText(post.summary);
+		txtContent.setText(post.content.body);
+
+		updatePreview();
+
+		ready();
+	}
+
+	@Override
+	public void getPostSuccess (GetPostRequest input, GetPostResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			show(post = output.post);
+		} else {
+			PageType.PostsPageType.show();
+		}
+	}
+
+	@Override
+	public void getPostFailure (GetPostRequest input, Throwable caught) {}
+
+	@Override
+	public void navigationChanged (Stack previous, Stack current) {
+		if (current.getAction() != null && !"new".equals(current.getAction())) {
+			String postParam;
+			if ((postParam = current.getAction()) != null) {
+				PostController.get().getPost(postParam);
+				loading();
+			}
+		}
 	}
 }
