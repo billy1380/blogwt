@@ -33,7 +33,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 		@Template("<span class=\"label label-info\">Created {0} - Not published</span>")
 		SafeHtml notPublished (String formattedDate);
 
-		@Template("<span><span class=\"glyphicon glyphicon-time\" aria-hidden=\"true\"></span>{0}</span>")
+		@Template("<span><span class=\"glyphicon glyphicon-time\" aria-hidden=\"true\"></span> {0}</span>")
 		SafeHtml publishedDate (String formattedDate);
 
 		@Template("<span class=\"label label-warning\">Not visible</span>")
