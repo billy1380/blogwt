@@ -15,7 +15,7 @@ public enum PostSortType {
 	PostSortTypeAuthor("author"),
 	PostSortTypePublished("published"),
 	PostSortTypeSlug("slug"),
-	PostSortTypeVisible("visible"), ;
+	PostSortTypeListed("listed"), ;
 	private String value;
 	private static Map<String, PostSortType> valueLookup = null;
 

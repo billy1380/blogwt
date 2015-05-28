@@ -169,13 +169,18 @@ public class EditPostPage extends Page implements
 	void onBtnSubmitClicked (ClickEvent e) {
 		if (isValid()) {
 			if (post == null) {
-				PostController.get().createPost(txtTitle.getText(),
-						cbxDirectOnly.getValue(), cbxComments.getValue(),
+				PostController.get().createPost(
+						txtTitle.getText(),
+						cbxDirectOnly.getValue().booleanValue() ? Boolean.FALSE
+								: Boolean.TRUE, cbxComments.getValue(),
 						txtSummary.getText(), txtContent.getText(),
 						cbxPublish.getValue(), txtTags.getText());
 			} else {
-				PostController.get().updatePost(post, txtTitle.getText(),
-						cbxDirectOnly.getValue(), cbxComments.getValue(),
+				PostController.get().updatePost(
+						post,
+						txtTitle.getText(),
+						cbxDirectOnly.getValue().booleanValue() ? Boolean.FALSE
+								: Boolean.TRUE, cbxComments.getValue(),
 						txtSummary.getText(), txtContent.getText(),
 						cbxPublish.getValue(), txtTags.getText());
 			}
