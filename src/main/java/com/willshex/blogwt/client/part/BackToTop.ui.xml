@@ -9,6 +9,7 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<g:Button ui:field="btnBackToTop" styleName="{style.backToTop} btn btn-primary" visible="false" text="Back To Top" />
+		<g:Button ui:field="btnBackToTop" styleName="{style.backToTop} btn btn-primary"
+			text="Back To Top" />
 	</g:HTMLPanel>
 </ui:UiBinder> 
