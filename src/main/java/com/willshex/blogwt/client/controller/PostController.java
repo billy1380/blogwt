@@ -119,13 +119,13 @@ public class PostController extends AsyncDataProvider<Post> {
 				});
 	}
 
-	public void updatePost (Post post, String title, Boolean directOnly,
+	public void updatePost (Post post, String title, Boolean listed,
 			Boolean commentsEnabled, String summary, String content,
 			Boolean publish, String tags) {
 		final UpdatePostRequest input = SessionController
 				.get()
 				.setSession(ApiHelper.setAccessCode(new UpdatePostRequest()))
-				.post(post.title(title).summary(summary).directOnly(directOnly)
+				.post(post.title(title).summary(summary).listed(listed)
 						.commentsEnabled(commentsEnabled)
 						.tags(TagHelper.convertToTagList(tags)))
 				.publish(publish);
@@ -199,7 +199,7 @@ public class PostController extends AsyncDataProvider<Post> {
 		fetchPosts();
 	}
 
-	public void createPost (String title, Boolean directOnly,
+	public void createPost (String title, Boolean listed,
 			Boolean commentsEnabled, String summary, String content,
 			Boolean publish, String tags) {
 		BlogService blogService = ApiHelper.createBlogClient();
@@ -210,7 +210,7 @@ public class PostController extends AsyncDataProvider<Post> {
 				.post(new Post().title(title).summary(summary)
 						.content(new PostContent().body(content))
 						.tags(TagHelper.convertToTagList(tags))
-						.directOnly(directOnly)
+						.listed(listed)
 						.commentsEnabled(commentsEnabled)).publish(publish);
 
 		blogService.createPost(input, new AsyncCallback<CreatePostResponse>() {

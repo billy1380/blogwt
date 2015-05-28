@@ -108,7 +108,7 @@ final class PostService implements IPostService {
 		}
 
 		if (showAll == null || !showAll.booleanValue()) {
-			query = query.filter(PostSortType.PostSortTypeVisible.toString(),
+			query = query.filter(PostSortType.PostSortTypeListed.toString(),
 					Boolean.TRUE);
 		}
 

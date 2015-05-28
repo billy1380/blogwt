@@ -130,7 +130,7 @@ public final class BlogApi extends ActionHandler {
 
 			input.post.commentsEnabled = updatedPost.commentsEnabled;
 			input.post.content.body = updatedPost.content.body;
-			input.post.directOnly = updatedPost.directOnly;
+			input.post.listed = updatedPost.listed;
 			input.post.summary = updatedPost.summary;
 			input.post.tags = updatedPost.tags;
 			input.post.title = updatedPost.title;
@@ -183,8 +183,8 @@ public final class BlogApi extends ActionHandler {
 				input.post.published = new Date();
 			}
 
-			input.post.directOnly = (input.post.directOnly == null ? Boolean.FALSE
-					: input.post.directOnly);
+			input.post.listed = (input.post.listed == null ? Boolean.FALSE
+					: input.post.listed);
 			input.post.commentsEnabled = (input.post.commentsEnabled == null ? Boolean.FALSE
 					: input.post.commentsEnabled);
 
