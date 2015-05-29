@@ -317,6 +317,12 @@ public class EditPostPage extends Page implements
 		txtSummary.setText(post.summary);
 		txtContent.setText(post.content.body);
 
+		cbxDirectOnly.setValue(Boolean.valueOf(post.listed != null
+				&& !post.listed.booleanValue()));
+		cbxComments.setValue(post.commentsEnabled == null ? Boolean.FALSE
+				: post.commentsEnabled);
+		cbxPublish.setValue(Boolean.valueOf(post.published != null));
+
 		updatePreview();
 
 		ready();

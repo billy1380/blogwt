@@ -183,7 +183,7 @@ public final class BlogApi extends ActionHandler {
 				input.post.published = new Date();
 			}
 
-			input.post.listed = (input.post.listed == null ? Boolean.FALSE
+			input.post.listed = (input.post.listed == null ? Boolean.TRUE
 					: input.post.listed);
 			input.post.commentsEnabled = (input.post.commentsEnabled == null ? Boolean.FALSE
 					: input.post.commentsEnabled);
