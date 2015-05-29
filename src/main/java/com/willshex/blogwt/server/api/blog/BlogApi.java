@@ -28,6 +28,7 @@ import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
@@ -292,9 +293,8 @@ public final class BlogApi extends ActionHandler {
 			} else {
 				output.posts = PostServiceProvider.provide().getPosts(showAll,
 						input.summaryOnly, input.pager.start,
-						input.pager.count,
-						PostSortType.fromString(input.pager.sortBy),
-						input.pager.sortDirection);
+						input.pager.count, PostSortType.PostSortTypePublished,
+						SortDirectionType.SortDirectionTypeDescending);
 			}
 
 			Map<Key<User>, User> users = new HashMap<Key<User>, User>();

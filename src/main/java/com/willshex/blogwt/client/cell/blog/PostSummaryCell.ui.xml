@@ -19,6 +19,7 @@
 			By
 			<ui:text from="{author}" />
 			<ui:safehtml from="{published}" />
+			<ui:safehtml from="{visible}" />
 		</p>
 		<p>
 			<ui:safehtml from="{description}" />
