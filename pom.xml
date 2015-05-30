@@ -215,6 +215,11 @@
             <artifactId>gwtquery</artifactId>
             <version>1.4.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.commonjava.googlecode.markdown4j</groupId>
+            <artifactId>markdown4j-gwt</artifactId>
+            <version>1.0</version>
+        </dependency>
 
 		<!-- Google App Engine -->
 		<dependency>
