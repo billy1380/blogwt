@@ -4,22 +4,22 @@
 	<ui:import field="com.willshex.blogwt.client.Resources.CELL_TABLE_RES" />
 	<ui:import field="com.willshex.blogwt.client.page.PageType.EditPostPageType" />
 	<ui:style gss="true">
-	@external btn-toolbar;
-	.btn-toolbar {
-		margin-top: 10px;
-		margin-bottom: 10px;
-	}
+	
+	.bottom-margin {
+       margin-bottom: 10px;
+    }
+    
 	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel>
 			<h1 ui:field="elTitle"></h1>
-			<div>
+			<div class="{style.bottom-margin}">
 				By
 				<span ui:field="elAuthor" />
 				<span ui:field="elDate" />
 			</div>
 
-			<div class="btn-toolbar">
+			<div class="btn-toolbar {style.bottom-margin}">
 				<div class="btn-group pull-right">
 					<g:Button ui:field="btnDeletePost" styleName="btn btn-danger">
 						<span class="glyphicon glyphicon-trash"></span>

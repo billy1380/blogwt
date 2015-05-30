@@ -26,6 +26,7 @@ import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
@@ -139,7 +140,9 @@ public class PostDetailPage extends Page implements
 		}
 
 		if (post.content != null) {
-			pnlContent.getElement().setInnerHTML(post.content.body);
+			String markup = PostHelper.createMarkup(post.content.body);
+
+			pnlContent.getElement().setInnerHTML(markup);
 
 			if (post.commentsEnabled == Boolean.TRUE) {
 				final String identifier = "post" + post.id.toString();
