@@ -11,7 +11,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -153,12 +152,12 @@ public class EditPostPage extends Page implements
 		tags.setInnerText(txtTags.getText());
 		pnlPreview.getElement().appendChild(tags);
 
-		ParagraphElement summary = d.createPElement();
+		DivElement summary = d.createDivElement();
 		String summaryMarkdown = PostHelper.createMarkup(txtSummary.getText());
 		summary.setInnerHTML(summaryMarkdown);
 		pnlPreview.getElement().appendChild(summary);
 
-		ParagraphElement content = d.createPElement();
+		DivElement content = d.createDivElement();
 		String contextMarkdown = PostHelper.createMarkup(txtContent.getText());
 		content.setInnerHTML(contextMarkdown);
 		pnlPreview.getElement().appendChild(content);

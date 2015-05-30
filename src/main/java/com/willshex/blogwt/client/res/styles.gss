@@ -1,3 +1,5 @@
+@external emoji, h1, h2, h3, h4, h5, h6;
+
 body {
     padding-top: 20px;
     padding-bottom: 20px;
@@ -6,4 +8,39 @@ body {
 
 .primaryLoader {
     gwt-sprite: "primaryLoader";
+}
+
+p .emoji {
+    height: 14px;
+    margin-bottom: 2px;
+}
+
+h1 .emoji, .h1 .emoji {
+    height: 36px;
+    margin-bottom: 2px;
+}
+
+h2 .emoji, .h2 .emoji {
+    height: 30px;
+    margin-bottom: 2px;
+}
+
+h3 .emoji, .h3 .emoji {
+    height: 24px;
+    margin-bottom: 2px;
+}
+
+h4 .emoji, .h4 .emoji {
+    height: 18px;
+    margin-bottom: 2px;
+}
+
+h5 .emoji, .h5 .emoji {
+    height: 14px;
+    margin-bottom: 2px;
+}
+
+h6 .emoji, .h6 .emoji {
+    height: 12px;
+    margin-bottom: 2px;
 }
