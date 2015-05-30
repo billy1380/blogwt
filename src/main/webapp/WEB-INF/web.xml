@@ -23,16 +23,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/user</url-pattern>
 	</servlet-mapping>
 
-	<security-constraint>
-		<web-resource-collection>
-			<web-resource-name></web-resource-name>
-			<url-pattern>/*</url-pattern>
-		</web-resource-collection>
-		<auth-constraint>
-			<role-name>admin</role-name>
-		</auth-constraint>
-	</security-constraint>
-
 	<!-- Objectify -->
 	<filter>
 		<filter-name>ObjectifyFilter</filter-name>
