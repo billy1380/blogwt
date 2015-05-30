@@ -15,10 +15,10 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiRenderer;
+import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
-import com.willshex.blogwt.shared.api.helper.PostHelper;
 import com.willshex.blogwt.shared.api.helper.UserHelper;
 
 /**
@@ -33,7 +33,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 		@Template("<span class=\"label label-info\">Created {0} - Not published</span>")
 		SafeHtml notPublished (String formattedDate);
 
-		@Template("<span><span class=\"glyphicon glyphicon-time\" aria-hidden=\"true\"></span> {0}</span>")
+		@Template("<span class=\"text-muted\"><span class=\"glyphicon glyphicon-time\" aria-hidden=\"true\"></span> {0}</span>")
 		SafeHtml publishedDate (String formattedDate);
 
 		@Template("<span class=\"label label-warning\">Not visible</span>")
@@ -42,7 +42,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 
 	interface PostSummaryCellRenderer extends UiRenderer {
 		void render (SafeHtmlBuilder sb, SafeUri link, String title,
-				SafeHtml description, String author, SafeHtml published,
+				SafeHtml summary, String author, SafeHtml published,
 				SafeHtml visible);
 	}
 
@@ -62,9 +62,9 @@ public class PostSummaryCell extends AbstractCell<Post> {
 		}
 
 		RENDERER.render(builder, link, value.title, SafeHtmlUtils
-				.fromTrustedString(value.summary), UserHelper
-				.handle(value.author), published, value.listed
-				.booleanValue() ? SafeHtmlUtils.EMPTY_SAFE_HTML
-				: DateTemplate.INSTANCE.notVisible());
+				.fromTrustedString(PostHelper.createMarkup(value.summary)),
+				UserHelper.handle(value.author), published, value.listed
+						.booleanValue() ? SafeHtmlUtils.EMPTY_SAFE_HTML
+						: DateTemplate.INSTANCE.notVisible());
 	}
 }

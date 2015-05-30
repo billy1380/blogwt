@@ -2,11 +2,15 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
 	<ui:with field="title" type="java.lang.String" />
-	<ui:with field="description" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="summary" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="author" type="java.lang.String" />
 	<ui:with field="published" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="visible" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:style gss="true">
+	
+	.bottom-margin {
+	   margin-bottom: 10px;
+	}
 	
 	</ui:style>
 	<div>
@@ -15,16 +19,15 @@
 				<ui:text from="{title}" />
 			</a>
 		</h3>
-		<p>
+		<div class="{style.bottom-margin}">
 			By
 			<ui:text from="{author}" />
 			<ui:safehtml from="{published}" />
 			<ui:safehtml from="{visible}" />
-		</p>
-		<p>
-			<ui:safehtml from="{description}" />
-		</p>
-
+		</div>
+		<div>
+			<ui:safehtml from="{summary}" />
+		</div>
 		<a href="{link}">Read More</a>
 	</div>
 </ui:UiBinder> 

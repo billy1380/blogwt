@@ -26,12 +26,13 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
-import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.NavigationController;
+import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
@@ -47,7 +48,6 @@ import com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler;
 import com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
-import com.willshex.blogwt.shared.api.helper.PostHelper;
 import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -154,14 +154,13 @@ public class EditPostPage extends Page implements
 		pnlPreview.getElement().appendChild(tags);
 
 		ParagraphElement summary = d.createPElement();
-		summary.addClassName("text-muted");
-		summary.addClassName("text-justified");
-		summary.setInnerText(txtSummary.getText());
+		String summaryMarkdown = PostHelper.createMarkup(txtSummary.getText());
+		summary.setInnerHTML(summaryMarkdown);
 		pnlPreview.getElement().appendChild(summary);
 
 		ParagraphElement content = d.createPElement();
-		content.addClassName("text-justified");
-		content.setInnerText(txtContent.getText());
+		String contextMarkdown = PostHelper.createMarkup(txtContent.getText());
+		content.setInnerHTML(contextMarkdown);
 		pnlPreview.getElement().appendChild(content);
 	}
 
@@ -314,6 +313,7 @@ public class EditPostPage extends Page implements
 		}
 
 		txtTags.setText(tags.toString());
+
 		txtSummary.setText(post.summary);
 		txtContent.setText(post.content.body);
 
