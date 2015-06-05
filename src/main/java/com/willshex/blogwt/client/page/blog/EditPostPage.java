@@ -136,7 +136,8 @@ public class EditPostPage extends Page implements
 
 		Document d = Document.get();
 		HeadingElement title = d.createHElement(1);
-		title.setInnerText(txtTitle.getText());
+
+		title.setInnerHTML(PostHelper.makeHeading(txtTitle.getText()));
 		pnlPreview.getElement().appendChild(title);
 
 		DivElement author = d.createDivElement();
@@ -153,12 +154,12 @@ public class EditPostPage extends Page implements
 		pnlPreview.getElement().appendChild(tags);
 
 		DivElement summary = d.createDivElement();
-		String summaryMarkdown = PostHelper.createMarkup(txtSummary.getText());
+		String summaryMarkdown = PostHelper.makeMarkup(txtSummary.getText());
 		summary.setInnerHTML(summaryMarkdown);
 		pnlPreview.getElement().appendChild(summary);
 
 		DivElement content = d.createDivElement();
-		String contextMarkdown = PostHelper.createMarkup(txtContent.getText());
+		String contextMarkdown = PostHelper.makeMarkup(txtContent.getText());
 		content.setInnerHTML(contextMarkdown);
 		pnlPreview.getElement().appendChild(content);
 	}

@@ -1,7 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
-	<ui:with field="title" type="java.lang.String" />
+	<ui:with field="title" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="summary" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="author" type="java.lang.String" />
 	<ui:with field="published" type="com.google.gwt.safehtml.shared.SafeHtml" />
@@ -14,11 +14,9 @@
 	
 	</ui:style>
 	<div>
-		<h3>
-			<a href="{link}">
-				<ui:text from="{title}" />
-			</a>
-		</h3>
+		<a href="{link}">
+			<ui:safehtml from="{title}" />
+		</a>
 		<div class="{style.bottom-margin}">
 			By
 			<ui:text from="{author}" />

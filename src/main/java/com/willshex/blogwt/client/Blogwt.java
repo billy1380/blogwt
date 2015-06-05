@@ -13,6 +13,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.willshex.blogwt.client.controller.NavigationController;
 
+import emoji.gwt.emoji.Emoji;
+import emoji.gwt.emoji.res.Noto;
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -20,8 +23,10 @@ public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
 
 	private HTMLPanel content;
 
-	public void onModuleLoad() {
+	public void onModuleLoad () {
 		super.onModuleLoad();
+
+		Emoji.get(Noto.INSTANCE);
 
 		History.addValueChangeHandler(NavigationController.get());
 
@@ -34,7 +39,7 @@ public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
 		History.fireCurrentHistoryState();
 	}
 
-	private void createContent() {
+	private void createContent () {
 		content = new HTMLPanel("<!-- content -->");
 		content.getElement().setId("content");
 		content.getElement().setClassName("container");
