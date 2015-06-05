@@ -110,7 +110,7 @@ public class PostDetailPage extends Page implements
 	}
 
 	private void show (Post post) {
-		elTitle.setInnerText(post.title);
+		elTitle.setInnerHTML(PostHelper.makeHeading(post.title));
 		elAuthor.setInnerText(UserHelper.handle(post.author));
 
 		if (post.published != null) {
@@ -140,7 +140,7 @@ public class PostDetailPage extends Page implements
 		}
 
 		if (post.content != null) {
-			String markup = PostHelper.createMarkup(post.content.body);
+			String markup = PostHelper.makeMarkup(post.content.body);
 
 			pnlContent.getElement().setInnerHTML(markup);
 

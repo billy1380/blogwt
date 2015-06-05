@@ -12,7 +12,7 @@
 	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel>
-			<h1 ui:field="elTitle"></h1>
+			<div ui:field="elTitle"></div>
 			<div class="{style.bottom-margin}">
 				By
 				<span ui:field="elAuthor" />

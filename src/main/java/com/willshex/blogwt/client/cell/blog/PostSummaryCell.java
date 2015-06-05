@@ -41,7 +41,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 	}
 
 	interface PostSummaryCellRenderer extends UiRenderer {
-		void render (SafeHtmlBuilder sb, SafeUri link, String title,
+		void render (SafeHtmlBuilder sb, SafeUri link, SafeHtml title,
 				SafeHtml summary, String author, SafeHtml published,
 				SafeHtml visible);
 	}
@@ -61,9 +61,11 @@ public class PostSummaryCell extends AbstractCell<Post> {
 					.ago(value.published));
 		}
 
-		RENDERER.render(builder, link, value.title, SafeHtmlUtils
-				.fromTrustedString(PostHelper.createMarkup(value.summary)),
-				UserHelper.handle(value.author), published, value.listed
+		RENDERER.render(builder, link, SafeHtmlUtils
+				.fromTrustedString(PostHelper.makeHeading2(value.title)),
+				SafeHtmlUtils.fromTrustedString(PostHelper
+						.makeMarkup(value.summary)), UserHelper
+						.handle(value.author), published, value.listed
 						.booleanValue() ? SafeHtmlUtils.EMPTY_SAFE_HTML
 						: DateTemplate.INSTANCE.notVisible());
 	}

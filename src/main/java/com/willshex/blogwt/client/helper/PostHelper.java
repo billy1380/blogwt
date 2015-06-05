@@ -26,8 +26,24 @@ public class PostHelper extends
 		return processor;
 	}
 
-	public static String createMarkup (String value) {
+	public static String makeMarkup (String value) {
 		return processor().process(value);
+	}
+
+	public static String makeHeading (String value) {
+		if (!value.startsWith("#")) {
+			value = "#" + value;
+		}
+
+		return makeMarkup(value);
+	}
+
+	public static String makeHeading2 (String value) {
+		if (!value.startsWith("##")) {
+			value = "##" + value;
+		}
+
+		return makeMarkup(value);
 	}
 
 }
