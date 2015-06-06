@@ -1,5 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:com.willshex.blogwt.client.part">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:p="urn:import:com.willshex.blogwt.client.part">
+	<ui:import field="com.willshex.blogwt.client.Resources.CELL_TABLE_RES" />
 	<ui:style gss="true">
 	@external checkbox;
 	.checkbox input[type=checkbox] {
@@ -12,23 +14,30 @@
 	</ui:style>
 	<g:HTMLPanel styleName="container">
 		<g:HTMLPanel styleName="row">
+			<g:HTMLPanel styleName="text-center col-xs-12" ui:field="pnlLoading"
+				visible="false">
+				<g:Image visible="true" resource="{CELL_TABLE_RES.cellTableLoading}" />
+			</g:HTMLPanel>
 			<g:FormPanel styleName="col-sm-4">
 				<g:HTMLPanel styleName="{style.form-post}">
 					<h2>New Post</h2>
 					<g:HTMLPanel ui:field="pnlTitle" styleName="form-group">
 						<label>Title</label>
 						<g:TextBox styleName="form-control" ui:field="txtTitle" />
-						<g:HTMLPanel styleName="small" ui:field="pnlTitleNote" visible="true" />
+						<g:HTMLPanel styleName="small" ui:field="pnlTitleNote"
+							visible="true" />
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="pnlSummary" styleName="form-group">
 						<label>Summary</label>
-						<g:TextArea styleName="form-control" ui:field="txtSummary" visibleLines="5" />
+						<g:TextArea styleName="form-control" ui:field="txtSummary"
+							visibleLines="5" />
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="pnlContent" styleName="form-group">
 						<label>Content</label>
-						<g:TextArea styleName="form-control" ui:field="txtContent" visibleLines="10" />
+						<g:TextArea styleName="form-control" ui:field="txtContent"
+							visibleLines="10" />
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="pnlTags" styleName="form-group">
@@ -38,7 +47,8 @@
 					</g:HTMLPanel>
 
 					<g:HTMLPanel styleName="checkbox">
-						<g:CheckBox ui:field="cbxDirectOnly" checked="false">require direct link</g:CheckBox>
+						<g:CheckBox ui:field="cbxDirectOnly" checked="false">require direct
+							link</g:CheckBox>
 					</g:HTMLPanel>
 
 					<g:HTMLPanel styleName="checkbox">
@@ -53,7 +63,8 @@
 						<g:CheckBox ui:field="cbxPublish" checked="false">publish on submit</g:CheckBox>
 					</g:HTMLPanel>
 
-					<g:SubmitButton ui:field="btnSubmit" styleName="{style.btn} btn btn-primary pull-right" text="Submit">
+					<g:SubmitButton ui:field="btnSubmit"
+						styleName="{style.btn} btn btn-primary pull-right" text="Submit">
 						Submit
 					</g:SubmitButton>
 				</g:HTMLPanel>
