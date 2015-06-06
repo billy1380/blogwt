@@ -81,6 +81,7 @@ public class EditPostPage extends Page implements
 	@UiField SubmitButton btnSubmit;
 
 	@UiField HTMLPanel pnlPreview;
+	@UiField HTMLPanel pnlLoading;
 
 	private Timer updateTimer = new Timer() {
 		@Override
@@ -202,6 +203,8 @@ public class EditPostPage extends Page implements
 		cbxComments.setEnabled(true);
 		cbxPublish.setEnabled(true);
 		btnSubmit.setEnabled(true);
+		
+		pnlLoading.setVisible(false);
 	}
 
 	private void loading () {
@@ -220,6 +223,8 @@ public class EditPostPage extends Page implements
 		pnlContent.removeStyleName("has-error");
 		pnlTags.removeStyleName("has-error");
 		pnlTagsNote.setVisible(false);
+		
+		pnlLoading.setVisible(true);
 	}
 
 	private void submitting () {
