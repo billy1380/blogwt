@@ -65,7 +65,7 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 		clPosts.setLoadingIndicator(loadingWidget);
 
 		PostController.get().addDataDisplay(clPosts);
-		refresh();
+		// refresh();
 	}
 
 	@Override
@@ -80,9 +80,9 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 	public void navigationChanged (Stack previous, Stack current) {
 		if (PageType.LogoutPageType.equals(current.getPage())) {
 			SessionController.get().logout();
-		} else {
-			refresh();
 		}
+		
+		refresh();
 	}
 
 	private void refresh () {
