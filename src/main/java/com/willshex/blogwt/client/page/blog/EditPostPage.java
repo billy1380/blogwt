@@ -10,6 +10,7 @@ package com.willshex.blogwt.client.page.blog;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -18,6 +19,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextArea;
@@ -79,9 +81,10 @@ public class EditPostPage extends Page implements
 	@UiField CheckBox cbxComments;
 	@UiField CheckBox cbxPublish;
 	@UiField SubmitButton btnSubmit;
-
+	@UiField Element elHeading;
 	@UiField HTMLPanel pnlPreview;
 	@UiField HTMLPanel pnlLoading;
+	@UiField FormPanel frmEdit;
 
 	private Timer updateTimer = new Timer() {
 		@Override
@@ -203,7 +206,7 @@ public class EditPostPage extends Page implements
 		cbxComments.setEnabled(true);
 		cbxPublish.setEnabled(true);
 		btnSubmit.setEnabled(true);
-		
+
 		pnlLoading.setVisible(false);
 	}
 
@@ -223,7 +226,7 @@ public class EditPostPage extends Page implements
 		pnlContent.removeStyleName("has-error");
 		pnlTags.removeStyleName("has-error");
 		pnlTagsNote.setVisible(false);
-		
+
 		pnlLoading.setVisible(true);
 	}
 
@@ -347,12 +350,33 @@ public class EditPostPage extends Page implements
 
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
+		boolean isNewPost = true;
+
 		if (current.getAction() != null && !"new".equals(current.getAction())) {
 			String postParam;
 			if ((postParam = current.getAction()) != null) {
 				PostController.get().getPost(postParam);
 				loading();
+				isNewPost = false;
 			}
 		}
+		elHeading.setInnerText(isNewPost ? "New Post" : "Edit Post");
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#reset() */
+	@Override
+	protected void reset () {
+		super.reset();
+
+		frmEdit.reset();
+		cbxDirectOnly.setValue(Boolean.FALSE);
+		cbxComments.setValue(Boolean.FALSE);
+		cbxPublish.setValue(Boolean.FALSE);
+		
+		// TODO: hide error messages etc
+		
+		updatePreview();
 	}
 }

@@ -18,9 +18,9 @@
 				visible="false">
 				<g:Image visible="true" resource="{CELL_TABLE_RES.cellTableLoading}" />
 			</g:HTMLPanel>
-			<g:FormPanel styleName="col-sm-4">
+			<g:FormPanel ui:field="frmEdit" styleName="col-sm-4">
 				<g:HTMLPanel styleName="{style.form-post}">
-					<h2>New Post</h2>
+					<h2 ui:field="elHeading">New Post</h2>
 					<g:HTMLPanel ui:field="pnlTitle" styleName="form-group">
 						<label>Title</label>
 						<g:TextBox styleName="form-control" ui:field="txtTitle" />
