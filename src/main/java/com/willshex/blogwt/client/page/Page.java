@@ -29,7 +29,7 @@ public abstract class Page extends Composite {
 	public Page (PageType pageType) {
 		this.pageType = pageType;
 	}
-	
+
 	protected void register (HandlerRegistration registration) {
 		handlers.add(registration);
 	}
@@ -54,6 +54,8 @@ public abstract class Page extends Composite {
 		for (HandlerRegistration handler : handlers) {
 			handler.removeHandler();
 		}
+		
+		reset();
 	}
 
 	public String getTitle () {
@@ -63,4 +65,6 @@ public abstract class Page extends Composite {
 	protected PageType getPageType () {
 		return pageType;
 	}
+
+	protected void reset () {}
 }
