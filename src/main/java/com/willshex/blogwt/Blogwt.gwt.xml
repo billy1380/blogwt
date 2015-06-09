@@ -22,6 +22,7 @@
 	<inherits name="com.googlecode.objectify.Objectify" />
 	<inherits name='com.google.gwt.query.Query'/>
 	<inherits name="org.Markdown4j" />
+	<inherits name="gwtupload.GWTUpload"/>
 
 	<add-linker name="xsiframe" />
 	<!-- <set-configuration-property name="xsiframe.failIfScriptTag" value="false" /> -->
