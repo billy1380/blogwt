@@ -3,6 +3,16 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
+	<context-param>
+		<param-name>maxFileSize</param-name>
+		<param-value>2096000</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>corsDomainsRegex</param-name>
+		<param-value>.*</param-value>
+	</context-param>
+
 	<servlet>
 		<servlet-name>Blog API</servlet-name>
 		<servlet-class>com.willshex.blogwt.server.api.blog.BlogJsonServlet</servlet-class>
@@ -32,6 +42,34 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<filter-name>ObjectifyFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+	<!-- gwtupload -->
+
+	<servlet>
+		<servlet-name>blobStore</servlet-name>
+		<servlet-class>gwtupload.server.gae.BlobstoreUploadAction</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>blobStore</servlet-name>
+		<url-pattern>*.blobstore</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>fileStore</servlet-name>
+		<servlet-class>gwtupload.server.gae.FilesApiUploadAction</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>fileStore</servlet-name>
+		<url-pattern>*.filestore</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>fileStore</servlet-name>
+		<url-pattern>*.gupld</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>blobStore</servlet-name>
+		<url-pattern>/upload</url-pattern>
+	</servlet-mapping>
 
 	<!-- Default page to serve -->
 	<welcome-file-list>

@@ -26,7 +26,7 @@ public class ApiHelper {
 	public static final String BLOG_END_POINT = "//" + getHost() + "/blog";
 	public static final String USER_END_POINT = "//" + getHost() + "/user";
 	public static final String UPLOAD_END_POINT = "//" + getHost()
-			+ "/upload.filestore";
+			+ "/upload.blobStore";
 
 	public static BlogService createBlogClient () {
 		BlogService service = new BlogService();

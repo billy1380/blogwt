@@ -7,6 +7,14 @@
 //
 package com.willshex.blogwt.client.page.blog;
 
+import gwtupload.client.BaseUploadStatus;
+import gwtupload.client.IUploadStatus.Status;
+import gwtupload.client.IUploader;
+import gwtupload.client.IUploader.OnFinishUploaderHandler;
+import gwtupload.client.MultiUploader;
+import gwtupload.client.PreloadedImage;
+import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -48,6 +56,8 @@ import com.willshex.blogwt.shared.api.blog.call.event.CreatePostEventHandler;
 import com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler;
 import com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Post;
+import com.willshex.blogwt.shared.api.datatype.Resource;
+import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
 import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -85,6 +95,13 @@ public class EditPostPage extends Page implements
 	@UiField HTMLPanel pnlPreview;
 	@UiField HTMLPanel pnlLoading;
 	@UiField FormPanel frmEdit;
+	@UiField MultiUploader uplDragAndDrop;
+	private Resource resource = null;
+
+	private final OnLoadPreloadedImageHandler PRELOAD_HANDLER = new OnLoadPreloadedImageHandler() {
+		@Override
+		public void onLoad (PreloadedImage image) {}
+	};
 
 	private Timer updateTimer = new Timer() {
 		@Override
@@ -102,6 +119,41 @@ public class EditPostPage extends Page implements
 		UiHelper.addPlaceholder(txtSummary, "Short Summary");
 		UiHelper.addPlaceholder(txtContent, "Article Content");
 		UiHelper.addPlaceholder(txtTags, "Comma Separated Tags");
+
+		uplDragAndDrop.addOnFinishUploadHandler(new OnFinishUploaderHandler() {
+
+			@Override
+			public void onFinish (IUploader uploader) {
+				if (uploader.getStatus() == Status.SUCCESS) {
+					String msg = uploader.getServerMessage().getMessage();
+					if (msg != null && msg.startsWith("data:")) {
+						// NOTE: this does not happen
+						new PreloadedImage(msg, PRELOAD_HANDLER);
+					} else {
+						resource = new Resource();
+						resource.type = ResourceTypeType.ResourceTypeTypeBlobStoreImage;
+
+						for (String url : uploader.getServerMessage()
+								.getUploadedFileUrls()) {
+							resource.data = url;
+							break;
+						}
+
+						for (String name : uploader.getServerMessage()
+								.getUploadedFileNames()) {
+							resource.name = name;
+							break;
+						}
+
+						// only preload one (many are not supported)
+						new PreloadedImage(resource.data, PRELOAD_HANDLER);
+					}
+				} else {
+					// Failed :(
+				}
+			}
+		});
+		uplDragAndDrop.setStatusWidget(new BaseUploadStatus());
 	}
 
 	/* (non-Javadoc)
@@ -374,9 +426,9 @@ public class EditPostPage extends Page implements
 		cbxDirectOnly.setValue(Boolean.FALSE);
 		cbxComments.setValue(Boolean.FALSE);
 		cbxPublish.setValue(Boolean.FALSE);
-		
+
 		// TODO: hide error messages etc
-		
+
 		updatePreview();
 	}
 }

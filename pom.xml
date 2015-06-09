@@ -301,5 +301,11 @@
 			<artifactId>objectify-gwt</artifactId>
 			<version>1.2.1</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.googlecode.gwtupload</groupId>
+			<artifactId>gwtupload-gae</artifactId>
+			<version>1.0.3</version>
+		</dependency>
 	</dependencies>
 </project>
