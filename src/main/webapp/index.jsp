@@ -72,6 +72,7 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link href='https://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet'
 	type='text/css'>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 <title><%=title == null ? "Blogwt" : title.value%></title>
 <%
 	if (properties != null) {
