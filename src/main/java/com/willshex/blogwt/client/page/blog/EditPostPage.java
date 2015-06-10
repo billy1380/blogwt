@@ -15,6 +15,9 @@ import gwtupload.client.MultiUploader;
 import gwtupload.client.PreloadedImage;
 import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -22,6 +25,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -96,11 +100,28 @@ public class EditPostPage extends Page implements
 	@UiField HTMLPanel pnlLoading;
 	@UiField FormPanel frmEdit;
 	@UiField MultiUploader uplDragAndDrop;
-	private Resource resource = null;
+	@UiField HTMLPanel pnlImagePreviews;
+	private Map<String, Resource> resources = new HashMap<String, Resource>();
+	private HTMLPanel currentResourceRow;
+
+	private static final int IMAGES_PER_ROW = 4;
 
 	private final OnLoadPreloadedImageHandler PRELOAD_HANDLER = new OnLoadPreloadedImageHandler() {
+
 		@Override
-		public void onLoad (PreloadedImage image) {}
+		public void onLoad (PreloadedImage image) {
+			image.addStyleName("img-circle");
+			image.addStyleName("col-xs-" + (int) (12 / IMAGES_PER_ROW));
+			
+			if ((resources.size() - 1) % IMAGES_PER_ROW == 0) {
+				currentResourceRow = new HTMLPanel(
+						SafeHtmlUtils.EMPTY_SAFE_HTML);
+				currentResourceRow.addStyleName("row");
+				pnlImagePreviews.add(currentResourceRow);
+			}
+
+			currentResourceRow.add(image);
+		}
 	};
 
 	private Timer updateTimer = new Timer() {
@@ -108,7 +129,7 @@ public class EditPostPage extends Page implements
 		public void run () {
 			updatePreview();
 		}
-	};;
+	};
 
 	public EditPostPage () {
 		super(PageType.EditPostPageType);
@@ -130,7 +151,7 @@ public class EditPostPage extends Page implements
 						// NOTE: this does not happen
 						new PreloadedImage(msg, PRELOAD_HANDLER);
 					} else {
-						resource = new Resource();
+						Resource resource = new Resource();
 						resource.type = ResourceTypeType.ResourceTypeTypeBlobStoreImage;
 
 						for (String url : uploader.getServerMessage()
@@ -145,7 +166,8 @@ public class EditPostPage extends Page implements
 							break;
 						}
 
-						// only preload one (many are not supported)
+						resources.put(resource.name, resource);
+						uploader.getStatusWidget().setVisible(false);
 						new PreloadedImage(resource.data, PRELOAD_HANDLER);
 					}
 				} else {
@@ -154,6 +176,7 @@ public class EditPostPage extends Page implements
 			}
 		});
 		uplDragAndDrop.setStatusWidget(new BaseUploadStatus());
+
 	}
 
 	/* (non-Javadoc)
