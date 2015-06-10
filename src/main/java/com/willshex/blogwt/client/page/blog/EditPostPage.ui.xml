@@ -4,7 +4,7 @@
 	<ui:import field="com.willshex.blogwt.client.Resources.CELL_TABLE_RES" />
 	<ui:import field="com.willshex.blogwt.client.helper.ApiHelper.UPLOAD_END_POINT" />
 	<ui:style gss="true">
-	@external checkbox, upld-drop-zone, GWTUpld;
+	@external checkbox, upld-drop-zone, GWTUpld, row;
 	.checkbox input[type=checkbox] {
 		margin-left: 0px;
 	}
@@ -21,7 +21,6 @@
 		text-align: center;
 		height: 120px;
 		border-width: 2px;
-		margin-bottom: 20px;
 		display: block;
 		vertical-align: middle;
 		border-radius: 6px
@@ -30,6 +29,11 @@
 	.GWTUpld {
 		width: 100%;
 	}
+	
+	.row {
+		margin-bottom: 10px;
+	}
+	
 	</ui:style>
 	<g:HTMLPanel styleName="container">
 		<g:HTMLPanel styleName="row">
@@ -45,6 +49,15 @@
 						<g:TextBox styleName="form-control" ui:field="txtTitle" />
 						<g:HTMLPanel styleName="small" ui:field="pnlTitleNote"
 							visible="true" />
+					</g:HTMLPanel>
+
+					<g:HTMLPanel ui:field="pnlImages" styleName="form-group">
+						<label>Images (png or jpg)</label>
+						<g:HTMLPanel ui:field="pnlImagePreviews" styleName="container-fluid">
+						</g:HTMLPanel>
+						<gu:MultiUploader ui:field="uplDragAndDrop" autoSubmit="true"
+							avoidRepeatFiles="true" validExtensions="jpg,png" servletPath="{UPLOAD_END_POINT}"
+							type="DROPZONE" />
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="pnlSummary" styleName="form-group">
@@ -82,12 +95,6 @@
 						<g:CheckBox ui:field="cbxPublish" checked="false">publish on submit</g:CheckBox>
 					</g:HTMLPanel>
 
-					<g:HTMLPanel ui:field="pnlImages" styleName="form-group">
-						<label>Images (png or jpeg)</label>
-						<gu:MultiUploader ui:field="uplDragAndDrop" autoSubmit="true"
-							avoidRepeatFiles="true" validExtensions="jpg,png" servletPath="{UPLOAD_END_POINT}"
-							type="DROPZONE" />
-					</g:HTMLPanel>
 					<g:SubmitButton ui:field="btnSubmit"
 						styleName="{style.btn} btn btn-primary pull-right" text="Submit">
 						Submit

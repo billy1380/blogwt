@@ -1,4 +1,4 @@
-@external emoji, h1, h2, h3, h4, h5, h6;
+@external h1, h2, h3, h4, h5, h6;
 
 body {
     padding-top: 20px;
@@ -8,6 +8,12 @@ body {
 
 .primaryLoader {
     gwt-sprite: "primaryLoader";
+}
+
+.image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 p .emoji {

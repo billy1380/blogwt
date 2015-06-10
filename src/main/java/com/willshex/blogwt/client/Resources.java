@@ -20,6 +20,10 @@ import com.google.gwt.user.cellview.client.CellTable;
 public interface Resources extends ClientBundle {
 	public interface ResourceStyles extends CssResource {
 		String primaryLoader ();
+		
+		String image();
+		
+		String emoji();
 	}
 
 	public static final Resources RES = GWT.create(Resources.class);
