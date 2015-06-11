@@ -9,6 +9,7 @@ package com.willshex.blogwt.client.controller;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.Cookies;
@@ -19,6 +20,7 @@ import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.Request;
 import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.helper.PermissionHelper;
@@ -188,10 +190,17 @@ public class SessionController {
 	}
 
 	public boolean isAdmin () {
-		return isValidSession()
-				&& user().roles != null
-				&& RoleHelper.toLookup(user().roles).containsKey(
-						RoleHelper.ADMIN);
+		return isValidSession() && user() != null && roles() != null
+				&& RoleHelper.toLookup(roles()).containsKey(RoleHelper.ADMIN);
+	}
+
+	public List<Role> roles () {
+		return user() == null || user().roles == null ? null : user().roles;
+	}
+
+	public List<Permission> permissions () {
+		return user() == null || user().permissions == null ? null
+				: user().permissions;
 	}
 
 	/**
@@ -201,12 +210,13 @@ public class SessionController {
 	public boolean isAuthorised (Collection<Permission> requiredPermissions) {
 		boolean authorised = isAdmin();
 
-		if (!authorised && isValidSession() && user().permissions != null) {
+		if (!authorised && isValidSession() && user() != null
+				&& permissions() != null) {
 			if (requiredPermissions == null || requiredPermissions.size() == 0) {
 				authorised = true;
 			} else {
 				Map<String, Permission> lookup = PermissionHelper
-						.toLookup(user().permissions);
+						.toLookup(permissions());
 				for (Permission permission : requiredPermissions) {
 					if (permission.code != null
 							&& lookup.containsKey(permission.code)) {
