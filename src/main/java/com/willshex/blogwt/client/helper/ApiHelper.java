@@ -25,8 +25,7 @@ public class ApiHelper {
 	public static final String ACCESS_CODE = "2bfe5f0e-9138-401c-8619-9a66f6367c9a";
 	public static final String BLOG_END_POINT = "//" + getHost() + "/blog";
 	public static final String USER_END_POINT = "//" + getHost() + "/user";
-	public static final String UPLOAD_END_POINT = "//" + getHost()
-			+ "/upload.blobstore";
+	public static final String UPLOAD_END_POINT = "//" + getHost() + "/upload";
 
 	public static BlogService createBlogClient () {
 		BlogService service = new BlogService();
