@@ -65,7 +65,6 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 		clPosts.setLoadingIndicator(loadingWidget);
 
 		PostController.get().addDataDisplay(clPosts);
-		// refresh();
 	}
 
 	@Override

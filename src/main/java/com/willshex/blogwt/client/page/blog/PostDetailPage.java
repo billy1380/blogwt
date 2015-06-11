@@ -176,6 +176,8 @@ public class PostDetailPage extends Page implements
 				}).scheduleRepeating(100);
 			}
 		}
+
+		pnlLoading.setVisible(false);
 	}
 
 	/* (non-Javadoc)
@@ -252,4 +254,23 @@ public class PostDetailPage extends Page implements
 
 	@Override
 	public void deletePostFailure (DeletePostRequest input, Throwable caught) {}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#reset() */
+	@Override
+	protected void reset () {
+		super.reset();
+
+		elTitle.setInnerHTML("");
+		elAuthor.setInnerHTML("");
+		elDate.setInnerHTML("");
+		pnlTags.clear();
+
+		lnkEditPost.setTargetHistoryToken(PageType.EditPostPageType
+				.asTargetHistoryToken(post.slug));
+
+		pnlContent.getElement().setInnerHTML("");
+		pnlLoading.setVisible(true);
+	}
 }
