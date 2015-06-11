@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.client.page.blog;
 
+import java.util.Arrays;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -23,6 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
 import com.willshex.blogwt.client.controller.NavigationController;
+import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
@@ -37,6 +40,7 @@ import com.willshex.blogwt.shared.api.blog.call.event.DeletePostEventHandler;
 import com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
+import com.willshex.blogwt.shared.api.helper.PermissionHelper;
 import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -203,6 +207,12 @@ public class PostDetailPage extends Page implements
 				pnlLoading.setVisible(true);
 			}
 		}
+
+		boolean canChange = SessionController.get().isAuthorised(
+				Arrays.asList(PermissionHelper
+						.create(PermissionHelper.MANAGE_POSTS)));
+		lnkEditPost.setVisible(canChange);
+		btnDeletePost.setVisible(canChange);
 	}
 
 	private static native void installDisqus (String discusShortName,
