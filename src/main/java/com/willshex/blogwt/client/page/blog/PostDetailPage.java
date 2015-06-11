@@ -268,7 +268,7 @@ public class PostDetailPage extends Page implements
 		pnlTags.clear();
 
 		lnkEditPost.setTargetHistoryToken(PageType.EditPostPageType
-				.asTargetHistoryToken(post.slug));
+				.asTargetHistoryToken(""));
 
 		pnlContent.getElement().setInnerHTML("");
 		pnlLoading.setVisible(true);
