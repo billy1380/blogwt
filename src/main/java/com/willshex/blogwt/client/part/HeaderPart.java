@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -42,7 +42,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 	private List<HandlerRegistration> registration;
 	
-	@UiField DivElement divName;
+	@UiField Element elName;
 	@UiField InlineHyperlink btnAccount;
 	@UiField InlineHyperlink btnSignInOut;
 	@UiField SpanElement spnUserName;
@@ -59,7 +59,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 		Resources.RES.styles().ensureInjected();
 
-		divName.setInnerText(PropertyController.get().title());
+		elName.setInnerText(PropertyController.get().title());
 	}
 
 	@UiHandler("btnExpand")
