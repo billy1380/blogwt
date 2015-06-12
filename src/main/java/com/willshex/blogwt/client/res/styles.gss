@@ -10,6 +10,10 @@ body {
     gwt-sprite: "primaryLoader";
 }
 
+.brand {
+    gwt-sprite: "brand";
+}
+
 .image {
     display: block;
     margin-left: auto;
