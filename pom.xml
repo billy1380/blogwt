@@ -32,6 +32,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<prerequisites>
+		<maven>3.1.0</maven>
+	</prerequisites>
+
 	<build>
 		<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
 
@@ -199,6 +203,12 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>net.sourceforge.htmlunit</groupId>
+			<artifactId>htmlunit</artifactId>
+			<version>2.17</version>
+		</dependency>
+
 		<!-- GWT -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
@@ -211,15 +221,15 @@
 			<version>${gwt.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>com.googlecode.gwtquery</groupId>
-            <artifactId>gwtquery</artifactId>
-            <version>1.4.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.commonjava.googlecode.markdown4j</groupId>
-            <artifactId>markdown4j-gwt</artifactId>
-            <version>1.1-SNAPSHOT</version>
-        </dependency>
+			<groupId>com.googlecode.gwtquery</groupId>
+			<artifactId>gwtquery</artifactId>
+			<version>1.4.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.commonjava.googlecode.markdown4j</groupId>
+			<artifactId>markdown4j-gwt</artifactId>
+			<version>1.1-SNAPSHOT</version>
+		</dependency>
 
 		<!-- Google App Engine -->
 		<dependency>
@@ -249,6 +259,7 @@
 		</dependency>
 
 		<!-- Other Dependencies -->
+
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -301,11 +312,12 @@
 			<artifactId>objectify-gwt</artifactId>
 			<version>1.2.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.googlecode.gwtupload</groupId>
 			<artifactId>gwtupload-gae</artifactId>
 			<version>1.0.3</version>
 		</dependency>
+
 	</dependencies>
 </project>

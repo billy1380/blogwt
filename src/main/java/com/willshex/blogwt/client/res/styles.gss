@@ -65,14 +65,14 @@ h6 .emoji, .h6 .emoji {
 
 .externalLink:after {
 position: relative;
-  top: 2px;
-  display: inline-block;
-  font-family: 'Glyphicons Halflings';
-  font-style: normal;
-  font-size: smaller;
-  font-weight: 400;
-  line-height: 1;
-  content: "\e144";
-  margin-left: 3px;
-  @mixin fontSmooting();
+    top: 2px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-size: smaller;
+    font-weight: 400;
+    line-height: 1;
+    content: "\e144";
+    margin-left: 3px;
+    @mixin fontSmooting();
 }
