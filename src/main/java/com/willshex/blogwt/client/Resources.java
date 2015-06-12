@@ -26,6 +26,10 @@ public interface Resources extends ClientBundle {
 		String emoji ();
 
 		String brand ();
+
+		String internalLink ();
+
+		String externalLink ();
 	}
 
 	public static final Resources RES = GWT.create(Resources.class);
