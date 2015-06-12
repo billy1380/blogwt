@@ -26,7 +26,9 @@
 	import="com.willshex.blogwt.server.service.property.PropertyServiceProvider"%>
 <%
 	String fragmentParameter = request.getParameter("_escaped_fragment_");
-	boolean isStatic = fragmentParameter != null;
+	boolean isStatic = false
+	//fragmentParameter != null
+	;
 
 	if (isStatic) {
 		String scheme = request.getScheme();
