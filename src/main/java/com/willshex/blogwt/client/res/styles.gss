@@ -1,5 +1,10 @@
 @external h1, h2, h3, h4, h5, h6;
 
+@defmixin fontSmooting() {
+-webkit-font-smoothing: antialiased; /* Chrome 10+,Safari 5.1+ */
+/* @alternate */ -moz-osx-font-smoothing: grayscale;
+ }
+ 
 body {
     padding-top: 20px;
     padding-bottom: 20px;
@@ -53,4 +58,21 @@ h5 .emoji, .h5 .emoji {
 h6 .emoji, .h6 .emoji {
     height: 12px;
     margin-bottom: 2px;
+}
+
+.internalLink {
+}
+
+.externalLink:after {
+position: relative;
+  top: 2px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-size: smaller;
+  font-weight: 400;
+  line-height: 1;
+  content: "\e144";
+  margin-left: 3px;
+  @mixin fontSmooting();
 }
