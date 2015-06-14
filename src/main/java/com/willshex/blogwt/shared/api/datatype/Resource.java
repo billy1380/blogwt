@@ -11,11 +11,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.condition.IfNotEmpty;
 
 @Entity
+@Cache
 public class Resource extends DataType {
 	@Index(value = IfNotEmpty.class) public String name;
 	public String data;
