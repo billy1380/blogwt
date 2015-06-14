@@ -12,10 +12,12 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
 
 @Entity
+@Cache
 public class PostContent extends DataType {
 	public String body;
 
