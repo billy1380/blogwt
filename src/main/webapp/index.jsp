@@ -1,3 +1,5 @@
+<%@page import="com.willshex.blogwt.server.service.session.ISessionService"%>
+<%@page import="java.util.Date"%>
 <%@page import="com.spacehopperstudios.utility.StringUtils"%>
 <%@page import="java.util.logging.Level"%>
 <%@page import="java.util.logging.Logger"%>
@@ -40,6 +42,7 @@
 		// TODO: load page content with headless browser
 	} else {
 		IPropertyService propertyService = PropertyServiceProvider.provide();
+		ISessionService sessionService = SessionServiceProvider.provide();
 
 		Property title = null, extendedTitle = null, copyrightHolder = null, copyrightUrl = null;
 		List<Property> properties = null;
@@ -60,23 +63,31 @@
 				for (Cookie currentCookie : cookies) {
 					if ("session.id".equals(currentCookie.getName())) {
 						sessionId = currentCookie.getValue();
+						break;
 					}
 				}
 
 				if (sessionId != null) {
-					userSession = SessionServiceProvider.provide().getSession(Long.valueOf(sessionId));
+					userSession = sessionService.getSession(Long.valueOf(sessionId));
 
 					if (userSession != null) {
-						userSession.user = UserServiceProvider.provide().getUser(userSession.userKey.getId());
+						if (userSession.expires.getTime() > new Date().getTime()) {
+							userSession = sessionService.extendSession(userSession, Long.valueOf(ISessionService.MILLIS_MINUTES));
+							userSession.user = UserServiceProvider.provide().getUser(userSession.userKey.getId());
+							userSession.user.password = null;
 
-						if (userSession.user.roleKeys != null) {
-							userSession.user.roles = RoleServiceProvider.provide().getIdRolesBatch(
-									PersistenceService.keysToIds(userSession.user.roleKeys));
-						}
+							if (userSession.user.roleKeys != null) {
+								userSession.user.roles = RoleServiceProvider.provide().getIdRolesBatch(
+										PersistenceService.keysToIds(userSession.user.roleKeys));
+							}
 
-						if (userSession.user.permissionKeys != null) {
-							userSession.user.permissions = PermissionServiceProvider.provide().getIdPermissionsBatch(
-									PersistenceService.keysToIds(userSession.user.permissionKeys));
+							if (userSession.user.permissionKeys != null) {
+								userSession.user.permissions = PermissionServiceProvider.provide().getIdPermissionsBatch(
+										PersistenceService.keysToIds(userSession.user.permissionKeys));
+							}
+						} else {
+							sessionService.deleteSession(userSession);
+							userSession = null;
 						}
 					}
 				}
