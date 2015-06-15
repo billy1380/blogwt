@@ -59,7 +59,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 
 	<servlet>
 		<servlet-name>blobStore</servlet-name>
-		<servlet-class>gwtupload.server.gae.BlobstoreUploadAction</servlet-class>
+		<servlet-class>gwtupload.server.gae.CloudStorageUploadAction</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
