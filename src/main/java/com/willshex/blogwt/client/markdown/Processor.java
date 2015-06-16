@@ -11,6 +11,7 @@ import static com.google.gwt.user.client.Window.Location.getHost;
 
 import org.markdown4j.ExtDecorator;
 import org.markdown4j.client.MarkdownProcessor;
+import org.markdown4j.client.WebSequencePlugin;
 
 import com.github.rjeschke.txtmark.Decorator;
 import com.github.rjeschke.txtmark.EmojiEmitter;
@@ -67,6 +68,17 @@ public class Processor extends MarkdownProcessor {
 				}
 			}
 		};
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see org.markdown4j.client.MarkdownProcessor#registerPlugins() */
+	@Override
+	protected void registerPlugins () {
+		CachedIncludePlugin includePlugin = new CachedIncludePlugin(
+				ensureManager());
+		includePlugin.setProcessor(this);
+		registerPlugins(new WebSequencePlugin(ensureManager()), includePlugin);
 	}
 
 	public Processor () {

@@ -16,7 +16,12 @@ import gwtupload.client.PreloadedImage;
 import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.markdown4j.Plugin;
+import org.markdown4j.client.IncludePlugin;
+import org.markdown4j.client.event.PluginContentReadyEventHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -102,7 +107,7 @@ public class EditPostPage extends Page implements
 	@UiField FormPanel frmEdit;
 	@UiField MultiUploader uplDragAndDrop;
 	@UiField HTMLPanel pnlImagePreviews;
-	private Map<String, Resource> resources = new HashMap<String, Resource>();
+	private Map<String, Resource> resources;
 	private HTMLPanel currentResourceRow;
 
 	private static final int IMAGES_PER_ROW = 4;
@@ -173,7 +178,7 @@ public class EditPostPage extends Page implements
 							break;
 						}
 
-						resources.put(resource.name, resource);
+						ensureResources().put(resource.name, resource);
 						uploader.getStatusWidget().setVisible(false);
 						new PreloadedImage(resource.data, PRELOAD_HANDLER);
 					}
@@ -203,24 +208,47 @@ public class EditPostPage extends Page implements
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetPostEventHandler.TYPE, PostController.get(), this));
 
+		register(PostHelper.processor().addPluginContentReadyHandler(
+				new PluginContentReadyEventHandler() {
+
+					@Override
+					public void ready (PluginContentReadyEvent event,
+							Plugin plugin, List<String> lines,
+							Map<String, String> params, String id,
+							String content) {
+						if (plugin instanceof IncludePlugin) {
+							Element el = pnlPreview.getElementById(id);
+
+							if (el != null && content != null) {
+								el.setInnerHTML(content);
+							}
+						}
+					}
+				}));
+
 		post = null;
 
-		updateTimer.cancel();
-		updateTimer.schedule(250);
+		deferRefresh();
 
 		ready();
 	}
 
-	@UiHandler({ "txtTitle", "txtSummary", "txtContent", "txtTags" })
-	void onTxtKeyUp (KeyUpEvent e) {
+	/**
+	 * 
+	 */
+	private void deferRefresh () {
 		updateTimer.cancel();
 		updateTimer.schedule(250);
 	}
 
+	@UiHandler({ "txtTitle", "txtSummary", "txtContent", "txtTags" })
+	void onTxtKeyUp (KeyUpEvent e) {
+		deferRefresh();
+	}
+
 	@UiHandler({ "txtSummary", "txtContent" })
 	void onClick (ClickEvent e) {
-		updateTimer.cancel();
-		updateTimer.schedule(250);
+		deferRefresh();
 	}
 
 	private void updatePreview () {
@@ -246,11 +274,11 @@ public class EditPostPage extends Page implements
 		pnlPreview.getElement().appendChild(tags);
 
 		DivElement summary = d.createDivElement();
-		summary.setInnerHTML(markdown(txtSummary));
+		summary.setInnerHTML(markup(txtSummary));
 		pnlPreview.getElement().appendChild(summary);
 
 		DivElement content = d.createDivElement();
-		content.setInnerHTML(markdown(txtContent));
+		content.setInnerHTML(markup(txtContent));
 		pnlPreview.getElement().appendChild(content);
 	}
 
@@ -258,7 +286,7 @@ public class EditPostPage extends Page implements
 	 * @param text
 	 * @return
 	 */
-	private String markdown (ValueBoxBase<String> valueBox) {
+	private String markup (ValueBoxBase<String> valueBox) {
 		StringBuffer markdown = new StringBuffer(valueBox.getText());
 		markdown.insert(valueBox.getCursorPos(), CARET_BEFORE);
 		return PostHelper.makeMarkup(markdown.toString())
@@ -461,6 +489,11 @@ public class EditPostPage extends Page implements
 		elHeading.setInnerText(isNewPost ? "New Post" : "Edit Post");
 	}
 
+	private Map<String, Resource> ensureResources () {
+		return resources == null ? resources = new HashMap<String, Resource>()
+				: resources;
+	}
+
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.client.page.Page#reset() */
@@ -472,6 +505,10 @@ public class EditPostPage extends Page implements
 		cbxDirectOnly.setValue(Boolean.FALSE);
 		cbxComments.setValue(Boolean.FALSE);
 		cbxPublish.setValue(Boolean.FALSE);
+
+		if (resources != null) {
+			resources.clear();
+		}
 
 		// TODO: hide error messages etc
 
