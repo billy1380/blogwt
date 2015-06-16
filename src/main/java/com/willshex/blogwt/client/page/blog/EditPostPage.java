@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
@@ -105,6 +106,11 @@ public class EditPostPage extends Page implements
 	private HTMLPanel currentResourceRow;
 
 	private static final int IMAGES_PER_ROW = 4;
+	private static final String CARET_BEFORE = " \\_\\:\\_this\\_is\\_the\\_tracking\\_cursor\\_\\:\\_ ";
+	private static final String CARET_AFTER = "_:_this_is_the_tracking_cursor_:_";
+	// private static final String CARET = " <span class=\"glyphicon glyphicon-pencil\"></span> ";
+	private static final String CARET_FINALLY = "<span style=\"color:red;\" class=\""
+			+ Resources.RES.styles().blink() + "\"><strong> _ </strong></span>";
 
 	private final OnLoadPreloadedImageHandler PRELOAD_HANDLER = new OnLoadPreloadedImageHandler() {
 
@@ -112,7 +118,7 @@ public class EditPostPage extends Page implements
 		public void onLoad (PreloadedImage image) {
 			image.addStyleName("img-circle");
 			image.addStyleName("col-xs-" + (int) (12 / IMAGES_PER_ROW));
-			
+
 			if ((resources.size() - 1) % IMAGES_PER_ROW == 0) {
 				currentResourceRow = new HTMLPanel(
 						SafeHtmlUtils.EMPTY_SAFE_HTML);
@@ -210,6 +216,12 @@ public class EditPostPage extends Page implements
 		updateTimer.schedule(250);
 	}
 
+	@UiHandler({ "txtSummary", "txtContent" })
+	void onClick (ClickEvent e) {
+		updateTimer.cancel();
+		updateTimer.schedule(250);
+	}
+
 	private void updatePreview () {
 		pnlPreview.getElement().removeAllChildren();
 
@@ -233,14 +245,24 @@ public class EditPostPage extends Page implements
 		pnlPreview.getElement().appendChild(tags);
 
 		DivElement summary = d.createDivElement();
-		String summaryMarkdown = PostHelper.makeMarkup(txtSummary.getText());
-		summary.setInnerHTML(summaryMarkdown);
+		summary.setInnerHTML(markdown(txtSummary));
 		pnlPreview.getElement().appendChild(summary);
 
 		DivElement content = d.createDivElement();
-		String contextMarkdown = PostHelper.makeMarkup(txtContent.getText());
-		content.setInnerHTML(contextMarkdown);
+		content.setInnerHTML(markdown(txtContent));
 		pnlPreview.getElement().appendChild(content);
+	}
+
+	/**
+	 * @param text
+	 * @return
+	 */
+	private String markdown (ValueBoxBase<String> valueBox) {
+		StringBuffer markdown = new StringBuffer(valueBox.getText());
+		markdown.insert(valueBox.getCursorPos(), CARET_BEFORE);
+		return PostHelper.makeMarkup(markdown.toString())
+				.replace(CARET_BEFORE, CARET_FINALLY)
+				.replace(CARET_AFTER, CARET_FINALLY);
 	}
 
 	@UiHandler("btnSubmit")

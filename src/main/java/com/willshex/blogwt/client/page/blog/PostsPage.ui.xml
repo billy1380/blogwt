@@ -3,7 +3,11 @@
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:import field="com.willshex.blogwt.client.page.PageType.EditPostPageType" />
 	<ui:style>
-	
+	.inline, .inline p {
+		display: inline;
+		padding: 0;
+		margin: 0;
+	}
 	</ui:style>
 	<g:HTMLPanel>
 		<div class="jumbotron">
@@ -21,12 +25,15 @@
 			</div>
 		</div>
 
-		<g:HTMLPanel>
+		<g:HTMLPanel styleName="col-sm-10">
 			<c:CellList ui:field="clPosts" />
 		</g:HTMLPanel>
 
 		<g:HTMLPanel ui:field="pnlNoPosts">
-			<h2 class="text-center">No posts! :'(</h2>
+			<h2 class="text-center">
+				No posts!
+				<p:Markdown styleName="{style.inline}">:crying_cat_face:</p:Markdown>
+			</h2>
 		</g:HTMLPanel>
 
 		<p:BackToTop />

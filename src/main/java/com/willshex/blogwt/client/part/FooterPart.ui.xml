@@ -4,7 +4,7 @@
 	
 	</ui:style>
 
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="col-xs-12">
 		<hr />
 		<footer class="footer">
 			<div class="container" ui:field="divCopyright" />
