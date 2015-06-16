@@ -20,7 +20,7 @@ public class PostHelper extends
 
 	private static MarkdownProcessor processor;
 
-	private static MarkdownProcessor processor () {
+	public static MarkdownProcessor processor () {
 		if (processor == null) {
 			processor = new Processor();
 		}
