@@ -109,8 +109,9 @@ public class EditPostPage extends Page implements
 	private static final String CARET_BEFORE = " \\_\\:\\_this\\_is\\_the\\_tracking\\_cursor\\_\\:\\_ ";
 	private static final String CARET_AFTER = "_:_this_is_the_tracking_cursor_:_";
 	// private static final String CARET = " <span class=\"glyphicon glyphicon-pencil\"></span> ";
-	private static final String CARET_FINALLY = "<span style=\"color:red;\" class=\""
-			+ Resources.RES.styles().blink() + "\"><strong> _ </strong></span>";
+	private static final String CARET_FINALLY = "<span class=\""
+			+ Resources.RES.styles().blink()
+			+ "\"><strong> &#9724; </strong></span>";
 
 	private final OnLoadPreloadedImageHandler PRELOAD_HANDLER = new OnLoadPreloadedImageHandler() {
 

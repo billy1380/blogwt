@@ -164,6 +164,8 @@
 						like those included with Eclipse or IntelliJ -->
 					<jvmFlags>
 						<jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
+						<jvmFlag>-XX:+CMSClassUnloadingEnabled</jvmFlag>
+						<jvmFlag>-XX:+CMSPermGenSweepingEnabled</jvmFlag>
 					</jvmFlags>
 					<version>0v3</version>
 				</configuration>

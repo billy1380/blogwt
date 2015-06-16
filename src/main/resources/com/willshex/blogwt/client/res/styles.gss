@@ -60,7 +60,7 @@ body {
     margin-right: auto;
 }
 
-p .emoji {
+p .emoji, li .emoji {
     height: 14px;
     margin-bottom: 2px;
 }
