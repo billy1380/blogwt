@@ -31,11 +31,10 @@
 	}
 	
 	.row {
-		margin-bottom: 10px;
+		margin-bottom: 15px;
 	}
-	
 	</ui:style>
-	<g:HTMLPanel styleName="container">
+	<g:HTMLPanel>
 		<g:HTMLPanel styleName="row">
 			<g:HTMLPanel styleName="text-center col-xs-12" ui:field="pnlLoading"
 				visible="false">
