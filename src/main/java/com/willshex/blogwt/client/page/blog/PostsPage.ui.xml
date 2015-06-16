@@ -25,8 +25,8 @@
 			</div>
 		</div>
 
-		<g:HTMLPanel styleName="col-sm-10">
-			<c:CellList ui:field="clPosts" />
+		<g:HTMLPanel styleName="row">
+			<c:CellList ui:field="clPosts" styleName="col-sm-10" />
 		</g:HTMLPanel>
 
 		<g:HTMLPanel ui:field="pnlNoPosts">

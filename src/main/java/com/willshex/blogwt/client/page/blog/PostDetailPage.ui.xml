@@ -23,22 +23,24 @@
 				</g:InlineHyperlink>
 			</div>
 		</div>
-		<g:HTMLPanel styleName="col-sm-10">
-			<div ui:field="elTitle"></div>
-			<div class="{style.bottom-margin}">
-				By
-				<span ui:field="elAuthor" />
-				<span ui:field="elDate" />
+		<g:HTMLPanel styleName="row">
+			<div class="col-sm-10">
+				<div ui:field="elTitle"></div>
+				<div class="{style.bottom-margin}">
+					By
+					<span ui:field="elAuthor" />
+					<span ui:field="elDate" />
+				</div>
+				<g:HTMLPanel styleName="text-center" ui:field="pnlLoading">
+					<g:Image visible="true" resource="{CELL_TABLE_RES.cellTableLoading}" />
+				</g:HTMLPanel>
+
+				<g:HTMLPanel ui:field="pnlContent" />
+
+				<g:HTMLPanel ui:field="pnlTags" />
+
+				<div id="disqus_thread" />
 			</div>
-			<g:HTMLPanel styleName="text-center" ui:field="pnlLoading">
-				<g:Image visible="true" resource="{CELL_TABLE_RES.cellTableLoading}" />
-			</g:HTMLPanel>
-
-			<g:HTMLPanel ui:field="pnlContent" />
-
-			<g:HTMLPanel ui:field="pnlTags" />
-			
-			<div id="disqus_thread" />
 		</g:HTMLPanel>
 		<p:BackToTop />
 	</g:HTMLPanel>
