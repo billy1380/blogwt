@@ -9,27 +9,26 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<g:HTMLPanel>
+		<div class="btn-toolbar {style.bottom-margin}">
+			<div class="btn-group pull-right">
+				<g:Button ui:field="btnDeletePost" styleName="btn btn-danger">
+					<span class="glyphicon glyphicon-trash"></span>
+				</g:Button>
+			</div>
+			<div class="btn-group pull-right">
+				<g:InlineHyperlink ui:field="lnkEditPost" styleName="btn btn-default"
+					targetHistoryToken="{EditPostPageType.asTargetHistoryToken}/xxx">
+					<span class="glyphicon glyphicon-edit"></span>
+					Edit Post
+				</g:InlineHyperlink>
+			</div>
+		</div>
+		<g:HTMLPanel styleName="col-sm-10">
 			<div ui:field="elTitle"></div>
 			<div class="{style.bottom-margin}">
 				By
 				<span ui:field="elAuthor" />
 				<span ui:field="elDate" />
-			</div>
-
-			<div class="btn-toolbar {style.bottom-margin}">
-				<div class="btn-group pull-right">
-					<g:Button ui:field="btnDeletePost" styleName="btn btn-danger">
-						<span class="glyphicon glyphicon-trash"></span>
-					</g:Button>
-				</div>
-				<div class="btn-group pull-right">
-					<g:InlineHyperlink ui:field="lnkEditPost" styleName="btn btn-default"
-						targetHistoryToken="{EditPostPageType.asTargetHistoryToken}/xxx">
-						<span class="glyphicon glyphicon-edit"></span>
-						Edit Post
-					</g:InlineHyperlink>
-				</div>
 			</div>
 			<g:HTMLPanel styleName="text-center" ui:field="pnlLoading">
 				<g:Image visible="true" resource="{CELL_TABLE_RES.cellTableLoading}" />
@@ -38,6 +37,7 @@
 			<g:HTMLPanel ui:field="pnlContent" />
 
 			<g:HTMLPanel ui:field="pnlTags" />
+			
 			<div id="disqus_thread" />
 		</g:HTMLPanel>
 		<p:BackToTop />

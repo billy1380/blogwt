@@ -72,7 +72,8 @@ public class Processor extends MarkdownProcessor {
 	public Processor () {
 		super();
 
-		setDecorator(new ExtDecorator() {
+		ExtDecorator decorator;
+		setDecorator(decorator = new ExtDecorator() {
 
 			/* (non-Javadoc)
 			 * 
@@ -108,5 +109,6 @@ public class Processor extends MarkdownProcessor {
 				}
 			}
 		});
+		decorator.addStyleClass("text-justify", "p");
 	}
 }

@@ -30,6 +30,8 @@ public interface Resources extends ClientBundle {
 		String internalLink ();
 
 		String externalLink ();
+		
+		String blink();
 	}
 
 	public static final Resources RES = GWT.create(Resources.class);

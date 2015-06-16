@@ -5,6 +5,41 @@
 /* @alternate */ -moz-osx-font-smoothing: grayscale;
  }
  
+ @defmixin blink(DURATION) {
+    -webkit-animation-name: blinker;
+    -webkit-animation-duration: DURATION;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+
+    /* @alternate */ -moz-animation-name: blinker;
+    /* @alternate */ -moz-animation-duration: DURATION;
+    /* @alternate */ -moz-animation-timing-function: linear;
+    /* @alternate */ -moz-animation-iteration-count: infinite;
+
+    /* @alternate */ animation-name: blinker;
+    /* @alternate */ animation-duration: DURATION;
+    /* @alternate */ animation-timing-function: linear;
+    /* @alternate */ animation-iteration-count: infinite;
+}
+
+@-moz-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@-webkit-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+ 
 body {
     padding-top: 20px;
     padding-bottom: 20px;
@@ -75,4 +110,8 @@ position: relative;
     content: "\e144";
     margin-left: 3px;
     @mixin fontSmooting();
+}
+
+.blink {
+    @mixin blink(1s);
 }
