@@ -199,7 +199,7 @@ public class MainServlet extends ContextAwareServlet {
 			RESPONSE.get()
 					.getOutputStream()
 					.print(String.format(PAGE_FORMAT, (title == null ? "Blogwt"
-							: title), scriptVariables.toString()));
+							: title.value), scriptVariables.toString()));
 		}
 	}
 
