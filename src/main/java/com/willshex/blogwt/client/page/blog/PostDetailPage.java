@@ -25,9 +25,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
 import com.willshex.blogwt.client.controller.NavigationController;
-import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PostController;
+import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
@@ -95,6 +95,8 @@ public class PostDetailPage extends Page implements
 				GetPostEventHandler.TYPE, PostController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				DeletePostEventHandler.TYPE, PostController.get(), this));
+
+		register(PostHelper.handlePluginContentReady());
 
 		super.onAttach();
 	}

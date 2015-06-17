@@ -24,7 +24,7 @@
 			</div>
 		</div>
 		<g:HTMLPanel styleName="row">
-			<div class="col-sm-10">
+			<div class="col-sm-8">
 				<div ui:field="elTitle"></div>
 				<div class="{style.bottom-margin}">
 					By

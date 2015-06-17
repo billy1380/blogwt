@@ -28,6 +28,7 @@ import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellList;
@@ -77,6 +78,9 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				this));
+
+		register(PostHelper.handlePluginContentReady());
+
 		super.onAttach();
 	}
 
