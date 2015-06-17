@@ -16,12 +16,7 @@ import gwtupload.client.PreloadedImage;
 import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import org.markdown4j.Plugin;
-import org.markdown4j.client.IncludePlugin;
-import org.markdown4j.client.event.PluginContentReadyEventHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -208,23 +203,7 @@ public class EditPostPage extends Page implements
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetPostEventHandler.TYPE, PostController.get(), this));
 
-		register(PostHelper.processor().addPluginContentReadyHandler(
-				new PluginContentReadyEventHandler() {
-
-					@Override
-					public void ready (PluginContentReadyEvent event,
-							Plugin plugin, List<String> lines,
-							Map<String, String> params, String id,
-							String content) {
-						if (plugin instanceof IncludePlugin) {
-							Element el = pnlPreview.getElementById(id);
-
-							if (el != null && content != null) {
-								el.setInnerHTML(content);
-							}
-						}
-					}
-				}));
+		register(PostHelper.handlePluginContentReady());
 
 		post = null;
 
