@@ -50,6 +50,7 @@ import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.client.part.MarkdownToolbar;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostResponse;
@@ -102,6 +103,8 @@ public class EditPostPage extends Page implements
 	@UiField FormPanel frmEdit;
 	@UiField MultiUploader uplDragAndDrop;
 	@UiField HTMLPanel pnlImagePreviews;
+	@UiField MarkdownToolbar tbrSummary;
+	@UiField MarkdownToolbar tbrContent;
 	private Map<String, Resource> resources;
 	private HTMLPanel currentResourceRow;
 
@@ -416,16 +419,18 @@ public class EditPostPage extends Page implements
 	private void show (Post post) {
 		txtTitle.setText(post.title);
 
-		StringBuffer tags = new StringBuffer();
-		for (String tag : post.tags) {
-			if (tags.length() > 0) {
-				tags.append(", ");
+		if (post.tags != null) {
+			StringBuffer tags = new StringBuffer();
+			for (String tag : post.tags) {
+				if (tags.length() > 0) {
+					tags.append(", ");
+				}
+
+				tags.append(tag);
 			}
-
-			tags.append(tag);
+			
+			txtTags.setText(tags.toString());
 		}
-
-		txtTags.setText(tags.toString());
 
 		txtSummary.setText(post.summary);
 		txtContent.setText(post.content.body);

@@ -61,12 +61,14 @@
 
 					<g:HTMLPanel ui:field="pnlSummary" styleName="form-group">
 						<label>Summary</label>
+						<p:MarkdownToolbar ui:field="tbrSummary" />
 						<g:TextArea styleName="form-control" ui:field="txtSummary"
 							visibleLines="5" />
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="pnlContent" styleName="form-group">
 						<label>Content</label>
+						<p:MarkdownToolbar ui:field="tbrContent" />
 						<g:TextArea styleName="form-control" ui:field="txtContent"
 							visibleLines="10" />
 					</g:HTMLPanel>
