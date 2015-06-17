@@ -186,6 +186,8 @@ public class EditPostPage extends Page implements
 			}
 		});
 		uplDragAndDrop.setStatusWidget(new BaseUploadStatus());
+		tbrSummary.setText(txtSummary);
+		tbrContent.setText(txtContent);
 
 	}
 
@@ -428,7 +430,7 @@ public class EditPostPage extends Page implements
 
 				tags.append(tag);
 			}
-			
+
 			txtTags.setText(tags.toString());
 		}
 

@@ -166,6 +166,8 @@
 						<jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
 						<jvmFlag>-XX:+CMSClassUnloadingEnabled</jvmFlag>
 						<jvmFlag>-XX:+CMSPermGenSweepingEnabled</jvmFlag>
+						<jvmFlag>-XX:MaxPermSize=1024M</jvmFlag>
+						<jvmFlag>-Xmx3G</jvmFlag>
 					</jvmFlags>
 					<version>0v3</version>
 				</configuration>

@@ -1,9 +1,62 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
+	@external btn-group, btn-toolbar;
+	.btn-toolbar.markdown-toolbar .btn-group {
+		margin-bottom: 10px;
+	}
 	
+	/*.btn-toolbar.markdown-toolbar .btn-group .btn-group {
+									        margin-bottom: 0px;
+									    }*/
 	</ui:style>
 	<g:HTMLPanel>
-		Markdown toolbar...
+		<div class="btn-toolbar {style.markdown-toolbar}">
+			<div class="btn-group">
+				<g:PushButton styleName="btn btn-default" ui:field="btnHeading" />
+				<g:PushButton styleName="btn btn-default" ui:field="btnBold" />
+				<g:PushButton styleName="btn btn-default" ui:field="btnItalic" />
+			</div>
+
+			<div class="btn-group">
+				<g:PushButton styleName="btn btn-default" ui:field="btnUnderline" />
+				<g:PushButton styleName="btn btn-default" ui:field="btnStrikethrough" />
+			</div>
+
+			<div class="btn-group">
+				<g:PushButton styleName="btn btn-default" ui:field="btnSuperscript" />
+				<g:PushButton styleName="btn btn-default" ui:field="btnSubscript" />
+			</div>
+
+			<div class="btn-group">
+				<g:PushButton styleName="btn btn-default" ui:field="btnFixed" />
+				<g:PushButton styleName="btn btn-default" ui:field="btnCode" />
+			</div>
+
+			<div class="btn-group">
+				<g:PushButton styleName="btn btn-default" ui:field="btnIndent" />
+				<g:PushButton styleName="btn btn-default" ui:field="btnOutdent" />
+			</div>
+
+			<div class="btn-group">
+				<g:PushButton styleName="btn btn-default" ui:field="btnQuote" />
+				<g:PushButton styleName="btn btn-default" ui:field="btnHr" />
+			</div>
+
+			<div class="btn-group">
+				<g:PushButton styleName="btn btn-default" ui:field="btnOl" />
+				<g:PushButton styleName="btn btn-default" ui:field="btnUl" />
+			</div>
+
+			<div class="btn-group">
+				<g:PushButton styleName="btn btn-default" ui:field="btnInsertImage" />
+				<g:PushButton styleName="btn btn-default" ui:field="btnInsertLink" />
+			</div>
+
+			<div class="btn-group">
+				<g:PushButton styleName="btn btn-default" ui:field="btnRemoveFormat" />
+			</div>
+		</div>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 
