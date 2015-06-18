@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -24,8 +25,11 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.controller.NavigationController.Stack;
+import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
+import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
@@ -38,13 +42,15 @@ import com.willshex.blogwt.shared.api.user.call.event.LogoutEventHandler;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public class HeaderPart extends Composite implements LoginEventHandler,
-		LogoutEventHandler {
+		LogoutEventHandler, NavigationChangedEventHandler {
 
 	private List<HandlerRegistration> registration;
-	
+
 	@UiField Element elName;
 	@UiField InlineHyperlink btnAccount;
 	@UiField InlineHyperlink btnSignInOut;
+	@UiField AnchorElement btnPosts;
+	@UiField AnchorElement btnProperties;
 	@UiField SpanElement spnUserName;
 
 	@UiField ImageElement imgAvatar;
@@ -65,6 +71,9 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiHandler("btnExpand")
 	void onBtnExpandClicked (ClickEvent event) {}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -77,6 +86,9 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				LoginEventHandler.TYPE, SessionController.get(), this));
 		registration.add(DefaultEventBus.get().addHandlerToSource(
 				LogoutEventHandler.TYPE, SessionController.get(), this));
+		registration.add(DefaultEventBus.get().addHandlerToSource(
+				NavigationChangedEventHandler.TYPE, NavigationController.get(),
+				this));
 
 		Session session = SessionController.get().session();
 		if (session != null && session.user != null) {
@@ -84,6 +96,9 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		}
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
 	@Override
 	protected void onDetach () {
 		for (HandlerRegistration handlerRegistration : registration) {
@@ -98,26 +113,38 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	 */
 	private void setLoggedInUser (User user) {
 		imgAvatar.setAlt(user.username);
-		imgAvatar.setSrc(user.avatar + "?s=20&default=retro");
+		imgAvatar.setSrc(user.avatar + "?s=18&default=retro");
 		spnUserName.setInnerText(user.forename + " " + user.surname);
 		btnAccount.setVisible(true);
-		btnSignInOut.setText("Sign Out");
+		btnSignInOut.getElement().setInnerHTML(
+				"<span class=\"glyphicon glyphicon-log-out\"></span> Sign Out");
 		btnSignInOut.setTargetHistoryToken(PageType.LogoutPageType
 				.asTargetHistoryToken());
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.shared.api.user.call.event.LogoutEventHandler#
+	 * logoutSuccess(com.willshex.blogwt.shared.api.user.call.LogoutRequest,
+	 * com.willshex.blogwt.shared.api.user.call.LogoutResponse) */
 	@Override
 	public void logoutSuccess (LogoutRequest input, LogoutResponse output) {
 		btnAccount.setVisible(false);
-		btnSignInOut.setText("Sign In");
+		btnSignInOut.getElement().setInnerHTML(
+				"<span class=\"glyphicon glyphicon-log-in\"></span> Sign In");
 		btnSignInOut.setTargetHistoryToken(PageType.LoginPageType
 				.asTargetHistoryToken());
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.shared.api.user.call.event.LogoutEventHandler#
+	 * logoutFailure(com.willshex.blogwt.shared.api.user.call.LogoutRequest,
+	 * java.lang.Throwable) */
 	@Override
 	public void logoutFailure (LogoutRequest input, Throwable caught) {
-		// TODO Auto-generated method stub
-
+		GWT.log("logoutFailure - input:"
+				+ (input == null ? null : input.toString()), caught);
 	}
 
 	@Override
@@ -126,13 +153,49 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				&& output.session != null && output.session.user != null) {
 			setLoggedInUser(output.session.user);
 		}
-
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler#loginFailure
+	 * (com.willshex.blogwt.shared.api.user.call.LoginRequest,
+	 * java.lang.Throwable) */
 	@Override
 	public void loginFailure (LoginRequest input, Throwable caught) {
-		// TODO Auto-generated method stub
-
+		GWT.log("loginFailure - input:"
+				+ (input == null ? null : input.toString()), caught);
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
+	 * navigationChanged
+	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
+	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
+	@Override
+	public void navigationChanged (Stack previous, Stack current) {
+		btnAccount.getElement().getParentElement().removeClassName("active");
+		btnPosts.getParentElement().removeClassName("active");
+		btnProperties.getParentElement().removeClassName("active");
+		btnSignInOut.getElement().getParentElement().removeClassName("active");
+
+		PageType p = PageType.fromString(current.getPage());
+		switch (p) {
+		case ChangeDetailsPageType:
+			btnAccount.getElement().getParentElement().addClassName("active");
+			break;
+		case LoginPageType:
+			btnSignInOut.getElement().getParentElement().addClassName("active");
+			break;
+		case PostsPageType:
+			btnPosts.getParentElement().addClassName("active");
+			break;
+		case PropertiesPageType:
+			btnProperties.getParentElement().addClassName("active");
+			break;
+		default:
+			break;
+		}
+	}
 }
