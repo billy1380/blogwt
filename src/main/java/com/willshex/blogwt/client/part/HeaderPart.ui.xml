@@ -2,6 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:import field="com.willshex.blogwt.client.page.PageType.ChangeDetailsPageType" />
 	<ui:import field="com.willshex.blogwt.client.page.PageType.LoginPageType" />
+	<ui:import field="com.willshex.blogwt.client.page.PageType.PostsPageType" />
+	<ui:import field="com.willshex.blogwt.client.page.PageType.PropertiesPageType" />
 	<ui:import field="com.willshex.blogwt.client.Resources.RES" />
 	<ui:style gss="true">
 	.bottom {
@@ -22,6 +24,17 @@
 				</a>
 			</div>
 			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="{PostsPageType.asHref}" ui:field="btnPosts">Blog</a>
+					</li>
+					<li>
+						<a href="{PropertiesPageType.asHref}" ui:field="btnProperties">
+							Site
+							<span class="glyphicon glyphicon-wrench"></span>
+						</a>
+					</li>
+				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li>
 						<g:InlineHyperlink ui:field="btnAccount"
@@ -34,6 +47,7 @@
 					<li>
 						<g:InlineHyperlink ui:field="btnSignInOut"
 							targetHistoryToken="{LoginPageType.asTargetHistoryToken}">
+							<span class="glyphicon glyphicon-log-in"></span>
 							Sign In
 						</g:InlineHyperlink>
 					</li>

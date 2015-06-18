@@ -22,6 +22,7 @@ import com.willshex.blogwt.client.page.blog.EditPostPage;
 import com.willshex.blogwt.client.page.blog.PostDetailPage;
 import com.willshex.blogwt.client.page.blog.PostsPage;
 import com.willshex.blogwt.client.page.blog.SetupBlogPage;
+import com.willshex.blogwt.client.page.blog.admin.PropertiesPage;
 import com.willshex.blogwt.client.page.user.ChangeDetailsPage;
 import com.willshex.blogwt.client.page.user.ChangePasswordPage;
 import com.willshex.blogwt.client.page.user.LoginPage;
@@ -31,6 +32,7 @@ import com.willshex.blogwt.client.page.user.RolesPage;
 import com.willshex.blogwt.client.page.user.UsersPage;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.helper.PermissionHelper;
+import com.willshex.blogwt.shared.api.helper.RoleHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -49,7 +51,8 @@ public enum PageType {
 	LogoutPageType("logout", true),
 	PermissionsPageType("permissions", PermissionHelper.MANAGE_PERMISSIONS),
 	RolesPageType("roles", PermissionHelper.MANAGE_ROLES),
-	UsersPageType("users", PermissionHelper.MANAGE_USERS), ;
+	UsersPageType("users", PermissionHelper.MANAGE_USERS),
+	PropertiesPageType("properties", RoleHelper.ADMIN), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -186,6 +189,9 @@ public enum PageType {
 			break;
 		case PostDetailPageType:
 			page = new PostDetailPage();
+			break;
+		case PropertiesPageType:
+			page = new PropertiesPage();
 			break;
 		case LogoutPageType:
 		case PostsPageType:
