@@ -5,10 +5,6 @@
 	.btn-toolbar.markdown-toolbar .btn-group {
 		margin-bottom: 10px;
 	}
-	
-	/*.btn-toolbar.markdown-toolbar .btn-group .btn-group {
-									        margin-bottom: 0px;
-									    }*/
 	</ui:style>
 	<g:HTMLPanel>
 		<div class="btn-toolbar {style.markdown-toolbar}">
@@ -19,23 +15,13 @@
 			</div>
 
 			<div class="btn-group">
-				<g:PushButton styleName="btn btn-default" ui:field="btnUnderline" />
 				<g:PushButton styleName="btn btn-default" ui:field="btnStrikethrough" />
-			</div>
-
-			<div class="btn-group">
 				<g:PushButton styleName="btn btn-default" ui:field="btnSuperscript" />
-				<g:PushButton styleName="btn btn-default" ui:field="btnSubscript" />
 			</div>
 
 			<div class="btn-group">
 				<g:PushButton styleName="btn btn-default" ui:field="btnFixed" />
 				<g:PushButton styleName="btn btn-default" ui:field="btnCode" />
-			</div>
-
-			<div class="btn-group">
-				<g:PushButton styleName="btn btn-default" ui:field="btnIndent" />
-				<g:PushButton styleName="btn btn-default" ui:field="btnOutdent" />
 			</div>
 
 			<div class="btn-group">
