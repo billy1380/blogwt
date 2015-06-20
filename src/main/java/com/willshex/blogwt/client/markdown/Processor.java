@@ -18,6 +18,7 @@ import com.github.rjeschke.txtmark.EmojiEmitter;
 import com.github.rjeschke.txtmark.MarkdownUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.markdown.plugin.GalleryPlugin;
 
 /**
  * @author William Shakour (billy1380)
@@ -78,7 +79,8 @@ public class Processor extends MarkdownProcessor {
 		CachedIncludePlugin includePlugin = new CachedIncludePlugin(
 				ensureManager());
 		includePlugin.setProcessor(this);
-		registerPlugins(new WebSequencePlugin(ensureManager()), includePlugin);
+		registerPlugins(new WebSequencePlugin(ensureManager()), includePlugin,
+				new GalleryPlugin());
 	}
 
 	public Processor () {
