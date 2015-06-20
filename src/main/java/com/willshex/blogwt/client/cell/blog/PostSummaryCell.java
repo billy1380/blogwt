@@ -61,11 +61,19 @@ public class PostSummaryCell extends AbstractCell<Post> {
 					.ago(value.published));
 		}
 
+		String body = "Empty... :imp:";
+
+		if (value.summary != null && value.summary.length() > 0) {
+			body = value.summary;
+		} else if (value.content != null && value.content.body != null
+				&& value.content.body.length() > 0) {
+			body = value.content.body;
+		}
+
 		RENDERER.render(builder, link, SafeHtmlUtils
 				.fromTrustedString(PostHelper.makeHeading2(value.title)),
-				SafeHtmlUtils.fromTrustedString(PostHelper
-						.makeMarkup(value.summary)), UserHelper
-						.handle(value.author), published, value.listed
+				SafeHtmlUtils.fromTrustedString(PostHelper.makeMarkup(body)),
+				UserHelper.handle(value.author), published, value.listed
 						.booleanValue() ? SafeHtmlUtils.EMPTY_SAFE_HTML
 						: DateTemplate.INSTANCE.notVisible());
 	}
