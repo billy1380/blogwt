@@ -18,6 +18,7 @@ import com.github.rjeschke.txtmark.EmojiEmitter;
 import com.github.rjeschke.txtmark.MarkdownUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.markdown.plugin.CachedIncludePlugin;
 import com.willshex.blogwt.client.markdown.plugin.GalleryPlugin;
 
 /**
