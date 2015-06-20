@@ -71,7 +71,7 @@ public class PostController extends AsyncDataProvider<Post> {
 				.setAccessCode(new GetPostsRequest());
 		input.pager = pager;
 		input.session = SessionController.get().sessionForApiCall();
-		input.summaryOnly = Boolean.TRUE;
+		input.includePostContents = Boolean.FALSE;
 
 		if (getPostsRequest != null) {
 			getPostsRequest.cancel();
@@ -209,8 +209,7 @@ public class PostController extends AsyncDataProvider<Post> {
 				.setSession(ApiHelper.setAccessCode(new CreatePostRequest()))
 				.post(new Post().title(title).summary(summary)
 						.content(new PostContent().body(content))
-						.tags(TagHelper.convertToTagList(tags))
-						.listed(listed)
+						.tags(TagHelper.convertToTagList(tags)).listed(listed)
 						.commentsEnabled(commentsEnabled)).publish(publish);
 
 		blogService.createPost(input, new AsyncCallback<CreatePostResponse>() {

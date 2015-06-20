@@ -16,7 +16,7 @@ import com.willshex.blogwt.shared.api.Request;
 
 public class GetPostsRequest extends Request {
 	public Pager pager;
-	public Boolean summaryOnly;
+	public Boolean includePostContents;
 
 	@Override
 	public JsonObject toJson () {
@@ -24,9 +24,9 @@ public class GetPostsRequest extends Request {
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager
 				.toJson();
 		object.add("pager", jsonPager);
-		JsonElement jsonSummaryOnly = summaryOnly == null ? JsonNull.INSTANCE
-				: new JsonPrimitive(summaryOnly);
-		object.add("summaryOnly", jsonSummaryOnly);
+		JsonElement jsonIncludePostContents = includePostContents == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(includePostContents);
+		object.add("includePostContents", jsonIncludePostContents);
 		return object;
 	}
 
@@ -40,10 +40,12 @@ public class GetPostsRequest extends Request {
 				pager.fromJson(jsonPager.getAsJsonObject());
 			}
 		}
-		if (jsonObject.has("summaryOnly")) {
-			JsonElement jsonSummaryOnly = jsonObject.get("summaryOnly");
-			if (jsonSummaryOnly != null) {
-				summaryOnly = Boolean.valueOf(jsonSummaryOnly.getAsBoolean());
+		if (jsonObject.has("includePostContents")) {
+			JsonElement jsonIncludePostContents = jsonObject
+					.get("includePostContents");
+			if (jsonIncludePostContents != null) {
+				includePostContents = Boolean.valueOf(jsonIncludePostContents
+						.getAsBoolean());
 			}
 		}
 	}
@@ -53,8 +55,8 @@ public class GetPostsRequest extends Request {
 		return this;
 	}
 
-	public GetPostsRequest summaryOnly (Boolean summaryOnly) {
-		this.summaryOnly = summaryOnly;
+	public GetPostsRequest includePostContents (Boolean includePostContents) {
+		this.includePostContents = includePostContents;
 		return this;
 	}
 }

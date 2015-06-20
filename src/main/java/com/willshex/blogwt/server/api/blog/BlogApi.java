@@ -279,20 +279,20 @@ public final class BlogApi extends ActionHandler {
 				}
 			}
 
-			if (input.summaryOnly == null) {
-				input.summaryOnly = Boolean.TRUE;
+			if (input.includePostContents == null) {
+				input.includePostContents = Boolean.FALSE;
 			}
 
 			if (input.session != null && input.session.user != null) {
 				output.posts = PostServiceProvider.provide()
 						.getUserViewablePosts(input.session.user, showAll,
-								input.summaryOnly, input.pager.start,
+								input.includePostContents, input.pager.start,
 								input.pager.count,
 								PostSortType.fromString(input.pager.sortBy),
 								input.pager.sortDirection);
 			} else {
 				output.posts = PostServiceProvider.provide().getPosts(showAll,
-						input.summaryOnly, input.pager.start,
+						input.includePostContents, input.pager.start,
 						input.pager.count, PostSortType.PostSortTypePublished,
 						SortDirectionType.SortDirectionTypeDescending);
 			}
