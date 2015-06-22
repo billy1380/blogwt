@@ -16,6 +16,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.willshex.blogwt.shared.api.datatype.DataType;
+import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
@@ -39,6 +40,7 @@ public class PersistenceService {
 		factory().register(Role.class);
 		factory().register(Property.class);
 		factory().register(PostContent.class);
+		factory().register(Page.class);
 	}
 
 	public static Objectify ofy () {

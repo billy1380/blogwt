@@ -15,14 +15,26 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.google.gwt.editor.client.Editor.Ignore;
+import com.googlecode.objectify.Key;
+import com.googlecode.objectify.annotation.Cache;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Index;
 
+@Entity
+@Cache
 public class Page extends DataType {
-	public List<Post> posts;
-	public String slug;
+	public List<Key<Post>> postKeys;
+	@Ignore public List<Post> posts;
+
+	@Index public String slug;
 	public String shortTitle;
-	public Page parent;
+
+	@Index public Key<Page> parentKey;
+	@Ignore public Page parent;
+
 	public Boolean hasChildren;
-	public Integer priority;
+	@Index public Integer priority;
 
 	@Override
 	public JsonObject toJson () {
