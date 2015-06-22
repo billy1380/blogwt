@@ -1,11 +1,11 @@
 //
-//  RolesPage.java
+//  UsersPage.java
 //  blogwt
 //
 //  Created by William Shakour (billy1380) on 11 May 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
 //
-package com.willshex.blogwt.client.page.user;
+package com.willshex.blogwt.client.page.admin;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -17,15 +17,15 @@ import com.willshex.blogwt.client.page.PageType;
  * @author William Shakour (billy1380)
  *
  */
-public class RolesPage extends Page {
+public class UsersPage extends Page {
 
-	private static RolesPageUiBinder uiBinder = GWT
-			.create(RolesPageUiBinder.class);
+	private static UsersPageUiBinder uiBinder = GWT
+			.create(UsersPageUiBinder.class);
 
-	interface RolesPageUiBinder extends UiBinder<Widget, RolesPage> {}
+	interface UsersPageUiBinder extends UiBinder<Widget, UsersPage> {}
 
-	public RolesPage () {
-		super(PageType.RolesPageType);
+	public UsersPage () {
+		super(PageType.UsersPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 

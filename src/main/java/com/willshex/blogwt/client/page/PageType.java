@@ -18,18 +18,18 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.History;
 import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.blogwt.client.page.admin.PermissionsPage;
+import com.willshex.blogwt.client.page.admin.PropertiesPage;
+import com.willshex.blogwt.client.page.admin.RolesPage;
+import com.willshex.blogwt.client.page.admin.UsersPage;
 import com.willshex.blogwt.client.page.blog.EditPostPage;
 import com.willshex.blogwt.client.page.blog.PostDetailPage;
 import com.willshex.blogwt.client.page.blog.PostsPage;
 import com.willshex.blogwt.client.page.blog.SetupBlogPage;
-import com.willshex.blogwt.client.page.blog.admin.PropertiesPage;
 import com.willshex.blogwt.client.page.user.ChangeDetailsPage;
 import com.willshex.blogwt.client.page.user.ChangePasswordPage;
 import com.willshex.blogwt.client.page.user.LoginPage;
-import com.willshex.blogwt.client.page.user.PermissionsPage;
 import com.willshex.blogwt.client.page.user.RegisterPage;
-import com.willshex.blogwt.client.page.user.RolesPage;
-import com.willshex.blogwt.client.page.user.UsersPage;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.helper.PermissionHelper;
 import com.willshex.blogwt.shared.api.helper.RoleHelper;
@@ -42,8 +42,8 @@ public enum PageType {
 	SetupBlogPageType("setup", false),
 	EditPostPageType("blogedit", PermissionHelper.MANAGE_POSTS),
 	PostsPageType("posts", false),
-	PostDetailPageType("postdetail", false),
-	ChangeDetailsPageType("userdetail", true),
+	PostDetailPageType("post", false),
+	ChangeDetailsPageType("user", true),
 	ChangePasswordPageType("changepassword", true),
 	ResetPasswordPageType("resetpassword", true),
 	RegisterPageType("register", false),
@@ -52,7 +52,9 @@ public enum PageType {
 	PermissionsPageType("permissions", PermissionHelper.MANAGE_PERMISSIONS),
 	RolesPageType("roles", PermissionHelper.MANAGE_ROLES),
 	UsersPageType("users", PermissionHelper.MANAGE_USERS),
-	PropertiesPageType("properties", RoleHelper.ADMIN), ;
+	PropertiesPageType("properties", RoleHelper.ADMIN),
+	EditPagePageType("pageedit", PermissionHelper.MANAGE_PAGES),
+	PageDetailPageType("page", false), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
