@@ -1,11 +1,11 @@
 //
-//  UsersPage.java
+//  EditPagePage.java
 //  blogwt
 //
-//  Created by William Shakour (billy1380) on 11 May 2015.
+//  Created by William Shakour (billy1380) on 22 Jun 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
 //
-package com.willshex.blogwt.client.page.user;
+package com.willshex.blogwt.client.page.page;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -17,15 +17,15 @@ import com.willshex.blogwt.client.page.PageType;
  * @author William Shakour (billy1380)
  *
  */
-public class UsersPage extends Page {
+public class EditPagePage extends Page {
 
-	private static UsersPageUiBinder uiBinder = GWT
-			.create(UsersPageUiBinder.class);
+	private static EditPagePageUiBinder uiBinder = GWT
+			.create(EditPagePageUiBinder.class);
 
-	interface UsersPageUiBinder extends UiBinder<Widget, UsersPage> {}
+	interface EditPagePageUiBinder extends UiBinder<Widget, EditPagePage> {}
 
-	public UsersPage () {
-		super(PageType.UsersPageType);
+	public EditPagePage () {
+		super(PageType.EditPagePageType);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
