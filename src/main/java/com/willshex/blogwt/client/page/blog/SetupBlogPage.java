@@ -13,7 +13,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.willshex.blogwt.client.DefaultEventBus;
-import com.willshex.blogwt.client.controller.SetupController;
+import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.page.wizard.WizardDialogPage;
 import com.willshex.blogwt.client.wizard.PagePlan.PagePlanBuilder;
@@ -40,7 +40,7 @@ public class SetupBlogPage extends WizardDialogPage implements
 		super.onAttach();
 
 		register(DefaultEventBus.get().addHandlerToSource(
-				SetupBlogEventHandler.TYPE, SetupController.get(), this));
+				SetupBlogEventHandler.TYPE, PropertyController.get(), this));
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class SetupBlogPage extends WizardDialogPage implements
 			}
 		}
 
-		SetupController.get().setupBlog(properties, users);
+		PropertyController.get().setupBlog(properties, users);
 	}
 
 	/* (non-Javadoc)

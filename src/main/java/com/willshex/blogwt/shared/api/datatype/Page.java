@@ -15,11 +15,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.google.gwt.editor.client.Editor.Ignore;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfNull;
 
 @Entity
 @Cache
@@ -30,7 +31,7 @@ public class Page extends DataType {
 	@Index public String slug;
 	public String shortTitle;
 
-	@Index public Key<Page> parentKey;
+	@Index(value = IfNull.class) public Key<Page> parentKey;
 	@Ignore public Page parent;
 
 	public Boolean hasChildren;

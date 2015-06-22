@@ -1,5 +1,5 @@
 //
-//  PropertiesPage.java
+//  PagesPage.java
 //  blogwt
 //
 //  Created by William Shakour (billy1380) on 22 Jun 2015.
@@ -17,15 +17,15 @@ import com.willshex.blogwt.client.page.PageType;
  * @author William Shakour (billy1380)
  *
  */
-public class PropertiesPage extends Page {
+public class PagesPage extends Page {
 
-	private static PropertiesPageUiBinder uiBinder = GWT
-			.create(PropertiesPageUiBinder.class);
+	private static PagesPageUiBinder uiBinder = GWT
+			.create(PagesPageUiBinder.class);
 
-	interface PropertiesPageUiBinder extends UiBinder<Widget, PropertiesPage> {}
+	interface PagesPageUiBinder extends UiBinder<Widget, PagesPage> {}
 
-	public PropertiesPage () {
-		super(PageType.PropertiesPageType);
+	public PagesPage () {
+		super(PageType.PagesPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 

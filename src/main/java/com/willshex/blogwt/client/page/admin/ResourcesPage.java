@@ -1,5 +1,5 @@
 //
-//  PropertiesPage.java
+//  ResourcesPage.java
 //  blogwt
 //
 //  Created by William Shakour (billy1380) on 22 Jun 2015.
@@ -9,23 +9,21 @@ package com.willshex.blogwt.client.page.admin;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.blogwt.client.page.Page;
-import com.willshex.blogwt.client.page.PageType;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class PropertiesPage extends Page {
+public class ResourcesPage extends Composite {
 
-	private static PropertiesPageUiBinder uiBinder = GWT
-			.create(PropertiesPageUiBinder.class);
+	private static ResourcesPageUiBinder uiBinder = GWT
+			.create(ResourcesPageUiBinder.class);
 
-	interface PropertiesPageUiBinder extends UiBinder<Widget, PropertiesPage> {}
+	interface ResourcesPageUiBinder extends UiBinder<Widget, ResourcesPage> {}
 
-	public PropertiesPage () {
-		super(PageType.PropertiesPageType);
+	public ResourcesPage () {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
