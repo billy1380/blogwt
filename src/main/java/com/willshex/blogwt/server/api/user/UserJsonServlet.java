@@ -12,7 +12,9 @@ import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
+import com.willshex.blogwt.shared.api.user.call.GetPermissionsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsRequest;
+import com.willshex.blogwt.shared.api.user.call.GetRolesRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.IsAuthorisedRequest;
@@ -66,6 +68,14 @@ public final class UserJsonServlet extends JsonServlet {
 			ForgotPasswordRequest input = new ForgotPasswordRequest();
 			input.fromJson(request);
 			output = service.forgotPassword(input).toString();
+		} else if ("GetPermissions".equals(action)) {
+			GetPermissionsRequest input = new GetPermissionsRequest();
+			input.fromJson(request);
+			output = service.getPermissions(input).toString();
+		} else if ("GetRoles".equals(action)) {
+			GetRolesRequest input = new GetRolesRequest();
+			input.fromJson(request);
+			output = service.getRoles(input).toString();
 		}
 		return output;
 	}

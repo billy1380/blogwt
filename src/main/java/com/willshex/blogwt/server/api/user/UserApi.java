@@ -30,8 +30,12 @@ import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameResponse;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordResponse;
+import com.willshex.blogwt.shared.api.user.call.GetPermissionsRequest;
+import com.willshex.blogwt.shared.api.user.call.GetPermissionsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsResponse;
+import com.willshex.blogwt.shared.api.user.call.GetRolesRequest;
+import com.willshex.blogwt.shared.api.user.call.GetRolesResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
@@ -46,8 +50,7 @@ import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public final class UserApi extends ActionHandler {
-	private static final Logger LOG = Logger.getLogger(UserApi.class
-			.getName());
+	private static final Logger LOG = Logger.getLogger(UserApi.class.getName());
 
 	public GetUsersResponse getUsers (GetUsersRequest input) {
 		LOG.finer("Entering getUsers");
@@ -58,7 +61,7 @@ public final class UserApi extends ActionHandler {
 
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
-			
+
 			UserHelper.stripPassword(output.users);
 
 			UserHelper.stripPassword(output.session.user);
@@ -314,6 +317,32 @@ public final class UserApi extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting forgotPassword");
+		return output;
+	}
+
+	public GetPermissionsResponse getPermissions (GetPermissionsRequest input) {
+		LOG.finer("Entering getPermissions");
+		GetPermissionsResponse output = new GetPermissionsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getPermissions");
+		return output;
+	}
+
+	public GetRolesResponse getRoles (GetRolesRequest input) {
+		LOG.finer("Entering getRoles");
+		GetRolesResponse output = new GetRolesResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getRoles");
 		return output;
 	}
 }

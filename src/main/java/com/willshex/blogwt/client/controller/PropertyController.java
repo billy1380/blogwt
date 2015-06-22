@@ -17,14 +17,25 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
+import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.api.blog.BlogService;
+import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
+import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
+import com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler.SetupBlogFailure;
+import com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler.SetupBlogSuccess;
 import com.willshex.blogwt.shared.api.datatype.Property;
+import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.helper.PropertyHelper;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class PropertyController {
+public class PropertyController extends AsyncDataProvider<Property> {
 	private static PropertyController one = null;
 
 	/**
@@ -114,4 +125,38 @@ public class PropertyController {
 	/*-{
 		return $wnd['properties'];
 	}-*/;
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google
+	 * .gwt.view.client.HasData) */
+	@Override
+	protected void onRangeChanged (HasData<Property> display) {
+
+	}
+	
+	public void setupBlog (List<Property> properties, List<User> users) {
+		final SetupBlogRequest input = ApiHelper
+				.setAccessCode(new SetupBlogRequest()).properties(properties)
+				.users(users);
+
+		BlogService blogService = ApiHelper.createBlogClient();
+		blogService.setupBlog(input, new AsyncCallback<SetupBlogResponse>() {
+
+			@Override
+			public void onSuccess (SetupBlogResponse output) {
+				DefaultEventBus.get().fireEventFromSource(
+						new SetupBlogSuccess(input, output),
+						PropertyController.this);
+			}
+
+			@Override
+			public void onFailure (Throwable caught) {
+				DefaultEventBus.get().fireEventFromSource(
+						new SetupBlogFailure(input, caught),
+						PropertyController.this);
+			}
+		});
+	}
 }

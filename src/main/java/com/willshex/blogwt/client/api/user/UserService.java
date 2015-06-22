@@ -21,8 +21,12 @@ import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameResponse;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordResponse;
+import com.willshex.blogwt.shared.api.user.call.GetPermissionsRequest;
+import com.willshex.blogwt.shared.api.user.call.GetPermissionsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsResponse;
+import com.willshex.blogwt.shared.api.user.call.GetRolesRequest;
+import com.willshex.blogwt.shared.api.user.call.GetRolesResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
@@ -463,6 +467,92 @@ public final class UserService extends JsonService {
 		} catch (RequestException exception) {
 			callback.onFailure(exception);
 			onCallFailure(UserService.this, UserMethodForgotPassword, input,
+					exception);
+		}
+		return handle;
+	}
+
+	public static final String UserMethodGetPermissions = "GetPermissions";
+
+	public Request getPermissions (final GetPermissionsRequest input,
+			final AsyncCallback<GetPermissionsResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(UserMethodGetPermissions, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								GetPermissionsResponse outputParameter = new GetPermissionsResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(UserService.this,
+										UserMethodGetPermissions, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(UserService.this,
+										UserMethodGetPermissions, input,
+										exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(UserService.this,
+									UserMethodGetPermissions, input, exception);
+						}
+					});
+			onCallStart(UserService.this, UserMethodGetPermissions, input,
+					handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(UserService.this, UserMethodGetPermissions, input,
+					exception);
+		}
+		return handle;
+	}
+
+	public static final String UserMethodGetRoles = "GetRoles";
+
+	public Request getRoles (final GetRolesRequest input,
+			final AsyncCallback<GetRolesResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(UserMethodGetRoles, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								GetRolesResponse outputParameter = new GetRolesResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(UserService.this,
+										UserMethodGetRoles, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(UserService.this,
+										UserMethodGetRoles, input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(UserService.this, UserMethodGetRoles,
+									input, exception);
+						}
+					});
+			onCallStart(UserService.this, UserMethodGetRoles, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(UserService.this, UserMethodGetRoles, input,
 					exception);
 		}
 		return handle;

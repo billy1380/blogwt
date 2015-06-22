@@ -1,8 +1,13 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<ui:style>
 	
 	</ui:style>
 	<g:HTMLPanel>
+		<h2>Users</h2>
+
+		<c:CellTable ui:field="tblUsers" />
+		<c:SimplePager ui:field="pgrUsers" location="LEFT" />
 	</g:HTMLPanel>
 </ui:UiBinder> 
