@@ -7,12 +7,15 @@
 //
 package com.willshex.blogwt.server.api.user;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.exception.AuthenticationException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
+import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
@@ -20,7 +23,14 @@ import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.server.service.user.IUserService;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
+import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
+import com.willshex.blogwt.shared.api.datatype.Role;
+import com.willshex.blogwt.shared.api.datatype.RoleSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.helper.PagerHelper;
+import com.willshex.blogwt.shared.api.helper.PermissionHelper;
+import com.willshex.blogwt.shared.api.helper.RoleHelper;
 import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
@@ -324,6 +334,29 @@ public final class UserApi extends ActionHandler {
 		LOG.finer("Entering getPermissions");
 		GetPermissionsResponse output = new GetPermissionsResponse();
 		try {
+			ApiValidator.notNull(input, GetPermissionsRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			List<Role> roles = new ArrayList<Role>();
+			roles.add(RoleHelper.createAdmin());
+
+			List<Permission> permissions = new ArrayList<Permission>();
+			Permission postPermission = PermissionServiceProvider.provide()
+					.getCodePermission(PermissionHelper.MANAGE_PERMISSIONS);
+			permissions.add(postPermission);
+
+			UserValidator.authorisation(input.session.user, roles, permissions,
+					"input.session.user");
+
+			output.permissions = PermissionServiceProvider.provide()
+					.getPermissions(input.pager.start, input.pager.count,
+							PermissionSortType.fromString(input.pager.sortBy),
+							input.pager.sortDirection);
+
+			output.pager = PagerHelper.moveForward(input.pager);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -337,6 +370,29 @@ public final class UserApi extends ActionHandler {
 		LOG.finer("Entering getRoles");
 		GetRolesResponse output = new GetRolesResponse();
 		try {
+			ApiValidator.notNull(input, GetRolesRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			List<Role> roles = new ArrayList<Role>();
+			roles.add(RoleHelper.createAdmin());
+
+			List<Permission> permissions = new ArrayList<Permission>();
+			Permission postPermission = PermissionServiceProvider.provide()
+					.getCodePermission(PermissionHelper.MANAGE_ROLES);
+			permissions.add(postPermission);
+
+			UserValidator.authorisation(input.session.user, roles, permissions,
+					"input.session.user");
+
+			output.roles = RoleServiceProvider.provide().getRoles(
+					input.pager.start, input.pager.count,
+					RoleSortType.fromString(input.pager.sortBy),
+					input.pager.sortDirection);
+
+			output.pager = PagerHelper.moveForward(input.pager);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
