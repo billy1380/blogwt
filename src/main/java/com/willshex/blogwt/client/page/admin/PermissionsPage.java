@@ -55,14 +55,41 @@ public class PermissionsPage extends Page {
 	 */
 	private void createColumns () {
 		TextColumn<Permission> code = new TextColumn<Permission>() {
-			
+
 			@Override
 			public String getValue (Permission object) {
 				return object.code;
 			}
 		};
-		
-		tblPermissions.addColumn(code);
+
+		TextColumn<Permission> type = new TextColumn<Permission>() {
+
+			@Override
+			public String getValue (Permission object) {
+				return object.type.toString();
+			}
+		};
+
+		TextColumn<Permission> name = new TextColumn<Permission>() {
+
+			@Override
+			public String getValue (Permission object) {
+				return object.name;
+			}
+		};
+
+		TextColumn<Permission> description = new TextColumn<Permission>() {
+
+			@Override
+			public String getValue (Permission object) {
+				return object.description;
+			}
+		};
+
+		tblPermissions.addColumn(code, "Code");
+		tblPermissions.addColumn(type, "Type");
+		tblPermissions.addColumn(name, "Name");
+		tblPermissions.addColumn(description, "Description");
 	}
 
 }

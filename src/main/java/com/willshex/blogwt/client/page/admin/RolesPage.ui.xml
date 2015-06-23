@@ -1,13 +1,25 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:style>
-	
+	.inline, .inline p {
+		display: inline;
+		padding: 0;
+		margin: 0;
+	}
 	</ui:style>
 	<g:HTMLPanel>
 		<h2>Roles</h2>
 
-		<c:CellTable ui:field="tblRoles" />
+		<c:CellTable ui:field="tblRoles"
+			styleName="col-sm-12 table table-striped table-bordered" />
 		<c:SimplePager ui:field="pgrRoles" location="LEFT" />
+
+		<g:HTMLPanel ui:field="pnlNoRoles">
+			<h2 class="text-center">
+				No roles!
+				<p:Markdown styleName="{style.inline}">:crying_cat_face:</p:Markdown>
+			</h2>
+		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 
