@@ -28,6 +28,7 @@
 				<div ui:field="elTitle"></div>
 				<div class="{style.bottom-margin}">
 					By
+					<img ui:field="imgAvatar" class="img-circle" />
 					<span ui:field="elAuthor" />
 					<span ui:field="elDate" />
 				</div>

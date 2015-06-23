@@ -3,6 +3,7 @@
 	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
 	<ui:with field="title" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="summary" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="avatar" type="com.google.gwt.safehtml.shared.SafeUri" />
 	<ui:with field="author" type="java.lang.String" />
 	<ui:with field="published" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="visible" type="com.google.gwt.safehtml.shared.SafeHtml" />
@@ -19,6 +20,7 @@
 		</a>
 		<div class="{style.bottom-margin}">
 			By
+			<img src="{avatar}" class="img-circle" />
 			<ui:text from="{author}" />
 			<ui:safehtml from="{published}" />
 			<ui:safehtml from="{visible}" />

@@ -64,6 +64,7 @@ import com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
+import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -244,8 +245,11 @@ public class EditPostPage extends Page implements
 		title.setInnerHTML(PostHelper.makeHeading(txtTitle.getText()));
 		pnlPreview.getElement().appendChild(title);
 
+		User user = SessionController.get().user();
 		DivElement author = d.createDivElement();
-		author.setInnerText(UserHelper.handle(SessionController.get().user()));
+		author.setInnerHTML("By <img src=\"" + user.avatar
+				+ "?s=20&default=retro\" class=\"img-circle\" > "
+				+ UserHelper.handle(user));
 		pnlPreview.getElement().appendChild(author);
 
 		DivElement on = d.createDivElement();
