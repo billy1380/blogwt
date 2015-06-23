@@ -12,6 +12,7 @@ import java.util.Arrays;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -68,6 +69,7 @@ public class PostDetailPage extends Page implements
 	boolean installed;
 	@UiField InlineHyperlink lnkEditPost;
 	@UiField Button btnDeletePost;
+	@UiField ImageElement imgAvatar;
 
 	public PostDetailPage () {
 		super(PageType.PostDetailPageType);
@@ -116,6 +118,7 @@ public class PostDetailPage extends Page implements
 	}
 
 	private void show (Post post) {
+		imgAvatar.setSrc(post.author.avatar + "?s=20&default=retro");
 		elTitle.setInnerHTML(PostHelper.makeHeading(post.title));
 		elAuthor.setInnerText(UserHelper.handle(post.author));
 

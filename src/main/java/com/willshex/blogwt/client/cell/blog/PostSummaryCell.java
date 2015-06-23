@@ -14,6 +14,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiRenderer;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.PageType;
@@ -42,8 +43,8 @@ public class PostSummaryCell extends AbstractCell<Post> {
 
 	interface PostSummaryCellRenderer extends UiRenderer {
 		void render (SafeHtmlBuilder sb, SafeUri link, SafeHtml title,
-				SafeHtml summary, String author, SafeHtml published,
-				SafeHtml visible);
+				SafeHtml summary, SafeUri avatar, String author,
+				SafeHtml published, SafeHtml visible);
 	}
 
 	private static PostSummaryCellRenderer RENDERER = GWT
@@ -70,9 +71,13 @@ public class PostSummaryCell extends AbstractCell<Post> {
 			body = value.content.body;
 		}
 
-		RENDERER.render(builder, link, SafeHtmlUtils
-				.fromTrustedString(PostHelper.makeHeading2(value.title)),
+		RENDERER.render(
+				builder,
+				link,
+				SafeHtmlUtils.fromTrustedString(PostHelper
+						.makeHeading2(value.title)),
 				SafeHtmlUtils.fromTrustedString(PostHelper.makeMarkup(body)),
+				UriUtils.fromString(value.author.avatar + "?s=20&default=retro"),
 				UserHelper.handle(value.author), published, value.listed
 						.booleanValue() ? SafeHtmlUtils.EMPTY_SAFE_HTML
 						: DateTemplate.INSTANCE.notVisible());
