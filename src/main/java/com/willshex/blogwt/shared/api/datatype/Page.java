@@ -20,6 +20,7 @@ import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.condition.IfNotNull;
 import com.googlecode.objectify.condition.IfNull;
 
 @Entity
@@ -28,14 +29,17 @@ public class Page extends DataType {
 	public List<Key<Post>> postKeys;
 	@Ignore public List<Post> posts;
 
+	public Key<User> ownerKey;
+	@Ignore public User owner;
+
 	@Index public String slug;
-	public String shortTitle;
+	public String title;
 
 	@Index(value = IfNull.class) public Key<Page> parentKey;
 	@Ignore public Page parent;
 
 	public Boolean hasChildren;
-	@Index public Integer priority;
+	@Index(value = IfNotNull.class) public Integer priority;
 
 	@Override
 	public JsonObject toJson () {
@@ -50,12 +54,15 @@ public class Page extends DataType {
 			}
 		}
 		object.add("posts", jsonPosts);
+		JsonElement jsonOwner = owner == null ? JsonNull.INSTANCE : owner
+				.toJson();
+		object.add("owner", jsonOwner);
 		JsonElement jsonSlug = slug == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(slug);
 		object.add("slug", jsonSlug);
-		JsonElement jsonShortTitle = shortTitle == null ? JsonNull.INSTANCE
-				: new JsonPrimitive(shortTitle);
-		object.add("shortTitle", jsonShortTitle);
+		JsonElement jsonTitle = title == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(title);
+		object.add("title", jsonTitle);
 		JsonElement jsonParent = parent == null ? JsonNull.INSTANCE : parent
 				.toJson();
 		object.add("parent", jsonParent);
@@ -86,16 +93,23 @@ public class Page extends DataType {
 			}
 		}
 
+		if (jsonObject.has("owner")) {
+			JsonElement jsonOwner = jsonObject.get("owner");
+			if (jsonOwner != null) {
+				owner = new User();
+				owner.fromJson(jsonOwner.getAsJsonObject());
+			}
+		}
 		if (jsonObject.has("slug")) {
 			JsonElement jsonSlug = jsonObject.get("slug");
 			if (jsonSlug != null) {
 				slug = jsonSlug.getAsString();
 			}
 		}
-		if (jsonObject.has("shortTitle")) {
-			JsonElement jsonShortTitle = jsonObject.get("shortTitle");
-			if (jsonShortTitle != null) {
-				shortTitle = jsonShortTitle.getAsString();
+		if (jsonObject.has("title")) {
+			JsonElement jsonTitle = jsonObject.get("title");
+			if (jsonTitle != null) {
+				title = jsonTitle.getAsString();
 			}
 		}
 		if (jsonObject.has("parent")) {
@@ -124,13 +138,18 @@ public class Page extends DataType {
 		return this;
 	}
 
+	public Page owner (User owner) {
+		this.owner = owner;
+		return this;
+	}
+
 	public Page slug (String slug) {
 		this.slug = slug;
 		return this;
 	}
 
-	public Page shortTitle (String shortTitle) {
-		this.shortTitle = shortTitle;
+	public Page title (String title) {
+		this.title = title;
 		return this;
 	}
 

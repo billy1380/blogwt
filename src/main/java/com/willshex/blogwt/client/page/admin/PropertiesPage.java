@@ -42,6 +42,7 @@ public class PropertiesPage extends Page {
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField SimplePager pgrProperties;
 	@UiField NoneFoundPanel pnlNoProperties;
+	private SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
 
 	public PropertiesPage () {
 		super(PageType.PropertiesPageType);
@@ -99,13 +100,13 @@ public class PropertiesPage extends Page {
 		};
 
 		Column<Property, SafeHtml> edit = new Column<Property, SafeHtml>(
-				new SafeHtmlCell()) {
+				safeHtmlPrototype) {
 
 			@Override
 			public SafeHtml getValue (Property object) {
 				return SafeHtmlUtils
 						.fromSafeConstant("<a class=\"btn btn-default btn-xs\" href=\""
-								+ PageType.EditProperty.asHref("id",
+								+ PageType.EditPropertyPageType.asHref("id",
 										object.id.toString()).asString()
 								+ "\" ><span class=\"glyphicon glyphicon-edit\"></span> edit<a>");
 			}
