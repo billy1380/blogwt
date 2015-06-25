@@ -38,22 +38,25 @@ public class PropertyHelper {
 
 	public static Property createTitle (String value) {
 		return new Property().name(TITLE).description(TITLE_DESCRIPTION)
-				.value(value);
+				.value(value).group("Setup").type("string");
 	}
 
 	public static Property createExtendedTitle (String value) {
 		return new Property().name(EXTENDED_TITLE)
-				.description(EXTENDED_TITLE_DESCRIPTION).value(value);
+				.description(EXTENDED_TITLE_DESCRIPTION).value(value)
+				.group("Setup").type("string");
 	}
 
 	public static Property createCopyrightHolder (String value) {
 		return new Property().name(COPYRIGHT_HOLDER)
-				.description(COPYRIGHT_HOLDER_DESCRIPTION).value(value);
+				.description(COPYRIGHT_HOLDER_DESCRIPTION).value(value)
+				.group("Setup").type("string");
 	}
 
 	public static Property createCopyrightUrl (String value) {
 		return new Property().name(COPYRIGHT_URL)
-				.description(COPYRIGHT_URL_DESCRIPTION).value(value);
+				.description(COPYRIGHT_URL_DESCRIPTION).value(value)
+				.group("Setup").type("string");
 	}
 
 	public static boolean empty (Property property) {
