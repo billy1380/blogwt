@@ -55,7 +55,8 @@ public enum PageType {
 	PropertiesPageType("properties", RoleHelper.ADMIN),
 	EditPagePageType("pageedit", PermissionHelper.MANAGE_PAGES),
 	PageDetailPageType("page", false),
-	PagesPageType("pages", PermissionHelper.MANAGE_PAGES), ;
+	PagesPageType("pages", PermissionHelper.MANAGE_PAGES),
+	EditProperty("propertyedit", RoleHelper.ADMIN), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
