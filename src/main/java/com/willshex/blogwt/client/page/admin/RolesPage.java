@@ -13,12 +13,12 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.controller.RoleController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
+import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.helper.PagerHelper;
 
@@ -37,7 +37,7 @@ public class RolesPage extends Page {
 			PagerHelper.DEFAULT_COUNT.intValue(),
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField SimplePager pgrRoles;
-	@UiField HTMLPanel pnlNoRoles;
+	@UiField NoneFoundPanel pnlNoRoles;
 
 	public RolesPage () {
 		super(PageType.RolesPageType);

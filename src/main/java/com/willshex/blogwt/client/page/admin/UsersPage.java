@@ -12,11 +12,13 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.SimplePager;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
+import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.helper.PagerHelper;
 
@@ -35,6 +37,7 @@ public class UsersPage extends Page {
 			PagerHelper.DEFAULT_COUNT.intValue(),
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField SimplePager pgrUsers;
+	@UiField NoneFoundPanel pnlNoUsers;
 
 	public UsersPage () {
 		super(PageType.UsersPageType);
@@ -42,6 +45,7 @@ public class UsersPage extends Page {
 
 		createColumns();
 
+		tblUsers.setEmptyTableWidget(pnlNoUsers);
 		UserController.get().addDataDisplay(tblUsers);
 		pgrUsers.setDisplay(tblUsers);
 	}
@@ -50,7 +54,15 @@ public class UsersPage extends Page {
 	 * 
 	 */
 	private void createColumns () {
-
+		TextColumn<User> username = new TextColumn<User>() {
+			
+			@Override
+			public String getValue (User object) {
+				return object.username;
+			}
+		};
+		
+		tblUsers.addColumn(username);
 	}
 
 }

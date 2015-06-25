@@ -2,11 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:style>
-	.inline, .inline p {
-		display: inline;
-		padding: 0;
-		margin: 0;
-	}
+	
 	</ui:style>
 	<g:HTMLPanel>
 		<h2>Permissions</h2>
@@ -14,11 +10,6 @@
 		<c:CellTable ui:field="tblPermissions" styleName="col-sm-12 table table-striped" />
 		<c:SimplePager ui:field="pgrPermissions" location="LEFT" />
 
-		<g:HTMLPanel ui:field="pnlNoPermissions">
-			<h2 class="text-center">
-				No permissions!
-				<p:Markdown styleName="{style.inline}">:crying_cat_face:</p:Markdown>
-			</h2>
-		</g:HTMLPanel>
+		<p:NoneFoundPanel subject="permissions" ui:field="pnlNoPermissions" />
 	</g:HTMLPanel>
 </ui:UiBinder> 
