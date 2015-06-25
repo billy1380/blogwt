@@ -50,6 +50,10 @@ body {
     gwt-sprite: "primaryLoader";
 }
 
+.defaultLoader {
+    gwt-sprite: "defaultLoader";
+}
+
 .brand {
     gwt-sprite: "brand";
 }

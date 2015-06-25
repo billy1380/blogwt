@@ -14,9 +14,15 @@ import java.util.Map;
 
 import org.markdown4j.client.IncludePlugin;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.willshex.blogwt.client.Resources;
 
 /**
  * @author William Shakour (billy1380)
@@ -26,11 +32,42 @@ public class CachedIncludePlugin extends IncludePlugin {
 
 	private Map<String, String> cache;
 
+	public interface CachedIncludePluginTemplates extends SafeHtmlTemplates {
+		CachedIncludePluginTemplates INSTANCE = GWT
+				.create(CachedIncludePluginTemplates.class);
+
+		@Template("<div id=\"{0}\"><div style=\"margin:20px 0\" ><img src=\"{1}\" alt=\"Loading {2}\"> <span style=\"font-weight:bold\">Loading include...</span><div class=\"small text-muted\">{2}</div></div></div>")
+		SafeHtml loadingButton (String id, SafeUri imgSrc, String includeSrc);
+	}
+
 	/**
 	 * @param manager
 	 */
 	public CachedIncludePlugin (HandlerManager manager) {
 		super(manager);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see org.markdown4j.client.IncludePlugin#emit(java.lang.StringBuilder,
+	 * java.util.List, java.util.Map) */
+	@Override
+	public void emit (StringBuilder out, List<String> lines,
+			Map<String, String> params) {
+		String src = params.get("src");
+		try {
+			if (src != null && src.length() > 0) {
+				String id = HTMLPanel.createUniqueId();
+				out.append(CachedIncludePluginTemplates.INSTANCE.loadingButton(
+						id, Resources.RES.defaultLoader().getSafeUri(), src)
+						.asString());
+
+				getContent(src, id, lines, params);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Error while rendering "
+					+ this.getClass().getName(), e);
+		}
 	}
 
 	protected Map<String, String> ensureCache () {
