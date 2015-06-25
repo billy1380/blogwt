@@ -12,7 +12,7 @@
 		<h2>Roles</h2>
 
 		<c:CellTable ui:field="tblRoles"
-			styleName="col-sm-12 table table-striped table-bordered" />
+			styleName="col-sm-12 table table-striped" />
 		<c:SimplePager ui:field="pgrRoles" location="LEFT" />
 
 		<g:HTMLPanel ui:field="pnlNoRoles">

@@ -33,6 +33,7 @@ import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
@@ -113,7 +114,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	 */
 	private void setLoggedInUser (User user) {
 		imgAvatar.setAlt(user.username);
-		imgAvatar.setSrc(user.avatar + "?s=18&default=retro");
+		imgAvatar.setSrc(user.avatar + "?s=" + UserHelper.AVATAR_HEADER_SIZE
+				+ "&default=retro");
 		spnUserName.setInnerText(user.forename + " " + user.surname);
 		btnAccount.setVisible(true);
 		btnSignInOut.getElement().setInnerHTML(
@@ -181,11 +183,11 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		btnSignInOut.getElement().getParentElement().removeClassName("active");
 
 		PageType p = PageType.fromString(current.getPage());
-		
+
 		if (p == null) {
 			p = PageType.PostsPageType;
 		}
-		
+
 		switch (p) {
 		case ChangeDetailsPageType:
 			btnAccount.getElement().getParentElement().addClassName("active");

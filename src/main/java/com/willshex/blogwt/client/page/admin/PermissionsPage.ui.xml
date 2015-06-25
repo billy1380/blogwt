@@ -11,7 +11,7 @@
 	<g:HTMLPanel>
 		<h2>Permissions</h2>
 
-		<c:CellTable ui:field="tblPermissions" styleName="col-sm-12 table table-striped table-bordered" />
+		<c:CellTable ui:field="tblPermissions" styleName="col-sm-12 table table-striped" />
 		<c:SimplePager ui:field="pgrPermissions" location="LEFT" />
 
 		<g:HTMLPanel ui:field="pnlNoPermissions">

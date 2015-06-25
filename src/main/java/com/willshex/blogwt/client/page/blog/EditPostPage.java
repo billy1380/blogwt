@@ -247,8 +247,9 @@ public class EditPostPage extends Page implements
 
 		User user = SessionController.get().user();
 		DivElement author = d.createDivElement();
-		author.setInnerHTML("By <img src=\"" + user.avatar
-				+ "?s=20&default=retro\" class=\"img-circle\" > "
+		author.setInnerHTML("By <img src=\"" + user.avatar + "?s="
+				+ UserHelper.AVATAR_SIZE
+				+ "&default=retro\" class=\"img-circle\" > "
 				+ UserHelper.handle(user));
 		pnlPreview.getElement().appendChild(author);
 
