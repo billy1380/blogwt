@@ -32,6 +32,7 @@ import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellList;
+import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.helper.PermissionHelper;
 
@@ -48,7 +49,7 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 
 	@UiField Element elTitle;
 	@UiField Element elExtendedTitle;
-	@UiField HTMLPanel pnlNoPosts;
+	@UiField NoneFoundPanel pnlNoPosts;
 	@UiField InlineHyperlink lnkNewPost;
 	@UiField(provided = true) CellList<Post> clPosts = new CellList<Post>(
 			new PostSummaryCell(), BootstrapGwtCellList.INSTANCE);

@@ -29,12 +29,7 @@
 			<c:CellList ui:field="clPosts" styleName="col-sm-8" />
 		</g:HTMLPanel>
 
-		<g:HTMLPanel ui:field="pnlNoPosts">
-			<h2 class="text-center">
-				No posts!
-				<p:Markdown styleName="{style.inline}">:crying_cat_face:</p:Markdown>
-			</h2>
-		</g:HTMLPanel>
+		<p:NoneFoundPanel subject="posts" ui:field="pnlNoPosts" />
 
 		<p:BackToTop />
 	</g:HTMLPanel>
