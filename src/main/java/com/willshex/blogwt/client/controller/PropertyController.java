@@ -15,27 +15,30 @@ import java.util.Map;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import com.google.gwt.http.client.Request;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.view.client.AsyncDataProvider;
-import com.google.gwt.view.client.HasData;
+import com.google.gwt.view.client.ListDataProvider;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.BlogService;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler.SetupBlogFailure;
 import com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler.SetupBlogSuccess;
 import com.willshex.blogwt.shared.api.datatype.Property;
+import com.willshex.blogwt.shared.api.datatype.PropertySortType;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.helper.PagerHelper;
 import com.willshex.blogwt.shared.api.helper.PropertyHelper;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class PropertyController extends AsyncDataProvider<Property> {
+public class PropertyController extends ListDataProvider<Property> {
 	private static PropertyController one = null;
 
 	/**
@@ -49,8 +52,12 @@ public class PropertyController extends AsyncDataProvider<Property> {
 		return one;
 	}
 
+	private Pager pager = PagerHelper.createDefaultPager().sortBy(
+			PropertySortType.PropertySortTypeName.toString());
+
+	private Request getPropertiesRequest;
+
 	private Map<String, Property> propertyLookup = new HashMap<String, Property>();
-	private List<Property> properties = null;
 
 	private PropertyController () {
 		String propertiesJson = properties();
@@ -58,25 +65,26 @@ public class PropertyController extends AsyncDataProvider<Property> {
 		if (propertiesJson != null) {
 			JsonArray jsonPropertyArray = (new JsonParser()).parse(
 					propertiesJson).getAsJsonArray();
+			if (getList() == null) {
+				setList(new ArrayList<Property>());
+			} else {
+				getList().clear();
+			}
+			
 			Property item = null;
 			for (int i = 0; i < jsonPropertyArray.size(); i++) {
-				if (properties == null) {
-					properties = new ArrayList<Property>();
-				} else {
-					properties.clear();
-				}
-
 				if (jsonPropertyArray.get(i).isJsonObject()) {
 					(item = new Property()).fromJson(jsonPropertyArray.get(i)
 							.getAsJsonObject());
 					propertyLookup.put(item.name, item);
+					getList().add(item);
 				}
 			}
 		}
 	}
 
 	public List<Property> blog () {
-		return properties;
+		return getList();
 	}
 
 	/**
@@ -126,16 +134,6 @@ public class PropertyController extends AsyncDataProvider<Property> {
 		return $wnd['properties'];
 	}-*/;
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google
-	 * .gwt.view.client.HasData) */
-	@Override
-	protected void onRangeChanged (HasData<Property> display) {
-
-	}
-	
 	public void setupBlog (List<Property> properties, List<User> users) {
 		final SetupBlogRequest input = ApiHelper
 				.setAccessCode(new SetupBlogRequest()).properties(properties)
