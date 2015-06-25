@@ -7,26 +7,65 @@
 //
 package com.willshex.blogwt.client.page.page;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Widget;
-import com.willshex.blogwt.client.page.Page;
+import java.util.List;
+
+import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.controller.NavigationController;
+import com.willshex.blogwt.client.controller.NavigationController.Stack;
+import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.client.page.wizard.WizardDialogPage;
+import com.willshex.blogwt.client.wizard.PagePlanFinishedHandler;
+import com.willshex.blogwt.client.wizard.WizardPage;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class EditPagePage extends Page {
-
-	private static EditPagePageUiBinder uiBinder = GWT
-			.create(EditPagePageUiBinder.class);
-
-	interface EditPagePageUiBinder extends UiBinder<Widget, EditPagePage> {}
+public class EditPagePage extends WizardDialogPage implements
+		NavigationChangedEventHandler, PagePlanFinishedHandler {
 
 	public EditPagePage () {
 		super(PageType.EditPagePageType);
-		initWidget(uiBinder.createAndBindUi(this));
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
+	@Override
+	protected void onAttach () {
+		register(DefaultEventBus.get().addHandlerToSource(
+				NavigationChangedEventHandler.TYPE, NavigationController.get(),
+				this));
+
+		super.onAttach();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onfinished
+	 * (java.util.List) */
+	@Override
+	public void onfinished (List<WizardPage<?>> pages) {
+
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
+	 * navigationChanged
+	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
+	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
+	@Override
+	public void navigationChanged (Stack previous, Stack current) {
+		String action = current.getAction();
+		if (action != null && "new".equalsIgnoreCase(action)) {
+			//			setPlan((new PagePlanBuilder())
+			//					.addPage(...)
+			//					.addPage(...).setName("New Page")
+			//					.addFinishedHandler(this).build());
+		} else {}
 	}
 
 }

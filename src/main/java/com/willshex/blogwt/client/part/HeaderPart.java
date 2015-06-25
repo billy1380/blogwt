@@ -15,6 +15,7 @@ import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -51,6 +52,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiField InlineHyperlink btnAccount;
 	@UiField InlineHyperlink btnSignInOut;
 	@UiField AnchorElement btnPosts;
+	@UiField AnchorElement btnPages;
 	@UiField AnchorElement btnProperties;
 	@UiField SpanElement spnUserName;
 
@@ -118,6 +120,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				+ "&default=retro");
 		spnUserName.setInnerText(user.forename + " " + user.surname);
 		btnAccount.setVisible(true);
+		btnPages.getStyle().setDisplay(Display.BLOCK);
+		btnProperties.getStyle().setDisplay(Display.BLOCK);
 		btnSignInOut.getElement().setInnerHTML(
 				"<span class=\"glyphicon glyphicon-log-out\"></span> Sign Out");
 		btnSignInOut.setTargetHistoryToken(PageType.LogoutPageType
@@ -132,6 +136,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@Override
 	public void logoutSuccess (LogoutRequest input, LogoutResponse output) {
 		btnAccount.setVisible(false);
+		btnPages.getStyle().setDisplay(Display.NONE);
+		btnProperties.getStyle().setDisplay(Display.NONE);
 		btnSignInOut.getElement().setInnerHTML(
 				"<span class=\"glyphicon glyphicon-log-in\"></span> Sign In");
 		btnSignInOut.setTargetHistoryToken(PageType.LoginPageType
@@ -179,6 +185,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	public void navigationChanged (Stack previous, Stack current) {
 		btnAccount.getElement().getParentElement().removeClassName("active");
 		btnPosts.getParentElement().removeClassName("active");
+		btnPages.getParentElement().removeClassName("active");
 		btnProperties.getParentElement().removeClassName("active");
 		btnSignInOut.getElement().getParentElement().removeClassName("active");
 
@@ -191,6 +198,9 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		switch (p) {
 		case ChangeDetailsPageType:
 			btnAccount.getElement().getParentElement().addClassName("active");
+			break;
+		case PagesPageType:
+			btnPages.getParentElement().addClassName("active");
 			break;
 		case LoginPageType:
 			btnSignInOut.getElement().getParentElement().addClassName("active");

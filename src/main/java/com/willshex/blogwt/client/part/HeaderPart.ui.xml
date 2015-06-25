@@ -1,9 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:import field="com.willshex.blogwt.client.page.PageType.ChangeDetailsPageType" />
-	<ui:import field="com.willshex.blogwt.client.page.PageType.LoginPageType" />
-	<ui:import field="com.willshex.blogwt.client.page.PageType.PostsPageType" />
-	<ui:import field="com.willshex.blogwt.client.page.PageType.PropertiesPageType" />
+	<ui:import field="com.willshex.blogwt.client.page.PageType.*" />
 	<ui:import field="com.willshex.blogwt.client.Resources.RES" />
 	<ui:style gss="true">
 	.bottom {
@@ -29,10 +26,10 @@
 						<a href="{PostsPageType.asHref}" ui:field="btnPosts">Blog</a>
 					</li>
 					<li>
-						<a href="{PropertiesPageType.asHref}" ui:field="btnProperties">
-							Site
-							<span class="glyphicon glyphicon-wrench"></span>
-						</a>
+						<a href="{PagesPageType.asHref}" ui:field="btnPages">Pages</a>
+					</li>
+					<li>
+						<a href="{PropertiesPageType.asHref}" ui:field="btnProperties">Site</a>
 					</li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
