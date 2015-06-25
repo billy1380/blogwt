@@ -118,7 +118,8 @@ public class PostDetailPage extends Page implements
 	}
 
 	private void show (Post post) {
-		imgAvatar.setSrc(post.author.avatar + "?s=20&default=retro");
+		imgAvatar.setSrc(post.author.avatar + "?s=" + UserHelper.AVATAR_SIZE
+				+ "&default=retro");
 		elTitle.setInnerHTML(PostHelper.makeHeading(post.title));
 		elAuthor.setInnerText(UserHelper.handle(post.author));
 

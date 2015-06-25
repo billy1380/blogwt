@@ -71,13 +71,11 @@ public class PostSummaryCell extends AbstractCell<Post> {
 			body = value.content.body;
 		}
 
-		RENDERER.render(
-				builder,
-				link,
-				SafeHtmlUtils.fromTrustedString(PostHelper
-						.makeHeading2(value.title)),
+		RENDERER.render(builder, link, SafeHtmlUtils
+				.fromTrustedString(PostHelper.makeHeading2(value.title)),
 				SafeHtmlUtils.fromTrustedString(PostHelper.makeMarkup(body)),
-				UriUtils.fromString(value.author.avatar + "?s=20&default=retro"),
+				UriUtils.fromString(value.author.avatar + "?s="
+						+ UserHelper.AVATAR_SIZE + "&default=retro"),
 				UserHelper.handle(value.author), published, value.listed
 						.booleanValue() ? SafeHtmlUtils.EMPTY_SAFE_HTML
 						: DateTemplate.INSTANCE.notVisible());
