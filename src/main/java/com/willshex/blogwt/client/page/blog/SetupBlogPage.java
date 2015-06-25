@@ -33,7 +33,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  *
  */
 public class SetupBlogPage extends WizardDialogPage implements
-		SetupBlogEventHandler {
+		SetupBlogEventHandler, PagePlanFinishedHandler {
 
 	@Override
 	protected void onAttach () {
@@ -51,34 +51,7 @@ public class SetupBlogPage extends WizardDialogPage implements
 
 		setPlan((new PagePlanBuilder()).addPage(new BlogPropertiesWizardPage())
 				.addPage(new AddUserWizardPage()).setName("Setup Blog")
-				.addFinishedHandler(new PagePlanFinishedHandler() {
-
-					@Override
-					public void onfinished (List<WizardPage<?>> pages) {
-						SetupBlogPage.this.finish(pages);
-					}
-				}).build());
-	}
-
-	/**
-	 * @param pages
-	 */
-	protected void finish (List<WizardPage<?>> pages) {
-		List<User> users = null;
-		List<Property> properties = null;
-		for (WizardPage<?> page : pages) {
-			if (page instanceof BlogPropertiesWizardPage) {
-				properties = ((BlogPropertiesWizardPage) page).getData();
-			} else if (page instanceof AddUserWizardPage) {
-				if (users == null) {
-					users = new ArrayList<User>();
-				}
-
-				users.add(((AddUserWizardPage) page).getData());
-			}
-		}
-
-		PropertyController.get().setupBlog(properties, users);
+				.addFinishedHandler(this).build());
 	}
 
 	/* (non-Javadoc)
@@ -109,6 +82,30 @@ public class SetupBlogPage extends WizardDialogPage implements
 	@Override
 	public void setupBlogFailure (SetupBlogRequest input, Throwable caught) {
 		GWT.log("setupBlogFailure - input:" + input.toString(), caught);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onfinished
+	 * (java.util.List) */
+	@Override
+	public void onfinished (List<WizardPage<?>> pages) {
+		List<User> users = null;
+		List<Property> properties = null;
+		for (WizardPage<?> page : pages) {
+			if (page instanceof BlogPropertiesWizardPage) {
+				properties = ((BlogPropertiesWizardPage) page).getData();
+			} else if (page instanceof AddUserWizardPage) {
+				if (users == null) {
+					users = new ArrayList<User>();
+				}
+
+				users.add(((AddUserWizardPage) page).getData());
+			}
+		}
+
+		PropertyController.get().setupBlog(properties, users);
 	}
 
 }
