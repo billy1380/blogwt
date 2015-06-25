@@ -50,9 +50,6 @@ public class PermissionsPage extends Page {
 		pgrPermissions.setDisplay(tblPermissions);
 	}
 
-	/**
-	 * 
-	 */
 	private void createColumns () {
 		TextColumn<Permission> code = new TextColumn<Permission>() {
 

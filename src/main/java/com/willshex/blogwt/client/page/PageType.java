@@ -18,6 +18,7 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.History;
 import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.blogwt.client.page.admin.PagesPage;
 import com.willshex.blogwt.client.page.admin.PermissionsPage;
 import com.willshex.blogwt.client.page.admin.PropertiesPage;
 import com.willshex.blogwt.client.page.admin.RolesPage;
@@ -26,6 +27,8 @@ import com.willshex.blogwt.client.page.blog.EditPostPage;
 import com.willshex.blogwt.client.page.blog.PostDetailPage;
 import com.willshex.blogwt.client.page.blog.PostsPage;
 import com.willshex.blogwt.client.page.blog.SetupBlogPage;
+import com.willshex.blogwt.client.page.page.EditPagePage;
+import com.willshex.blogwt.client.page.page.PageDetailPage;
 import com.willshex.blogwt.client.page.user.ChangeDetailsPage;
 import com.willshex.blogwt.client.page.user.ChangePasswordPage;
 import com.willshex.blogwt.client.page.user.LoginPage;
@@ -56,7 +59,7 @@ public enum PageType {
 	EditPagePageType("pageedit", PermissionHelper.MANAGE_PAGES),
 	PageDetailPageType("page", false),
 	PagesPageType("pages", PermissionHelper.MANAGE_PAGES),
-	EditProperty("propertyedit", RoleHelper.ADMIN), ;
+	EditPropertyPageType("propertyedit", RoleHelper.ADMIN), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -196,6 +199,15 @@ public enum PageType {
 			break;
 		case PropertiesPageType:
 			page = new PropertiesPage();
+			break;
+		case PagesPageType:
+			page = new PagesPage();
+			break;
+		case EditPagePageType:
+			page = new EditPagePage();
+			break;
+		case PageDetailPageType:
+			page = new PageDetailPage();
 			break;
 		case LogoutPageType:
 		case PostsPageType:
