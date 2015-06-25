@@ -181,6 +181,11 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		btnSignInOut.getElement().getParentElement().removeClassName("active");
 
 		PageType p = PageType.fromString(current.getPage());
+		
+		if (p == null) {
+			p = PageType.PostsPageType;
+		}
+		
 		switch (p) {
 		case ChangeDetailsPageType:
 			btnAccount.getElement().getParentElement().addClassName("active");
