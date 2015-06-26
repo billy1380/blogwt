@@ -31,6 +31,9 @@
 					<li>
 						<a href="{PropertiesPageType.asHref}" ui:field="btnProperties">Site</a>
 					</li>
+					<li>
+                        <a href="{UsersPageType.asHref}" ui:field="btnUsers">Users</a>
+                    </li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li>

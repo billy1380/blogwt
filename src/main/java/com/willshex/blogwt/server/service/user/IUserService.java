@@ -48,7 +48,7 @@ public interface IUserService extends IService {
 	 * @param sortDirection
 	 * @return
 	 */
-	public List<User> getUsers (Long start, Long count, UserSortType sortBy,
+	public List<User> getUsers (Integer start, Integer count, UserSortType sortBy,
 			SortDirectionType sortDirection);
 
 	/**

@@ -90,12 +90,12 @@ final class UserService implements IUserService {
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.services.user.IUserService#getUsers
-	 * (java.lang.Long, java.lang.Long,
+	 * (java.lang.Integer, java.lang.Integer,
 	 * com.willshex.blogwt.shared.api.datatypes.UserSortType,
 	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
-	public List<User> getUsers (Long start, Long count, UserSortType sortBy,
-			SortDirectionType sortDirection) {
+	public List<User> getUsers (Integer start, Integer count,
+			UserSortType sortBy, SortDirectionType sortDirection) {
 		Query<User> query = ofy().load().type(User.class);
 
 		if (start != null) {
@@ -122,7 +122,7 @@ final class UserService implements IUserService {
 			query = query.order(condition);
 		}
 
-		return query.list();
+		return addAvatars(query.list());
 	}
 
 	/* (non-Javadoc)
@@ -149,6 +149,17 @@ final class UserService implements IUserService {
 	@Override
 	public void updateUserIdLastLoggedIn (Long userId) {
 		updateUser(getUser(userId).lastLoggedIn(new Date()));
+	}
+
+	private List<User> addAvatars (List<User> users) {
+		if (users != null) {
+			for (User user : users) {
+				if (user.avatar == null) {
+					addAvatar(user);
+				}
+			}
+		}
+		return users;
 	}
 
 	private User addAvatar (User user) {

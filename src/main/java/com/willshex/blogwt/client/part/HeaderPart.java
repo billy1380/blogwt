@@ -54,6 +54,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiField AnchorElement btnPosts;
 	@UiField AnchorElement btnPages;
 	@UiField AnchorElement btnProperties;
+	@UiField AnchorElement btnUsers;
 	@UiField SpanElement spnUserName;
 
 	@UiField ImageElement imgAvatar;
@@ -122,6 +123,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		btnAccount.setVisible(true);
 		btnPages.getStyle().setDisplay(Display.BLOCK);
 		btnProperties.getStyle().setDisplay(Display.BLOCK);
+		btnUsers.getStyle().setDisplay(Display.BLOCK);
 		btnSignInOut.getElement().setInnerHTML(
 				"<span class=\"glyphicon glyphicon-log-out\"></span> Sign Out");
 		btnSignInOut.setTargetHistoryToken(PageType.LogoutPageType
@@ -138,6 +140,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		btnAccount.setVisible(false);
 		btnPages.getStyle().setDisplay(Display.NONE);
 		btnProperties.getStyle().setDisplay(Display.NONE);
+		btnUsers.getStyle().setDisplay(Display.NONE);
 		btnSignInOut.getElement().setInnerHTML(
 				"<span class=\"glyphicon glyphicon-log-in\"></span> Sign In");
 		btnSignInOut.setTargetHistoryToken(PageType.LoginPageType
@@ -187,6 +190,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		btnPosts.getParentElement().removeClassName("active");
 		btnPages.getParentElement().removeClassName("active");
 		btnProperties.getParentElement().removeClassName("active");
+		btnUsers.getParentElement().removeClassName("active");
 		btnSignInOut.getElement().getParentElement().removeClassName("active");
 
 		PageType p = PageType.fromString(current.getPage());
@@ -201,6 +205,9 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 			break;
 		case PagesPageType:
 			btnPages.getParentElement().addClassName("active");
+			break;
+		case UsersPageType:
+			btnUsers.getParentElement().addClassName("active");
 			break;
 		case LoginPageType:
 			btnSignInOut.getElement().getParentElement().addClassName("active");

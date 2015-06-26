@@ -50,6 +50,15 @@ public class PrettyButtonCell extends ButtonCell {
 			case "edit":
 				buttonStyle = "btn-default";
 				glyph = "glyphicon-edit";
+				break;
+			case "admin":
+				buttonStyle = "btn-default";
+				glyph = "glyphicon-sunglasses";
+				break;
+			case "user":
+				buttonStyle = "btn-default";
+				glyph = "glyphicon-user";
+				break;
 			}
 		}
 
