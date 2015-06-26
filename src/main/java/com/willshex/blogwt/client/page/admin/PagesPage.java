@@ -67,7 +67,7 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page {
 				return object.title;
 			}
 		};
-		
+
 		TextColumn<Page> owner = new TextColumn<Page>() {
 
 			@Override
@@ -77,7 +77,7 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page {
 		};
 
 		Column<Page, SafeHtml> hasChildren = new Column<Page, SafeHtml>(
-				new SafeHtmlCell()) {
+				safeHtmlPrototype) {
 
 			@Override
 			public SafeHtml getValue (Page object) {

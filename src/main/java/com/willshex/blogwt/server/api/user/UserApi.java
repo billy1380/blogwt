@@ -8,6 +8,7 @@
 package com.willshex.blogwt.server.api.user;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +29,7 @@ import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.RoleSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.datatype.UserSortType;
 import com.willshex.blogwt.shared.api.helper.PagerHelper;
 import com.willshex.blogwt.shared.api.helper.PermissionHelper;
 import com.willshex.blogwt.shared.api.helper.RoleHelper;
@@ -71,6 +73,17 @@ public final class UserApi extends ActionHandler {
 
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
+
+			UserValidator.authorisation(input.session.user, Arrays
+					.asList(RoleHelper.createAdmin()), Arrays
+					.asList(PermissionServiceProvider.provide()
+							.getCodePermission(PermissionHelper.MANAGE_USERS)),
+					"input.session.user");
+
+			output.users = UserServiceProvider.provide().getUsers(
+					input.pager.start, input.pager.count,
+					UserSortType.fromString(input.pager.sortBy),
+					input.pager.sortDirection);
 
 			UserHelper.stripPassword(output.users);
 
@@ -339,15 +352,11 @@ public final class UserApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			List<Role> roles = new ArrayList<Role>();
-			roles.add(RoleHelper.createAdmin());
-
-			List<Permission> permissions = new ArrayList<Permission>();
-			Permission postPermission = PermissionServiceProvider.provide()
-					.getCodePermission(PermissionHelper.MANAGE_PERMISSIONS);
-			permissions.add(postPermission);
-
-			UserValidator.authorisation(input.session.user, roles, permissions,
+			UserValidator.authorisation(input.session.user, Arrays
+					.asList(RoleHelper.createAdmin()), Arrays
+					.asList(PermissionServiceProvider.provide()
+							.getCodePermission(
+									PermissionHelper.MANAGE_PERMISSIONS)),
 					"input.session.user");
 
 			output.permissions = PermissionServiceProvider.provide()
