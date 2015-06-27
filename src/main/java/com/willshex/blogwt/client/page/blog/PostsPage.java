@@ -89,13 +89,13 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 	public void navigationChanged (Stack previous, Stack current) {
 		if (PageType.LogoutPageType.equals(current.getPage())) {
 			SessionController.get().logout();
+		} else {
+			refresh();
 		}
 
 		lnkNewPost.setVisible(SessionController.get().isAuthorised(
 				Arrays.asList(PermissionHelper
 						.create(PermissionHelper.MANAGE_POSTS))));
-
-		refresh();
 	}
 
 	private void refresh () {
