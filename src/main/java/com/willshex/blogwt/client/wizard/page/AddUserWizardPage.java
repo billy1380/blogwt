@@ -15,6 +15,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -111,6 +112,30 @@ public class AddUserWizardPage extends Composite implements WizardPage<User> {
 	@Override
 	public boolean validate () {
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.willshex.blogwt.client.wizard.WizardPage#setData(java.lang.Object)
+	 */
+	@Override
+	public void setData (User data) {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.willshex.blogwt.client.wizard.WizardPage#getPageDescription()
+	 */
+	@Override
+	public String getPageDescription () {
+		return "Add a new user.";
+	}
+
+	/* (non-Javadoc)
+	 * @see com.willshex.blogwt.client.wizard.WizardPage#getAutoFocusField()
+	 */
+	@Override
+	public Focusable getAutoFocusField () {
+		return txtUsername;
 	}
 
 }

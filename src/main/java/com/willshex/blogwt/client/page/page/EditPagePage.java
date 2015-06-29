@@ -68,4 +68,13 @@ public class EditPagePage extends WizardDialogPage implements
 		} else {}
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onCancelled() */
+	@Override
+	public void onCancelled () {
+
+	}
+
 }

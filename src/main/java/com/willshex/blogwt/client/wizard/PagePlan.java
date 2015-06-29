@@ -2,7 +2,7 @@
 //  PagePlan.java
 //  blogwt
 //
-//  Created by billy1380 on 1 Aug 2013.
+//  Created by William Shakour (billy1380) on 1 Aug 2013.
 //  Copyright © 2013 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.client.wizard;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author billy1380
+ * @author William Shakour (billy1380)
  * 
  */
 public class PagePlan {
@@ -37,7 +37,6 @@ public class PagePlan {
 	}
 
 	public static class PagePlanBuilder {
-
 		PagePlan plan;
 
 		public PagePlan build() {
@@ -73,7 +72,40 @@ public class PagePlan {
 	}
 
 	public WizardPage<?> get(int index) {
+		if (index > 0 && pages.get(index) instanceof DeferredWizardPage) {
+			DeferredWizardPage<?> deferred = (DeferredWizardPage<?>) pages.get(index);
+			List<WizardPage<?>> replacement = deferred.getPages(pages, index);
+
+			int i = index;
+			int j = findUnmodifyablePageIndex(index);
+
+			pages.remove(i);
+			unmodifyablePages.remove(j);
+
+			if (replacement != null) {
+				for (WizardPage<?> wizardPage : replacement) {
+					addUnmodifyableAt(i++, j++, wizardPage);
+				}
+			}
+		}
+
 		return pages.get(index);
+	}
+
+	/**
+	 * @param index
+	 * @return
+	 */
+	private int findUnmodifyablePageIndex(int index) {
+		WizardPage<?> existingPage = null;
+		int immutablePageIndex = -1;
+
+		for (int i = index; immutablePageIndex == -1 && i >= 0; i--) {
+			existingPage = pages.get(i);
+			immutablePageIndex = unmodifyablePages.indexOf(existingPage);
+		}
+
+		return immutablePageIndex;
 	}
 
 	/**
@@ -108,6 +140,11 @@ public class PagePlan {
 		pages.add(page);
 	}
 
+	private void addUnmodifyableAt(int pageIndex, int unmodifyablePageIndex, WizardPage<?> page) {
+		pages.add(pageIndex, page);
+		unmodifyablePages.add(unmodifyablePageIndex, page);
+	}
+
 	public boolean canRemove(WizardPage<?> page) {
 		return !unmodifyablePages.contains(page);
 	}
@@ -126,6 +163,12 @@ public class PagePlan {
 	public void finished() {
 		for (PagePlanFinishedHandler handler : finishHandlers) {
 			handler.onfinished(pages);
+		}
+	}
+
+	public void cancelled() {
+		for (PagePlanFinishedHandler handler : finishHandlers) {
+			handler.onCancelled();
 		}
 	}
 
