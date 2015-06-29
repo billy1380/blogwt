@@ -14,6 +14,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -104,6 +105,30 @@ public class BlogPropertiesWizardPage extends Composite implements
 	@Override
 	public boolean validate () {
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.willshex.blogwt.client.wizard.WizardPage#setData(java.lang.Object)
+	 */
+	@Override
+	public void setData (List<Property> data) {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.willshex.blogwt.client.wizard.WizardPage#getPageDescription()
+	 */
+	@Override
+	public String getPageDescription () {
+		return "Enter some blog details to start. You can change these properties and others later from the admin pages.";
+	}
+
+	/* (non-Javadoc)
+	 * @see com.willshex.blogwt.client.wizard.WizardPage#getAutoFocusField()
+	 */
+	@Override
+	public Focusable getAutoFocusField () {
+		return txtTitle;
 	}
 
 }

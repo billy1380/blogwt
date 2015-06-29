@@ -16,5 +16,7 @@ import java.util.List;
 public interface PagePlanFinishedHandler {
 
 	void onfinished(List<WizardPage<?>> pages);
+	
+	void onCancelled();
 
 }

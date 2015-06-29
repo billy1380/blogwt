@@ -19,6 +19,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -111,8 +112,7 @@ public class WizardDialog extends Composite {
 						WizardDialogTemplates.INSTANCE.loadingButton("Loading... ", Resources.RES.primaryLoader().getSafeUri()));
 				plan.finished();
 			} else {
-				currentPage++;
-
+				while (plan.get(++currentPage) == SeparatorWizardPage.SEPARATOR) {}
 				layout();
 			}
 		}
@@ -173,6 +173,10 @@ public class WizardDialog extends Composite {
 
 		pnlContents.clear();
 		pnlContents.add(page.getBody());
+	}
+
+	protected Focusable getAutofocusField() {
+		return plan.get(currentPage).getAutoFocusField();
 	}
 
 }

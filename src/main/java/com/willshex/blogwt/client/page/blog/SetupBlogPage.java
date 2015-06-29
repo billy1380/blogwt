@@ -108,4 +108,12 @@ public class SetupBlogPage extends WizardDialogPage implements
 		PropertyController.get().setupBlog(properties, users);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onCancelled()
+	 */
+	@Override
+	public void onCancelled () {
+		
+	}
+
 }
