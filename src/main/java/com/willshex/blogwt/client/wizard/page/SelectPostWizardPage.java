@@ -9,8 +9,10 @@ package com.willshex.blogwt.client.wizard.page;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.wizard.WizardPage;
@@ -28,6 +30,7 @@ public class SelectPostWizardPage extends Composite implements WizardPage<Post> 
 	interface SelectPostWizardPageUiBinder extends
 			UiBinder<Widget, SelectPostWizardPage> {}
 
+	@UiField SuggestBox txtPost;
 	private Post post;
 
 	public SelectPostWizardPage () {
@@ -47,6 +50,14 @@ public class SelectPostWizardPage extends Composite implements WizardPage<Post> 
 	 * @see com.willshex.blogwt.client.wizard.WizardPage#getData() */
 	@Override
 	public Post getData () {
+		if (post == null) {
+			post = new Post();
+		}
+
+		if (post.id == null) {
+			post.slug = txtPost.getValue();
+		}
+
 		return post;
 	}
 
