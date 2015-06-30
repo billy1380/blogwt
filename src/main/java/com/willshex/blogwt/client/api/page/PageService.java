@@ -3,7 +3,7 @@
 //  xsdwsdl2code
 //
 //  Created by William Shakour on June 25, 2015.
-//  Copyright © 2015 SPACEHOPPER STUDIOS. All rights reserved.
+//  Copyright © 2015 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.client.api.page;
 
@@ -13,6 +13,10 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
+import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
+import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
+import com.willshex.blogwt.shared.api.page.call.DeletePageResponse;
 import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
@@ -21,6 +25,90 @@ import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class PageService extends JsonService {
+	public static final String PageMethodDeletePage = "DeletePage";
+
+	public Request deletePage (final DeletePageRequest input,
+			final AsyncCallback<DeletePageResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(PageMethodDeletePage, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								DeletePageResponse outputParameter = new DeletePageResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(PageService.this,
+										PageMethodDeletePage, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(PageService.this,
+										PageMethodDeletePage, input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(PageService.this,
+									PageMethodDeletePage, input, exception);
+						}
+					});
+			onCallStart(PageService.this, PageMethodDeletePage, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(PageService.this, PageMethodDeletePage, input,
+					exception);
+		}
+		return handle;
+	}
+
+	public static final String PageMethodCreatePage = "CreatePage";
+
+	public Request createPage (final CreatePageRequest input,
+			final AsyncCallback<CreatePageResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(PageMethodCreatePage, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								CreatePageResponse outputParameter = new CreatePageResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(PageService.this,
+										PageMethodCreatePage, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(PageService.this,
+										PageMethodCreatePage, input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(PageService.this,
+									PageMethodCreatePage, input, exception);
+						}
+					});
+			onCallStart(PageService.this, PageMethodCreatePage, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(PageService.this, PageMethodCreatePage, input,
+					exception);
+		}
+		return handle;
+	}
+
 	public static final String PageMethodGetPages = "GetPages";
 
 	public Request getPages (final GetPagesRequest input,

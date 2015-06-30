@@ -9,6 +9,11 @@ package com.willshex.blogwt.server.api.page;
 
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.shared.api.datatype.Page;
+import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
+import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
+import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
+import com.willshex.blogwt.shared.api.page.call.DeletePageResponse;
 import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
@@ -17,18 +22,31 @@ import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public final class PageApi extends ActionHandler {
-	private static final Logger LOG = Logger.getLogger(PageApi.class.getName());
+	private static final Logger LOG = Logger.getLogger(Page.class.getName());
 
-	public GetPageResponse getPage (GetPageRequest input) {
-		LOG.finer("Entering getPage");
-		GetPageResponse output = new GetPageResponse();
+	public DeletePageResponse deletePage (DeletePageRequest input) {
+		LOG.finer("Entering deletePage");
+		DeletePageResponse output = new DeletePageResponse();
 		try {
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
-		LOG.finer("Exiting getPage");
+		LOG.finer("Exiting deletePage");
+		return output;
+	}
+
+	public CreatePageResponse createPage (CreatePageRequest input) {
+		LOG.finer("Entering createPage");
+		CreatePageResponse output = new CreatePageResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting createPage");
 		return output;
 	}
 
@@ -42,6 +60,19 @@ public final class PageApi extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getPages");
+		return output;
+	}
+
+	public GetPageResponse getPage (GetPageRequest input) {
+		LOG.finer("Entering getPage");
+		GetPageResponse output = new GetPageResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getPage");
 		return output;
 	}
 }
