@@ -96,6 +96,21 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 	@Override
 	public void setData (Page data) {
 		page = data;
+
+		if (page != null) {
+			boolean b;
+			cbxHasParent.setValue(Boolean.valueOf(b = page.parent != null));
+			if (b) {
+				txtParentPage.setValue(Long.toString(page.parent.id));
+			}
+
+			cbxHasPriority.setValue(Boolean.valueOf(page.priority != null));
+			if (b) {
+				txtPriority.setValue(Float.toString(page.priority));
+			}
+
+			txtTitle.setValue(page.title);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -112,7 +127,11 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 	@Override
 	public String getPageDescription () {
 		return PostHelper
-				.makeMarkup("Enter the page details then press next to select the content to add to the page.\n\nParentless pages will appear in the header, but only if they are assigned a priority.\n\nParentless and priorityless pages are effectively invisible.");
+				.makeMarkup("Enter the page details then press next to select the content to add to the page.\n\n"
+						+ "Parentless pages will appear in the header, but only if they are assigned a priority.\n\n"
+						+ "Parentless and priorityless pages are effectively invisible.\n\n"
+						+ "__There can be no overlap between page slugs and native page identifiers. "
+						+ "Native pages will win, except in the case of the home page__.");
 	}
 
 	/* (non-Javadoc)

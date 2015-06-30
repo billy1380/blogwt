@@ -13,8 +13,6 @@
 					<h2 ui:field="h2WizardTitle">Title</h2>
 					<h3 ui:field="h3PageTitle">Title</h3>
 
-					<div ui:field="elDescription" class="small">Description</div>
-
 					<g:HTMLPanel ui:field="pnlContents" />
 
 					<div class="btn-toolbar">
@@ -35,6 +33,9 @@
 								text="+" />
 						</g:HTMLPanel>
 					</div>
+
+					<hr />
+					<div ui:field="elDescription" class="small">Description</div>
 				</g:HTMLPanel>
 			</g:FormPanel>
 		</g:HTMLPanel>
