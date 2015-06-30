@@ -1,0 +1,33 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	.slug {
+		margin: 5px;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<g:HTMLPanel styleName="form-group">
+			<label class="control-label">Title</label>
+			<g:TextBox ui:field="txtTitle" styleName="form-control" />
+			<div ui:field="elSlug" class="{style.slug} small" />
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="form-group">
+			<label class="control-label">Parent page</label>
+			<div class="input-group">
+				<g:CheckBox ui:field="cbxHasParent" styleName="input-group-addon"
+					checked="false" />
+				<g:SuggestBox ui:field="txtParentPage" styleName="form-control"
+					enabled="false" />
+			</div>
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="form-group">
+			<label class="control-label">Priority</label>
+			<div class="input-group">
+				<g:CheckBox ui:field="cbxHasPriority" styleName="input-group-addon"
+					checked="false" />
+				<g:TextBox ui:field="txtPriority" styleName="form-control"
+					enabled="false" text="none" />
+			</div>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 
