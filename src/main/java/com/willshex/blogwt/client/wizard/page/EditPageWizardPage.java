@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.helper.PostHelper;
+import com.willshex.blogwt.client.oracle.PageOracle;
 import com.willshex.blogwt.client.wizard.WizardPage;
 import com.willshex.blogwt.shared.api.datatype.Page;
 
@@ -39,12 +40,12 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 	@UiField TextBox txtTitle;
 	@UiField Element elSlug;
 	@UiField CheckBox cbxHasParent;
-	@UiField SuggestBox txtParentPage;
+	@UiField(provided = true) SuggestBox txtParentPage = new SuggestBox(
+			new PageOracle());
 	@UiField CheckBox cbxHasPriority;
 	@UiField TextBox txtPriority;
 
 	private Page page;
-	private Page suggestParent;
 
 	public EditPageWizardPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -72,7 +73,8 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 		}
 
 		if (cbxHasParent.getValue().booleanValue()) {
-			page.parent = suggestParent;
+			(page.parent = new Page())
+					.id(Long.valueOf(txtParentPage.getValue()));
 		} else {
 			page.parent = null;
 		}

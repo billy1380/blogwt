@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.helper.PostHelper;
+import com.willshex.blogwt.client.oracle.PostOracle;
 import com.willshex.blogwt.client.wizard.WizardPage;
 import com.willshex.blogwt.shared.api.datatype.Post;
 
@@ -30,7 +31,8 @@ public class SelectPostWizardPage extends Composite implements WizardPage<Post> 
 	interface SelectPostWizardPageUiBinder extends
 			UiBinder<Widget, SelectPostWizardPage> {}
 
-	@UiField SuggestBox txtPost;
+	@UiField(provided = true) SuggestBox txtPost = new SuggestBox(
+			new PostOracle());
 	private Post post;
 
 	public SelectPostWizardPage () {
