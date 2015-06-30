@@ -17,6 +17,9 @@ import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.page.wizard.WizardDialogPage;
 import com.willshex.blogwt.client.wizard.PagePlanFinishedHandler;
 import com.willshex.blogwt.client.wizard.WizardPage;
+import com.willshex.blogwt.client.wizard.page.EditPageWizardPage;
+import com.willshex.blogwt.client.wizard.page.SelectPostWizardPage;
+import com.willshex.blogwt.client.wizard.PagePlan.PagePlanBuilder;
 
 /**
  * @author William Shakour (billy1380)
@@ -61,11 +64,12 @@ public class EditPagePage extends WizardDialogPage implements
 	public void navigationChanged (Stack previous, Stack current) {
 		String action = current.getAction();
 		if (action != null && "new".equalsIgnoreCase(action)) {
-			//			setPlan((new PagePlanBuilder())
-			//					.addPage(...)
-			//					.addPage(...).setName("New Page")
-			//					.addFinishedHandler(this).build());
-		} else {}
+			setPlan((new PagePlanBuilder()).addPage(new EditPageWizardPage())
+					.addPage(new SelectPostWizardPage()).setName("New Page")
+					.addFinishedHandler(this).build());
+		} else {
+
+		}
 	}
 
 	/* (non-Javadoc)

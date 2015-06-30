@@ -8,6 +8,7 @@
 package com.willshex.blogwt.client.wizard;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
@@ -35,16 +36,17 @@ public class WizardDialog extends Composite {
 	private int currentPage = 0;
 
 	public interface WizardDialogTemplates extends SafeHtmlTemplates {
-		WizardDialogTemplates INSTANCE = GWT.create(WizardDialogTemplates.class);
+		WizardDialogTemplates INSTANCE = GWT
+				.create(WizardDialogTemplates.class);
 
 		@Template("<span class=\"glyphicon glyphicon-arrow-left\" style=\"margin-right:10px\"></span>{0}")
-		SafeHtml backButton(String name);
+		SafeHtml backButton (String name);
 
 		@Template("{0}<span class=\"glyphicon glyphicon-arrow-right\" style=\"margin-left:10px\"></span>")
-		SafeHtml nextButton(String name);
+		SafeHtml nextButton (String name);
 
 		@Template("{0}<img src=\"{1}\" alt=\"Loading...\">")
-		SafeHtml loadingButton(String name, SafeUri imgSrc);
+		SafeHtml loadingButton (String name, SafeUri imgSrc);
 	}
 
 	private static final String ADD_CHILD_BUTTON_SPAN = "<span class=\"glyphicon glyphicon-plus\"></span>";
@@ -52,9 +54,12 @@ public class WizardDialog extends Composite {
 
 	private static final String FINISH_BUTTON_SPAN = "Finish<span class=\"glyphicon glyphicon-ok\" style=\"margin-left:10px\"></span>";
 
-	private static final SafeHtml ADD_HTML = SafeHtmlUtils.fromSafeConstant(ADD_CHILD_BUTTON_SPAN);
-	private static final SafeHtml REMOVE_HTML = SafeHtmlUtils.fromSafeConstant(REMOVE_CHILD_BUTTON_SPAN);
-	private static final SafeHtml FINISH_HTML = SafeHtmlUtils.fromSafeConstant(FINISH_BUTTON_SPAN);
+	private static final SafeHtml ADD_HTML = SafeHtmlUtils
+			.fromSafeConstant(ADD_CHILD_BUTTON_SPAN);
+	private static final SafeHtml REMOVE_HTML = SafeHtmlUtils
+			.fromSafeConstant(REMOVE_CHILD_BUTTON_SPAN);
+	private static final SafeHtml FINISH_HTML = SafeHtmlUtils
+			.fromSafeConstant(FINISH_BUTTON_SPAN);
 
 	@UiField Button btnBack;
 
@@ -66,25 +71,27 @@ public class WizardDialog extends Composite {
 	@UiField HeadingElement h2WizardTitle;
 	@UiField HeadingElement h3PageTitle;
 
+	@UiField Element elDescription;
 	@UiField HTMLPanel pnlContents;
 
 	@UiField HTMLPanel pnlRepeatable;
 
-	private static WizardDialogUiBinder uiBinder = GWT.create(WizardDialogUiBinder.class);
+	private static WizardDialogUiBinder uiBinder = GWT
+			.create(WizardDialogUiBinder.class);
 
 	interface WizardDialogUiBinder extends UiBinder<Widget, WizardDialog> {}
 
-	public WizardDialog() {
+	public WizardDialog () {
 		this(null);
 	}
 
-	public WizardDialog(PagePlan plan) {
+	public WizardDialog (PagePlan plan) {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		setPlan(plan);
 	}
 
-	protected void setPlan(PagePlan plan) {
+	protected void setPlan (PagePlan plan) {
 		this.plan = plan;
 
 		if (plan != null) {
@@ -95,7 +102,7 @@ public class WizardDialog extends Composite {
 	}
 
 	@UiHandler("btnBack")
-	void onBtnBackClicked(ClickEvent event) {
+	void onBtnBackClicked (ClickEvent event) {
 		if (currentPage > 0) {
 			currentPage--;
 
@@ -104,12 +111,14 @@ public class WizardDialog extends Composite {
 	}
 
 	@UiHandler("btnNext")
-	void onBtnNextClicked(ClickEvent event) {
+	void onBtnNextClicked (ClickEvent event) {
 
 		if (plan.get(currentPage).validate()) {
 			if (plan.count() - 1 == currentPage) {
 				btnNext.getElement().setInnerSafeHtml(
-						WizardDialogTemplates.INSTANCE.loadingButton("Loading... ", Resources.RES.primaryLoader().getSafeUri()));
+						WizardDialogTemplates.INSTANCE.loadingButton(
+								"Loading... ", Resources.RES.primaryLoader()
+										.getSafeUri()));
 				plan.finished();
 			} else {
 				while (plan.get(++currentPage) == SeparatorWizardPage.SEPARATOR) {}
@@ -119,7 +128,7 @@ public class WizardDialog extends Composite {
 	}
 
 	@UiHandler("btnAddChild")
-	void onBtnAddChild(ClickEvent event) {
+	void onBtnAddChild (ClickEvent event) {
 		if (currentPage + 1 == plan.count()) {
 			plan.add(plan.get(currentPage).another());
 		} else {
@@ -130,7 +139,7 @@ public class WizardDialog extends Composite {
 	}
 
 	@UiHandler("btnRemoveChild")
-	void onBtnRemoveChild(ClickEvent event) {
+	void onBtnRemoveChild (ClickEvent event) {
 		if (plan.canRemove(plan.get(currentPage))) {
 			plan.remove(plan.get(currentPage));
 
@@ -138,9 +147,11 @@ public class WizardDialog extends Composite {
 		}
 	}
 
-	private void layout() {
+	private void layout () {
 		if (currentPage > 0) {
-			btnBack.getElement().setInnerSafeHtml(WizardDialogTemplates.INSTANCE.backButton(plan.get(currentPage - 1).getPageTitle()));
+			btnBack.getElement().setInnerSafeHtml(
+					WizardDialogTemplates.INSTANCE.backButton(plan.get(
+							currentPage - 1).getPageTitle()));
 			btnBack.setVisible(true);
 		} else {
 			btnBack.setVisible(false);
@@ -166,16 +177,19 @@ public class WizardDialog extends Composite {
 		if (plan.count() - 1 == currentPage) {
 			btnNext.getElement().setInnerSafeHtml(FINISH_HTML);
 		} else {
-			btnNext.getElement().setInnerSafeHtml(WizardDialogTemplates.INSTANCE.nextButton(plan.get(currentPage + 1).getPageTitle()));
+			btnNext.getElement().setInnerSafeHtml(
+					WizardDialogTemplates.INSTANCE.nextButton(plan.get(
+							currentPage + 1).getPageTitle()));
 		}
 
 		h3PageTitle.setInnerHTML(page.getPageTitle());
+		elDescription.setInnerHTML(page.getPageDescription());
 
 		pnlContents.clear();
 		pnlContents.add(page.getBody());
 	}
 
-	protected Focusable getAutofocusField() {
+	protected Focusable getAutofocusField () {
 		return plan.get(currentPage).getAutoFocusField();
 	}
 

@@ -39,7 +39,7 @@ public class Page extends DataType {
 	@Ignore public Page parent;
 
 	public Boolean hasChildren;
-	@Index(value = IfNotNull.class) public Integer priority;
+	@Index(value = IfNotNull.class) public Float priority;
 
 	@Override
 	public JsonObject toJson () {
@@ -128,7 +128,7 @@ public class Page extends DataType {
 		if (jsonObject.has("priority")) {
 			JsonElement jsonPriority = jsonObject.get("priority");
 			if (jsonPriority != null) {
-				priority = Integer.valueOf(jsonPriority.getAsInt());
+				priority = Float.valueOf(jsonPriority.getAsFloat());
 			}
 		}
 	}
@@ -163,7 +163,7 @@ public class Page extends DataType {
 		return this;
 	}
 
-	public Page priority (Integer priority) {
+	public Page priority (Float priority) {
 		this.priority = priority;
 		return this;
 	}
