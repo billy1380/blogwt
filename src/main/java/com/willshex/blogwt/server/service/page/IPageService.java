@@ -36,4 +36,10 @@ public interface IPageService extends IService {
 	*/
 	public void deletePage (Page page);
 
+	/**
+	 * @param slug
+	 * @return
+	 */
+	public Page getSlugPage (String slug);
+
 }

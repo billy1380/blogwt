@@ -13,6 +13,7 @@ import java.util.Date;
 
 import com.googlecode.objectify.Key;
 import com.willshex.blogwt.shared.api.datatype.Page;
+import com.willshex.blogwt.shared.api.datatype.PageSortType;
 
 final class PageService implements IPageService {
 	public String getName () {
@@ -45,6 +46,18 @@ final class PageService implements IPageService {
 	@Override
 	public void deletePage (Page page) {
 		ofy().delete().entity(page).now();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.page.IPageService#getSlugPage(java
+	 * .lang.String) */
+	@Override
+	public Page getSlugPage (String slug) {
+		return ofy().load().type(Page.class)
+				.filter(PageSortType.PageSortTypeSlug.toString(), slug).first()
+				.now();
 	}
 
 }

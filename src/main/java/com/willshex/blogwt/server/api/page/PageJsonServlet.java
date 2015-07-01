@@ -12,6 +12,7 @@ import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
+import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
 import com.willshex.gson.json.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
@@ -20,7 +21,11 @@ public final class PageJsonServlet extends JsonServlet {
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
 		PageApi service = new PageApi();
-		if ("DeletePage".equals(action)) {
+		if ("UpdatePage".equals(action)) {
+			UpdatePageRequest input = new UpdatePageRequest();
+			input.fromJson(request);
+			output = service.updatePage(input).toString();
+		} else if ("DeletePage".equals(action)) {
 			DeletePageRequest input = new DeletePageRequest();
 			input.fromJson(request);
 			output = service.deletePage(input).toString();
