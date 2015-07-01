@@ -21,10 +21,54 @@ import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPagesResponse;
+import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
+import com.willshex.blogwt.shared.api.page.call.UpdatePageResponse;
 import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class PageService extends JsonService {
+	public static final String PageMethodUpdatePage = "UpdatePage";
+
+	public Request updatePage (final UpdatePageRequest input,
+			final AsyncCallback<UpdatePageResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(PageMethodUpdatePage, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								UpdatePageResponse outputParameter = new UpdatePageResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(PageService.this,
+										PageMethodUpdatePage, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(PageService.this,
+										PageMethodUpdatePage, input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(PageService.this,
+									PageMethodUpdatePage, input, exception);
+						}
+					});
+			onCallStart(PageService.this, PageMethodUpdatePage, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(PageService.this, PageMethodUpdatePage, input,
+					exception);
+		}
+		return handle;
+	}
+
 	public static final String PageMethodDeletePage = "DeletePage";
 
 	public Request deletePage (final DeletePageRequest input,
