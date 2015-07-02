@@ -18,13 +18,13 @@ import com.willshex.gson.json.service.server.InputValidationException;
  */
 public class PageValidator {
 	private static final String type = Page.class.getSimpleName();
-	
+
 	public static Page validate (Page page, String name)
 			throws InputValidationException {
 		if (page == null)
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + ": " + name);
-		
+
 		return page;
 	}
 
@@ -50,7 +50,8 @@ public class PageValidator {
 		if (isIdLookup) {
 			lookupPage = PageServiceProvider.provide().getPage(page.id);
 		} else {
-			lookupPage = PageServiceProvider.provide().getSlugPage(page.slug);
+			lookupPage = PageServiceProvider.provide().getSlugPage(page.slug,
+					Boolean.FALSE);
 		}
 
 		if (lookupPage == null)

@@ -15,8 +15,10 @@ import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PageValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
+import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Page;
+import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.helper.PagerHelper;
@@ -58,9 +60,7 @@ public final class PageApi extends ActionHandler {
 
 			UserValidator.authorisation(input.session.user, roles, permissions,
 					"input.session.user");
-			
-			
-			
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -91,8 +91,6 @@ public final class PageApi extends ActionHandler {
 			UserValidator.authorisation(input.session.user, roles, permissions,
 					"input.session.user");
 
-			
-			
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -123,8 +121,10 @@ public final class PageApi extends ActionHandler {
 			UserValidator.authorisation(input.session.user, roles, permissions,
 					"input.session.user");
 
-			
-			
+			input.page = PageValidator.validate(input.page, "input.page");
+
+			output.page = PageServiceProvider.provide().addPage(input.page);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -143,9 +143,16 @@ public final class PageApi extends ActionHandler {
 
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
+
+			if (input.pager == null) {
+				input.pager = PagerHelper.createDefaultPager();
+			}
 			
-			//output.pages;
-			
+			output.pages = PageServiceProvider.provide().getPages(
+					input.includePosts, input.pager.start, input.pager.count,
+					PageSortType.fromString(input.pager.sortBy),
+					input.pager.sortDirection);
+
 			output.pager = PagerHelper.moveForward(input.pager);
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -167,8 +174,13 @@ public final class PageApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			output.page = PageValidator.lookup(input.page, "input.page");
-			
+			input.page = PageValidator.lookup(input.page, "input.page");
+
+			if (input.includePosts = Boolean.TRUE) {
+				output.page = PageServiceProvider.provide().getPage(
+						input.page.id, input.includePosts);
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

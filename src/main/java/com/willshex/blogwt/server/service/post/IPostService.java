@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.service.post;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.spacehopperstudios.service.IService;
@@ -27,33 +28,29 @@ public interface IPostService extends IService {
 	/**
 	 * @param id
 	 * @return
-	 * @throws DataAccessException
 	 */
 	public Post getPost (Long id);
 
 	/**
 	 * @param post
 	 * @return
-	 * @throws DataAccessException
 	 */
 	public Post addPost (Post post);
 
 	/**
 	 * @param post
 	 * @return
-	 * @throws DataAccessException
 	 */
 	public Post updatePost (Post post);
 
 	/**
 	 * @param post
-	 * @throws DataAccessException
 	 */
 	public void deletePost (Post post);
 
 	/**
 	 * 
-	 * 	 * 
+	 * 	
 	 * @param user
 	 *            , get all posts published by user
 	 * @param showAll
@@ -78,7 +75,6 @@ public interface IPostService extends IService {
 	 * @param sortBy
 	 * @param sortDirection
 	 * @return
-	 * @throws DataAccessException
 	 */
 	public List<Post> getPosts (Boolean showAll, Boolean includeContents,
 			Integer start, Integer count, PostSortType sortBy,
@@ -89,7 +85,6 @@ public interface IPostService extends IService {
 	 * @param user
 	 * @param showAll
 	 * @return
-	 * @throws DataAccessException
 	 */
 	public Long getUserViewablePostsCount (User user, Boolean showAll);
 
@@ -97,7 +92,6 @@ public interface IPostService extends IService {
 	 * 
 	 * @param showAll
 	 * @return
-	 * @throws DataAccessException
 	 */
 	public Long getPostsCount (Boolean showAll);
 
@@ -105,7 +99,6 @@ public interface IPostService extends IService {
 	 * 
 	 * @param slug
 	 * @return
-	 * @throws DataAccessException
 	 */
 	public Post getSlugPost (String slug);
 
@@ -114,5 +107,10 @@ public interface IPostService extends IService {
 	 * @return
 	 */
 	public PostContent getPostContent (Post post);
+
+	/**
+	 * @param ids
+	 */
+	public List<Post> getPostBatch (Collection<Long> ids);
 
 }
