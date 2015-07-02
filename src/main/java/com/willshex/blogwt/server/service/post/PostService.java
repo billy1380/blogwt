@@ -216,12 +216,14 @@ final class PostService implements IPostService {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.server.service.post.IPostService#getPostBatch(java.util.Collection)
-	 */
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.post.IPostService#getPostBatch(java
+	 * .util.Collection) */
 	@Override
 	public List<Post> getPostBatch (Collection<Long> ids) {
-		
-		return null;
+		return new ArrayList<Post>(ofy().load().type(Post.class).ids(ids)
+				.values());
 	}
 
 }
