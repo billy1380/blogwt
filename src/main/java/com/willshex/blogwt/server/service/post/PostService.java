@@ -11,6 +11,7 @@ package com.willshex.blogwt.server.service.post;
 import static com.willshex.blogwt.server.service.PersistenceService.ofy;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -212,6 +213,15 @@ final class PostService implements IPostService {
 	public PostContent getPostContent (Post post) {
 		return ofy().load().type(PostContent.class).id(post.contentKey.getId())
 				.now();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.willshex.blogwt.server.service.post.IPostService#getPostBatch(java.util.Collection)
+	 */
+	@Override
+	public List<Post> getPostBatch (Collection<Long> ids) {
+		
+		return null;
 	}
 
 }

@@ -16,16 +16,16 @@ import com.willshex.blogwt.shared.api.datatype.Page;
 
 public class GetPageRequest extends Request {
 	public Page page;
-	public Boolean includePostContents;
+	public Boolean includePosts;
 
 	@Override
 	public JsonObject toJson () {
 		JsonObject object = super.toJson();
 		JsonElement jsonPage = page == null ? JsonNull.INSTANCE : page.toJson();
 		object.add("page", jsonPage);
-		JsonElement jsonIncludePostContents = includePostContents == null ? JsonNull.INSTANCE
-				: new JsonPrimitive(includePostContents);
-		object.add("includePostContents", jsonIncludePostContents);
+		JsonElement jsonIncludePosts = includePosts == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(includePosts);
+		object.add("includePosts", jsonIncludePosts);
 		return object;
 	}
 
@@ -39,12 +39,10 @@ public class GetPageRequest extends Request {
 				page.fromJson(jsonPage.getAsJsonObject());
 			}
 		}
-		if (jsonObject.has("includePostContents")) {
-			JsonElement jsonIncludePostContents = jsonObject
-					.get("includePostContents");
-			if (jsonIncludePostContents != null) {
-				includePostContents = Boolean.valueOf(jsonIncludePostContents
-						.getAsBoolean());
+		if (jsonObject.has("includePosts")) {
+			JsonElement jsonIncludePosts = jsonObject.get("includePosts");
+			if (jsonIncludePosts != null) {
+				includePosts = Boolean.valueOf(jsonIncludePosts.getAsBoolean());
 			}
 		}
 	}
@@ -54,8 +52,8 @@ public class GetPageRequest extends Request {
 		return this;
 	}
 
-	public GetPageRequest includePostContents (Boolean includePostContents) {
-		this.includePostContents = includePostContents;
+	public GetPageRequest includePosts (Boolean includePosts) {
+		this.includePosts = includePosts;
 		return this;
 	}
 }
