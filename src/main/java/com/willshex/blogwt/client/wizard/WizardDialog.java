@@ -93,10 +93,10 @@ public class WizardDialog extends Composite {
 
 	protected void setPlan (PagePlan plan) {
 		this.plan = plan;
+		currentPage = 0;
 
 		if (plan != null) {
 			h2WizardTitle.setInnerHTML(plan.getName());
-
 			layout();
 		}
 	}
