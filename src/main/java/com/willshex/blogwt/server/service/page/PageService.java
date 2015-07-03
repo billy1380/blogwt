@@ -12,10 +12,10 @@ import static com.willshex.blogwt.server.service.PersistenceService.ofy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.dev.util.collect.HashMap;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.service.PersistenceService;

@@ -26,7 +26,10 @@ import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
+import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
+import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.api.page.call.event.CreatePageEventHandler;
+import com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -35,7 +38,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class EditPagePage extends WizardDialogPage implements
 		NavigationChangedEventHandler, PagePlanFinishedHandler,
-		CreatePageEventHandler {
+		CreatePageEventHandler, GetPageEventHandler {
 
 	public EditPagePage () {
 		super(PageType.EditPagePageType);
@@ -51,6 +54,8 @@ public class EditPagePage extends WizardDialogPage implements
 				this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				CreatePageEventHandler.TYPE, PageController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(
+				GetPageEventHandler.TYPE, PageController.get(), this));
 
 		super.onAttach();
 	}
@@ -94,7 +99,22 @@ public class EditPagePage extends WizardDialogPage implements
 					.addPage(new SelectPostWizardPage()).setName("New Page")
 					.addFinishedHandler(this).build());
 		} else {
+			if (current.getParameterCount() >= 1) {
+				Page page = null;
+				switch (current.getAction()) {
+				case "id":
+					(page = new Page())
+							.id(Long.valueOf(current.getParameter(0)));
+					break;
+				case "slug":
+					page = new Page().slug(current.getParameter(0));
+					break;
+				}
 
+				if (page != null) {
+					PageController.get().getPage(page, true);
+				}
+			}
 		}
 	}
 
@@ -129,5 +149,40 @@ public class EditPagePage extends WizardDialogPage implements
 	 * java.lang.Throwable) */
 	@Override
 	public void createPageFailure (CreatePageRequest input, Throwable caught) {}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler#
+	 * getPageSuccess(com.willshex.blogwt.shared.api.page.call.GetPageRequest,
+	 * com.willshex.blogwt.shared.api.page.call.GetPageResponse) */
+	@Override
+	public void getPageSuccess (GetPageRequest input, GetPageResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			PagePlanBuilder builder = new PagePlanBuilder();
+
+			EditPageWizardPage ewp = new EditPageWizardPage();
+			ewp.setData(output.page);
+
+			builder.addPage(ewp);
+
+			SelectPostWizardPage spwp = new SelectPostWizardPage();
+			for (Post post : output.page.posts) {
+				spwp = new SelectPostWizardPage();
+				spwp.setData(post);
+				builder.addPage(spwp);
+			}
+
+			setPlan(builder.setName("Edit " + output.page.title)
+					.addFinishedHandler(this).build());
+		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler#
+	 * getPageFailure(com.willshex.blogwt.shared.api.page.call.GetPageRequest,
+	 * java.lang.Throwable) */
+	@Override
+	public void getPageFailure (GetPageRequest input, Throwable caught) {}
 
 }

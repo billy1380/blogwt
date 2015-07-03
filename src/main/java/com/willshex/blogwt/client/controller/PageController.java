@@ -23,12 +23,16 @@ import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
 import com.willshex.blogwt.shared.api.page.call.DeletePageResponse;
+import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
+import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPagesResponse;
 import com.willshex.blogwt.shared.api.page.call.event.CreatePageEventHandler.CreatePageFailure;
 import com.willshex.blogwt.shared.api.page.call.event.CreatePageEventHandler.CreatePageSuccess;
 import com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler.DeletePageFailure;
 import com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler.DeletePageSuccess;
+import com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler.GetPageFailure;
+import com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler.GetPageSuccess;
 import com.willshex.blogwt.shared.api.page.call.event.GetPagesEventHandler.GetPagesFailure;
 import com.willshex.blogwt.shared.api.page.call.event.GetPagesEventHandler.GetPagesSuccess;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -52,12 +56,14 @@ public class PageController extends AsyncDataProvider<Page> {
 	private Pager pager = PagerHelper.createDefaultPager();
 
 	private Request getPagesRequest;
+	private Request getPageRequest;
 
 	private void fetchPages () {
 		final GetPagesRequest input = ApiHelper
 				.setAccessCode(new GetPagesRequest());
 		input.pager = pager;
 		input.session = SessionController.get().sessionForApiCall();
+		input.includePosts = Boolean.FALSE;
 
 		if (getPagesRequest != null) {
 			getPagesRequest.cancel();
@@ -176,6 +182,48 @@ public class PageController extends AsyncDataProvider<Page> {
 								new DeletePageFailure(input, caught),
 								PageController.this);
 					}
+				});
+	}
+
+	/**
+	 * @param page
+	 */
+	public void getPage (Page page, boolean includePosts) {
+		final GetPageRequest input = ApiHelper
+				.setAccessCode(new GetPageRequest());
+		input.session = SessionController.get().sessionForApiCall();
+		input.page = page;
+		input.includePosts = Boolean.valueOf(includePosts);
+		
+		if (getPageRequest != null) {
+			getPageRequest.cancel();
+		}
+
+		getPageRequest = ApiHelper.createPageClient().getPage(input,
+				new AsyncCallback<GetPageResponse>() {
+
+					@Override
+					public void onSuccess (GetPageResponse output) {
+						getPageRequest = null;
+
+						if (output.status == StatusType.StatusTypeSuccess) {
+
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new GetPageSuccess(input, output),
+								PageController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						getPageRequest = null;
+
+						DefaultEventBus.get().fireEventFromSource(
+								new GetPageFailure(input, caught),
+								PageController.this);
+					}
+
 				});
 	}
 
