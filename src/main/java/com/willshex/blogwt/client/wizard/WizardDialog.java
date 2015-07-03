@@ -76,6 +76,9 @@ public class WizardDialog extends Composite {
 
 	@UiField HTMLPanel pnlRepeatable;
 
+	@UiField HTMLPanel pnlLayout;
+	@UiField HTMLPanel pnlEmpty;
+
 	private static WizardDialogUiBinder uiBinder = GWT
 			.create(WizardDialogUiBinder.class);
 
@@ -91,13 +94,26 @@ public class WizardDialog extends Composite {
 		setPlan(plan);
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
+	@Override
+	protected void onDetach () {
+		super.onDetach();
+
+		pnlEmpty.setVisible(true);
+		pnlLayout.setVisible(false);
+	}
+
 	protected void setPlan (PagePlan plan) {
 		this.plan = plan;
 		currentPage = 0;
 
 		if (plan != null) {
 			h2WizardTitle.setInnerHTML(plan.getName());
+			pnlEmpty.setVisible(false);
 			layout();
+			pnlLayout.setVisible(true);
 		}
 	}
 
