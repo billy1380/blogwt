@@ -7,7 +7,7 @@
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">
-		<g:HTMLPanel styleName="row">
+		<g:HTMLPanel styleName="row" visible="false" ui:field="pnlLayout">
 			<g:FormPanel styleName="{style.form-wizard} col-sm-4 col-md-offset-4">
 				<g:HTMLPanel>
 					<h2 ui:field="h2WizardTitle">Title</h2>
@@ -38,6 +38,9 @@
 					<div ui:field="elDescription" class="small">Description</div>
 				</g:HTMLPanel>
 			</g:FormPanel>
+		</g:HTMLPanel>
+		<g:HTMLPanel styleName="row" ui:field="pnlEmpty">
+			<h2 class="col-sm-4 col-md-offset-4">Waiting for plan...</h2>
 		</g:HTMLPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 
