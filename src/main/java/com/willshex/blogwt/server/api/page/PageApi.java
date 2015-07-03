@@ -17,6 +17,7 @@ import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
+import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -24,6 +25,7 @@ import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.helper.PagerHelper;
 import com.willshex.blogwt.shared.api.helper.PermissionHelper;
 import com.willshex.blogwt.shared.api.helper.RoleHelper;
+import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
@@ -91,6 +93,10 @@ public final class PageApi extends ActionHandler {
 			UserValidator.authorisation(input.session.user, roles, permissions,
 					"input.session.user");
 
+			input.page = PageValidator.lookup(input.page, "input.page");
+
+			PageServiceProvider.provide().deletePage(input.page);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -147,11 +153,17 @@ public final class PageApi extends ActionHandler {
 			if (input.pager == null) {
 				input.pager = PagerHelper.createDefaultPager();
 			}
-			
+
 			output.pages = PageServiceProvider.provide().getPages(
 					input.includePosts, input.pager.start, input.pager.count,
 					PageSortType.fromString(input.pager.sortBy),
 					input.pager.sortDirection);
+
+			for (Page page : output.pages) {
+				page.owner = UserHelper
+						.stripPassword(UserServiceProvider.provide().getUser(
+								Long.valueOf(page.ownerKey.getId())));
+			}
 
 			output.pager = PagerHelper.moveForward(input.pager);
 
@@ -180,6 +192,10 @@ public final class PageApi extends ActionHandler {
 				output.page = PageServiceProvider.provide().getPage(
 						input.page.id, input.includePosts);
 			}
+
+			output.page.owner = UserHelper.stripPassword(UserServiceProvider
+					.provide().getUser(
+							Long.valueOf(output.page.ownerKey.getId())));
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
