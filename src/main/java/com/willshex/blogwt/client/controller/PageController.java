@@ -21,10 +21,14 @@ import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.helper.PagerHelper;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
+import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
+import com.willshex.blogwt.shared.api.page.call.DeletePageResponse;
 import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPagesResponse;
 import com.willshex.blogwt.shared.api.page.call.event.CreatePageEventHandler.CreatePageFailure;
 import com.willshex.blogwt.shared.api.page.call.event.CreatePageEventHandler.CreatePageSuccess;
+import com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler.DeletePageFailure;
+import com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler.DeletePageSuccess;
 import com.willshex.blogwt.shared.api.page.call.event.GetPagesEventHandler.GetPagesFailure;
 import com.willshex.blogwt.shared.api.page.call.event.GetPagesEventHandler.GetPagesSuccess;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -119,28 +123,60 @@ public class PageController extends AsyncDataProvider<Page> {
 	 * @param page
 	 */
 	public void createPage (Page page) {
-		final CreatePageRequest input = SessionController
-				.get()
+		final CreatePageRequest input = SessionController.get()
 				.setSession(ApiHelper.setAccessCode(new CreatePageRequest()))
 				.page(page);
 
-		ApiHelper.createPageClient().createPage(input, new AsyncCallback<CreatePageResponse>() {
+		ApiHelper.createPageClient().createPage(input,
+				new AsyncCallback<CreatePageResponse>() {
 
-			@Override
-			public void onSuccess (CreatePageResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {}
+					@Override
+					public void onSuccess (CreatePageResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {}
 
-				DefaultEventBus.get().fireEventFromSource(
-						new CreatePageSuccess(input, output),
-						PageController.this);
-			}
+						DefaultEventBus.get().fireEventFromSource(
+								new CreatePageSuccess(input, output),
+								PageController.this);
+					}
 
-			@Override
-			public void onFailure (Throwable caught) {
-				DefaultEventBus.get().fireEventFromSource(
-						new CreatePageFailure(input, caught),
-						PageController.this);
-			}
-		});
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new CreatePageFailure(input, caught),
+								PageController.this);
+					}
+				});
 	}
+
+	/**
+	 * @param page
+	 */
+	public void deletePage (Page page) {
+		final DeletePageRequest input = SessionController.get()
+				.setSession(ApiHelper.setAccessCode(new DeletePageRequest()))
+				.page(page);
+
+		ApiHelper.createPageClient().deletePage(input,
+				new AsyncCallback<DeletePageResponse>() {
+
+					@Override
+					public void onSuccess (DeletePageResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {
+							if (input.page != null) {}
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new DeletePageSuccess(input, output),
+								PageController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new DeletePageFailure(input, caught),
+								PageController.this);
+					}
+				});
+	}
+
 }

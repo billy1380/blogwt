@@ -7,8 +7,12 @@
 //
 package com.willshex.blogwt.server.api.validation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Page;
+import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.json.service.server.InputValidationException;
 
@@ -24,6 +28,15 @@ public class PageValidator {
 		if (page == null)
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + ": " + name);
+
+		List<Post> posts = new ArrayList<Post>();
+		for (Post post : page.posts) {
+			posts.add(PostValidator.lookup(post, name + ".posts[n]"));
+		}
+
+		page.posts = posts;
+		
+		page.owner = UserValidator.lookup(page.owner, name + ".owner");
 
 		return page;
 	}

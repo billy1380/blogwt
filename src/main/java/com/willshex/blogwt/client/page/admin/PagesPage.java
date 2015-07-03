@@ -20,6 +20,7 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
@@ -28,12 +29,18 @@ import com.willshex.blogwt.client.part.PrettyButtonCell;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.api.helper.PagerHelper;
+import com.willshex.blogwt.shared.api.helper.UserHelper;
+import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
+import com.willshex.blogwt.shared.api.page.call.DeletePageResponse;
+import com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class PagesPage extends com.willshex.blogwt.client.page.Page {
+public class PagesPage extends com.willshex.blogwt.client.page.Page implements
+		DeletePageEventHandler {
 
 	private static PagesPageUiBinder uiBinder = GWT
 			.create(PagesPageUiBinder.class);
@@ -47,6 +54,17 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page {
 	@UiField NoneFoundPanel pnlNoPages;
 	private SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
 	private ButtonCell actionButtonPrototype = new PrettyButtonCell();
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
+	@Override
+	protected void onAttach () {
+		super.onAttach();
+
+		register(DefaultEventBus.get().addHandlerToSource(
+				DeletePageEventHandler.TYPE, PageController.get(), this));
+	}
 
 	public PagesPage () {
 		super(PageType.PagesPageType);
@@ -72,7 +90,7 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page {
 
 			@Override
 			public String getValue (Page object) {
-				return "-";
+				return UserHelper.name(object.owner);
 			}
 		};
 
@@ -83,9 +101,9 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page {
 			public SafeHtml getValue (Page object) {
 				return SafeHtmlUtils
 						.fromSafeConstant("<span class=\"glyphicon glyphicon-"
-								+ object.hasChildren != null
-								&& object.hasChildren.booleanValue() ? "ok"
-								: "remove" + "\"></span>");
+								+ (object.hasChildren != null
+										&& object.hasChildren.booleanValue() ? "ok"
+										: "remove") + "\"></span>");
 			}
 		};
 
@@ -96,9 +114,9 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page {
 			public SafeHtml getValue (Page object) {
 				return SafeHtmlUtils
 						.fromSafeConstant("<span class=\"glyphicon glyphicon-"
-								+ object.parent == null
-								&& object.priority != null ? "ok" : "remove"
-								+ "\"></span>");
+								+ (object.parent == null
+										&& object.priority != null ? "ok"
+										: "remove") + "\"></span>");
 			}
 		};
 
@@ -144,7 +162,7 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page {
 
 			@Override
 			public void update (int index, Page object, String value) {
-
+				PageController.get().deletePage(object);
 			}
 		});
 
@@ -157,5 +175,31 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page {
 		tblPages.addColumn(edit);
 		tblPages.addColumn(delete);
 	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler
+	 * #deletePageSuccess
+	 * (com.willshex.blogwt.shared.api.page.call.DeletePageRequest,
+	 * com.willshex.blogwt.shared.api.page.call.DeletePageResponse) */
+	@Override
+	public void deletePageSuccess (DeletePageRequest input,
+			DeletePageResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			tblPages.setVisibleRangeAndClearData(tblPages.getVisibleRange(),
+					true);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler
+	 * #deletePageFailure
+	 * (com.willshex.blogwt.shared.api.page.call.DeletePageRequest,
+	 * java.lang.Throwable) */
+	@Override
+	public void deletePageFailure (DeletePageRequest input, Throwable caught) {}
 
 }
