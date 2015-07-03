@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.Resources;
 
@@ -66,7 +65,7 @@ public class WizardDialog extends Composite {
 	@UiField Button btnAddChild;
 	@UiField Button btnRemoveChild;
 
-	@UiField SubmitButton btnNext;
+	@UiField Button btnNext;
 
 	@UiField HeadingElement h2WizardTitle;
 	@UiField HeadingElement h3PageTitle;

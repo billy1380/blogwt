@@ -70,6 +70,8 @@ public class SelectPostWizardPage extends Composite implements WizardPage<Post> 
 	@Override
 	public void setData (Post data) {
 		post = data;
+
+		txtPost.setText(data.slug == null ? data.id.toString() : data.slug);
 	}
 
 	/* (non-Javadoc)
@@ -118,7 +120,7 @@ public class SelectPostWizardPage extends Composite implements WizardPage<Post> 
 	 * @see com.willshex.blogwt.client.wizard.WizardPage#getAutoFocusField() */
 	@Override
 	public Focusable getAutoFocusField () {
-		return null;
+		return txtPost;
 	}
 
 }

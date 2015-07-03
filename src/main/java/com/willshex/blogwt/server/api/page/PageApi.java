@@ -186,9 +186,9 @@ public final class PageApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			input.page = PageValidator.lookup(input.page, "input.page");
+			output.page = input.page = PageValidator.lookup(input.page, "input.page");
 
-			if (input.includePosts = Boolean.TRUE) {
+			if (input.includePosts == Boolean.TRUE) {
 				output.page = PageServiceProvider.provide().getPage(
 						input.page.id, input.includePosts);
 			}

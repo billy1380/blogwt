@@ -22,7 +22,7 @@
 						</div>
 
 						<div class="pull-right btn-group">
-							<g:SubmitButton ui:field="btnNext" styleName="{style.btn} btn btn-primary"
+							<g:Button ui:field="btnNext" styleName="{style.btn} btn btn-primary"
 								text="Next" />
 						</div>
 
