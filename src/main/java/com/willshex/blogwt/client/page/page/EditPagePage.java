@@ -28,8 +28,11 @@ import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
 import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
+import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
+import com.willshex.blogwt.shared.api.page.call.UpdatePageResponse;
 import com.willshex.blogwt.shared.api.page.call.event.CreatePageEventHandler;
 import com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler;
+import com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -38,7 +41,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class EditPagePage extends WizardDialogPage implements
 		NavigationChangedEventHandler, PagePlanFinishedHandler,
-		CreatePageEventHandler, GetPageEventHandler {
+		CreatePageEventHandler, GetPageEventHandler, UpdatePageEventHandler {
 
 	public EditPagePage () {
 		super(PageType.EditPagePageType);
@@ -56,6 +59,8 @@ public class EditPagePage extends WizardDialogPage implements
 				CreatePageEventHandler.TYPE, PageController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetPageEventHandler.TYPE, PageController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(
+				UpdatePageEventHandler.TYPE, PageController.get(), this));
 
 		super.onAttach();
 	}
@@ -82,7 +87,11 @@ public class EditPagePage extends WizardDialogPage implements
 			}
 		}
 
-		PageController.get().createPage(page);
+		if (page.id == null) {
+			PageController.get().createPage(page);
+		} else {
+			PageController.get().updatePage(page);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -184,5 +193,26 @@ public class EditPagePage extends WizardDialogPage implements
 	 * java.lang.Throwable) */
 	@Override
 	public void getPageFailure (GetPageRequest input, Throwable caught) {}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler
+	 * #updatePageSuccess
+	 * (com.willshex.blogwt.shared.api.page.call.UpdatePageRequest,
+	 * com.willshex.blogwt.shared.api.page.call.UpdatePageResponse) */
+	@Override
+	public void updatePageSuccess (UpdatePageRequest input,
+			UpdatePageResponse output) {}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler
+	 * #updatePageFailure
+	 * (com.willshex.blogwt.shared.api.page.call.UpdatePageRequest,
+	 * java.lang.Throwable) */
+	@Override
+	public void updatePageFailure (UpdatePageRequest input, Throwable caught) {}
 
 }

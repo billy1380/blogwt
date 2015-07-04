@@ -27,6 +27,8 @@ import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPagesResponse;
+import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
+import com.willshex.blogwt.shared.api.page.call.UpdatePageResponse;
 import com.willshex.blogwt.shared.api.page.call.event.CreatePageEventHandler.CreatePageFailure;
 import com.willshex.blogwt.shared.api.page.call.event.CreatePageEventHandler.CreatePageSuccess;
 import com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler.DeletePageFailure;
@@ -35,6 +37,8 @@ import com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler.GetPag
 import com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler.GetPageSuccess;
 import com.willshex.blogwt.shared.api.page.call.event.GetPagesEventHandler.GetPagesFailure;
 import com.willshex.blogwt.shared.api.page.call.event.GetPagesEventHandler.GetPagesSuccess;
+import com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler.UpdatePageFailure;
+import com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler.UpdatePageSuccess;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -194,7 +198,7 @@ public class PageController extends AsyncDataProvider<Page> {
 		input.session = SessionController.get().sessionForApiCall();
 		input.page = page;
 		input.includePosts = Boolean.valueOf(includePosts);
-		
+
 		if (getPageRequest != null) {
 			getPageRequest.cancel();
 		}
@@ -224,6 +228,35 @@ public class PageController extends AsyncDataProvider<Page> {
 								PageController.this);
 					}
 
+				});
+	}
+
+	/**
+	 * @param page
+	 */
+	public void updatePage (Page page) {
+		final UpdatePageRequest input = SessionController.get()
+				.setSession(ApiHelper.setAccessCode(new UpdatePageRequest()))
+				.page(page);
+
+		ApiHelper.createPageClient().updatePage(input,
+				new AsyncCallback<UpdatePageResponse>() {
+
+					@Override
+					public void onSuccess (UpdatePageResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new UpdatePageSuccess(input, output),
+								PageController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new UpdatePageFailure(input, caught),
+								PageController.this);
+					}
 				});
 	}
 
