@@ -105,6 +105,18 @@ public class NavigationController implements ValueChangeHandler<String> {
 			return parts.length > 0 ? parts[0] : null;
 		}
 
+		public String getPageSlug () {
+			String slug = null;
+			if (parts.length > 0) {
+				if (parts[0] != null && parts[0].length() > 0
+						&& parts[0].charAt(0) == '!') {
+					slug = parts[0].substring(1);
+				}
+			}
+
+			return slug;
+		}
+
 		public String getAction () {
 			return parts.length > 1 ? parts[1] : null;
 		}
@@ -275,7 +287,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 		PageType stackPage = PageType.fromString(page);
 
 		if (stackPage == null) {
-			stackPage = PageType.PostsPageType;
+			stackPage = PageType.PageDetailPageType;
 		}
 
 		final Stack previous = stack;

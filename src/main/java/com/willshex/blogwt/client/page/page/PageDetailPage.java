@@ -98,13 +98,19 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
-		if (current.getAction() != null) {
-			String slug;
-			if ((slug = current.getAction()) != null) {
-				PageController.get().getPage(new Page().slug(slug), true);
-				pnlLoading.setVisible(true);
-			}
+		String slug = null;
+		if (PageType.fromString(current.getPage()) == PageType.PageDetailPageType) {
+			slug = current.getAction();
+		} else {
+			slug = current.getPageSlug();
 		}
+
+		if (slug == null) {
+			slug = "home";
+		}
+	
+		PageController.get().getPage(new Page().slug(slug), true);
+		pnlLoading.setVisible(true);
 
 		boolean canChange = SessionController.get().isAuthorised(
 				Arrays.asList(PermissionHelper
@@ -150,7 +156,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 		if (output.status == StatusType.StatusTypeSuccess) {
 			show(page = output.page);
 		} else {
-			PageType.PagesPageType.show();
+			PageType.PostsPageType.show();
 		}
 	}
 
