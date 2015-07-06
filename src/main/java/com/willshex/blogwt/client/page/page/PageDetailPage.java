@@ -10,6 +10,8 @@ package com.willshex.blogwt.client.page.page;
 import java.util.Arrays;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -19,12 +21,16 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Page;
+import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.helper.PermissionHelper;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
 import com.willshex.blogwt.shared.api.page.call.DeletePageResponse;
@@ -66,6 +72,22 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 						+ page.title + "\"")) {
 			PageController.get().deletePage(page);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
+	@Override
+	protected void onAttach () {
+		super.onAttach();
+
+		register(DefaultEventBus.get().addHandlerToSource(
+				NavigationChangedEventHandler.TYPE, NavigationController.get(),
+				this));
+		register(DefaultEventBus.get().addHandlerToSource(
+				GetPageEventHandler.TYPE, PageController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(
+				DeletePageEventHandler.TYPE, PageController.get(), this));
 	}
 
 	/* (non-Javadoc)
@@ -141,6 +163,18 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 	public void getPageFailure (GetPageRequest input, Throwable caught) {}
 
 	private void show (Page page) {
+		pnlContent.getElement().removeAllChildren();
+
+		String html;
+		Element e;
+		for (Post post : page.posts) {
+			if (post.content != null && post.content.body != null) {
+				html = PostHelper.makeMarkup(post.content.body);
+				e = Document.get().createDivElement();
+				e.setInnerHTML(html);
+				pnlContent.getElement().appendChild(e);
+			}
+		}
 
 		pnlLoading.setVisible(false);
 	}
