@@ -43,8 +43,8 @@ import com.willshex.blogwt.shared.api.helper.RoleHelper;
  */
 public enum PageType {
 	SetupBlogPageType("setup", false),
-	EditPostPageType("blogedit", PermissionHelper.MANAGE_POSTS),
-	PostsPageType("posts", false),
+	EditPostPageType("postedit", PermissionHelper.MANAGE_POSTS),
+	PostsPageType("blog", false),
 	PostDetailPageType("post", false),
 	ChangeDetailsPageType("user", true),
 	ChangePasswordPageType("changepassword", true),
@@ -63,7 +63,7 @@ public enum PageType {
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
-	private PostsPage defaultPage = null;
+	private Page defaultPage = null;
 	private Map<String, Permission> requiredPermissions;
 	private boolean requiresAuthentication;
 
@@ -206,14 +206,14 @@ public enum PageType {
 		case EditPagePageType:
 			page = new EditPagePage();
 			break;
-		case PageDetailPageType:
-			page = new PageDetailPage();
-			break;
 		case LogoutPageType:
 		case PostsPageType:
+			page = new PostsPage();
+			break;
+		case PageDetailPageType:
 		default:
 			if (defaultPage == null) {
-				defaultPage = new PostsPage();
+				defaultPage = new PageDetailPage();
 			}
 			page = defaultPage;
 			break;
