@@ -178,7 +178,7 @@ public class EditPagePage extends WizardDialogPage implements
 			for (Post post : output.page.posts) {
 				spwp = new SelectPostWizardPage();
 				spwp.setData(post);
-				builder.addPage(spwp);
+				builder.addPage(spwp, post != output.page.posts.get(0));
 			}
 
 			setPlan(builder.setName("Edit " + output.page.title)

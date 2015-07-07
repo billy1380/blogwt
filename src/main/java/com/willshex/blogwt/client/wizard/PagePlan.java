@@ -17,14 +17,14 @@ import java.util.List;
 public class PagePlan {
 
 	private String name = null;
-	private List<WizardPage<?>> unmodifyablePages = new ArrayList<WizardPage<?>>();
+	private List<WizardPage<?>> unmodifiablePages = new ArrayList<WizardPage<?>>();
 	private List<WizardPage<?>> pages = new ArrayList<WizardPage<?>>();
 	private List<PagePlanFinishedHandler> finishHandlers = new ArrayList<PagePlanFinishedHandler>();
 
 	/**
 	 * @return the name
 	 */
-	public String getName() {
+	public String getName () {
 		return name;
 	}
 
@@ -32,29 +32,38 @@ public class PagePlan {
 	 * @param name
 	 *            the name to set
 	 */
-	public void setName(String name) {
+	public void setName (String name) {
 		this.name = name;
 	}
 
 	public static class PagePlanBuilder {
 		PagePlan plan;
 
-		public PagePlan build() {
+		public PagePlan build () {
 			return plan;
 		}
 
-		public PagePlanBuilder addPage(WizardPage<?> page) {
+		public PagePlanBuilder addPage (WizardPage<?> page, boolean modifiable) {
 
 			if (plan == null) {
 				plan = new PagePlan();
 			}
 
-			plan.addUnmodifyable(page);
+			if (modifiable) {
+				plan.add(page);
+			} else {
+				plan.addUnmodifiable(page);
+			}
 
 			return this;
 		}
 
-		public PagePlanBuilder setName(String name) {
+		public PagePlanBuilder addPage (WizardPage<?> page) {
+			addPage(page, false);
+			return this;
+		}
+
+		public PagePlanBuilder setName (String name) {
 			plan.name = name;
 
 			return this;
@@ -64,27 +73,29 @@ public class PagePlan {
 		 * @param wizardDialogFinishedHandler
 		 * @return
 		 */
-		public PagePlanBuilder addFinishedHandler(PagePlanFinishedHandler handler) {
+		public PagePlanBuilder addFinishedHandler (
+				PagePlanFinishedHandler handler) {
 			plan.addFinishedHandler(handler);
 
 			return this;
 		}
 	}
 
-	public WizardPage<?> get(int index) {
+	public WizardPage<?> get (int index) {
 		if (index > 0 && pages.get(index) instanceof DeferredWizardPage) {
-			DeferredWizardPage<?> deferred = (DeferredWizardPage<?>) pages.get(index);
+			DeferredWizardPage<?> deferred = (DeferredWizardPage<?>) pages
+					.get(index);
 			List<WizardPage<?>> replacement = deferred.getPages(pages, index);
 
 			int i = index;
-			int j = findUnmodifyablePageIndex(index);
+			int j = findUnmodifiablePageIndex(index);
 
 			pages.remove(i);
-			unmodifyablePages.remove(j);
+			unmodifiablePages.remove(j);
 
 			if (replacement != null) {
 				for (WizardPage<?> wizardPage : replacement) {
-					addUnmodifyableAt(i++, j++, wizardPage);
+					addUnmodifiableAt(i++, j++, wizardPage);
 				}
 			}
 		}
@@ -96,13 +107,13 @@ public class PagePlan {
 	 * @param index
 	 * @return
 	 */
-	private int findUnmodifyablePageIndex(int index) {
+	private int findUnmodifiablePageIndex (int index) {
 		WizardPage<?> existingPage = null;
 		int immutablePageIndex = -1;
 
 		for (int i = index; immutablePageIndex == -1 && i >= 0; i--) {
 			existingPage = pages.get(i);
-			immutablePageIndex = unmodifyablePages.indexOf(existingPage);
+			immutablePageIndex = unmodifiablePages.indexOf(existingPage);
 		}
 
 		return immutablePageIndex;
@@ -111,19 +122,19 @@ public class PagePlan {
 	/**
 	 * @param handler
 	 */
-	public void addFinishedHandler(PagePlanFinishedHandler handler) {
+	public void addFinishedHandler (PagePlanFinishedHandler handler) {
 		finishHandlers.add(handler);
 	}
 
-	public void removeFinishedHandler(PagePlanFinishedHandler handler) {
+	public void removeFinishedHandler (PagePlanFinishedHandler handler) {
 		finishHandlers.remove(handler);
 	}
 
-	public int count() {
+	public int count () {
 		return pages.size();
 	}
 
-	public void add(WizardPage<?> page) {
+	public void add (WizardPage<?> page) {
 		pages.add(page);
 	}
 
@@ -131,28 +142,28 @@ public class PagePlan {
 	 * @param currentPage
 	 * @param another
 	 */
-	public void addAt(int index, WizardPage<?> page) {
+	public void addAt (int index, WizardPage<?> page) {
 		pages.add(index, page);
 	}
 
-	private void addUnmodifyable(WizardPage<?> page) {
-		unmodifyablePages.add(page);
+	private void addUnmodifiable (WizardPage<?> page) {
+		unmodifiablePages.add(page);
 		pages.add(page);
 	}
 
-	private void addUnmodifyableAt(int pageIndex, int unmodifyablePageIndex, WizardPage<?> page) {
+	private void addUnmodifiableAt (int pageIndex, int unmodifiablePageIndex,
+			WizardPage<?> page) {
 		pages.add(pageIndex, page);
-		unmodifyablePages.add(unmodifyablePageIndex, page);
+		unmodifiablePages.add(unmodifiablePageIndex, page);
 	}
 
-	public boolean canRemove(WizardPage<?> page) {
-		return !unmodifyablePages.contains(page);
+	public boolean canRemove (WizardPage<?> page) {
+		return !unmodifiablePages.contains(page);
 	}
 
-	public void remove(WizardPage<?> page) {
-		if (unmodifyablePages.contains(page)) {
-			throw new RuntimeException("Cannot remove page inserted by builder");
-		}
+	public void remove (WizardPage<?> page) {
+		if (unmodifiablePages.contains(page)) { throw new RuntimeException(
+				"Cannot remove page inserted by builder"); }
 
 		pages.remove(page);
 	}
@@ -160,13 +171,13 @@ public class PagePlan {
 	/**
 	 * 
 	 */
-	public void finished() {
+	public void finished () {
 		for (PagePlanFinishedHandler handler : finishHandlers) {
 			handler.onfinished(pages);
 		}
 	}
 
-	public void cancelled() {
+	public void cancelled () {
 		for (PagePlanFinishedHandler handler : finishHandlers) {
 			handler.onCancelled();
 		}
