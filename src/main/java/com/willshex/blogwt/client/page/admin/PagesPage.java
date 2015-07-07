@@ -144,8 +144,8 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 			public SafeHtml getValue (Page object) {
 				return SafeHtmlUtils
 						.fromSafeConstant("<a class=\"btn btn-default btn-xs\" href=\""
-								+ PageType.EditPagePageType.asHref("id",
-										object.id.toString()).asString()
+								+ PageType.EditPagePageType.asHref(object.slug)
+										.asString()
 								+ "\" ><span class=\"glyphicon glyphicon-edit\"></span> edit<a>");
 			}
 		};

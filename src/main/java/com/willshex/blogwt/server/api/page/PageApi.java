@@ -24,6 +24,7 @@ import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.helper.PagerHelper;
 import com.willshex.blogwt.shared.api.helper.PermissionHelper;
+import com.willshex.blogwt.shared.api.helper.PostHelper;
 import com.willshex.blogwt.shared.api.helper.RoleHelper;
 import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
@@ -64,6 +65,22 @@ public final class PageApi extends ActionHandler {
 			UserValidator.authorisation(input.session.user, roles, permissions,
 					"input.session.user");
 
+			Page updatedPage = input.page;
+
+			input.page = PageValidator.lookup(input.page, "input.page");
+			updatedPage = PageValidator.validate(updatedPage, "input.page");
+
+			input.page.hasChildren = updatedPage.hasChildren;
+			input.page.parent = updatedPage.parent;
+			input.page.posts = updatedPage.posts;
+			input.page.priority = updatedPage.priority;
+			input.page.title = updatedPage.title;
+			input.page.slug = PostHelper.slugify(input.page.title);
+
+			PageServiceProvider.provide().updatePage(input.page);
+
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -98,6 +115,8 @@ public final class PageApi extends ActionHandler {
 
 			PageServiceProvider.provide().deletePage(input.page);
 
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -129,9 +148,12 @@ public final class PageApi extends ActionHandler {
 					"input.session.user");
 
 			input.page = PageValidator.validate(input.page, "input.page");
+			input.page.slug = PostHelper.slugify(input.page.title);
 
 			output.page = PageServiceProvider.provide().addPage(input.page);
 
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -168,6 +190,8 @@ public final class PageApi extends ActionHandler {
 
 			output.pager = PagerHelper.moveForward(input.pager);
 
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -205,6 +229,8 @@ public final class PageApi extends ActionHandler {
 					.provide().getUser(
 							Long.valueOf(output.page.ownerKey.getId())));
 
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
