@@ -108,7 +108,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 		if (slug == null) {
 			slug = "home";
 		}
-	
+
 		PageController.get().getPage(new Page().slug(slug), true);
 		pnlLoading.setVisible(true);
 
@@ -181,6 +181,9 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 				pnlContent.getElement().appendChild(e);
 			}
 		}
+
+		lnkEditPage.setTargetHistoryToken(PageType.EditPagePageType
+				.asTargetHistoryToken(page.slug));
 
 		pnlLoading.setVisible(false);
 	}

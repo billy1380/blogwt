@@ -88,9 +88,8 @@ public final class BlogApi extends ActionHandler {
 			output.post.content = PostServiceProvider.provide().getPostContent(
 					output.post);
 
-			if (output.session != null) {
-				UserHelper.stripPassword(output.session.user);
-			}
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -143,7 +142,8 @@ public final class BlogApi extends ActionHandler {
 
 			PostServiceProvider.provide().updatePost(input.post);
 
-			UserHelper.stripPassword(output.session.user);
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -198,7 +198,8 @@ public final class BlogApi extends ActionHandler {
 			}
 
 			UserHelper.stripPassword(output.post.author);
-			UserHelper.stripPassword(output.session.user);
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -232,7 +233,8 @@ public final class BlogApi extends ActionHandler {
 
 			PostServiceProvider.provide().deletePost(input.post);
 
-			UserHelper.stripPassword(output.session.user);
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -314,9 +316,8 @@ public final class BlogApi extends ActionHandler {
 
 			output.pager = PagerHelper.moveForward(input.pager);
 
-			if (output.session != null) {
-				UserHelper.stripPassword(output.session.user);
-			}
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -371,6 +372,8 @@ public final class BlogApi extends ActionHandler {
 
 			UserServiceProvider.provide().addUserBatch(input.users);
 
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

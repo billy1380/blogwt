@@ -108,8 +108,8 @@ public class EditPagePage extends WizardDialogPage implements
 					.addPage(new SelectPostWizardPage()).setName("New Page")
 					.addFinishedHandler(this).build());
 		} else {
+			Page page = null;
 			if (current.getParameterCount() >= 1) {
-				Page page = null;
 				switch (current.getAction()) {
 				case "id":
 					(page = new Page())
@@ -119,10 +119,12 @@ public class EditPagePage extends WizardDialogPage implements
 					page = new Page().slug(current.getParameter(0));
 					break;
 				}
+			} else {
+				page = new Page().slug(current.getAction());
+			}
 
-				if (page != null) {
-					PageController.get().getPage(page, true);
-				}
+			if (page != null) {
+				PageController.get().getPage(page, true);
 			}
 		}
 	}
@@ -203,7 +205,11 @@ public class EditPagePage extends WizardDialogPage implements
 	 * com.willshex.blogwt.shared.api.page.call.UpdatePageResponse) */
 	@Override
 	public void updatePageSuccess (UpdatePageRequest input,
-			UpdatePageResponse output) {}
+			UpdatePageResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			PageType.PageDetailPageType.show(input.page.slug);
+		}
+	}
 
 	/* (non-Javadoc)
 	 * 

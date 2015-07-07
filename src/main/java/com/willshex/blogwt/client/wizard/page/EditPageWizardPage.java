@@ -101,12 +101,14 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 
 		if (page != null) {
 			boolean b;
-			cbxHasParent.setValue(Boolean.valueOf(b = page.parent != null));
+			cbxHasParent.setValue(Boolean.valueOf(b = page.parent != null),
+					true);
 			if (b) {
 				txtParentPage.setValue(Long.toString(page.parent.id));
 			}
 
-			cbxHasPriority.setValue(Boolean.valueOf(page.priority != null));
+			cbxHasPriority.setValue(Boolean.valueOf(b = page.priority != null),
+					true);
 			if (b) {
 				txtPriority.setValue(Float.toString(page.priority));
 			}
