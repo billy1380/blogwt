@@ -26,8 +26,8 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
-import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.NavigationController;
+import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
@@ -97,6 +97,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		Session session = SessionController.get().session();
 		if (session != null && session.user != null) {
 			setLoggedInUser(session.user);
+		} else {
+			configure(false);
 		}
 	}
 
@@ -120,13 +122,22 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		imgAvatar.setSrc(user.avatar + "?s=" + UserHelper.AVATAR_HEADER_SIZE
 				+ "&default=retro");
 		spnUserName.setInnerText(user.forename + " " + user.surname);
-		btnAccount.setVisible(true);
-		btnPages.getStyle().setDisplay(Display.BLOCK);
-		btnProperties.getStyle().setDisplay(Display.BLOCK);
-		btnUsers.getStyle().setDisplay(Display.BLOCK);
-		btnSignInOut.getElement().setInnerHTML(
-				"<span class=\"glyphicon glyphicon-log-out\"></span> Sign Out");
-		btnSignInOut.setTargetHistoryToken(PageType.LogoutPageType
+		configure(true);
+	}
+
+	private void configure (boolean login) {
+		btnAccount.setVisible(login);
+		Display d = login ? Display.BLOCK : Display.NONE;
+		btnPages.getStyle().setDisplay(d);
+		btnProperties.getStyle().setDisplay(d);
+		btnUsers.getStyle().setDisplay(d);
+		btnSignInOut
+				.getElement()
+				.setInnerHTML(
+						login ? "<span class=\"glyphicon glyphicon-log-out\"></span> Sign Out"
+								: "<span class=\"glyphicon glyphicon-log-in\"></span> Sign In");
+		btnSignInOut.setTargetHistoryToken(login ? PageType.LogoutPageType
+				.asTargetHistoryToken() : PageType.LoginPageType
 				.asTargetHistoryToken());
 	}
 
@@ -137,14 +148,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	 * com.willshex.blogwt.shared.api.user.call.LogoutResponse) */
 	@Override
 	public void logoutSuccess (LogoutRequest input, LogoutResponse output) {
-		btnAccount.setVisible(false);
-		btnPages.getStyle().setDisplay(Display.NONE);
-		btnProperties.getStyle().setDisplay(Display.NONE);
-		btnUsers.getStyle().setDisplay(Display.NONE);
-		btnSignInOut.getElement().setInnerHTML(
-				"<span class=\"glyphicon glyphicon-log-in\"></span> Sign In");
-		btnSignInOut.setTargetHistoryToken(PageType.LoginPageType
-				.asTargetHistoryToken());
+		configure(false);
 	}
 
 	/* (non-Javadoc)
@@ -195,6 +199,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 		PageType p = PageType.fromString(current.getPage());
 
+		// this causes the blog heading to be selected by default
 		if (p == null) {
 			p = PageType.PostsPageType;
 		}
