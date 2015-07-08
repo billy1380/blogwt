@@ -12,7 +12,7 @@
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<g:Button ui:field="btnExpand" styleName="navbar-toggle collapsed" />
-				<a class="navbar-brand" href="{PostsPageType.asHref}">
+				<a class="navbar-brand" ui:field="btnHome">
 					<span>
 						<g:Image altText="Blogwt" title="Blogwt" styleName="img-rounded {style.bottom}"
 							resource="{RES.brand}" width="20px" height="20px" />

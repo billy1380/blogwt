@@ -11,8 +11,9 @@ import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -55,6 +56,24 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 	private SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
 	private ButtonCell actionButtonPrototype = new PrettyButtonCell();
 
+	public interface PagesPageTemplates extends SafeHtmlTemplates {
+		public PagesPageTemplates INSTANCE = GWT
+				.create(PagesPageTemplates.class);
+
+		@Template("<a href=\"#!{0}\">{1}<a>")
+		SafeHtml title (String slug, String title);
+
+		@Template("<span class=\"glyphicon glyphicon-ok\"></span>")
+		SafeHtml yes ();
+
+		@Template("<span class=\"glyphicon glyphicon-remove\"></span>")
+		SafeHtml no ();
+
+		@Template("<a class=\"btn btn-default btn-xs\" href=\"{0}\" ><span class=\"glyphicon glyphicon-edit\"></span> edit<a>")
+		SafeHtml edit (SafeUri href);
+
+	}
+
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
@@ -78,11 +97,13 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 	}
 
 	private void createColumns () {
-		TextColumn<Page> title = new TextColumn<Page>() {
+		Column<Page, SafeHtml> title = new Column<Page, SafeHtml>(
+				safeHtmlPrototype) {
 
 			@Override
-			public String getValue (Page object) {
-				return object.title;
+			public SafeHtml getValue (Page object) {
+				return PagesPageTemplates.INSTANCE.title(object.slug,
+						object.title);
 			}
 		};
 
@@ -99,11 +120,9 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 
 			@Override
 			public SafeHtml getValue (Page object) {
-				return SafeHtmlUtils
-						.fromSafeConstant("<span class=\"glyphicon glyphicon-"
-								+ (object.hasChildren != null
-										&& object.hasChildren.booleanValue() ? "ok"
-										: "remove") + "\"></span>");
+				return object.hasChildren != null
+						&& object.hasChildren.booleanValue() ? PagesPageTemplates.INSTANCE
+						.yes() : PagesPageTemplates.INSTANCE.no();
 			}
 		};
 
@@ -112,11 +131,8 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 
 			@Override
 			public SafeHtml getValue (Page object) {
-				return SafeHtmlUtils
-						.fromSafeConstant("<span class=\"glyphicon glyphicon-"
-								+ (object.parent == null
-										&& object.priority != null ? "ok"
-										: "remove") + "\"></span>");
+				return object.parent == null && object.priority != null ? PagesPageTemplates.INSTANCE
+						.yes() : PagesPageTemplates.INSTANCE.no();
 			}
 		};
 
@@ -142,11 +158,8 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 
 			@Override
 			public SafeHtml getValue (Page object) {
-				return SafeHtmlUtils
-						.fromSafeConstant("<a class=\"btn btn-default btn-xs\" href=\""
-								+ PageType.EditPagePageType.asHref(object.slug)
-										.asString()
-								+ "\" ><span class=\"glyphicon glyphicon-edit\"></span> edit<a>");
+				return PagesPageTemplates.INSTANCE
+						.edit(PageType.EditPagePageType.asHref(object.slug));
 			}
 		};
 

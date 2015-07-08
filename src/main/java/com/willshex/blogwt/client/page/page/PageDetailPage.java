@@ -106,10 +106,18 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 		}
 
 		if (slug == null) {
-			slug = "home";
+			Page home;
+			if ((home = PageController.get().homePage()) != null) {
+				slug = home.slug;
+			}
 		}
 
-		PageController.get().getPage(new Page().slug(slug), true);
+		if (slug == null) {
+			PageType.PostsPageType.show();
+		} else {
+			PageController.get().getPage(new Page().slug(slug), true);
+		}
+
 		pnlLoading.setVisible(true);
 
 		boolean canChange = SessionController.get().isAuthorised(
@@ -117,6 +125,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 						.create(PermissionHelper.MANAGE_PAGES)));
 		lnkEditPage.setVisible(canChange);
 		btnDeletePage.setVisible(canChange);
+
 	}
 
 	/* (non-Javadoc)
