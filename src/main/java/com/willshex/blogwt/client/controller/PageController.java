@@ -7,15 +7,22 @@
 //
 package com.willshex.blogwt.client.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import com.google.gwt.http.client.Request;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.helper.PagerHelper;
@@ -61,6 +68,36 @@ public class PageController extends AsyncDataProvider<Page> {
 
 	private Request getPagesRequest;
 	private Request getPageRequest;
+
+	private List<Page> headerPages = null;
+	private Page home;
+
+	private PageController () {
+		String pagesJson = headerPages();
+
+		if (pagesJson != null) {
+			JsonArray jsonPageArray = (new JsonParser()).parse(pagesJson)
+					.getAsJsonArray();
+			if (headerPages == null) {
+				headerPages = new ArrayList<Page>();
+			} else {
+				headerPages.clear();
+			}
+
+			Page item = null;
+			for (int i = 0; i < jsonPageArray.size(); i++) {
+				if (jsonPageArray.get(i).isJsonObject()) {
+					(item = new Page()).fromJson(jsonPageArray.get(i)
+							.getAsJsonObject());
+					headerPages.add(item);
+					if (item.priority != null
+							&& item.priority.floatValue() == 0.0f) {
+						home = item;
+					}
+				}
+			}
+		}
+	}
 
 	private void fetchPages () {
 		final GetPagesRequest input = ApiHelper
@@ -259,5 +296,19 @@ public class PageController extends AsyncDataProvider<Page> {
 					}
 				});
 	}
+
+	public Page homePage () {
+		return home;
+	}
+
+	public SafeUri homePageUri () {
+		return home == null ? PageType.PostsPageType.asHref() : UriUtils
+				.fromString("#!" + home.slug);
+	}
+
+	private static native String headerPages ()
+	/*-{
+		return $wnd['pages'];
+	}-*/;
 
 }

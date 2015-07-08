@@ -28,6 +28,7 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
+import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
@@ -51,6 +52,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiField Element elName;
 	@UiField InlineHyperlink btnAccount;
 	@UiField InlineHyperlink btnSignInOut;
+	@UiField AnchorElement btnHome;
 	@UiField AnchorElement btnPosts;
 	@UiField AnchorElement btnPages;
 	@UiField AnchorElement btnProperties;
@@ -70,6 +72,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		Resources.RES.styles().ensureInjected();
 
 		elName.setInnerText(PropertyController.get().title());
+		btnHome.setHref(PageController.get().homePageUri());
 	}
 
 	@UiHandler("btnExpand")
