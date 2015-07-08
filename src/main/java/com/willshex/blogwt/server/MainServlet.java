@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -29,6 +28,7 @@ import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.server.service.PersistenceService;
+import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
@@ -36,6 +36,8 @@ import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
+import com.willshex.blogwt.shared.api.datatype.Page;
+import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.helper.PropertyHelper;
@@ -81,126 +83,186 @@ public class MainServlet extends ContextAwareServlet {
 	protected void doGet () throws ServletException, IOException {
 		super.doGet();
 
-		HttpServletRequest request = REQUEST.get();
-		String fragmentParameter = request.getParameter("_escaped_fragment_");
-		boolean isStatic = fragmentParameter != null;
-
-		if (isStatic) {
-			String scheme = request.getScheme();
-			String serverName = request.getServerName();
-			int serverPort = request.getServerPort();
-			String uri = request.getRequestURI();
-			String url = scheme + "://" + serverName + ":" + serverPort + uri
-					+ "#!" + StringUtils.urldecode(fragmentParameter);
-
-			HttpServletResponse response = RESPONSE.get();
-
-			response.setCharacterEncoding(CHAR_ENCODING);
-			response.setHeader("Content-Type", "text/plain; charset="
-					+ CHAR_ENCODING);
-			response.getOutputStream().print(staticContent(url));
+		if (isStatic()) {
+			processStaticRequest();
 		} else {
-			IPropertyService propertyService = PropertyServiceProvider
-					.provide();
-			ISessionService sessionService = SessionServiceProvider.provide();
+			processRequest();
+		}
+	}
 
-			Property title = null, extendedTitle = null, copyrightHolder = null, copyrightUrl = null;
-			StringBuffer scriptVariables = new StringBuffer();
-			List<Property> properties = null;
-			title = propertyService.getNamedProperty(PropertyHelper.TITLE);
-			Session userSession = null;
+	/**
+	 * @throws IOException 
+	 * 
+	 */
+	private void processRequest () throws IOException {
+		IPropertyService propertyService = PropertyServiceProvider.provide();
 
-			if (title != null) {
-				extendedTitle = propertyService
-						.getNamedProperty(PropertyHelper.EXTENDED_TITLE);
-				copyrightHolder = propertyService
-						.getNamedProperty(PropertyHelper.COPYRIGHT_HOLDER);
-				copyrightUrl = propertyService
-						.getNamedProperty(PropertyHelper.COPYRIGHT_URL);
+		Property title = null;
+		StringBuffer scriptVariables = new StringBuffer();
+		title = propertyService.getNamedProperty(PropertyHelper.TITLE);
 
-				properties = Arrays.asList(new Property[] { title,
-						extendedTitle, copyrightHolder, copyrightUrl });
+		if (title != null) {
+			appendSession(scriptVariables);
+			scriptVariables.append("\n");
+			appendProperties(scriptVariables, title,
+					propertyService
+							.getNamedProperty(PropertyHelper.EXTENDED_TITLE),
+					propertyService
+							.getNamedProperty(PropertyHelper.COPYRIGHT_HOLDER),
+					propertyService
+							.getNamedProperty(PropertyHelper.COPYRIGHT_URL));
+			scriptVariables.append("\n");
+			appendPages(scriptVariables);
+			scriptVariables.append("\n");
+		}
 
-				Cookie[] cookies = request.getCookies();
-				String sessionId = null;
+		RESPONSE.get()
+				.getOutputStream()
+				.print(String.format(PAGE_FORMAT, (title == null ? "Blogwt"
+						: title.value), scriptVariables.toString()));
 
-				if (cookies != null) {
-					for (Cookie currentCookie : cookies) {
-						if ("session.id".equals(currentCookie.getName())) {
-							sessionId = currentCookie.getValue();
-							break;
-						}
-					}
+	}
 
-					if (sessionId != null) {
-						userSession = sessionService.getSession(Long
-								.valueOf(sessionId));
+	/**
+	 * @param scriptVariables
+	 */
+	private void appendPages (StringBuffer scriptVariables) {
+		List<Page> pages = PageServiceProvider.provide().getPages(
+				Boolean.FALSE, Integer.valueOf(0), null,
+				PageSortType.PageSortTypePriority, null);
 
-						if (userSession != null) {
-							if (userSession.expires.getTime() > new Date()
-									.getTime()) {
-								userSession = sessionService
-										.extendSession(
-												userSession,
-												Long.valueOf(ISessionService.MILLIS_MINUTES));
-								userSession.user = UserServiceProvider
-										.provide().getUser(
-												userSession.userKey.getId());
-								userSession.user.password = null;
+		if (pages != null) {
+			scriptVariables.append("var pages='[");
 
-								if (userSession.user.roleKeys != null) {
-									userSession.user.roles = RoleServiceProvider
-											.provide()
-											.getIdRolesBatch(
-													PersistenceService
-															.keysToIds(userSession.user.roleKeys));
-								}
+			boolean first = true;
+			for (Page page : pages) {
+				if (first) {
+					first = false;
+				} else {
+					scriptVariables.append(",");
+				}
+				scriptVariables.append(page.toString().replace("'", "\\'"));
+			}
+		}
 
-								if (userSession.user.permissionKeys != null) {
-									userSession.user.permissions = PermissionServiceProvider
-											.provide()
-											.getIdPermissionsBatch(
-													PersistenceService
-															.keysToIds(userSession.user.permissionKeys));
-								}
-							} else {
-								sessionService.deleteSession(userSession);
-								userSession = null;
-							}
-						}
-					}
+		scriptVariables.append("]';");
+	}
+
+	/**
+	 * @param scriptVariables
+	 * @param properties
+	 */
+	private void appendProperties (StringBuffer scriptVariables,
+			Property... properties) {
+		if (properties.length >= 0) {
+			scriptVariables.append("var properties='[");
+
+			boolean first = true;
+			for (Property property : properties) {
+				if (first) {
+					first = false;
+				} else {
+					scriptVariables.append(",");
 				}
 
-				if (properties != null) {
-					scriptVariables.append("\nvar properties='[");
-					boolean first = true;
-					for (Property property : properties) {
-						if (first) {
-							first = false;
-						} else {
-							scriptVariables.append(",");
-						}
-
-						scriptVariables.append(property.toString().replace("'",
-								"\\'"));
-					}
-
-					scriptVariables.append("]';\n");
-				}
-
-				if (userSession != null) {
-					scriptVariables.append("var session='"
-							+ userSession.toString().replace("'", "\\'")
-							+ "';\n");
-				}
-
+				scriptVariables.append(property.toString().replace("'", "\\'"));
 			}
 
-			RESPONSE.get()
-					.getOutputStream()
-					.print(String.format(PAGE_FORMAT, (title == null ? "Blogwt"
-							: title.value), scriptVariables.toString()));
+			scriptVariables.append("]';");
 		}
+	}
+
+	/**
+	 * @param scriptVariables 
+	 * 
+	 */
+	private void appendSession (StringBuffer scriptVariables) {
+		ISessionService sessionService = SessionServiceProvider.provide();
+		Session userSession = null;
+		Cookie[] cookies = REQUEST.get().getCookies();
+		String sessionId = null;
+
+		if (cookies != null) {
+			for (Cookie currentCookie : cookies) {
+				if ("session.id".equals(currentCookie.getName())) {
+					sessionId = currentCookie.getValue();
+					break;
+				}
+			}
+
+			if (sessionId != null) {
+				userSession = sessionService
+						.getSession(Long.valueOf(sessionId));
+
+				if (userSession != null) {
+					if (userSession.expires.getTime() > new Date().getTime()) {
+						userSession = sessionService.extendSession(userSession,
+								Long.valueOf(ISessionService.MILLIS_MINUTES));
+						userSession.user = UserServiceProvider.provide()
+								.getUser(userSession.userKey.getId());
+						userSession.user.password = null;
+
+						if (userSession.user.roleKeys != null) {
+							userSession.user.roles = RoleServiceProvider
+									.provide()
+									.getIdRolesBatch(
+											PersistenceService
+													.keysToIds(userSession.user.roleKeys));
+						}
+
+						if (userSession.user.permissionKeys != null) {
+							userSession.user.permissions = PermissionServiceProvider
+									.provide()
+									.getIdPermissionsBatch(
+											PersistenceService
+													.keysToIds(userSession.user.permissionKeys));
+						}
+					} else {
+						sessionService.deleteSession(userSession);
+						userSession = null;
+					}
+				}
+			}
+		}
+
+		if (userSession != null) {
+			scriptVariables.append("var session='"
+					+ userSession.toString().replace("'", "\\'") + "';");
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean isStatic () {
+		return REQUEST.get().getParameter("_escaped_fragment_") != null;
+	}
+
+	/**
+	 * @param fragmentParameter 
+	 * @param request 
+	 * @throws IOException 
+	 * @throws FailingHttpStatusCodeException 
+	 * 
+	 */
+	private void processStaticRequest () throws FailingHttpStatusCodeException,
+			IOException {
+		HttpServletRequest request = REQUEST.get();
+		String fragmentParameter = request.getParameter("_escaped_fragment_");
+
+		String scheme = request.getScheme();
+		String serverName = request.getServerName();
+		int serverPort = request.getServerPort();
+		String uri = request.getRequestURI();
+		String url = scheme + "://" + serverName + ":" + serverPort + uri
+				+ "#!" + StringUtils.urldecode(fragmentParameter);
+
+		HttpServletResponse response = RESPONSE.get();
+
+		response.setCharacterEncoding(CHAR_ENCODING);
+		response.setHeader("Content-Type", "text/plain; charset="
+				+ CHAR_ENCODING);
+		response.getOutputStream().print(staticContent(url));
 	}
 
 	/**
