@@ -77,6 +77,10 @@ public class EditPagePage extends WizardDialogPage implements
 		for (WizardPage<?> wizardPage : pages) {
 			if (wizardPage instanceof EditPageWizardPage) {
 				page = ((EditPageWizardPage) wizardPage).getData();
+
+				if (page.posts != null) {
+					page.posts.clear();
+				}
 			} else if (wizardPage instanceof SelectPostWizardPage) {
 				if (page.posts == null) {
 					page.posts = new ArrayList<Post>();
