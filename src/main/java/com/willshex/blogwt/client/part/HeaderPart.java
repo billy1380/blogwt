@@ -61,7 +61,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		@Template("<a href=\"{0}\">{1}</a>")
 		SafeHtml item (SafeUri href, String title);
 
-		@Template("<a href=\"{0}\"><span class=\"glyphicon glyphicon-{1}\"></span>{2}</a>")
+		@Template("<a href=\"{0}\"><span class=\"glyphicon glyphicon-{1}\"></span> {2}</a>")
 		SafeHtml glyphItem (SafeUri href, String glyphName, String title);
 
 		@Template("<a href=\"{0}\"><span>{1}</span><img class=\"img-circle\" src=\"{2}\" /></a>")
@@ -98,6 +98,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 		boolean foundBrandPage = false;
 		List<Page> pages;
+		SafeUri href;
 		if ((pages = PageController.get().getHeaderPages()) != null) {
 			for (Page page : pages) {
 				if (page.parent != null) continue;
@@ -106,34 +107,52 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 					btnHome.setHref("#!" + page.slug);
 					foundBrandPage = true;
 				} else {
-					addItem(elNavLeft, page.title,
-							UriUtils.fromString("#!" + page.slug));
+					href = UriUtils.fromString("#!" + page.slug);
+					addItem(elNavLeft,
+							HeaderTemplates.INSTANCE.item(href, page.title),
+							href);
 				}
 			}
 		}
 
 		if (foundBrandPage) {
-			addItem(elNavLeft, "Blog", PageType.PostsPageType.asHref());
+			href = PageType.PostsPageType.asHref();
+			addItem(elNavLeft, HeaderTemplates.INSTANCE.item(href, "Blog"),
+					href);
 		} else {
 			btnHome.setHref(PageType.PostsPageType.asHref());
 		}
 	}
 
-	private void addItem (Element parent, String title, SafeUri href) {
-		Element element = Document.get().createLIElement();
-		element.setInnerSafeHtml(HeaderTemplates.INSTANCE.item(href, title));
-		parent.appendChild(element);
-		ensureItems().put(href.asString().replaceFirst("#", ""), element);
+	private void addItem (Element parent, SafeHtml item, SafeUri href) {
+		String key = href.asString().replaceFirst("#", "");
+		Element element = ensureItems().get(key);
+
+		if (element == null) {
+			element = Document.get().createLIElement();
+			element.setInnerSafeHtml(item);
+			parent.appendChild(element);
+			ensureItems().put(key, element);
+		}
+	}
+
+	private void removeItem (SafeUri href) {
+		String key = href.asString().replaceFirst("#", "");
+		Element element = ensureItems().get(key);
+		if (element != null) {
+			element.removeFromParent();
+			ensureItems().remove(key);
+		}
 	}
 
 	private void activateItem (String page, boolean active) {
-		Element el = ensureItems().get(page);
+		Element element = ensureItems().get(page);
 
-		if (el != null) {
-			if (active && !el.hasClassName("active")) {
-				el.addClassName("active");
-			} else if (!active && el.hasClassName("active")) {
-				el.removeClassName("active");
+		if (element != null) {
+			if (active && !element.hasClassName("active")) {
+				element.addClassName("active");
+			} else if (!active && element.hasClassName("active")) {
+				element.removeClassName("active");
 			}
 		}
 	}
@@ -192,19 +211,13 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	}
 
 	private void configure (boolean login) {
-		//		btnAccount.setVisible(login);
-		//		Display d = login ? Display.BLOCK : Display.NONE;
-		//		btnPages.getStyle().setDisplay(d);
-		//		btnProperties.getStyle().setDisplay(d);
-		//		btnUsers.getStyle().setDisplay(d);
-		//		btnSignInOut
-		//				.getElement()
-		//				.setInnerHTML(
-		//						login ? "<span class=\"glyphicon glyphicon-log-out\"></span> Sign Out"
-		//								: "<span class=\"glyphicon glyphicon-log-in\"></span> Sign In");
-		//		btnSignInOut.setTargetHistoryToken(login ? PageType.LogoutPageType
-		//				.asTargetHistoryToken() : PageType.LoginPageType
-		//				.asTargetHistoryToken());
+		removeItem(login ? PageType.LoginPageType.asHref()
+				: PageType.LogoutPageType.asHref());
+		SafeUri href = login ? PageType.LogoutPageType.asHref()
+				: PageType.LoginPageType.asHref();
+		addItem(elNavRight, HeaderTemplates.INSTANCE.glyphItem(href,
+				login ? "log-out" : "log-in", login ? "Sign Out" : "Sign In"),
+				href);
 	}
 
 	/* (non-Javadoc)
