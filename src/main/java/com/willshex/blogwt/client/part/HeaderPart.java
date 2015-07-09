@@ -17,6 +17,7 @@ import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -25,7 +26,9 @@ import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
@@ -37,8 +40,10 @@ import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Page;
+import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.helper.PermissionHelper;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
@@ -48,7 +53,7 @@ import com.willshex.blogwt.shared.api.user.call.event.LogoutEventHandler;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public class HeaderPart extends Composite implements LoginEventHandler,
-		LogoutEventHandler, NavigationChangedEventHandler {
+		LogoutEventHandler, NavigationChangedEventHandler, ClickHandler {
 
 	private static HeaderPartUiBinder uiBinder = GWT
 			.create(HeaderPartUiBinder.class);
@@ -74,6 +79,14 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 	@UiField AnchorElement btnHome;
 	private Map<String, Element> items;
+
+	@UiField Element elAdmin;
+	@UiField Anchor btnAdmin;
+	@UiField Element elAdminDropdown;
+
+	@UiField Element elPages;
+	@UiField Element elProperties;
+	@UiField Element elUsers;
 
 	private Map<String, Element> ensureItems () {
 		if (items == null) {
@@ -122,6 +135,15 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		} else {
 			btnHome.setHref(PageType.PostsPageType.asHref());
 		}
+
+		ensureItems().put(PageType.PagesPageType.asTargetHistoryToken(),
+				elPages);
+		ensureItems().put(PageType.PropertiesPageType.asTargetHistoryToken(),
+				elProperties);
+		ensureItems().put(PageType.UsersPageType.asTargetHistoryToken(),
+				elUsers);
+
+		elAdmin.removeFromParent();
 	}
 
 	private void addItem (Element parent, SafeHtml item, SafeUri href) {
@@ -178,12 +200,14 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		registration.add(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				this));
+		registration.add(RootPanel.get().addDomHandler(this,
+				ClickEvent.getType()));
 
 		Session session = SessionController.get().session();
 		if (session != null && session.user != null) {
 			setLoggedInUser(session.user);
 		} else {
-			configure(false);
+			configureNavBar(false);
 		}
 	}
 
@@ -207,10 +231,11 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		//		imgAvatar.setSrc(user.avatar + "?s=" + UserHelper.AVATAR_HEADER_SIZE
 		//				+ "&default=retro");
 		//		spnUserName.setInnerText(user.forename + " " + user.surname);
-		configure(true);
+
+		configureNavBar(true);
 	}
 
-	private void configure (boolean login) {
+	private void configureNavBar (boolean login) {
 		removeItem(login ? PageType.LoginPageType.asHref()
 				: PageType.LogoutPageType.asHref());
 		SafeUri href = login ? PageType.LogoutPageType.asHref()
@@ -218,6 +243,52 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		addItem(elNavRight, HeaderTemplates.INSTANCE.glyphItem(href,
 				login ? "log-out" : "log-in", login ? "Sign Out" : "Sign In"),
 				href);
+
+		addAdminNav();
+	}
+
+	private void addAdminNav () {
+		Permission managePages = PermissionHelper
+				.create(PermissionHelper.MANAGE_PAGES);
+		Permission manageProperties = PermissionHelper
+				.create(PermissionHelper.MANAGE_PERMISSIONS);
+		Permission manageUsers = PermissionHelper
+				.create(PermissionHelper.MANAGE_POSTS);
+
+		boolean addAdmin = false;
+
+		if (SessionController.get().isAdmin()) {
+			addAdmin = true;
+		} else {
+			elAdminDropdown.removeAllChildren();
+		}
+
+		if (addAdmin || SessionController.get().isAuthorised(managePages)) {
+			addAdmin = true;
+			elAdminDropdown.appendChild(elPages);
+		} else {
+			elPages.removeFromParent();
+		}
+
+		if (addAdmin || SessionController.get().isAuthorised(manageProperties)) {
+			addAdmin = true;
+			elAdminDropdown.appendChild(elProperties);
+		} else {
+			elProperties.removeFromParent();
+		}
+
+		if (addAdmin || SessionController.get().isAuthorised(manageUsers)) {
+			addAdmin = true;
+			elAdminDropdown.appendChild(elUsers);
+		} else {
+			elUsers.removeFromParent();
+		}
+
+		if (addAdmin) {
+			elNavLeft.appendChild(elAdmin);
+		} else {
+			elAdmin.removeFromParent();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -227,7 +298,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	 * com.willshex.blogwt.shared.api.user.call.LogoutResponse) */
 	@Override
 	public void logoutSuccess (LogoutRequest input, LogoutResponse output) {
-		configure(false);
+		configureNavBar(false);
 	}
 
 	/* (non-Javadoc)
@@ -274,5 +345,31 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		}
 
 		activateItem(current.getPage(), true);
+	}
+
+	@UiHandler("btnAdmin")
+	void onAdminClicked (ClickEvent ce) {
+		boolean isOpen = elAdmin.hasClassName("open");
+
+		if (isOpen) {
+			elAdmin.removeClassName("open");
+		} else {
+			elAdmin.addClassName("open");
+		}
+
+		ce.getNativeEvent().stopPropagation();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
+	 * .dom.client.ClickEvent) */
+	@Override
+	public void onClick (ClickEvent event) {
+		boolean isOpen = elAdmin.hasClassName("open");
+		if (isOpen) {
+			elAdmin.removeClassName("open");
+		}
 	}
 }
