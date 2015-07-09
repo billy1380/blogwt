@@ -48,7 +48,7 @@ public enum PageType {
 	PostDetailPageType("post", false),
 	ChangeDetailsPageType("user", true),
 	ChangePasswordPageType("changepassword", true),
-	ResetPasswordPageType("resetpassword", true),
+	ResetPasswordPageType("resetpassword", false),
 	RegisterPageType("register", false),
 	LoginPageType("login", false),
 	LogoutPageType("logout", true),
