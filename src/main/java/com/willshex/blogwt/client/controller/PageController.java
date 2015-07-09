@@ -306,6 +306,10 @@ public class PageController extends AsyncDataProvider<Page> {
 				.fromString("#!" + home.slug);
 	}
 
+	public List<Page> getHeaderPages () {
+		return headerPages;
+	}
+
 	private static native String headerPages ()
 	/*-{
 		return $wnd['pages'];

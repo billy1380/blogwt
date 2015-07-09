@@ -21,36 +21,11 @@
 				</a>
 			</div>
 			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li>
-						<a href="{PostsPageType.asHref}" ui:field="btnPosts">Blog</a>
-					</li>
-					<li>
-						<a href="{PagesPageType.asHref}" ui:field="btnPages">Pages</a>
-					</li>
-					<li>
-						<a href="{PropertiesPageType.asHref}" ui:field="btnProperties">Site</a>
-					</li>
-					<li>
-                        <a href="{UsersPageType.asHref}" ui:field="btnUsers">Users</a>
-                    </li>
+				<ul class="nav navbar-nav" ui:field="elNavLeft">
+
 				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<li>
-						<g:InlineHyperlink ui:field="btnAccount"
-							targetHistoryToken="{ChangeDetailsPageType.asTargetHistoryToken}"
-							visible="false">
-							<span ui:field="spnUserName">-</span>
-							<img ui:field="imgAvatar" class="img-circle" />
-						</g:InlineHyperlink>
-					</li>
-					<li>
-						<g:InlineHyperlink ui:field="btnSignInOut"
-							targetHistoryToken="{LoginPageType.asTargetHistoryToken}">
-							<span class="glyphicon glyphicon-log-in"></span>
-							Sign In
-						</g:InlineHyperlink>
-					</li>
+				<ul class="nav navbar-nav navbar-right" ui:field="elNavRight">
+
 				</ul>
 			</div>
 		</div>
