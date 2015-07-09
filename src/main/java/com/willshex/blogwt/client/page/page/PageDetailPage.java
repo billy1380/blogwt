@@ -185,6 +185,10 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 		for (Post post : page.posts) {
 			if (post.content != null && post.content.body != null) {
 				html = PostHelper.makeMarkup(post.content.body);
+				e = Document.get().createAnchorElement();
+				e.setAttribute("name", "!" + page.slug + "/" + post.slug);
+				pnlContent.getElement().appendChild(e);
+
 				e = Document.get().createDivElement();
 				e.setInnerHTML(html);
 				pnlContent.getElement().appendChild(e);
