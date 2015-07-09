@@ -88,6 +88,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 				GetPageEventHandler.TYPE, PageController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				DeletePageEventHandler.TYPE, PageController.get(), this));
+		register(PostHelper.handlePluginContentReady());
 	}
 
 	/* (non-Javadoc)
