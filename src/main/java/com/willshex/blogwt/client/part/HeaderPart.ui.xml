@@ -23,6 +23,24 @@
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav" ui:field="elNavLeft">
 
+					<li class="dropdown" ui:field="elAdmin">
+						<g:Anchor ui:field="btnAdmin" styleName="dropdown-toggle">
+							Admin
+							<span class="caret" />
+						</g:Anchor>
+						<ul class="dropdown-menu" ui:field="elAdminDropdown">
+							<li ui:field="elPages">
+								<a href="{PagesPageType.asHref}">Pages</a>
+							</li>
+							<li ui:field="elProperties">
+								<a href="{PropertiesPageType.asHref}">Properties</a>
+							</li>
+							<li ui:field="elUsers">
+								<a href="{UsersPageType.asHref}">Users</a>
+							</li>
+						</ul>
+					</li>
+
 				</ul>
 				<ul class="nav navbar-nav navbar-right" ui:field="elNavRight">
 

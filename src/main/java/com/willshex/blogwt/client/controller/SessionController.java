@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.client.controller;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -207,6 +208,10 @@ public class SessionController {
 	 * @param requiredPermissions
 	 * @return
 	 */
+	public boolean isAuthorised (Permission... requiredPermissions) {
+		return isAuthorised(Arrays.asList(requiredPermissions));
+	}
+
 	public boolean isAuthorised (Collection<Permission> requiredPermissions) {
 		boolean authorised = isAdmin();
 
