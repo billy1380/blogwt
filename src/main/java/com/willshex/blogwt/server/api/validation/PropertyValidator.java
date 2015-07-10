@@ -7,8 +7,8 @@ import java.util.List;
 
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.shared.api.datatype.Property;
-import com.willshex.blogwt.shared.api.helper.PropertyHelper;
 import com.willshex.blogwt.shared.api.validation.ApiError;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
 

@@ -31,9 +31,9 @@ import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.client.part.PrettyButtonCell;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
-import com.willshex.blogwt.shared.api.helper.PagerHelper;
-import com.willshex.blogwt.shared.api.helper.UserHelper;
+import com.willshex.blogwt.shared.helper.DateTimeHelper;
+import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.helper.UserHelper;
 
 /**
  * @author William Shakour (billy1380)

@@ -19,8 +19,8 @@ import com.google.gwt.uibinder.client.UiRenderer;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Post;
-import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
-import com.willshex.blogwt.shared.api.helper.UserHelper;
+import com.willshex.blogwt.shared.helper.DateTimeHelper;
+import com.willshex.blogwt.shared.helper.UserHelper;
 
 /**
  * @author William Shakour (billy1380)

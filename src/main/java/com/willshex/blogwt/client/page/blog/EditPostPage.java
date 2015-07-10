@@ -65,8 +65,8 @@ import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
-import com.willshex.blogwt.shared.api.helper.UserHelper;
+import com.willshex.blogwt.shared.helper.DateTimeHelper;
+import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**

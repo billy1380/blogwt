@@ -45,14 +45,14 @@ import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.api.helper.PermissionHelper;
-import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
 import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
 import com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler;
 import com.willshex.blogwt.shared.api.user.call.event.LogoutEventHandler;
+import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public class HeaderPart extends Composite implements LoginEventHandler,

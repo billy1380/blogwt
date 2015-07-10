@@ -31,8 +31,8 @@ import com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler.Setu
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.PropertySortType;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.api.helper.PagerHelper;
-import com.willshex.blogwt.shared.api.helper.PropertyHelper;
+import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 /**
  * @author William Shakour (billy1380)

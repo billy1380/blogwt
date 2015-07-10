@@ -25,7 +25,7 @@ import com.willshex.blogwt.client.markdown.Processor;
  *
  */
 public class PostHelper extends
-		com.willshex.blogwt.shared.api.helper.PostHelper {
+		com.willshex.blogwt.shared.helper.PostHelper {
 
 	private static MarkdownProcessor processor;
 	private static final PluginContentReadyEventHandler DEFAULT_PLUGIN_READY_HANDLER = new PluginContentReadyEventHandler() {

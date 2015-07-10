@@ -48,8 +48,8 @@ public interface IUserService extends IService {
 	 * @param sortDirection
 	 * @return
 	 */
-	public List<User> getUsers (Integer start, Integer count, UserSortType sortBy,
-			SortDirectionType sortDirection);
+	public List<User> getUsers (Integer start, Integer count,
+			UserSortType sortBy, SortDirectionType sortDirection);
 
 	/**
 	 * @param username
@@ -68,5 +68,11 @@ public interface IUserService extends IService {
 	 * @param users
 	 */
 	public void addUserBatch (Collection<User> users);
+
+	/**
+	 * @param username
+	 * @return
+	 */
+	public User getUsernameUser (String username);
 
 }

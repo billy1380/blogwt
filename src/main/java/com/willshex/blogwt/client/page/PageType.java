@@ -34,8 +34,8 @@ import com.willshex.blogwt.client.page.user.ChangePasswordPage;
 import com.willshex.blogwt.client.page.user.LoginPage;
 import com.willshex.blogwt.client.page.user.RegisterPage;
 import com.willshex.blogwt.shared.api.datatype.Permission;
-import com.willshex.blogwt.shared.api.helper.PermissionHelper;
-import com.willshex.blogwt.shared.api.helper.RoleHelper;
+import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.helper.RoleHelper;
 
 /**
  * @author William Shakour (billy1380)

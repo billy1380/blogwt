@@ -10,6 +10,7 @@ package com.willshex.blogwt.server.api.validation;
 import java.util.Collection;
 
 import com.willshex.blogwt.server.api.exception.AuthorisationException;
+import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
@@ -47,7 +48,32 @@ public class UserValidator extends ApiValidator {
 		if (user == null)
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + ": " + name);
-		return user;
+
+		boolean isIdLookup = false, isNameLookup = false;
+
+		if (user.id != null) {
+			isIdLookup = true;
+		} else if (user.username != null) {
+			isNameLookup = true;
+		}
+
+		if (!(isIdLookup || isNameLookup))
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNoLookup, type + ": " + name);
+
+		User lookupUser = null;
+		if (isIdLookup) {
+			lookupUser = UserServiceProvider.provide().getUser(user.id);
+		} else if (isNameLookup) {
+			lookupUser = UserServiceProvider.provide().getUsernameUser(
+					user.username);
+		}
+
+		if (lookupUser == null)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNotFound, type + ": " + name);
+
+		return lookupUser;
 	}
 
 }

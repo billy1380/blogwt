@@ -40,9 +40,9 @@ import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.DeletePostEventHandler;
 import com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Post;
-import com.willshex.blogwt.shared.api.helper.DateTimeHelper;
-import com.willshex.blogwt.shared.api.helper.PermissionHelper;
-import com.willshex.blogwt.shared.api.helper.UserHelper;
+import com.willshex.blogwt.shared.helper.DateTimeHelper;
+import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**

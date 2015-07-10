@@ -25,7 +25,6 @@ import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.Page;
-import com.willshex.blogwt.shared.api.helper.PagerHelper;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
@@ -46,6 +45,7 @@ import com.willshex.blogwt.shared.api.page.call.event.GetPagesEventHandler.GetPa
 import com.willshex.blogwt.shared.api.page.call.event.GetPagesEventHandler.GetPagesSuccess;
 import com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler.UpdatePageFailure;
 import com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler.UpdatePageSuccess;
+import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**

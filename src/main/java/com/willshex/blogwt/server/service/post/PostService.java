@@ -23,7 +23,7 @@ import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.api.helper.PostHelper;
+import com.willshex.blogwt.shared.helper.PostHelper;
 
 /**
  * 

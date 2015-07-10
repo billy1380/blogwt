@@ -27,12 +27,9 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.spacehopperstudios.utility.StringUtils;
-import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
-import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
-import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
@@ -40,7 +37,8 @@ import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Session;
-import com.willshex.blogwt.shared.api.helper.PropertyHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.service.ContextAwareServlet;
 
 /**
@@ -200,23 +198,8 @@ public class MainServlet extends ContextAwareServlet {
 								Long.valueOf(ISessionService.MILLIS_MINUTES));
 						userSession.user = UserServiceProvider.provide()
 								.getUser(userSession.userKey.getId());
-						userSession.user.password = null;
-
-						if (userSession.user.roleKeys != null) {
-							userSession.user.roles = RoleServiceProvider
-									.provide()
-									.getIdRolesBatch(
-											PersistenceService
-													.keysToIds(userSession.user.roleKeys));
-						}
-
-						if (userSession.user.permissionKeys != null) {
-							userSession.user.permissions = PermissionServiceProvider
-									.provide()
-									.getIdPermissionsBatch(
-											PersistenceService
-													.keysToIds(userSession.user.permissionKeys));
-						}
+						UserHelper.stripPassword(userSession.user);
+						UserHelper.addRolesAndPermissions(userSession.user);
 					} else {
 						sessionService.deleteSession(userSession);
 						userSession = null;
