@@ -61,4 +61,13 @@ public class UserHelper {
 	public static String name (User user) {
 		return user == null ? "unknown" : user.forename + " " + user.surname;
 	}
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	public static boolean isAdmin (User user) {
+		return user.roles == null ? false : RoleHelper.toLookup(user.roles)
+				.containsKey(RoleHelper.ADMIN);
+	}
 }

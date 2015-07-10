@@ -1,12 +1,14 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="com.willshex.blogwt.client.page.PageType.*" />
 	<ui:style gss="true">
-	.code {
-		font-family: "Lucida Console", Monaco, monospace;
-	}
-	
+	@external checkbox;
 	.account {
 		text-align: center;
+	}
+	
+	.smaller {
+		font-size: smaller;
 	}
 	
 	.parent {
@@ -25,20 +27,73 @@
 		right: -9999px;
 		margin: auto;
 	}
+	
+	.checkbox input[type=checkbox] {
+		margin-left: 0px;
+	}
+	
+	.form-signin .btn {
+		margin-bottom: 10px;
+	}
 	</ui:style>
-	<g:HTMLPanel styleName="container {style.account}">
+	<g:HTMLPanel styleName="container">
 		<div class="row">
 			<div class="col-sm-4 col-sm-offset-4">
-				<h2>Account</h2>
-				<div class="{style.parent} img-circle">
-					<g:Image ui:field="imgAvatar" styleName="{style.image}" height="160px" />
+				<div class="{style.account}">
+					<h2>Account</h2>
+					<div class="{style.parent} img-circle">
+						<g:Image ui:field="imgAvatar" styleName="{style.image}" height="160px" />
+					</div>
+					<h3 ui:field="h3Username">-</h3>
+					<span class="text-muted" ui:field="elDates" />
 				</div>
-				<h3 ui:field="h3Username">-</h3>
-				<span class="text-muted" ui:field="elLastLoggedIn" />
 				<g:FormPanel>
-					<g:HTMLPanel styleName="form-group">
-						<g:TextArea enabled="false" ui:field="txtAccountJson"
-							visibleLines="12" styleName="{style.code} form-control" />
+					<g:HTMLPanel>
+						<g:HTMLPanel ui:field="pnlUsername" styleName="form-group">
+							<label class="control-label">Username</label>
+							<g:HTMLPanel styleName="input-group">
+								<span class="input-group-addon">@</span>
+								<g:TextBox ui:field="txtUsername" styleName="form-control" />
+							</g:HTMLPanel>
+							<g:HTMLPanel styleName="control-label small" ui:field="pnlUsernameNote"
+								visible="false" />
+
+							<div class="text-right">
+								<g:InlineHyperlink text="Change password"
+									targetHistoryToken="{ChangePasswordPageType.asTargetHistoryToken}" />
+							</div>
+						</g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="pnlForename" styleName="form-group">
+							<label class="control-label">Forename</label>
+							<g:TextBox ui:field="txtForename" styleName="form-control" />
+							<g:HTMLPanel styleName="control-label small" ui:field="pnlForenameNote"
+								visible="false" />
+						</g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="pnlSurname" styleName="form-group">
+							<label class="control-label">Surname</label>
+							<g:TextBox ui:field="txtSurname" styleName="form-control" />
+							<g:HTMLPanel styleName="control-label small" ui:field="pnlSurnameNote"
+								visible="false" />
+						</g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="pnlEmail" styleName="form-group">
+							<label class="control-label">E-mail</label>
+							<g:TextBox ui:field="txtEmail" styleName="form-control" />
+							<span class="text-muted {style.smaller}">
+								Changing e-mail address will change your avatar (
+								<a href="https://en.gravatar.com/" target="_blank">Gravatar</a>
+								)
+							</span>
+							<g:HTMLPanel styleName="control-label small" ui:field="pnlEmailNote"
+								visible="false" />
+						</g:HTMLPanel>
+
+						<g:SubmitButton ui:field="btnUpdate"
+							styleName="{style.btn} btn btn-primary pull-right" text="Update">
+							Update
+						</g:SubmitButton>
 					</g:HTMLPanel>
 				</g:FormPanel>
 			</div>
