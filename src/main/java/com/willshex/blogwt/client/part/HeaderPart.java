@@ -16,6 +16,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -28,6 +29,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
@@ -44,6 +46,7 @@ import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.helper.PermissionHelper;
+import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
@@ -76,17 +79,19 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiField Element elName;
 	@UiField Element elNavLeft;
 	@UiField Element elNavRight;
-
 	@UiField AnchorElement btnHome;
-	private Map<String, Element> items;
-
 	@UiField Element elAdmin;
 	@UiField Anchor btnAdmin;
 	@UiField Element elAdminDropdown;
-
 	@UiField Element elPages;
 	@UiField Element elProperties;
 	@UiField Element elUsers;
+	@UiField Element elAccount;
+	@UiField InlineHyperlink btnAccount;
+	@UiField Element elUserName;
+	@UiField ImageElement imgAvatar;
+
+	private Map<String, Element> items;
 
 	private Map<String, Element> ensureItems () {
 		if (items == null) {
@@ -144,6 +149,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				elUsers);
 
 		elAdmin.removeFromParent();
+		elAccount.removeFromParent();
 	}
 
 	private void addItem (Element parent, SafeHtml item, SafeUri href) {
@@ -227,15 +233,21 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	 * @param user
 	 */
 	private void setLoggedInUser (User user) {
-		//		imgAvatar.setAlt(user.username);
-		//		imgAvatar.setSrc(user.avatar + "?s=" + UserHelper.AVATAR_HEADER_SIZE
-		//				+ "&default=retro");
-		//		spnUserName.setInnerText(user.forename + " " + user.surname);
+		imgAvatar.setAlt(user.username);
+		imgAvatar.setSrc(user.avatar + "?s=" + UserHelper.AVATAR_HEADER_SIZE
+				+ "&default=retro");
+		elUserName.setInnerText(user.forename + " " + user.surname);
 
 		configureNavBar(true);
 	}
 
 	private void configureNavBar (boolean login) {
+		if (login) {
+			elNavRight.appendChild(elAccount);
+		} else {
+			elAccount.removeFromParent();
+		}
+
 		removeItem(login ? PageType.LoginPageType.asHref()
 				: PageType.LogoutPageType.asHref());
 		SafeUri href = login ? PageType.LogoutPageType.asHref()
@@ -243,45 +255,47 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		addItem(elNavRight, HeaderTemplates.INSTANCE.glyphItem(href,
 				login ? "log-out" : "log-in", login ? "Sign Out" : "Sign In"),
 				href);
-
-		addAdminNav();
+		addAdminNav(login);
 	}
 
-	private void addAdminNav () {
-		Permission managePages = PermissionHelper
-				.create(PermissionHelper.MANAGE_PAGES);
-		Permission manageProperties = PermissionHelper
-				.create(PermissionHelper.MANAGE_PERMISSIONS);
-		Permission manageUsers = PermissionHelper
-				.create(PermissionHelper.MANAGE_POSTS);
-
+	private void addAdminNav (boolean login) {
 		boolean addAdmin = false;
 
-		if (SessionController.get().isAdmin()) {
-			addAdmin = true;
-		} else {
-			elAdminDropdown.removeAllChildren();
-		}
+		if (login) {
+			Permission managePages = PermissionHelper
+					.create(PermissionHelper.MANAGE_PAGES);
+			Permission manageProperties = PermissionHelper
+					.create(PermissionHelper.MANAGE_PERMISSIONS);
+			Permission manageUsers = PermissionHelper
+					.create(PermissionHelper.MANAGE_POSTS);
 
-		if (addAdmin || SessionController.get().isAuthorised(managePages)) {
-			addAdmin = true;
-			elAdminDropdown.appendChild(elPages);
-		} else {
-			elPages.removeFromParent();
-		}
+			if (SessionController.get().isAdmin()) {
+				addAdmin = true;
+			} else {
+				elAdminDropdown.removeAllChildren();
+			}
 
-		if (addAdmin || SessionController.get().isAuthorised(manageProperties)) {
-			addAdmin = true;
-			elAdminDropdown.appendChild(elProperties);
-		} else {
-			elProperties.removeFromParent();
-		}
+			if (addAdmin || SessionController.get().isAuthorised(managePages)) {
+				addAdmin = true;
+				elAdminDropdown.appendChild(elPages);
+			} else {
+				elPages.removeFromParent();
+			}
 
-		if (addAdmin || SessionController.get().isAuthorised(manageUsers)) {
-			addAdmin = true;
-			elAdminDropdown.appendChild(elUsers);
-		} else {
-			elUsers.removeFromParent();
+			if (addAdmin
+					|| SessionController.get().isAuthorised(manageProperties)) {
+				addAdmin = true;
+				elAdminDropdown.appendChild(elProperties);
+			} else {
+				elProperties.removeFromParent();
+			}
+
+			if (addAdmin || SessionController.get().isAuthorised(manageUsers)) {
+				addAdmin = true;
+				elAdminDropdown.appendChild(elUsers);
+			} else {
+				elUsers.removeFromParent();
+			}
 		}
 
 		if (addAdmin) {

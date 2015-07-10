@@ -1,10 +1,48 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
-	/* Add CSS here. See the GWT docs on UI Binder for more details */
+	<ui:style gss="true">
+	.code {
+		font-family: "Lucida Console", Monaco, monospace;
+	}
+	
+	.account {
+		text-align: center;
+	}
+	
+	.parent {
+		position: relative;
+		overflow: hidden;
+		width: 160px;
+		height: 160px;
+		margin: auto;
+	}
+	
+	.image {
+		position: absolute;
+		top: -9999px;
+		bottom: -9999px;
+		left: -9999px;
+		right: -9999px;
+		margin: auto;
+	}
 	</ui:style>
-	<g:HTMLPanel>
-		<!-- Add GWT widgets here. Enter < and hit Ctrl-Space to auto-complete widget names. The ui:field attribute binds an element to a field in the owner class. See 
-			the GWT docs on UI Binder for more details. -->
+	<g:HTMLPanel styleName="container {style.account}">
+		<div class="row">
+			<div class="col-sm-4 col-sm-offset-4">
+				<h2>Account</h2>
+				<div class="{style.parent} img-circle">
+					<g:Image ui:field="imgAvatar" styleName="{style.image}" height="160px" />
+				</div>
+				<h3 ui:field="h3Username">-</h3>
+				<span class="text-muted" ui:field="elLastLoggedIn" />
+				<g:FormPanel>
+					<g:HTMLPanel styleName="form-group">
+						<g:TextArea enabled="false" ui:field="txtAccountJson"
+							visibleLines="12" styleName="{style.code} form-control" />
+					</g:HTMLPanel>
+				</g:FormPanel>
+			</div>
+			<div class="col-sm-4"></div>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 
