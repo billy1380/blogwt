@@ -43,7 +43,13 @@
 
 				</ul>
 				<ul class="nav navbar-nav navbar-right" ui:field="elNavRight">
-
+					<li ui:field="elAccount">
+						<g:InlineHyperlink ui:field="btnAccount"
+							targetHistoryToken="{ChangeDetailsPageType.asTargetHistoryToken}">
+							<span ui:field="elUserName">-</span>
+							<img ui:field="imgAvatar" class="img-circle" />
+						</g:InlineHyperlink>
+					</li>
 				</ul>
 			</div>
 		</div>
