@@ -23,7 +23,7 @@ import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.wizard.WizardPage;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.api.helper.RoleHelper;
+import com.willshex.blogwt.shared.helper.RoleHelper;
 
 /**
  * @author William Shakour (billy1380)

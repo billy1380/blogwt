@@ -10,6 +10,8 @@ package com.willshex.blogwt.shared.api.helper;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.willshex.blogwt.shared.helper.PostHelper;
+
 /**
  * @author William Shakour (billy1380)
  *

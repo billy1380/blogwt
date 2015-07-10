@@ -17,6 +17,7 @@ import com.willshex.blogwt.server.api.exception.AuthenticationException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
+import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
@@ -30,10 +31,6 @@ import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.RoleSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
-import com.willshex.blogwt.shared.api.helper.PagerHelper;
-import com.willshex.blogwt.shared.api.helper.PermissionHelper;
-import com.willshex.blogwt.shared.api.helper.RoleHelper;
-import com.willshex.blogwt.shared.api.helper.UserHelper;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
@@ -58,6 +55,9 @@ import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
 import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
+import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -312,6 +312,17 @@ public final class UserApi extends ActionHandler {
 
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
+
+			UserValidator.authorisation(input.session.user, Arrays
+					.asList(RoleHelper.createAdmin()), Arrays
+					.asList(PermissionServiceProvider.provide()
+							.getCodePermission(PermissionHelper.MANAGE_USERS)),
+					"input.session.user");
+
+			output.user = input.user = UserValidator.lookup(input.user,
+					"input.user");
+			UserHelper.stripPassword(output.user);
+			UserHelper.addRolesAndPermissions(output.user);
 
 			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;

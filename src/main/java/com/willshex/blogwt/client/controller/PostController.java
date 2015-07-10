@@ -41,8 +41,8 @@ import com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler.Upd
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
-import com.willshex.blogwt.shared.api.helper.PagerHelper;
-import com.willshex.blogwt.shared.api.helper.TagHelper;
+import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.helper.TagHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**

@@ -196,4 +196,15 @@ final class UserService implements IUserService {
 		ofy().save().entities(users).now();
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.user.IUserService#getUsernameUser
+	 * (java.lang.String) */
+	@Override
+	public User getUsernameUser (String username) {
+		return addAvatar(ofy().load().type(User.class)
+				.filter("username", username).first().now());
+	}
+
 }

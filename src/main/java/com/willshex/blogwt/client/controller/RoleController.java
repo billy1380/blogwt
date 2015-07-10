@@ -19,11 +19,11 @@ import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
 import com.willshex.blogwt.shared.api.datatype.Role;
-import com.willshex.blogwt.shared.api.helper.PagerHelper;
 import com.willshex.blogwt.shared.api.user.call.GetRolesRequest;
 import com.willshex.blogwt.shared.api.user.call.GetRolesResponse;
 import com.willshex.blogwt.shared.api.user.call.event.GetRolesEventHandler.GetRolesFailure;
 import com.willshex.blogwt.shared.api.user.call.event.GetRolesEventHandler.GetRolesSuccess;
+import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**

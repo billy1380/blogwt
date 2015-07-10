@@ -24,8 +24,6 @@ import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.api.helper.PermissionHelper;
-import com.willshex.blogwt.shared.api.helper.RoleHelper;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
@@ -33,6 +31,8 @@ import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
 import com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler.LoginFailure;
 import com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler.LoginSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.LogoutEventHandler;
+import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**

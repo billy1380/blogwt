@@ -20,7 +20,7 @@ import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Permission;
-import com.willshex.blogwt.shared.api.helper.PagerHelper;
+import com.willshex.blogwt.shared.helper.PagerHelper;
 
 /**
  * @author William Shakour (billy1380)
