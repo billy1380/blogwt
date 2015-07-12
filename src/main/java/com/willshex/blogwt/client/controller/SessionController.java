@@ -158,8 +158,6 @@ public class SessionController {
 
 			@Override
 			public void onSuccess (LogoutResponse output) {
-				Cookies.removeCookie(COOKIE_KEY_ID);
-
 				DefaultEventBus.get().fireEventFromSource(
 						new LogoutEventHandler.LogoutSuccess(input, output),
 						SessionController.this);
@@ -167,8 +165,6 @@ public class SessionController {
 
 			@Override
 			public void onFailure (Throwable caught) {
-				Cookies.removeCookie(COOKIE_KEY_ID);
-
 				DefaultEventBus.get().fireEventFromSource(
 						new LogoutEventHandler.LogoutFailure(input, caught),
 						SessionController.this);
@@ -176,6 +172,7 @@ public class SessionController {
 		});
 
 		session = null;
+		Cookies.removeCookie(COOKIE_KEY_ID);
 		if (pageType != null) {
 			pageType.show(params);
 		}
