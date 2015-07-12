@@ -99,7 +99,7 @@ public class LoginPage extends Page implements NavigationChangedEventHandler,
 		pnlUsername.removeStyleName("has-error");
 		pnlUsernameNote.setVisible(false);
 		pnlPassword.removeStyleName("has-error");
-		pnlUsernameNote.setVisible(false);
+		pnlPasswordNote.setVisible(false);
 	}
 
 	/* (non-Javadoc)
