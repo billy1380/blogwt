@@ -20,13 +20,16 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
@@ -73,6 +76,12 @@ public class ChangeDetailsPage extends Page implements
 	public ChangeDetailsPage () {
 		super(PageType.ChangeDetailsPageType);
 		initWidget(uiBinder.createAndBindUi(this));
+
+		UiHelper.addPlaceholder(txtUsername, "Username");
+		UiHelper.autoFocus(txtUsername);
+		UiHelper.addPlaceholder(txtForename, "Forename");
+		UiHelper.addPlaceholder(txtSurname, "Surname");
+		UiHelper.addPlaceholder(txtEmail, "Email");
 	}
 
 	/* (non-Javadoc)
@@ -87,6 +96,8 @@ public class ChangeDetailsPage extends Page implements
 				this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetUserDetailsEventHandler.TYPE, UserController.get(), this));
+
+		ready();
 	}
 
 	/* (non-Javadoc)
@@ -143,6 +154,8 @@ public class ChangeDetailsPage extends Page implements
 		if (output.status == StatusType.StatusTypeSuccess) {
 			showUserDetails(output.user);
 		}
+
+		ready();
 	}
 
 	/* (non-Javadoc)
@@ -153,17 +166,61 @@ public class ChangeDetailsPage extends Page implements
 	 * GetUserDetailsRequest, java.lang.Throwable) */
 	@Override
 	public void getUserDetailsFailure (GetUserDetailsRequest input,
-			Throwable caught) {}
+			Throwable caught) {
+		ready();
+	}
 
 	@UiHandler("btnUpdate")
 	void onUpdateClicked (ClickEvent ce) {
-		if (validate()) {
+		if (isValid()) {
+			loading();
 			//			UserController.get().updateUser();
+		} else {
+			showErrors();
 		}
 	}
 
-	boolean validate () {
+	private boolean isValid () {
+		// do client validation
 		return true;
+	}
+
+	private void showErrors () {
+
+	}
+
+	private void ready () {
+		btnUpdate.getElement().setInnerSafeHtml(
+				WizardDialog.WizardDialogTemplates.INSTANCE
+						.nextButton("Update"));
+
+		btnUpdate.setEnabled(true);
+		txtUsername.setEnabled(true);
+		txtForename.setEnabled(true);
+		txtSurname.setEnabled(true);
+		txtEmail.setEnabled(true);
+	}
+
+	private void loading () {
+		btnUpdate.getElement().setInnerSafeHtml(
+				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
+						"Updating... ", Resources.RES.primaryLoader()
+								.getSafeUri()));
+
+		btnUpdate.setEnabled(false);
+		txtUsername.setEnabled(false);
+		txtForename.setEnabled(false);
+		txtSurname.setEnabled(false);
+		txtEmail.setEnabled(false);
+
+		pnlUsername.removeStyleName("has-error");
+		pnlUsernameNote.setVisible(false);
+		pnlForename.removeStyleName("has-error");
+		pnlForenameNote.setVisible(false);
+		pnlSurname.removeStyleName("has-error");
+		pnlSurnameNote.setVisible(false);
+		pnlEmail.removeStyleName("has-error");
+		pnlEmailNote.setVisible(false);
 	}
 
 }
