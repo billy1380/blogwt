@@ -75,7 +75,7 @@ final class UserService implements IUserService {
 	@Override
 	public User updateUser (User user) {
 		ofy().save().entity(user).now();
-		return user;
+		return addAvatar(user);
 	}
 
 	/* (non-Javadoc)

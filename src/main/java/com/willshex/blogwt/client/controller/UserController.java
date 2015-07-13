@@ -19,10 +19,14 @@ import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUsersResponse;
+import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsFailure;
+import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler.GetUserDetailsFailure;
 import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler.GetUserDetailsSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetUsersEventHandler.GetUsersFailure;
@@ -50,7 +54,7 @@ public class UserController extends AsyncDataProvider<User> {
 			UserSortType.UserSortTypeAdded.toString());
 
 	private Request getUsersRequest;
-	private Request getUserDetailsRequest;
+	private Request ChangeUserDetailsRequest;
 
 	private void fetchUsers () {
 		final GetUsersRequest input = ApiHelper
@@ -128,16 +132,16 @@ public class UserController extends AsyncDataProvider<User> {
 		input.session = SessionController.get().sessionForApiCall();
 		input.user = user;
 
-		if (getUserDetailsRequest != null) {
-			getUserDetailsRequest.cancel();
+		if (ChangeUserDetailsRequest != null) {
+			ChangeUserDetailsRequest.cancel();
 		}
 
-		getUserDetailsRequest = ApiHelper.createUserClient().getUserDetails(
+		ChangeUserDetailsRequest = ApiHelper.createUserClient().getUserDetails(
 				input, new AsyncCallback<GetUserDetailsResponse>() {
 
 					@Override
 					public void onSuccess (GetUserDetailsResponse output) {
-						getUserDetailsRequest = null;
+						ChangeUserDetailsRequest = null;
 
 						if (output.status == StatusType.StatusTypeSuccess) {
 
@@ -156,6 +160,47 @@ public class UserController extends AsyncDataProvider<User> {
 					}
 
 				});
+	}
+
+	/**
+	 * @param user
+	 */
+	public void changeUserDetails (User user) {
+		final ChangeUserDetailsRequest input = ApiHelper
+				.setAccessCode(new ChangeUserDetailsRequest());
+
+		input.session = SessionController.get().sessionForApiCall();
+		input.user = user;
+
+		if (ChangeUserDetailsRequest != null) {
+			ChangeUserDetailsRequest.cancel();
+		}
+
+		ChangeUserDetailsRequest = ApiHelper.createUserClient()
+				.changeUserDetails(input,
+						new AsyncCallback<ChangeUserDetailsResponse>() {
+
+							@Override
+							public void onSuccess (
+									ChangeUserDetailsResponse output) {
+								ChangeUserDetailsRequest = null;
+
+								if (output.status == StatusType.StatusTypeSuccess) {
+
+								}
+
+								DefaultEventBus.get().fireEventFromSource(
+										new ChangeUserDetailsSuccess(input,
+												output), UserController.this);
+							}
+
+							@Override
+							public void onFailure (Throwable caught) {
+								DefaultEventBus.get().fireEventFromSource(
+										new ChangeUserDetailsFailure(input,
+												caught), UserController.this);
+							}
+						});
 	}
 
 }
