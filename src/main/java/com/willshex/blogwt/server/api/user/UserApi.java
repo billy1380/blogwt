@@ -235,6 +235,39 @@ public final class UserApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
+			User updatedUser = input.user;
+
+			input.user = UserValidator.lookup(input.user, "input.user");
+
+			// if the logged in user
+			if (input.user.id.longValue() != input.session.userKey.getId()) {
+				List<Role> roles = new ArrayList<Role>();
+				roles.add(RoleHelper.createAdmin());
+
+				List<Permission> permissions = new ArrayList<Permission>();
+				Permission postPermission = PermissionServiceProvider.provide()
+						.getCodePermission(PermissionHelper.MANAGE_USERS);
+				permissions.add(postPermission);
+
+				UserValidator.authorisation(input.session.user, roles,
+						permissions, "input.session.user");
+			}
+
+			updatedUser = UserValidator.validate(updatedUser, "input.user");
+
+			input.user.username = updatedUser.username;
+			input.user.forename = updatedUser.forename;
+			input.user.surname = updatedUser.surname;
+			input.user.email = updatedUser.email;
+
+			output.user = UserServiceProvider.provide().updateUser(input.user);
+
+			UserHelper.stripPassword(output.user);
+
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
+			output.status = StatusType.StatusTypeSuccess;
+
 			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

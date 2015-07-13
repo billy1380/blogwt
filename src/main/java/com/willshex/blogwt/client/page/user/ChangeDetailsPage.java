@@ -31,8 +31,11 @@ import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
+import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler;
 import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
@@ -43,7 +46,8 @@ import com.willshex.gson.json.service.shared.StatusType;
  *
  */
 public class ChangeDetailsPage extends Page implements
-		NavigationChangedEventHandler, GetUserDetailsEventHandler {
+		NavigationChangedEventHandler, GetUserDetailsEventHandler,
+		ChangeUserDetailsEventHandler {
 
 	private static ChangeDetailsPageUiBinder uiBinder = GWT
 			.create(ChangeDetailsPageUiBinder.class);
@@ -72,6 +76,7 @@ public class ChangeDetailsPage extends Page implements
 	@UiField HTMLPanel pnlEmailNote;
 
 	@UiField Button btnUpdate;
+	private User user;
 
 	public ChangeDetailsPage () {
 		super(PageType.ChangeDetailsPageType);
@@ -97,6 +102,9 @@ public class ChangeDetailsPage extends Page implements
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetUserDetailsEventHandler.TYPE, UserController.get(), this));
 
+		register(DefaultEventBus.get().addHandlerToSource(
+				ChangeUserDetailsEventHandler.TYPE, UserController.get(), this));
+
 		ready();
 	}
 
@@ -109,7 +117,7 @@ public class ChangeDetailsPage extends Page implements
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
 		if (current.getAction() == null) {
-			showUserDetails(SessionController.get().user());
+			showUserDetails(user = SessionController.get().user());
 		} else if ("id".equals(current.getAction())
 				&& current.getParameterCount() > 0) {
 			Long id = Long.valueOf(current.getParameter(0));
@@ -152,7 +160,7 @@ public class ChangeDetailsPage extends Page implements
 	public void getUserDetailsSuccess (GetUserDetailsRequest input,
 			GetUserDetailsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			showUserDetails(output.user);
+			showUserDetails(user = output.user);
 		}
 
 		ready();
@@ -174,7 +182,13 @@ public class ChangeDetailsPage extends Page implements
 	void onUpdateClicked (ClickEvent ce) {
 		if (isValid()) {
 			loading();
-			//			UserController.get().updateUser();
+			User updatedUser = new User();
+			updatedUser.id(user.id);
+			UserController.get().changeUserDetails(
+					updatedUser.username(txtUsername.getText())
+							.forename(txtForename.getText())
+							.surname(txtSurname.getText())
+							.email(txtEmail.getText()));
 		} else {
 			showErrors();
 		}
@@ -221,6 +235,35 @@ public class ChangeDetailsPage extends Page implements
 		pnlSurnameNote.setVisible(false);
 		pnlEmail.removeStyleName("has-error");
 		pnlEmailNote.setVisible(false);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler
+	 * #changeUserDetailsSuccess(com.willshex.blogwt.shared.api.user.call.
+	 * ChangeUserDetailsRequest,
+	 * com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse) */
+	@Override
+	public void changeUserDetailsSuccess (ChangeUserDetailsRequest input,
+			ChangeUserDetailsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			showUserDetails(user = output.user);
+		}
+
+		ready();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler
+	 * #changeUserDetailsFailure(com.willshex.blogwt.shared.api.user.call.
+	 * ChangeUserDetailsRequest, java.lang.Throwable) */
+	@Override
+	public void changeUserDetailsFailure (ChangeUserDetailsRequest input,
+			Throwable caught) {
+		ready();
 	}
 
 }
