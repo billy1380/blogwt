@@ -22,8 +22,9 @@ public enum ApiError {
 	AuthenticationFailed(100005, "Authentication failed for username {0}"),
 	AuthorisationFailed(100006, "Authroisation failed for {0}"),
 	ExistingSetup(100007, "Setup has already been completed for: {0}"),
-	MissingProperties(100008,
-			"One or more properties were missing in: {0}"), ;
+	MissingProperties(100008, "One or more properties were missing in: {0}"),
+	AuthenticationFailedBadPassword(100009,
+			"Authentication failed, password does not match current login user {0}"), ;
 
 	private static final String PARAM_0 = "\\{0\\}";
 	private static final String PARAM_1 = "\\{1\\}";

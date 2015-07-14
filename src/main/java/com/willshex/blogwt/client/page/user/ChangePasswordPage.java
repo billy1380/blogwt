@@ -13,6 +13,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -29,6 +30,7 @@ import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
@@ -42,6 +44,8 @@ public class ChangePasswordPage extends Page implements
 
 	interface ChangePasswordPageUiBinder extends
 			UiBinder<Widget, ChangePasswordPage> {}
+
+	@UiField FormPanel frmPasswords;
 
 	@UiField HTMLPanel pnlPassword;
 	@UiField PasswordTextBox txtPassword;
@@ -123,7 +127,21 @@ public class ChangePasswordPage extends Page implements
 	 * com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse) */
 	@Override
 	public void changePasswordSuccess (ChangePasswordRequest input,
-			ChangePasswordResponse output) {}
+			ChangePasswordResponse output) {
+		if (output.status == StatusType.StatusTypeFailure) {
+			GWT.log("Could not change password with error ["
+					+ (output.error == null ? "none" : output.error.toString())
+					+ "]");
+		} else {
+			if (userId == null) {
+				PageType.ChangeDetailsPageType.show();
+			} else {
+				PageType.ChangeDetailsPageType.show("id", userId.toString());
+			}
+		}
+
+		ready();
+	}
 
 	/* (non-Javadoc)
 	 * 
@@ -133,7 +151,12 @@ public class ChangePasswordPage extends Page implements
 	 * ChangePasswordRequest, java.lang.Throwable) */
 	@Override
 	public void changePasswordFailure (ChangePasswordRequest input,
-			Throwable caught) {}
+			Throwable caught) {
+		GWT.log("Could not change password", caught);
+
+		txtPassword.setText("");
+		ready();
+	}
 
 	private void loading () {
 		btnChange.getElement().setInnerSafeHtml(
@@ -165,5 +188,15 @@ public class ChangePasswordPage extends Page implements
 				userId = Long.valueOf(current.getParameter(0));
 			}
 		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#reset() */
+	@Override
+	protected void reset () {
+		frmPasswords.reset();
+		userId = null;
+		super.reset();
 	}
 }

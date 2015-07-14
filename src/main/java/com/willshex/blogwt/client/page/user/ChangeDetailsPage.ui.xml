@@ -42,7 +42,7 @@
 					<h3 ui:field="h3Username">-</h3>
 					<span class="text-muted" ui:field="elDates" />
 				</div>
-				<g:FormPanel>
+				<g:FormPanel ui:field="frmDetails">
 					<g:HTMLPanel>
 						<g:HTMLPanel ui:field="pnlUsername" styleName="form-group">
 							<label class="control-label">Username</label>

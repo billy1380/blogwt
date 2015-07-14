@@ -75,4 +75,18 @@ public interface IUserService extends IService {
 	 */
 	public User getUsernameUser (String username);
 
+	/**
+	 * 
+	 * @param user
+	 * @param password
+	 * @return
+	 */
+	public Boolean verifyPassword (User user, String password);
+
+	/**
+	 * 
+	 * @param password
+	 * @return
+	 */
+	public String generatePassword (String password);
 }

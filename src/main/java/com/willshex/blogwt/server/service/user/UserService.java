@@ -45,7 +45,7 @@ final class UserService implements IUserService {
 			user.added = user.created = new Date();
 		}
 
-		user.password = StringUtils.sha1Hash(user.password + SALT);
+		user.password = generatePassword(user.password);
 
 		if (user.roles != null) {
 			user.roleKeys = new ArrayList<Key<Role>>();
@@ -134,8 +134,7 @@ final class UserService implements IUserService {
 		User user = ofy().load().type(User.class).filter("username", username)
 				.first().now();
 
-		if (user != null
-				&& !StringUtils.sha1Hash(password + SALT).equals(user.password)) {
+		if (!verifyPassword(user, password)) {
 			user = null;
 		}
 
@@ -190,7 +189,7 @@ final class UserService implements IUserService {
 				}
 			}
 
-			user.password = StringUtils.sha1Hash(user.password + SALT);
+			user.password = generatePassword(user.password);
 		}
 
 		ofy().save().entities(users).now();
@@ -205,6 +204,27 @@ final class UserService implements IUserService {
 	public User getUsernameUser (String username) {
 		return addAvatar(ofy().load().type(User.class)
 				.filter("username", username).first().now());
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.user.IUserService#verifyPassword(
+	 * com.willshex.blogwt.shared.api.datatype.User, java.lang.String) */
+	@Override
+	public Boolean verifyPassword (User user, String password) {
+		return Boolean.valueOf(user != null
+				&& StringUtils.sha1Hash(password + SALT).equals(user.password));
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.user.IUserService#generatePassword
+	 * (java.lang.String) */
+	@Override
+	public String generatePassword (String password) {
+		return StringUtils.sha1Hash(password + SALT);
 	}
 
 }

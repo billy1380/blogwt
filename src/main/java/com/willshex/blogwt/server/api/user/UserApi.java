@@ -55,10 +55,12 @@ import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
 import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
+import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.gson.json.service.server.ActionHandler;
+import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public final class UserApi extends ActionHandler {
@@ -213,6 +215,33 @@ public final class UserApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
+			//			// if not the logged in user
+			//			if (input.user.id.longValue() != input.session.userKey.getId()) {
+			//				List<Role> roles = new ArrayList<Role>();
+			//				roles.add(RoleHelper.createAdmin());
+			//
+			//				List<Permission> permissions = new ArrayList<Permission>();
+			//				Permission postPermission = PermissionServiceProvider.provide()
+			//						.getCodePermission(PermissionHelper.MANAGE_USERS);
+			//				permissions.add(postPermission);
+			//
+			//				UserValidator.authorisation(input.session.user, roles,
+			//						permissions, "input.session.user");
+			//			}
+
+			User user = UserServiceProvider.provide().getUser(
+					Long.valueOf(input.session.userKey.getId()));
+
+			if (UserServiceProvider.provide().verifyPassword(user,
+					input.password)) {
+				user.password = UserServiceProvider.provide().generatePassword(
+						input.changedPassword);
+				UserServiceProvider.provide().updateUser(user);
+			} else ApiValidator.throwServiceError(
+					InputValidationException.class,
+					ApiError.AuthenticationFailedBadPassword,
+					"String: input.password");
+
 			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -239,7 +268,7 @@ public final class UserApi extends ActionHandler {
 
 			input.user = UserValidator.lookup(input.user, "input.user");
 
-			// if the logged in user
+			// if the not logged in user
 			if (input.user.id.longValue() != input.session.userKey.getId()) {
 				List<Role> roles = new ArrayList<Role>();
 				roles.add(RoleHelper.createAdmin());
