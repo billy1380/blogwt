@@ -15,6 +15,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -55,6 +56,8 @@ public class ChangeDetailsPage extends Page implements
 
 	interface ChangeDetailsPageUiBinder extends
 			UiBinder<Widget, ChangeDetailsPage> {}
+
+	@UiField FormPanel frmDetails;
 
 	@UiField Image imgAvatar;
 	@UiField HeadingElement h3Username;
@@ -273,6 +276,20 @@ public class ChangeDetailsPage extends Page implements
 	public void changeUserDetailsFailure (ChangeUserDetailsRequest input,
 			Throwable caught) {
 		ready();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#reset() */
+	@Override
+	protected void reset () {
+		frmDetails.reset();
+		imgAvatar.setAltText("");
+		imgAvatar.setUrl("");
+		elDates.setInnerText("");
+		h3Username.setInnerText("");
+
+		super.reset();
 	}
 
 }
