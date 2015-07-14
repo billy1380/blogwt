@@ -18,7 +18,10 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.controller.NavigationController;
+import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.UserController;
+import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
@@ -32,7 +35,7 @@ import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler
  *
  */
 public class ChangePasswordPage extends Page implements
-		ChangePasswordEventHandler {
+		ChangePasswordEventHandler, NavigationChangedEventHandler {
 
 	private static ChangePasswordPageUiBinder uiBinder = GWT
 			.create(ChangePasswordPageUiBinder.class);
@@ -50,6 +53,8 @@ public class ChangePasswordPage extends Page implements
 	@UiField HTMLPanel pnlNewPasswordNote;
 
 	@UiField Button btnChange;
+
+	private Long userId;
 
 	public ChangePasswordPage () {
 		super(PageType.ChangePasswordPageType);
@@ -70,6 +75,9 @@ public class ChangePasswordPage extends Page implements
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				ChangePasswordEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(
+				NavigationChangedEventHandler.TYPE, NavigationController.get(),
+				this));
 
 		ready();
 	}
@@ -78,7 +86,9 @@ public class ChangePasswordPage extends Page implements
 	void onChangeClicked (ClickEvent ce) {
 		if (isValid()) {
 			loading();
-			// change password
+
+			UserController.get().changeUserPassword(userId,
+					txtPassword.getText(), txtNewPassword.getText());
 		} else {
 			showErrors();
 		}
@@ -142,4 +152,18 @@ public class ChangePasswordPage extends Page implements
 		pnlNewPasswordNote.setVisible(false);
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
+	 * navigationChanged
+	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
+	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
+	@Override
+	public void navigationChanged (Stack previous, Stack current) {
+		if ("id".equals(current.getAction())) {
+			if (current.getParameterCount() > 0) {
+				userId = Long.valueOf(current.getParameter(0));
+			}
+		}
+	}
 }
