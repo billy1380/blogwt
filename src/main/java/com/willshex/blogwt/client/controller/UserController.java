@@ -19,12 +19,16 @@ import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
+import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUsersResponse;
+import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler.ChangePasswordFailure;
+import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler.ChangePasswordSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsFailure;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler.GetUserDetailsFailure;
@@ -54,7 +58,7 @@ public class UserController extends AsyncDataProvider<User> {
 			UserSortType.UserSortTypeAdded.toString());
 
 	private Request getUsersRequest;
-	private Request ChangeUserDetailsRequest;
+	private Request getUserRequest;
 
 	private void fetchUsers () {
 		final GetUsersRequest input = ApiHelper
@@ -132,16 +136,16 @@ public class UserController extends AsyncDataProvider<User> {
 		input.session = SessionController.get().sessionForApiCall();
 		input.user = user;
 
-		if (ChangeUserDetailsRequest != null) {
-			ChangeUserDetailsRequest.cancel();
+		if (getUserRequest != null) {
+			getUserRequest.cancel();
 		}
 
-		ChangeUserDetailsRequest = ApiHelper.createUserClient().getUserDetails(
-				input, new AsyncCallback<GetUserDetailsResponse>() {
+		getUserRequest = ApiHelper.createUserClient().getUserDetails(input,
+				new AsyncCallback<GetUserDetailsResponse>() {
 
 					@Override
 					public void onSuccess (GetUserDetailsResponse output) {
-						ChangeUserDetailsRequest = null;
+						getUserRequest = null;
 
 						if (output.status == StatusType.StatusTypeSuccess) {
 
@@ -172,35 +176,67 @@ public class UserController extends AsyncDataProvider<User> {
 		input.session = SessionController.get().sessionForApiCall();
 		input.user = user;
 
-		if (ChangeUserDetailsRequest != null) {
-			ChangeUserDetailsRequest.cancel();
+		if (getUserRequest != null) {
+			getUserRequest.cancel();
 		}
 
-		ChangeUserDetailsRequest = ApiHelper.createUserClient()
-				.changeUserDetails(input,
-						new AsyncCallback<ChangeUserDetailsResponse>() {
+		getUserRequest = ApiHelper.createUserClient().changeUserDetails(input,
+				new AsyncCallback<ChangeUserDetailsResponse>() {
 
-							@Override
-							public void onSuccess (
-									ChangeUserDetailsResponse output) {
-								ChangeUserDetailsRequest = null;
+					@Override
+					public void onSuccess (ChangeUserDetailsResponse output) {
+						getUserRequest = null;
 
-								if (output.status == StatusType.StatusTypeSuccess) {
+						if (output.status == StatusType.StatusTypeSuccess) {
 
-								}
+						}
 
-								DefaultEventBus.get().fireEventFromSource(
-										new ChangeUserDetailsSuccess(input,
-												output), UserController.this);
-							}
+						DefaultEventBus.get().fireEventFromSource(
+								new ChangeUserDetailsSuccess(input, output),
+								UserController.this);
+					}
 
-							@Override
-							public void onFailure (Throwable caught) {
-								DefaultEventBus.get().fireEventFromSource(
-										new ChangeUserDetailsFailure(input,
-												caught), UserController.this);
-							}
-						});
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new ChangeUserDetailsFailure(input, caught),
+								UserController.this);
+					}
+				});
+	}
+
+	public void changeUserPassword (Long userId, String password,
+			String newPassword) {
+		final ChangePasswordRequest input = ApiHelper
+				.setAccessCode(new ChangePasswordRequest());
+
+		input.session = SessionController.get().sessionForApiCall();
+		input.password = password;
+		input.changedPassword = newPassword;
+
+		// change password should take a user parameter
+
+		ApiHelper.createUserClient().changePassword(input,
+				new AsyncCallback<ChangePasswordResponse>() {
+
+					@Override
+					public void onSuccess (ChangePasswordResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {
+
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new ChangePasswordSuccess(input, output),
+								UserController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new ChangePasswordFailure(input, caught),
+								UserController.this);
+					}
+				});
 	}
 
 }
