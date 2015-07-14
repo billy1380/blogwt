@@ -38,7 +38,7 @@ public class AddUserWizardPage extends Composite implements WizardPage<User> {
 			UiBinder<Widget, AddUserWizardPage> {}
 
 	@UiField public TextBox txtUsername;
-	@UiField public TextBox txtEmailAddress;
+	@UiField public TextBox txtEmail;
 	@UiField public TextBox txtForename;
 	@UiField public TextBox txtSurname;
 	@UiField public PasswordTextBox txtPassword;
@@ -51,7 +51,7 @@ public class AddUserWizardPage extends Composite implements WizardPage<User> {
 		UiHelper.addPlaceholder(txtUsername, "Username");
 		UiHelper.autoFocus(txtUsername);
 
-		UiHelper.addPlaceholder(txtEmailAddress, "E-mail address");
+		UiHelper.addPlaceholder(txtEmail, "E-mail address");
 		UiHelper.addPlaceholder(txtForename, "Forename");
 		UiHelper.addPlaceholder(txtSurname, "Surname");
 		UiHelper.addPlaceholder(txtPassword, "Password");
@@ -77,7 +77,7 @@ public class AddUserWizardPage extends Composite implements WizardPage<User> {
 		}
 
 		return new User().username(txtUsername.getText())
-				.email(txtEmailAddress.getText())
+				.email(txtEmail.getText())
 				.forename(txtForename.getText()).surname(txtSurname.getText())
 				.password(txtPassword.getText()).roles(roles);
 	}
