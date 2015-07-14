@@ -24,6 +24,7 @@ import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
+import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
@@ -49,6 +50,8 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 
 	@UiField Element elTitle;
 	@UiField Element elExtendedTitle;
+	@UiField Element elJumbotron;
+
 	@UiField NoneFoundPanel pnlNoPosts;
 	@UiField InlineHyperlink lnkNewPost;
 	@UiField(provided = true) CellList<Post> clPosts = new CellList<Post>(
@@ -72,6 +75,10 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 		clPosts.setLoadingIndicator(loadingWidget);
 
 		PostController.get().addDataDisplay(clPosts);
+
+		if (PageController.get().homePage() != null) {
+			elJumbotron.removeFromParent();
+		}
 	}
 
 	@Override

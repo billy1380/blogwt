@@ -10,7 +10,7 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<div class="jumbotron">
+		<div ui:field="elJumbotron" class="jumbotron">
 			<h1 ui:field="elTitle">Posts</h1>
 			<p ui:field="elExtendedTitle" class="small">Extended Title</p>
 		</div>
