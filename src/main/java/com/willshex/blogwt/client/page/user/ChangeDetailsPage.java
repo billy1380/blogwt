@@ -17,6 +17,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
@@ -76,6 +77,8 @@ public class ChangeDetailsPage extends Page implements
 	@UiField HTMLPanel pnlEmailNote;
 
 	@UiField Button btnUpdate;
+	@UiField InlineHyperlink lnkChangePassword;
+
 	private User user;
 
 	public ChangeDetailsPage () {
@@ -118,6 +121,9 @@ public class ChangeDetailsPage extends Page implements
 	public void navigationChanged (Stack previous, Stack current) {
 		if (current.getAction() == null) {
 			showUserDetails(user = SessionController.get().user());
+			lnkChangePassword
+					.setTargetHistoryToken(PageType.ChangePasswordPageType
+							.asTargetHistoryToken());
 		} else if ("id".equals(current.getAction())
 				&& current.getParameterCount() > 0) {
 			Long id = Long.valueOf(current.getParameter(0));
@@ -161,6 +167,9 @@ public class ChangeDetailsPage extends Page implements
 			GetUserDetailsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			showUserDetails(user = output.user);
+			lnkChangePassword
+					.setTargetHistoryToken(PageType.ChangePasswordPageType
+							.asTargetHistoryToken("id", user.id.toString()));
 		}
 
 		ready();
