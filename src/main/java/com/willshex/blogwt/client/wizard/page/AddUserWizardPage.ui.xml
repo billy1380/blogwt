@@ -1,7 +1,27 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="com.willshex.blogwt.client.page.PageType.*" />
 	<ui:style>
+	.smaller {
+		font-size: smaller;
+	}
 	
+	.top-of-pair {
+		margin-bottom: -1px;
+		border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+	
+	.bottom-of-pair {
+		margin-bottom: 10px;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+	
+	.top-of-pair:focus, .bottom-of-pair:focus {
+		position: relative;
+		z-index: 2;
+	}
 	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel ui:field="pnlUsername" styleName="form-group">
@@ -10,19 +30,46 @@
 				<span class="input-group-addon">@</span>
 				<g:TextBox ui:field="txtUsername" styleName="form-control" />
 			</g:HTMLPanel>
-			<g:HTMLPanel styleName="control-label small" ui:field="pnlUsernameNote" visible="false" />
+			<g:HTMLPanel styleName="control-label small" ui:field="pnlUsernameNote"
+				visible="false" />
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="form-group">
-			<g:TextBox ui:field="txtEmailAddress" styleName="form-control" />
+
+		<g:HTMLPanel ui:field="pnlPassword" styleName="form-group">
+			<label class="control-label">Password</label>
+			<g:PasswordTextBox ui:field="txtPassword"
+				styleName="form-control {style.top-of-pair}" />
+			<g:PasswordTextBox ui:field="txtConfirmPassword"
+				styleName="form-control {style.bottom-of-pair}" />
+			<g:HTMLPanel styleName="control-label small" ui:field="pnlPasswordNote"
+				visible="false" />
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="form-group">
+
+		<g:HTMLPanel ui:field="pnlForename" styleName="form-group">
+			<label class="control-label">Forename</label>
 			<g:TextBox ui:field="txtForename" styleName="form-control" />
+			<g:HTMLPanel styleName="control-label small" ui:field="pnlForenameNote"
+				visible="false" />
+		</g:HTMLPanel>
+
+		<g:HTMLPanel ui:field="pnlSurname" styleName="form-group">
+			<label class="control-label">Surname</label>
 			<g:TextBox ui:field="txtSurname" styleName="form-control" />
+			<g:HTMLPanel styleName="control-label small" ui:field="pnlSurnameNote"
+				visible="false" />
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="form-group">
-			<g:PasswordTextBox ui:field="txtPassword" styleName="form-control" />
-			<g:PasswordTextBox ui:field="txtConfirmPassword" styleName="form-control" />
+
+		<g:HTMLPanel ui:field="pnlEmail" styleName="form-group">
+			<label class="control-label">E-mail</label>
+			<g:TextBox ui:field="txtEmail" styleName="form-control" />
+			<span class="text-muted {style.smaller}">
+				Changing e-mail address will change your avatar (
+				<a href="https://en.gravatar.com/" target="_blank">Gravatar</a>
+				)
+			</span>
+			<g:HTMLPanel styleName="control-label small" ui:field="pnlEmailNote"
+				visible="false" />
 		</g:HTMLPanel>
-		<g:CheckBox text="Is Admin" ui:field="cbxIsAdmin" styleName="checkbox" checked="true" />
+		<g:CheckBox text="Is Admin" ui:field="cbxIsAdmin" styleName="checkbox"
+			checked="true" />
 	</g:HTMLPanel>
 </ui:UiBinder> 

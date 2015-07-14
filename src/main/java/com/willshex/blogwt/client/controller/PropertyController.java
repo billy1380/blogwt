@@ -70,7 +70,7 @@ public class PropertyController extends ListDataProvider<Property> {
 			} else {
 				getList().clear();
 			}
-			
+
 			Property item = null;
 			for (int i = 0; i < jsonPropertyArray.size(); i++) {
 				if (jsonPropertyArray.get(i).isJsonObject()) {
@@ -84,7 +84,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	}
 
 	public List<Property> blog () {
-		return getList();
+		return getList() == null || getList().isEmpty() ? null : getList();
 	}
 
 	/**
