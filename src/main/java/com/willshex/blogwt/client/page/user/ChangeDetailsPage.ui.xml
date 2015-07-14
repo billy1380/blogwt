@@ -2,7 +2,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:import field="com.willshex.blogwt.client.page.PageType.*" />
 	<ui:style gss="true">
-	@external checkbox;
 	.account {
 		text-align: center;
 	}
@@ -26,10 +25,6 @@
 		left: -9999px;
 		right: -9999px;
 		margin: auto;
-	}
-	
-	.checkbox input[type=checkbox] {
-		margin-left: 0px;
 	}
 	
 	.form-signin .btn {
@@ -59,7 +54,7 @@
 								visible="false" />
 
 							<div class="text-right">
-								<g:InlineHyperlink text="Change password"
+								<g:InlineHyperlink text="Change password" ui:field="lnkChangePassword"
 									targetHistoryToken="{ChangePasswordPageType.asTargetHistoryToken}" />
 							</div>
 						</g:HTMLPanel>
