@@ -24,6 +24,7 @@ import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.Session;
+import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.api.datatype.User;
 
 /**
@@ -41,6 +42,7 @@ public class PersistenceService {
 		factory().register(Property.class);
 		factory().register(PostContent.class);
 		factory().register(Page.class);
+		factory().register(Tag.class);
 	}
 
 	public static Objectify ofy () {

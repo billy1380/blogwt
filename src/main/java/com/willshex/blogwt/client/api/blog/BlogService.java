@@ -21,6 +21,8 @@ import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetTagsRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetTagsResponse;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
@@ -29,6 +31,89 @@ import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class BlogService extends JsonService {
+	public static final String BlogMethodGetTags = "GetTags";
+
+	public Request getTags (final GetTagsRequest input,
+			final AsyncCallback<GetTagsResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(BlogMethodGetTags, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								GetTagsResponse outputParameter = new GetTagsResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(BlogService.this,
+										BlogMethodGetTags, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(BlogService.this,
+										BlogMethodGetTags, input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(BlogService.this, BlogMethodGetTags,
+									input, exception);
+						}
+					});
+			onCallStart(BlogService.this, BlogMethodGetTags, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodGetTags, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String BlogMethodGetPosts = "GetPosts";
+
+	public Request getPosts (final GetPostsRequest input,
+			final AsyncCallback<GetPostsResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(BlogMethodGetPosts, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								GetPostsResponse outputParameter = new GetPostsResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(BlogService.this,
+										BlogMethodGetPosts, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(BlogService.this,
+										BlogMethodGetPosts, input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(BlogService.this, BlogMethodGetPosts,
+									input, exception);
+						}
+					});
+			onCallStart(BlogService.this, BlogMethodGetPosts, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodGetPosts, input,
+					exception);
+		}
+		return handle;
+	}
+
 	public static final String BlogMethodGetPost = "GetPost";
 
 	public Request getPost (final GetPostRequest input,
@@ -70,28 +155,28 @@ public final class BlogService extends JsonService {
 		return handle;
 	}
 
-	public static final String BlogMethodUpdatePost = "UpdatePost";
+	public static final String BlogMethodDeletePost = "DeletePost";
 
-	public Request updatePost (final UpdatePostRequest input,
-			final AsyncCallback<UpdatePostResponse> callback) {
+	public Request deletePost (final DeletePostRequest input,
+			final AsyncCallback<DeletePostResponse> callback) {
 		Request handle = null;
 		try {
-			handle = sendRequest(BlogMethodUpdatePost, input,
+			handle = sendRequest(BlogMethodDeletePost, input,
 					new RequestCallback() {
 						@Override
 						public void onResponseReceived (Request request,
 								Response response) {
 							try {
-								UpdatePostResponse outputParameter = new UpdatePostResponse();
+								DeletePostResponse outputParameter = new DeletePostResponse();
 								parseResponse(response, outputParameter);
 								callback.onSuccess(outputParameter);
 								onCallSuccess(BlogService.this,
-										BlogMethodUpdatePost, input,
+										BlogMethodDeletePost, input,
 										outputParameter);
 							} catch (JSONException | HttpException exception) {
 								callback.onFailure(exception);
 								onCallFailure(BlogService.this,
-										BlogMethodUpdatePost, input, exception);
+										BlogMethodDeletePost, input, exception);
 							}
 						}
 
@@ -100,13 +185,55 @@ public final class BlogService extends JsonService {
 								Throwable exception) {
 							callback.onFailure(exception);
 							onCallFailure(BlogService.this,
-									BlogMethodUpdatePost, input, exception);
+									BlogMethodDeletePost, input, exception);
 						}
 					});
-			onCallStart(BlogService.this, BlogMethodUpdatePost, input, handle);
+			onCallStart(BlogService.this, BlogMethodDeletePost, input, handle);
 		} catch (RequestException exception) {
 			callback.onFailure(exception);
-			onCallFailure(BlogService.this, BlogMethodUpdatePost, input,
+			onCallFailure(BlogService.this, BlogMethodDeletePost, input,
+					exception);
+		}
+		return handle;
+	}
+
+	public static final String BlogMethodSetupBlog = "SetupBlog";
+
+	public Request setupBlog (final SetupBlogRequest input,
+			final AsyncCallback<SetupBlogResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(BlogMethodSetupBlog, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								SetupBlogResponse outputParameter = new SetupBlogResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(BlogService.this,
+										BlogMethodSetupBlog, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(BlogService.this,
+										BlogMethodSetupBlog, input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(BlogService.this,
+									BlogMethodSetupBlog, input, exception);
+						}
+					});
+			onCallStart(BlogService.this, BlogMethodSetupBlog, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodSetupBlog, input,
 					exception);
 		}
 		return handle;
@@ -154,28 +281,28 @@ public final class BlogService extends JsonService {
 		return handle;
 	}
 
-	public static final String BlogMethodDeletePost = "DeletePost";
+	public static final String BlogMethodUpdatePost = "UpdatePost";
 
-	public Request deletePost (final DeletePostRequest input,
-			final AsyncCallback<DeletePostResponse> callback) {
+	public Request updatePost (final UpdatePostRequest input,
+			final AsyncCallback<UpdatePostResponse> callback) {
 		Request handle = null;
 		try {
-			handle = sendRequest(BlogMethodDeletePost, input,
+			handle = sendRequest(BlogMethodUpdatePost, input,
 					new RequestCallback() {
 						@Override
 						public void onResponseReceived (Request request,
 								Response response) {
 							try {
-								DeletePostResponse outputParameter = new DeletePostResponse();
+								UpdatePostResponse outputParameter = new UpdatePostResponse();
 								parseResponse(response, outputParameter);
 								callback.onSuccess(outputParameter);
 								onCallSuccess(BlogService.this,
-										BlogMethodDeletePost, input,
+										BlogMethodUpdatePost, input,
 										outputParameter);
 							} catch (JSONException | HttpException exception) {
 								callback.onFailure(exception);
 								onCallFailure(BlogService.this,
-										BlogMethodDeletePost, input, exception);
+										BlogMethodUpdatePost, input, exception);
 							}
 						}
 
@@ -184,97 +311,13 @@ public final class BlogService extends JsonService {
 								Throwable exception) {
 							callback.onFailure(exception);
 							onCallFailure(BlogService.this,
-									BlogMethodDeletePost, input, exception);
+									BlogMethodUpdatePost, input, exception);
 						}
 					});
-			onCallStart(BlogService.this, BlogMethodDeletePost, input, handle);
+			onCallStart(BlogService.this, BlogMethodUpdatePost, input, handle);
 		} catch (RequestException exception) {
 			callback.onFailure(exception);
-			onCallFailure(BlogService.this, BlogMethodDeletePost, input,
-					exception);
-		}
-		return handle;
-	}
-
-	public static final String BlogMethodGetPosts = "GetPosts";
-
-	public Request getPosts (final GetPostsRequest input,
-			final AsyncCallback<GetPostsResponse> callback) {
-		Request handle = null;
-		try {
-			handle = sendRequest(BlogMethodGetPosts, input,
-					new RequestCallback() {
-						@Override
-						public void onResponseReceived (Request request,
-								Response response) {
-							try {
-								GetPostsResponse outputParameter = new GetPostsResponse();
-								parseResponse(response, outputParameter);
-								callback.onSuccess(outputParameter);
-								onCallSuccess(BlogService.this,
-										BlogMethodGetPosts, input,
-										outputParameter);
-							} catch (JSONException | HttpException exception) {
-								callback.onFailure(exception);
-								onCallFailure(BlogService.this,
-										BlogMethodGetPosts, input, exception);
-							}
-						}
-
-						@Override
-						public void onError (Request request,
-								Throwable exception) {
-							callback.onFailure(exception);
-							onCallFailure(BlogService.this, BlogMethodGetPosts,
-									input, exception);
-						}
-					});
-			onCallStart(BlogService.this, BlogMethodGetPosts, input, handle);
-		} catch (RequestException exception) {
-			callback.onFailure(exception);
-			onCallFailure(BlogService.this, BlogMethodGetPosts, input,
-					exception);
-		}
-		return handle;
-	}
-
-	public static final String BlogMethodSetupBlog = "SetupBlog";
-
-	public Request setupBlog (final SetupBlogRequest input,
-			final AsyncCallback<SetupBlogResponse> callback) {
-		Request handle = null;
-		try {
-			handle = sendRequest(BlogMethodSetupBlog, input,
-					new RequestCallback() {
-						@Override
-						public void onResponseReceived (Request request,
-								Response response) {
-							try {
-								SetupBlogResponse outputParameter = new SetupBlogResponse();
-								parseResponse(response, outputParameter);
-								callback.onSuccess(outputParameter);
-								onCallSuccess(BlogService.this,
-										BlogMethodSetupBlog, input,
-										outputParameter);
-							} catch (JSONException | HttpException exception) {
-								callback.onFailure(exception);
-								onCallFailure(BlogService.this,
-										BlogMethodSetupBlog, input, exception);
-							}
-						}
-
-						@Override
-						public void onError (Request request,
-								Throwable exception) {
-							callback.onFailure(exception);
-							onCallFailure(BlogService.this,
-									BlogMethodSetupBlog, input, exception);
-						}
-					});
-			onCallStart(BlogService.this, BlogMethodSetupBlog, input, handle);
-		} catch (RequestException exception) {
-			callback.onFailure(exception);
-			onCallFailure(BlogService.this, BlogMethodSetupBlog, input,
+			onCallFailure(BlogService.this, BlogMethodUpdatePost, input,
 					exception);
 		}
 		return handle;

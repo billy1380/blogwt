@@ -27,6 +27,7 @@ import com.willshex.blogwt.client.page.blog.EditPostPage;
 import com.willshex.blogwt.client.page.blog.PostDetailPage;
 import com.willshex.blogwt.client.page.blog.PostsPage;
 import com.willshex.blogwt.client.page.blog.SetupBlogPage;
+import com.willshex.blogwt.client.page.blog.TagPage;
 import com.willshex.blogwt.client.page.page.EditPagePage;
 import com.willshex.blogwt.client.page.page.PageDetailPage;
 import com.willshex.blogwt.client.page.user.ChangeDetailsPage;
@@ -60,7 +61,8 @@ public enum PageType {
 	EditPagePageType("pageedit", PermissionHelper.MANAGE_PAGES),
 	PageDetailPageType("page", false),
 	PagesPageType("pages", PermissionHelper.MANAGE_PAGES),
-	EditPropertyPageType("propertyedit", RoleHelper.ADMIN), ;
+	EditPropertyPageType("propertyedit", RoleHelper.ADMIN),
+	TagPagePageType("tag", false), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -209,6 +211,9 @@ public enum PageType {
 			break;
 		case EditPagePageType:
 			page = new EditPagePage();
+			break;
+		case TagPagePageType:
+			page = new TagPage();
 			break;
 		case LogoutPageType:
 		case PostsPageType:
