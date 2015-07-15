@@ -10,6 +10,7 @@ package com.willshex.blogwt.client.controller;
 import java.util.Collections;
 
 import com.google.gwt.http.client.Request;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -237,6 +238,14 @@ public class UserController extends AsyncDataProvider<User> {
 								UserController.this);
 					}
 				});
+	}
+
+	/**
+	 * @param email
+	 */
+	public static void resetPassword (String email) {
+		Window.alert("Tried to reset the password for [" + email
+				+ "]. This feature is coming soon!");
 	}
 
 }
