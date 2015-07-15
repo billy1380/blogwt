@@ -33,6 +33,7 @@ import com.willshex.blogwt.client.page.user.ChangeDetailsPage;
 import com.willshex.blogwt.client.page.user.ChangePasswordPage;
 import com.willshex.blogwt.client.page.user.LoginPage;
 import com.willshex.blogwt.client.page.user.RegisterPage;
+import com.willshex.blogwt.client.page.user.ResetPasswordPage;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
@@ -178,6 +179,9 @@ public enum PageType {
 			break;
 		case ChangePasswordPageType:
 			page = new ChangePasswordPage();
+			break;
+		case ResetPasswordPageType:
+			page = new ResetPasswordPage();
 			break;
 		case RolesPageType:
 			page = new RolesPage();
