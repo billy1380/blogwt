@@ -53,13 +53,14 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 
 	interface PageDetailPageUiBinder extends UiBinder<Widget, PageDetailPage> {}
 
-	private Page page;
 	@UiField HTMLPanel pnlLoading;
 	@UiField HTMLPanel pnlContent;
 
 	@UiField InlineHyperlink lnkEditPage;
 	@UiField Button btnDeletePage;
 
+	private Page page;
+	
 	public PageDetailPage () {
 		super(PageType.PageDetailPageType);
 		initWidget(uiBinder.createAndBindUi(this));
