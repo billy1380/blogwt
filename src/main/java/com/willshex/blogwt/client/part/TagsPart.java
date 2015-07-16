@@ -7,14 +7,14 @@
 //
 package com.willshex.blogwt.client.part;
 
-import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.cell.blog.TagCell;
+import com.willshex.blogwt.client.controller.TagController;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 
 /**
@@ -29,18 +29,11 @@ public class TagsPart extends Composite {
 	interface TagsPartUiBinder extends UiBinder<Widget, TagsPart> {}
 
 	@UiField(provided = true) CellList<Tag> clTags = new CellList<Tag>(
-			new AbstractCell<Tag>() {
-
-				@Override
-				public void render (Context context, Tag value,
-						SafeHtmlBuilder sb) {
-
-				}
-
-			}, BootstrapGwtCellList.INSTANCE);
+			new TagCell(true, true), BootstrapGwtCellList.INSTANCE);
 
 	public TagsPart () {
 		initWidget(uiBinder.createAndBindUi(this));
+		TagController.get().addDataDisplay(clTags);
 	}
 
 }

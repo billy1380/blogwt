@@ -22,7 +22,8 @@ import com.googlecode.objectify.annotation.Index;
 
 @Entity
 public class Tag extends DataType {
-	@Index public String name;
+	public String name;
+	@Index public String slug;
 
 	public List<Key<Post>> postKeys;
 	@Ignore public List<Post> posts;
@@ -33,6 +34,9 @@ public class Tag extends DataType {
 		JsonElement jsonName = name == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(name);
 		object.add("name", jsonName);
+		JsonElement jsonSlug = slug == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(slug);
+		object.add("slug", jsonSlug);
 		JsonElement jsonPosts = JsonNull.INSTANCE;
 		if (posts != null) {
 			jsonPosts = new JsonArray();
@@ -55,6 +59,12 @@ public class Tag extends DataType {
 				name = jsonName.getAsString();
 			}
 		}
+		if (jsonObject.has("slug")) {
+			JsonElement jsonSlug = jsonObject.get("slug");
+			if (jsonSlug != null) {
+				slug = jsonSlug.getAsString();
+			}
+		}
 		if (jsonObject.has("posts")) {
 			JsonElement jsonPosts = jsonObject.get("posts");
 			if (jsonPosts != null) {
@@ -74,6 +84,11 @@ public class Tag extends DataType {
 
 	public Tag name (String name) {
 		this.name = name;
+		return this;
+	}
+
+	public Tag slug (String slug) {
+		this.slug = slug;
 		return this;
 	}
 
