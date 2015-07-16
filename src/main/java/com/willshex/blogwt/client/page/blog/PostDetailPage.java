@@ -17,14 +17,17 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.ListDataProvider;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
+import com.willshex.blogwt.client.cell.blog.TagCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PostController;
@@ -33,6 +36,7 @@ import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.client.part.InlineBootstrapGwtCellList;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
@@ -40,6 +44,7 @@ import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.DeletePostEventHandler;
 import com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Post;
+import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
@@ -58,22 +63,30 @@ public class PostDetailPage extends Page implements
 
 	interface PostDetailPageUiBinder extends UiBinder<Widget, PostDetailPage> {}
 
-	private Post post;
 	@UiField Element elTitle;
 	@UiField Element elDate;
 	@UiField Element elAuthor;
-	@UiField HTMLPanel pnlTags;
 	@UiField HTMLPanel pnlLoading;
-	Element elComments;
+
 	@UiField HTMLPanel pnlContent;
-	boolean installed;
 	@UiField InlineHyperlink lnkEditPost;
 	@UiField Button btnDeletePost;
 	@UiField ImageElement imgAvatar;
 
+	@UiField(provided = true) CellList<Tag> clTags = new CellList<Tag>(
+			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
+
+	private ListDataProvider<Tag> tagList = new ListDataProvider<Tag>();
+
+	private boolean installed;
+	private Element elComments;
+	private Post post;
+
 	public PostDetailPage () {
 		super(PageType.PostDetailPageType);
 		initWidget(uiBinder.createAndBindUi(this));
+
+		tagList.addDataDisplay(clTags);
 	}
 
 	@UiHandler("btnDeletePost")
@@ -131,21 +144,12 @@ public class PostDetailPage extends Page implements
 					.notPublished(DateTimeHelper.ago(post.created)));
 		}
 
-		if (pnlTags.getWidgetCount() > 0) {
-			pnlTags.clear();
-		}
-
 		lnkEditPost.setTargetHistoryToken(PageType.EditPostPageType
 				.asTargetHistoryToken(post.slug));
 
 		if (post.tags != null) {
-			StringBuffer buffer = new StringBuffer();
 			for (String tag : post.tags) {
-				if (buffer.length() != 0) {
-					buffer.append(" ");
-				}
-
-				buffer.append(tag);
+				tagList.getList().add(new Tag().name(tag));
 			}
 		}
 
@@ -281,7 +285,8 @@ public class PostDetailPage extends Page implements
 		elTitle.setInnerHTML("");
 		elAuthor.setInnerHTML("");
 		elDate.setInnerHTML("");
-		pnlTags.clear();
+
+		tagList.getList().clear();
 
 		lnkEditPost.setTargetHistoryToken(PageType.EditPostPageType
 				.asTargetHistoryToken(""));

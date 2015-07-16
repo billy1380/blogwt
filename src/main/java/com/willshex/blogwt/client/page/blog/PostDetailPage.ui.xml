@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:p="urn:import:com.willshex.blogwt.client.part">
+	xmlns:p="urn:import:com.willshex.blogwt.client.part" xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<ui:import field="com.willshex.blogwt.client.Resources.CELL_TABLE_RES" />
 	<ui:import field="com.willshex.blogwt.client.page.PageType.EditPostPageType" />
 	<ui:style gss="true">
@@ -38,7 +38,7 @@
 
 				<g:HTMLPanel ui:field="pnlContent" />
 
-				<g:HTMLPanel ui:field="pnlTags" />
+				<c:CellList ui:field="clTags" />
 
 				<div id="disqus_thread" />
 			</div>
