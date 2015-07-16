@@ -15,7 +15,6 @@ import java.util.Map;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import com.google.gwt.http.client.Request;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -23,15 +22,12 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.BlogService;
 import com.willshex.blogwt.client.helper.ApiHelper;
-import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler.SetupBlogFailure;
 import com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler.SetupBlogSuccess;
 import com.willshex.blogwt.shared.api.datatype.Property;
-import com.willshex.blogwt.shared.api.datatype.PropertySortType;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 /**
@@ -51,11 +47,6 @@ public class PropertyController extends ListDataProvider<Property> {
 
 		return one;
 	}
-
-	private Pager pager = PagerHelper.createDefaultPager().sortBy(
-			PropertySortType.PropertySortTypeName.toString());
-
-	private Request getPropertiesRequest;
 
 	private Map<String, Property> propertyLookup = new HashMap<String, Property>();
 

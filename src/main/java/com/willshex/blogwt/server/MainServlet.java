@@ -27,18 +27,20 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
+import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Session;
+import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
-import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.service.ContextAwareServlet;
 
 /**
@@ -112,6 +114,8 @@ public class MainServlet extends ContextAwareServlet {
 			scriptVariables.append("\n");
 			appendPages(scriptVariables);
 			scriptVariables.append("\n");
+			appendTags(scriptVariables);
+			scriptVariables.append("\n");
 		}
 
 		RESPONSE.get()
@@ -144,6 +148,30 @@ public class MainServlet extends ContextAwareServlet {
 		}
 
 		scriptVariables.append("]';");
+	}
+
+	/**
+	 * @param scriptVariables
+	 */
+	private void appendTags (StringBuffer scriptVariables) {
+		List<Tag> tags = TagServiceProvider.provide().getTags();
+
+		if (tags.size() >= 0) {
+			scriptVariables.append("var tags='[");
+
+			boolean first = true;
+			for (Tag tag : tags) {
+				if (first) {
+					first = false;
+				} else {
+					scriptVariables.append(",");
+				}
+
+				scriptVariables.append(tag.toString().replace("'", "\\'"));
+			}
+
+			scriptVariables.append("]';");
+		}
 	}
 
 	/**
