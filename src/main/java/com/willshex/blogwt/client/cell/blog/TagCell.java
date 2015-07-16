@@ -16,6 +16,7 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Tag;
+import com.willshex.blogwt.shared.helper.PostHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -55,7 +56,9 @@ public class TagCell extends AbstractSafeHtmlCell<Tag> {
 				builder.appendHtmlConstant("<span class=\"glyphicon glyphicon-tags\"></span> ");
 			}
 
-			SafeUri href = PageType.TagPagePageType.asHref(object.slug);
+			SafeUri href = PageType.TagPagePageType
+					.asHref(object.slug == null ? PostHelper
+							.slugify(object.name) : object.slug);
 
 			if (displayCount) {
 				builder.append(TagTemplate.INSTANCE.tagWithCount(href,
