@@ -21,6 +21,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet>
 
 	<servlet>
+		<servlet-name>Dev</servlet-name>
+		<servlet-class>com.willshex.blogwt.server.DevServlet</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>Blog API</servlet-name>
 		<servlet-class>com.willshex.blogwt.server.api.blog.BlogJsonServlet</servlet-class>
 	</servlet>
@@ -29,11 +34,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>User API</servlet-name>
 		<servlet-class>com.willshex.blogwt.server.api.user.UserJsonServlet</servlet-class>
 	</servlet>
-	
-	   <servlet>
-        <servlet-name>Page API</servlet-name>
-        <servlet-class>com.willshex.blogwt.server.api.page.PageJsonServlet</servlet-class>
-    </servlet>
+
+	<servlet>
+		<servlet-name>Page API</servlet-name>
+		<servlet-class>com.willshex.blogwt.server.api.page.PageJsonServlet</servlet-class>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>Blog API</servlet-name>
@@ -44,16 +49,21 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>User API</servlet-name>
 		<url-pattern>/user</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
-        <servlet-name>Page API</servlet-name>
-        <url-pattern>/page</url-pattern>
-    </servlet-mapping>
+		<servlet-name>Page API</servlet-name>
+		<url-pattern>/page</url-pattern>
+	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>Site</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+        <servlet-name>Dev</servlet-name>
+        <url-pattern>/dev</url-pattern>
+    </servlet-mapping>
 
 	<!-- Objectify -->
 	<filter>
