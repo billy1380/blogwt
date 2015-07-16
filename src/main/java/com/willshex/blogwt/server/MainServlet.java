@@ -28,6 +28,7 @@ import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.server.helper.UserHelper;
+import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
@@ -37,6 +38,7 @@ import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
+import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.Tag;
@@ -161,6 +163,9 @@ public class MainServlet extends ContextAwareServlet {
 
 			boolean first = true;
 			for (Tag tag : tags) {
+				tag.posts = PersistenceService.dataTypeList(Post.class,
+						tag.postKeys);
+
 				if (first) {
 					first = false;
 				} else {

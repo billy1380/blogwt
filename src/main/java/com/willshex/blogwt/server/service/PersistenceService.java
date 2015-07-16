@@ -74,4 +74,23 @@ public class PersistenceService {
 
 		return i;
 	}
+
+	/**
+	 * @param t
+	 * @param keys
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends DataType> List<T> dataTypeList (Class<T> t,
+			Collection<Key<T>> keys) {
+		List<T> list = new ArrayList<T>();
+
+		try {
+			for (Key<T> key : keys) {
+				list.add((T) t.newInstance().id(Long.valueOf(key.getId())));
+			}
+		} catch (InstantiationException | IllegalAccessException ex) {}
+
+		return list;
+	}
 }

@@ -23,6 +23,7 @@ import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.helper.PostHelper;
 
 final class TagService implements ITagService {
 	public String getName () {
@@ -41,6 +42,7 @@ final class TagService implements ITagService {
 		}
 
 		tag.name = tag.name.toLowerCase();
+		tag.slug = PostHelper.slugify(tag.name);
 
 		if (tag.posts != null) {
 			for (Post post : tag.posts) {
@@ -127,6 +129,7 @@ final class TagService implements ITagService {
 			}
 
 			tag.name = tag.name.toLowerCase();
+			tag.slug = PostHelper.slugify(tag.name);
 
 			if (tag.posts != null) {
 				for (Post post : tag.posts) {
