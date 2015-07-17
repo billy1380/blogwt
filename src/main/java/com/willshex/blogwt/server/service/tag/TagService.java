@@ -20,7 +20,9 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Work;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Post;
+import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PostHelper;
@@ -86,7 +88,9 @@ final class TagService implements ITagService {
 
 		do {
 			posts = PostServiceProvider.provide().getPosts(Boolean.FALSE,
-					Boolean.FALSE, pager.start, pager.count, null, null);
+					Boolean.FALSE, pager.start, pager.count,
+					PostSortType.PostSortTypePublished,
+					SortDirectionType.SortDirectionTypeDescending);
 
 			if (posts != null) {
 				PagerHelper.moveForward(pager);
@@ -107,8 +111,7 @@ final class TagService implements ITagService {
 					}
 				}
 			}
-
-		} while (posts != null && posts.size() > 0);
+		} while (posts != null && posts.size() >= pager.count.intValue());
 
 		if (tagLookup.size() > 0) {
 			addTagBatch(tagLookup.values());
@@ -225,8 +228,6 @@ final class TagService implements ITagService {
 						ofy().save().entity(latest).now();
 					}
 				}
-
-				ofy().save().entity(latest);
 
 				return null;
 			}
