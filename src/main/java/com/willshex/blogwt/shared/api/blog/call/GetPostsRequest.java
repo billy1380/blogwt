@@ -17,6 +17,7 @@ import com.willshex.blogwt.shared.api.Request;
 public class GetPostsRequest extends Request {
 	public Pager pager;
 	public Boolean includePostContents;
+	public String tag;
 
 	@Override
 	public JsonObject toJson () {
@@ -27,6 +28,9 @@ public class GetPostsRequest extends Request {
 		JsonElement jsonIncludePostContents = includePostContents == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(includePostContents);
 		object.add("includePostContents", jsonIncludePostContents);
+		JsonElement jsonTag = tag == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(tag);
+		object.add("tag", jsonTag);
 		return object;
 	}
 
@@ -48,6 +52,12 @@ public class GetPostsRequest extends Request {
 						.getAsBoolean());
 			}
 		}
+		if (jsonObject.has("tag")) {
+			JsonElement jsonTag = jsonObject.get("tag");
+			if (jsonTag != null) {
+				tag = jsonTag.getAsString();
+			}
+		}
 	}
 
 	public GetPostsRequest pager (Pager pager) {
@@ -57,6 +67,11 @@ public class GetPostsRequest extends Request {
 
 	public GetPostsRequest includePostContents (Boolean includePostContents) {
 		this.includePostContents = includePostContents;
+		return this;
+	}
+
+	public GetPostsRequest tag (String tag) {
+		this.tag = tag;
 		return this;
 	}
 }

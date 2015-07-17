@@ -61,6 +61,8 @@ public class PostController extends AsyncDataProvider<Post> {
 		return one;
 	}
 
+	private String tag;
+
 	private Pager pager = PagerHelper.createDefaultPager().sortBy(
 			PostSortType.PostSortTypeCreated.toString());
 	private Request getPostsRequest;
@@ -72,6 +74,7 @@ public class PostController extends AsyncDataProvider<Post> {
 		input.pager = pager;
 		input.session = SessionController.get().sessionForApiCall();
 		input.includePostContents = Boolean.FALSE;
+		input.tag = tag;
 
 		if (getPostsRequest != null) {
 			getPostsRequest.cancel();
@@ -298,14 +301,31 @@ public class PostController extends AsyncDataProvider<Post> {
 	 * @return
 	 */
 	public String disqusId () {
-		return "";
-	}
+		return PropertyController.get().stringProperty("disqus.id");
+	};
 
 	/**
 	 * @return
 	 */
 	public String categoryId () {
-		return "";
+		return PropertyController.get().stringProperty("category.id");
+	};
+
+	/**
+	 * @param tag
+	 */
+	public void setTag (String tag) {
+		if (tag != this.tag) {
+			this.tag = tag;
+
+			PagerHelper.reset(pager);
+		}
+	}
+
+	public void clearTag () {
+		tag = null;
+
+		PagerHelper.reset(pager);
 	}
 
 }
