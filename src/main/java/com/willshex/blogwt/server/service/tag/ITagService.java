@@ -24,10 +24,10 @@ public interface ITagService extends IService {
 	public Tag getTag (Long id);
 
 	/**
-	* @param name
+	* @param slug
 	* @return
 	*/
-	public Tag getNamedTag (String name);
+	public Tag getSlugTag (String slug);
 
 	/**
 	* @param tag

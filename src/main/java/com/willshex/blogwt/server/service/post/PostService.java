@@ -11,6 +11,7 @@ package com.willshex.blogwt.server.service.post;
 import static com.willshex.blogwt.server.service.PersistenceService.ofy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -18,10 +19,12 @@ import java.util.Map;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
+import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.PostHelper;
 
@@ -66,6 +69,21 @@ final class PostService implements IPostService {
 		post.content.postKey = postKey;
 		ofy().save().entity(post.content).now();
 
+		if (post.tags != null) {
+			Tag tag;
+			for (String name : post.tags) {
+				tag = TagServiceProvider.provide().getSlugTag(
+						PostHelper.slugify(name));
+
+				if (tag == null) {
+					tag = TagServiceProvider.provide().addTag(
+							new Tag().name(name).posts(Arrays.asList(post)));
+				}
+
+				TagServiceProvider.provide().addTagPost(tag, post);
+			}
+		}
+
 		return post;
 	}
 
@@ -86,6 +104,22 @@ final class PostService implements IPostService {
 		}
 
 		ofy().save().entity(post).now();
+
+		if (post.tags != null) {
+			Tag tag;
+			for (String name : post.tags) {
+				tag = TagServiceProvider.provide().getSlugTag(
+						PostHelper.slugify(name));
+
+				if (tag == null) {
+					tag = TagServiceProvider.provide().addTag(
+							new Tag().name(name).posts(Arrays.asList(post)));
+				}
+
+				TagServiceProvider.provide().addTagPost(tag, post);
+			}
+		}
+
 		return post;
 	}
 
