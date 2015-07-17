@@ -147,12 +147,11 @@ final class TagService implements ITagService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.tag.ITagService#getNamedTag(java.
+	 * @see com.willshex.blogwt.server.service.tag.ITagService#getSlugTag(java.
 	 * lang.String) */
 	@Override
-	public Tag getNamedTag (String name) {
-		return ofy().load().type(Tag.class).filter("name", name).first().now();
+	public Tag getSlugTag (String slug) {
+		return ofy().load().type(Tag.class).filter("slug", slug).first().now();
 	}
 
 	/* (non-Javadoc)
