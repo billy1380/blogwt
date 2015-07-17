@@ -97,4 +97,16 @@ public class PagerHelper {
 
 		return pager;
 	}
+
+	public static Pager reset (Pager pager) {
+		if (pager != null) {
+			pager.start(DEFAULT_START)
+					.count(DEFAULT_COUNT)
+					.sortBy(DEFAULT_SORT_BY)
+					.sortDirection(
+							SortDirectionType.SortDirectionTypeDescending);
+		}
+
+		return pager;
+	}
 }
