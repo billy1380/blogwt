@@ -69,26 +69,13 @@ final class PostService implements IPostService {
 		post.content.postKey = postKey;
 		ofy().save().entity(post.content).now();
 
-		if (post.tags != null) {
-			Tag tag;
-			for (String name : post.tags) {
-				tag = TagServiceProvider.provide().getSlugTag(
-						PostHelper.slugify(name));
-
-				if (tag == null) {
-					tag = TagServiceProvider.provide().addTag(
-							new Tag().name(name).posts(Arrays.asList(post)));
-				}
-
-				TagServiceProvider.provide().addTagPost(tag, post);
-			}
-		}
+		updateTags(post);
 
 		return post;
 	}
 
 	@Override
-	public Post updatePost (Post post) {
+	public Post updatePost (Post post, Collection<String> removedTags) {
 		post.slug = PostHelper.slugify(post.title);
 
 		if (post.content != null) {
@@ -105,26 +92,17 @@ final class PostService implements IPostService {
 
 		ofy().save().entity(post).now();
 
-		if (post.tags != null) {
-			Tag tag;
-			for (String name : post.tags) {
-				tag = TagServiceProvider.provide().getSlugTag(
-						PostHelper.slugify(name));
-
-				if (tag == null) {
-					tag = TagServiceProvider.provide().addTag(
-							new Tag().name(name).posts(Arrays.asList(post)));
-				}
-
-				TagServiceProvider.provide().addTagPost(tag, post);
-			}
-		}
+		updateTags(post);
+		
+		deleteFromTags(post, removedTags);
 
 		return post;
 	}
 
 	@Override
 	public void deletePost (Post post) {
+		deleteFromTags(post, post.tags);
+
 		ofy().delete().entity(post).now();
 
 		ofy().delete().key(post.contentKey).now();
@@ -258,6 +236,43 @@ final class PostService implements IPostService {
 	public List<Post> getPostBatch (Collection<Long> ids) {
 		return new ArrayList<Post>(ofy().load().type(Post.class).ids(ids)
 				.values());
+	}
+
+	/**
+	 * @param post
+	 */
+	private void updateTags (Post post) {
+		if (post.listed == Boolean.TRUE && post.published != null
+				&& post.tags != null) {
+			Tag tag;
+			for (String name : post.tags) {
+				tag = TagServiceProvider.provide().getSlugTag(
+						PostHelper.slugify(name));
+
+				if (tag == null) {
+					tag = TagServiceProvider.provide().addTag(
+							new Tag().name(name).posts(Arrays.asList(post)));
+				}
+
+				TagServiceProvider.provide().addTagPost(tag, post);
+			}
+		}
+	}
+
+	/**
+	 * @param post
+	 * @param tags 
+	 */
+	private void deleteFromTags (Post post, Collection<String> tags) {
+		Tag tag;
+		for (String name : tags) {
+			tag = TagServiceProvider.provide().getSlugTag(
+					PostHelper.slugify(name));
+
+			if (tag != null) {
+				TagServiceProvider.provide().removeTagPost(tag, post);
+			}
+		}
 	}
 
 }

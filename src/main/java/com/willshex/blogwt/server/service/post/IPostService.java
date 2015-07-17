@@ -38,10 +38,12 @@ public interface IPostService extends IService {
 	public Post addPost (Post post);
 
 	/**
+	 * 
 	 * @param post
+	 * @param removedTags
 	 * @return
 	 */
-	public Post updatePost (Post post);
+	public Post updatePost (Post post, Collection<String> removedTags);
 
 	/**
 	 * @param post

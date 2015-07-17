@@ -132,6 +132,21 @@ public final class BlogApi extends ActionHandler {
 			input.post.content.body = updatedPost.content.body;
 			input.post.listed = updatedPost.listed;
 			input.post.summary = updatedPost.summary;
+
+			List<String> removedTags = null;
+			if (updatedPost.tags == null) {
+				removedTags = input.post.tags;
+			} else {
+				if (input.post.tags != null) {
+					removedTags = new ArrayList<String>();
+					for (String tag : input.post.tags) {
+						if (!updatedPost.tags.contains(tag)) {
+							removedTags.add(tag);
+						}
+					}
+				}
+			}
+
 			input.post.tags = updatedPost.tags;
 			input.post.title = updatedPost.title;
 
@@ -140,7 +155,7 @@ public final class BlogApi extends ActionHandler {
 				input.post.published = new Date();
 			}
 
-			PostServiceProvider.provide().updatePost(input.post);
+			PostServiceProvider.provide().updatePost(input.post, removedTags);
 
 			UserHelper.stripPassword(output.session == null ? null
 					: output.session.user);
