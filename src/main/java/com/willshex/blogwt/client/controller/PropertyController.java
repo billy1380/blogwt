@@ -148,4 +148,13 @@ public class PropertyController extends ListDataProvider<Property> {
 			}
 		});
 	}
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	public String stringProperty (String name) {
+		Property p = propertyLookup.get(name);
+		return p == null ? null : propertyLookup.get(name).value;
+	}
 }

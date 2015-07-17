@@ -1,9 +1,21 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style >
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
+	<ui:style>
 	
 	</ui:style>
 	<g:HTMLPanel>
-		
+		<h2 ui:field="elHeading">
+			Posts tagged with
+		</h2>
+
+		<g:HTMLPanel styleName="row">
+			<c:CellList ui:field="clPosts" styleName="col-sm-8" />
+			<p:TagsPart ui:field="coTags" styleName="col-sm-4" />
+		</g:HTMLPanel>
+
+		<p:NoneFoundPanel subject="posts" ui:field="pnlNoPosts" />
+
+		<p:BackToTop />
 	</g:HTMLPanel>
 </ui:UiBinder> 

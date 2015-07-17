@@ -106,6 +106,7 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 	}
 
 	private void refresh () {
+		PostController.get().clearTag();
 		clPosts.setVisibleRangeAndClearData(clPosts.getVisibleRange(), true);
 	}
 

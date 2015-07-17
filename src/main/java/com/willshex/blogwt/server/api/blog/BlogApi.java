@@ -22,11 +22,13 @@ import com.willshex.blogwt.server.api.validation.PropertyValidator;
 import com.willshex.blogwt.server.api.validation.RoleValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
+import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
+import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
@@ -46,6 +48,7 @@ import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Role;
+import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PagerHelper;
@@ -300,33 +303,52 @@ public final class BlogApi extends ActionHandler {
 				input.includePostContents = Boolean.FALSE;
 			}
 
-			if (input.session != null && input.session.user != null) {
-				output.posts = PostServiceProvider.provide()
-						.getUserViewablePosts(input.session.user, showAll,
-								input.includePostContents, input.pager.start,
-								input.pager.count,
-								PostSortType.fromString(input.pager.sortBy),
-								input.pager.sortDirection);
-			} else {
-				output.posts = PostServiceProvider.provide().getPosts(showAll,
-						input.includePostContents, input.pager.start,
-						input.pager.count, PostSortType.PostSortTypePublished,
-						SortDirectionType.SortDirectionTypeDescending);
+			boolean postsForTag = false;
+			if (input.tag != null && input.tag.length() > 0) {
+				postsForTag = true;
+				Tag tag = TagServiceProvider.provide().getSlugTag(input.tag);
+
+				if (tag != null) {
+					output.posts = PostServiceProvider.provide().getPostBatch(
+							PersistenceService.keysToIds(tag.postKeys));
+				}
 			}
 
-			Map<Key<User>, User> users = new HashMap<Key<User>, User>();
-
-			for (Post post : output.posts) {
-				if (users.get(post.authorKey) == null) {
-					users.put(
-							post.authorKey,
-							UserHelper.stripSensitive(UserServiceProvider
-									.provide()
-									.getUser(
-											Long.valueOf(post.authorKey.getId()))));
+			if (!postsForTag) {
+				if (input.session != null && input.session.user != null) {
+					output.posts = PostServiceProvider
+							.provide()
+							.getUserViewablePosts(
+									input.session.user,
+									showAll,
+									input.includePostContents,
+									input.pager.start,
+									input.pager.count,
+									PostSortType.fromString(input.pager.sortBy),
+									input.pager.sortDirection);
+				} else {
+					output.posts = PostServiceProvider.provide().getPosts(
+							showAll, input.includePostContents,
+							input.pager.start, input.pager.count,
+							PostSortType.PostSortTypePublished,
+							SortDirectionType.SortDirectionTypeDescending);
 				}
+			}
 
-				post.author = users.get(post.authorKey);
+			if (output.posts != null) {
+				Map<Key<User>, User> users = new HashMap<Key<User>, User>();
+
+				for (Post post : output.posts) {
+					if (users.get(post.authorKey) == null) {
+						users.put(post.authorKey, UserHelper
+								.stripSensitive(UserServiceProvider.provide()
+										.getUser(
+												Long.valueOf(post.authorKey
+														.getId()))));
+					}
+
+					post.author = users.get(post.authorKey);
+				}
 			}
 
 			output.pager = PagerHelper.moveForward(input.pager);
