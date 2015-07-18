@@ -52,11 +52,8 @@
 							</g:HTMLPanel>
 							<g:HTMLPanel styleName="control-label small" ui:field="pnlUsernameNote"
 								visible="false" />
-
-							<div class="text-right">
-								<g:InlineHyperlink text="Change password" ui:field="lnkChangePassword"
-									targetHistoryToken="{ChangePasswordPageType.asTargetHistoryToken}" />
-							</div>
+							<g:Hyperlink text="Change password" ui:field="lnkChangePassword"
+								styleName="text-right" targetHistoryToken="{ChangePasswordPageType.asTargetHistoryToken}" />
 						</g:HTMLPanel>
 
 						<g:HTMLPanel ui:field="pnlForename" styleName="form-group">
