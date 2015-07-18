@@ -20,6 +20,7 @@ import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.IsAuthorisedRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
+import com.willshex.blogwt.shared.api.user.call.RegisterUserRequest;
 import com.willshex.gson.json.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
@@ -28,7 +29,11 @@ public final class UserJsonServlet extends JsonServlet {
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
 		UserApi service = new UserApi();
-		if ("GetUsers".equals(action)) {
+		if ("RegisterUser".equals(action)) {
+			RegisterUserRequest input = new RegisterUserRequest();
+			input.fromJson(request);
+			output = service.registerUser(input).toString();
+		} else if ("GetUsers".equals(action)) {
 			GetUsersRequest input = new GetUsersRequest();
 			input.fromJson(request);
 			output = service.getUsers(input).toString();
