@@ -17,8 +17,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
@@ -80,7 +80,7 @@ public class ChangeDetailsPage extends Page implements
 	@UiField HTMLPanel pnlEmailNote;
 
 	@UiField Button btnUpdate;
-	@UiField InlineHyperlink lnkChangePassword;
+	@UiField Hyperlink lnkChangePassword;
 
 	private User user;
 
