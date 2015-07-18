@@ -55,6 +55,8 @@ import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
 import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
+import com.willshex.blogwt.shared.api.user.call.RegisterUserRequest;
+import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
@@ -65,6 +67,19 @@ import com.willshex.gson.json.service.shared.StatusType;
 
 public final class UserApi extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(UserApi.class.getName());
+
+	public RegisterUserResponse registerUser (RegisterUserRequest input) {
+		LOG.finer("Entering registerUser");
+		RegisterUserResponse output = new RegisterUserResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting registerUser");
+		return output;
+	}
 
 	public GetUsersResponse getUsers (GetUsersRequest input) {
 		LOG.finer("Entering getUsers");
