@@ -18,8 +18,10 @@ import com.github.rjeschke.txtmark.EmojiEmitter;
 import com.github.rjeschke.txtmark.MarkdownUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.markdown.plugin.CachedIncludePlugin;
 import com.willshex.blogwt.client.markdown.plugin.GalleryPlugin;
+import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
 
 /**
  * @author William Shakour (billy1380)
@@ -80,8 +82,17 @@ public class Processor extends MarkdownProcessor {
 		CachedIncludePlugin includePlugin = new CachedIncludePlugin(
 				ensureManager());
 		includePlugin.setProcessor(this);
+
+		String mapsApiKey = PropertyController.get().stringProperty(
+				"maps.api.key");
+
+		if (mapsApiKey != null && mapsApiKey.trim().length() == 0) {
+			mapsApiKey = null;
+		}
+
 		registerPlugins(new WebSequencePlugin(ensureManager()), includePlugin,
-				new GalleryPlugin());
+				new GalleryPlugin(), mapsApiKey == null ? null : new MapPlugin(
+						mapsApiKey));
 	}
 
 	public Processor () {
