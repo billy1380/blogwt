@@ -26,8 +26,8 @@ public class PropertyHelper {
 
 	public static final String MARKDOWN_MAPS_API_KEY = "markdown.maps.api.key";
 	public static final String POST_COMMENTS_ENABLED = "post.comments.enabled";
-	public static final String POST_DISQUS_ID = "post.disqus.id";
-	public static final String POST_CATEGORY_ID = "post.category.id";
+	public static final String POST_DISQUS_ID = "post.comments.disqus.id";
+	public static final String POST_CATEGORY_ID = "post.comments.disqus.category.id";
 
 	public static final String TITLE_DESCRIPTION = "Blog Title";
 	public static final String EXTENDED_TITLE_DESCRIPTION = "Extended Title (Short Description)";
@@ -102,5 +102,13 @@ public class PropertyHelper {
 		}
 
 		return properties;
+	}
+
+	/**
+	 * @param property
+	 * @return
+	 */
+	public static String value (Property property) {
+		return property == null ? null : property.value;
 	}
 }
