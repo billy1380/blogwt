@@ -7,24 +7,22 @@
 //
 package com.willshex.blogwt.client.page.admin;
 
-import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.SimplePager;
-import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
-import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
-import com.willshex.blogwt.client.part.NoneFoundPanel;
+import com.willshex.blogwt.client.part.property.StringPropertyPart;
+import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.datatype.Property;
-import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -37,86 +35,99 @@ public class PropertiesPage extends Page {
 
 	interface PropertiesPageUiBinder extends UiBinder<Widget, PropertiesPage> {}
 
-	@UiField(provided = true) CellTable<Property> tblProperties = new CellTable<Property>(
-			PagerHelper.DEFAULT_COUNT.intValue(),
-			BootstrapGwtCellTable.INSTANCE);
-	@UiField SimplePager pgrProperties;
-	@UiField NoneFoundPanel pnlNoProperties;
-	private SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
+	@UiField HTMLPanel pnlProperties;
+	@UiField SubmitButton btnUpdate;
 
 	public PropertiesPage () {
 		super(PageType.PropertiesPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
-		createColumns();
+		btnUpdate.removeFromParent();
+		addProperties();
+		pnlProperties.add(btnUpdate);
 
-		tblProperties.setEmptyTableWidget(pnlNoProperties);
-		PropertyController.get().addDataDisplay(tblProperties);
-		pgrProperties.setDisplay(tblProperties);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
+	@Override
+	protected void onAttach () {
+		super.onAttach();
+
+		ready();
+	}
+
+	@UiHandler("btnUpdate")
+	void onUpdateClicked (ClickEvent ce) {
+		if (isValid()) {
+			loading();
+			// update properties
+		} else {
+			showErrors();
+		}
+	}
+
+	private boolean isValid () {
+		// do client validation
+		return true;
+	}
+
+	private void showErrors () {
+
 	}
 
 	/**
 	 * 
 	 */
-	private void createColumns () {
-		TextColumn<Property> code = new TextColumn<Property>() {
+	private void addProperties () {
+		StringPropertyPart formPart = null;
+		boolean first = true;
 
-			@Override
-			public String getValue (Property object) {
-				return object.group;
+		for (Property property : PropertyHelper.properties()) {
+			formPart = new StringPropertyPart();
+
+			if (first) {
+				formPart.setAutofocus();
+				first = false;
 			}
-		};
 
-		TextColumn<Property> type = new TextColumn<Property>() {
+			formPart.setDescription(property.description);
+			formPart.setName(property.name);
+			formPart.setValue(PropertyController.get().stringProperty(
+					property.name));
 
-			@Override
-			public String getValue (Property object) {
-				return object.type.toString();
-			}
-		};
-
-		TextColumn<Property> name = new TextColumn<Property>() {
-
-			@Override
-			public String getValue (Property object) {
-				return object.name;
-			}
-		};
-
-		TextColumn<Property> value = new TextColumn<Property>() {
-
-			@Override
-			public String getValue (Property object) {
-				return object.value;
-			}
-		};
-
-		TextColumn<Property> description = new TextColumn<Property>() {
-
-			@Override
-			public String getValue (Property object) {
-				return object.description;
-			}
-		};
-
-		Column<Property, SafeHtml> edit = new Column<Property, SafeHtml>(
-				safeHtmlPrototype) {
-
-			@Override
-			public SafeHtml getValue (Property object) {
-				return SafeHtmlUtils
-						.fromSafeConstant("<a class=\"btn btn-default btn-xs\" href=\""
-								+ PageType.EditPropertyPageType.asHref("id",
-										object.id.toString()).asString()
-								+ "\" ><span class=\"glyphicon glyphicon-edit\"></span> edit<a>");
-			}
-		};
-
-		tblProperties.addColumn(code, "Group");
-		tblProperties.addColumn(type, "Type");
-		tblProperties.addColumn(name, "Name");
-		tblProperties.addColumn(value, "Value");
-		tblProperties.addColumn(description, "Description");
-		tblProperties.addColumn(edit);
+			pnlProperties.add(formPart);
+		}
 	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#reset() */
+	@Override
+	protected void reset () {
+		super.reset();
+	}
+
+	private void ready () {
+		btnUpdate.getElement().setInnerSafeHtml(
+				WizardDialog.WizardDialogTemplates.INSTANCE
+						.nextButton("Update"));
+
+		btnUpdate.setEnabled(true);
+
+		// enable properties
+	}
+
+	private void loading () {
+		btnUpdate.getElement().setInnerSafeHtml(
+				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
+						"Updating... ", Resources.RES.primaryLoader()
+								.getSafeUri()));
+
+		btnUpdate.setEnabled(false);
+
+		// disable properties
+	}
+
 }

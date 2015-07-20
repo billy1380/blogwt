@@ -1,0 +1,13 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="form-group">
+		<label class="control-label" ui:field="elDescription" />
+		<label class="small text-muted" ui:field="elName" />
+		<g:TextBox ui:field="txtValue" styleName="form-control" />
+		<g:HTMLPanel styleName="control-label small" ui:field="pnlValueNote"
+			visible="false" />
+	</g:HTMLPanel>
+</ui:UiBinder> 
