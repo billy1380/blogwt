@@ -9,9 +9,12 @@ package com.willshex.blogwt.client.page.admin;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,7 +37,7 @@ import com.willshex.blogwt.shared.helper.PropertyHelper;
  *
  */
 public class PropertiesPage extends Page implements
-		UpdatePropertiesEventHandler {
+		UpdatePropertiesEventHandler, ValueChangeHandler<String> {
 
 	private static PropertiesPageUiBinder uiBinder = GWT
 			.create(PropertiesPageUiBinder.class);
@@ -47,11 +50,6 @@ public class PropertiesPage extends Page implements
 	public PropertiesPage () {
 		super(PageType.PropertiesPageType);
 		initWidget(uiBinder.createAndBindUi(this));
-
-		btnUpdate.removeFromParent();
-		addProperties();
-		pnlProperties.add(btnUpdate);
-
 	}
 
 	/* (non-Javadoc)
@@ -64,6 +62,10 @@ public class PropertiesPage extends Page implements
 		register(DefaultEventBus.get().addHandlerToSource(
 				UpdatePropertiesEventHandler.TYPE, PropertyController.get(),
 				this));
+
+		btnUpdate.removeFromParent();
+		addProperties();
+		pnlProperties.add(btnUpdate);
 
 		ready();
 	}
@@ -116,6 +118,7 @@ public class PropertiesPage extends Page implements
 			formPart.setName(property.name);
 			formPart.setValue(PropertyController.get().stringProperty(
 					property.name));
+			register(formPart.addValueChangeHandler(this));
 
 			w = formPart;
 		} else {
@@ -129,6 +132,7 @@ public class PropertiesPage extends Page implements
 			formPart.setName(property.name);
 			formPart.setValue(PropertyController.get().stringProperty(
 					property.name));
+			register(formPart.addValueChangeHandler(this));
 
 			w = formPart;
 		}
@@ -188,6 +192,16 @@ public class PropertiesPage extends Page implements
 	public void updatePropertiesFailure (UpdatePropertiesRequest input,
 			Throwable caught) {
 		ready();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.gwt.event.logical.shared.ValueChangeHandler#onValueChange
+	 * (com.google.gwt.event.logical.shared.ValueChangeEvent) */
+	@Override
+	public void onValueChange (ValueChangeEvent<String> event) {
+		Window.alert(event.getValue());
 	}
 
 }
