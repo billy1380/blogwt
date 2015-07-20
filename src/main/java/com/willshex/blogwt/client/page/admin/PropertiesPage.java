@@ -20,6 +20,7 @@ import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.client.part.property.CommentPart;
 import com.willshex.blogwt.client.part.property.StringPropertyPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
@@ -92,15 +93,36 @@ public class PropertiesPage extends Page implements
 	 * 
 	 */
 	private void addProperties () {
-		StringPropertyPart formPart = null;
 		boolean first = true;
 
 		for (Property property : PropertyHelper.properties()) {
-			formPart = new StringPropertyPart();
+			pnlProperties.add(widget(property, first));
+			first = false;
+		}
+	}
+
+	/**
+	 * @param property
+	 * @param first
+	 * @return
+	 */
+	private Widget widget (Property property, boolean first) {
+		Widget w = null;
+
+		if (PropertyHelper.POST_COMMENTS_ENABLED.equals(property.name)) {
+			CommentPart formPart = new CommentPart();
+
+			formPart.setDescription(property.description);
+			formPart.setName(property.name);
+			formPart.setValue(PropertyController.get().stringProperty(
+					property.name));
+
+			w = formPart;
+		} else {
+			StringPropertyPart formPart = new StringPropertyPart();
 
 			if (first) {
 				formPart.setAutofocus();
-				first = false;
 			}
 
 			formPart.setDescription(property.description);
@@ -108,8 +130,10 @@ public class PropertiesPage extends Page implements
 			formPart.setValue(PropertyController.get().stringProperty(
 					property.name));
 
-			pnlProperties.add(formPart);
+			w = formPart;
 		}
+
+		return w;
 	}
 
 	/* (non-Javadoc)

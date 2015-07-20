@@ -66,4 +66,8 @@ public class StringPropertyPart extends Composite {
 		UiHelper.autoFocus(txtValue);
 	}
 
+	public String getValue () {
+		return txtValue.getValue();
+	}
+
 }
