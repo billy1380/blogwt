@@ -1,5 +1,5 @@
 //
-//  AllVendors.java
+//  Resources.java
 //  blogwt
 //
 //  Created by William Shakour (billy1380) on 20 Dec 2014.
