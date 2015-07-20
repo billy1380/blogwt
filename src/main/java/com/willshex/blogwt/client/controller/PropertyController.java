@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -24,11 +25,16 @@ import com.willshex.blogwt.client.api.blog.BlogService;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
+import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
+import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler.SetupBlogFailure;
 import com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler.SetupBlogSuccess;
+import com.willshex.blogwt.shared.api.blog.call.event.UpdatePropertiesEventHandler.UpdatePropertiesFailure;
+import com.willshex.blogwt.shared.api.blog.call.event.UpdatePropertiesEventHandler.UpdatePropertiesSuccess;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
@@ -154,7 +160,57 @@ public class PropertyController extends ListDataProvider<Property> {
 	 * @return
 	 */
 	public String stringProperty (String name) {
-		Property p = propertyLookup.get(name);
-		return p == null ? null : propertyLookup.get(name).value;
+		return PropertyHelper.value(propertyLookup.get(name));
+	}
+
+	public void updateProperties (List<Property> properties) {
+		List<Property> changed = null;
+
+		String existingPropertyValue;
+		for (Property property : properties) {
+			existingPropertyValue = PropertyHelper.value(propertyLookup
+					.get(property.name));
+
+			if ((existingPropertyValue == null && !PropertyHelper
+					.isEmpty(property))
+					|| !property.value.equals(existingPropertyValue)) {
+				if (changed == null) {
+					changed = new ArrayList<Property>();
+				}
+
+				changed.add(property);
+			}
+		}
+
+		if (changed != null) {
+			final UpdatePropertiesRequest input = SessionController.get()
+					.setSession(
+							ApiHelper.setAccessCode(
+									new UpdatePropertiesRequest()).properties(
+									changed));
+
+			ApiHelper.createBlogClient().updateProperties(input,
+					new AsyncCallback<UpdatePropertiesResponse>() {
+
+						@Override
+						public void onSuccess (UpdatePropertiesResponse output) {
+							if (output != null
+									&& output.status == StatusType.StatusTypeSuccess) {
+								GWT.log("Properties have been updated successfully... reload to see the effects.");
+							}
+
+							DefaultEventBus.get().fireEventFromSource(
+									new UpdatePropertiesSuccess(input, output),
+									PropertyController.this);
+						}
+
+						@Override
+						public void onFailure (Throwable caught) {
+							DefaultEventBus.get().fireEventFromSource(
+									new UpdatePropertiesFailure(input, caught),
+									PropertyController.this);
+						}
+					});
+		}
 	}
 }

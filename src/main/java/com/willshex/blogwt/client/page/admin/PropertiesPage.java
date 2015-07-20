@@ -15,12 +15,16 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.property.StringPropertyPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
+import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
+import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse;
+import com.willshex.blogwt.shared.api.blog.call.event.UpdatePropertiesEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
@@ -28,7 +32,8 @@ import com.willshex.blogwt.shared.helper.PropertyHelper;
  * @author William Shakour (billy1380)
  *
  */
-public class PropertiesPage extends Page {
+public class PropertiesPage extends Page implements
+		UpdatePropertiesEventHandler {
 
 	private static PropertiesPageUiBinder uiBinder = GWT
 			.create(PropertiesPageUiBinder.class);
@@ -55,6 +60,10 @@ public class PropertiesPage extends Page {
 	protected void onAttach () {
 		super.onAttach();
 
+		register(DefaultEventBus.get().addHandlerToSource(
+				UpdatePropertiesEventHandler.TYPE, PropertyController.get(),
+				this));
+
 		ready();
 	}
 
@@ -62,7 +71,9 @@ public class PropertiesPage extends Page {
 	void onUpdateClicked (ClickEvent ce) {
 		if (isValid()) {
 			loading();
-			// update properties
+
+			PropertyController.get().updateProperties(
+					PropertyHelper.properties());
 		} else {
 			showErrors();
 		}
@@ -128,6 +139,31 @@ public class PropertiesPage extends Page {
 		btnUpdate.setEnabled(false);
 
 		// disable properties
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.blog.call.event.UpdatePropertiesEventHandler
+	 * #updatePropertiesSuccess(com.willshex.blogwt.shared.api.blog.call.
+	 * UpdatePropertiesRequest,
+	 * com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse) */
+	@Override
+	public void updatePropertiesSuccess (UpdatePropertiesRequest input,
+			UpdatePropertiesResponse output) {
+		ready();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.blog.call.event.UpdatePropertiesEventHandler
+	 * #updatePropertiesFailure(com.willshex.blogwt.shared.api.blog.call.
+	 * UpdatePropertiesRequest, java.lang.Throwable) */
+	@Override
+	public void updatePropertiesFailure (UpdatePropertiesRequest input,
+			Throwable caught) {
+		ready();
 	}
 
 }
