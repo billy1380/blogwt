@@ -1,15 +1,24 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-    xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
-    <ui:style>
-    
-    </ui:style>
-    <g:HTMLPanel>
-        <h2>Properties</h2>
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="container">
+		<div class="row">
+			<div class="col-sm-4 col-sm-offset-4">
+				<h2>Properties</h2>
+				<g:FormPanel ui:field="frmProperties">
+					<g:HTMLPanel ui:field="pnlProperties">
 
-        <c:CellTable ui:field="tblProperties" styleName="col-sm-12 table table-striped" />
-        <c:SimplePager ui:field="pgrProperties" location="LEFT" />
-
-        <p:NoneFoundPanel subject="properties" ui:field="pnlNoProperties" />
-    </g:HTMLPanel>
+						<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary pull-right"
+							text="Update">
+							Update
+						</g:SubmitButton>
+					</g:HTMLPanel>
+				</g:FormPanel>
+			</div>
+			<div class="col-sm-4"></div>
+		</div>
+	</g:HTMLPanel>
 </ui:UiBinder> 

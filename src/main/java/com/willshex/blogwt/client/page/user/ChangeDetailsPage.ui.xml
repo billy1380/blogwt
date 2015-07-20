@@ -6,10 +6,6 @@
 		text-align: center;
 	}
 	
-	.smaller {
-		font-size: smaller;
-	}
-	
 	.parent {
 		position: relative;
 		overflow: hidden;
@@ -25,10 +21,6 @@
 		left: -9999px;
 		right: -9999px;
 		margin: auto;
-	}
-	
-	.form-signin .btn {
-		margin-bottom: 10px;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">
@@ -73,7 +65,7 @@
 						<g:HTMLPanel ui:field="pnlEmail" styleName="form-group">
 							<label class="control-label">E-mail</label>
 							<g:TextBox ui:field="txtEmail" styleName="form-control" />
-							<span class="text-muted {style.smaller}">
+							<span class="text-muted small">
 								Changing e-mail address will change your avatar (
 								<a href="https://en.gravatar.com/" target="_blank">Gravatar</a>
 								)
@@ -82,8 +74,8 @@
 								visible="false" />
 						</g:HTMLPanel>
 
-						<g:SubmitButton ui:field="btnUpdate"
-							styleName="{style.btn} btn btn-primary pull-right" text="Update">
+						<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary pull-right"
+							text="Update">
 							Update
 						</g:SubmitButton>
 					</g:HTMLPanel>

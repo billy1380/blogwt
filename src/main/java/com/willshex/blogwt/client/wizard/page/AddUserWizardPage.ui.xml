@@ -2,10 +2,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:import field="com.willshex.blogwt.client.page.PageType.*" />
 	<ui:style>
-	.smaller {
-		font-size: smaller;
-	}
-	
 	.top-of-pair {
 		margin-bottom: -1px;
 		border-bottom-right-radius: 0;
@@ -61,7 +57,7 @@
 		<g:HTMLPanel ui:field="pnlEmail" styleName="form-group">
 			<label class="control-label">E-mail</label>
 			<g:TextBox ui:field="txtEmail" styleName="form-control" />
-			<span class="text-muted {style.smaller}">
+			<span class="text-muted small">
 				Changing e-mail address will change your avatar (
 				<a href="https://en.gravatar.com/" target="_blank">Gravatar</a>
 				)

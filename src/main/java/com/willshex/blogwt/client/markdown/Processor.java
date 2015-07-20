@@ -92,7 +92,7 @@ public class Processor extends MarkdownProcessor {
 
 		registerPlugins(new WebSequencePlugin(ensureManager()), includePlugin,
 				new GalleryPlugin(), mapsApiKey == null ? null : new MapPlugin(
-						mapsApiKey));
+						mapsApiKey, ensureManager()));
 	}
 
 	public Processor () {
