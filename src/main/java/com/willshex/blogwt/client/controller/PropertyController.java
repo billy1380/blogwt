@@ -84,7 +84,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	public SafeUri copyrightHolderUrl () {
 		Property p = propertyLookup.get(PropertyHelper.COPYRIGHT_URL);
 		return UriUtils
-				.fromSafeConstant(PropertyHelper.empty(p) ? "https://www.willshex.com"
+				.fromSafeConstant(PropertyHelper.isEmpty(p) ? "https://www.willshex.com"
 						: p.value);
 	}
 
@@ -93,7 +93,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	 */
 	public String copyrightHolder () {
 		Property p = propertyLookup.get(PropertyHelper.COPYRIGHT_HOLDER);
-		return PropertyHelper.empty(p) ? "WillShex Limited" : p.value;
+		return PropertyHelper.isEmpty(p) ? "WillShex Limited" : p.value;
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	 */
 	public String title () {
 		Property p = propertyLookup.get(PropertyHelper.TITLE);
-		return PropertyHelper.empty(p) ? "Blogwt" : p.value;
+		return PropertyHelper.isEmpty(p) ? "Blogwt" : p.value;
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	 */
 	public String extendedTitle () {
 		Property p = propertyLookup.get(PropertyHelper.EXTENDED_TITLE);
-		return PropertyHelper.empty(p) ? "a blog is a blog" : p.value;
+		return PropertyHelper.isEmpty(p) ? "a blog is a blog" : p.value;
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	 */
 	public Date started () {
 		Property p = propertyLookup.get(PropertyHelper.TITLE);
-		return PropertyHelper.empty(p) ? new Date(1199188800000L) : p.created;
+		return PropertyHelper.isEmpty(p) ? new Date(1199188800000L) : p.created;
 	}
 
 	private static native String properties ()

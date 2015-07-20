@@ -39,10 +39,14 @@ import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetTagsRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetTagsResponse;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
+import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
+import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
@@ -417,6 +421,33 @@ public final class BlogApi extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting setupBlog");
+		return output;
+	}
+
+	public GetTagsResponse getTags (GetTagsRequest input) {
+		LOG.finer("Entering getTags");
+		GetTagsResponse output = new GetTagsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getTags");
+		return output;
+	}
+
+	public UpdatePropertiesResponse updateProperties (
+			UpdatePropertiesRequest input) {
+		LOG.finer("Entering updateProperties");
+		UpdatePropertiesResponse output = new UpdatePropertiesResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting updateProperties");
 		return output;
 	}
 }
