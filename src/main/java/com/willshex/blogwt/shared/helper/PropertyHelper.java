@@ -39,6 +39,8 @@ public class PropertyHelper {
 	public static final String POST_DISQUS_ID_DESCRIPTION = "Disqus Identifier";
 	public static final String POST_CATEGORY_ID_DESCRIPTION = "Disqus Category Identifier";
 
+	private static List<Property> properties = null;
+
 	public static Map<String, Property> toLookup (List<Property> properties) {
 		Map<String, Property> lookup = new HashMap<String, Property>();
 		for (Property property : properties) {
@@ -70,7 +72,7 @@ public class PropertyHelper {
 				.group("Setup").type("string");
 	}
 
-	public static boolean empty (Property property) {
+	public static boolean isEmpty (Property property) {
 		return property == null || property.value == null
 				|| property.value.length() == 0;
 	}
@@ -79,22 +81,26 @@ public class PropertyHelper {
 	 * @return
 	 */
 	public static List<Property> properties () {
-		return Arrays.asList(
-				createTitle(null),
-				createExtendedTitle(null),
-				createCopyrightHolder(null),
-				createCopyrightUrl(null),
-				new Property().name(MARKDOWN_MAPS_API_KEY)
-						.description(MARKDOWN_MAPS_API_KEY_DESCRIPTION)
-						.group("Functional").type("string"),
-				new Property().name(POST_COMMENTS_ENABLED)
-						.description(POST_COMMENTS_ENABLED_DESCRIPTION)
-						.group("Functional").type("string"),
-				new Property().name(POST_DISQUS_ID)
-						.description(POST_DISQUS_ID_DESCRIPTION)
-						.group("Functional").type("string"),
-				new Property().name(POST_CATEGORY_ID)
-						.description(POST_CATEGORY_ID_DESCRIPTION)
-						.group("Functional").type("string"));
+		if (properties == null) {
+			properties = Arrays.asList(
+					createTitle(null),
+					createExtendedTitle(null),
+					createCopyrightHolder(null),
+					createCopyrightUrl(null),
+					new Property().name(MARKDOWN_MAPS_API_KEY)
+							.description(MARKDOWN_MAPS_API_KEY_DESCRIPTION)
+							.group("Functional").type("string"),
+					new Property().name(POST_COMMENTS_ENABLED)
+							.description(POST_COMMENTS_ENABLED_DESCRIPTION)
+							.group("Functional").type("string"),
+					new Property().name(POST_DISQUS_ID)
+							.description(POST_DISQUS_ID_DESCRIPTION)
+							.group("Functional").type("string"),
+					new Property().name(POST_CATEGORY_ID)
+							.description(POST_CATEGORY_ID_DESCRIPTION)
+							.group("Functional").type("string"));
+		}
+
+		return properties;
 	}
 }
