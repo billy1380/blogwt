@@ -11,6 +11,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
@@ -18,7 +19,7 @@ import com.google.gwt.user.client.ui.HasValue;
  *
  */
 public abstract class AbstractPropertyPart extends Composite implements
-		HasValue<String> {
+		HasValue<String>, HasName {
 
 	protected String value;
 	

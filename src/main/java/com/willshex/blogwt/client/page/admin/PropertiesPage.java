@@ -9,6 +9,7 @@ package com.willshex.blogwt.client.page.admin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,8 +18,8 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
@@ -51,6 +52,7 @@ public class PropertiesPage extends Page implements
 	@UiField SubmitButton btnUpdate;
 
 	private List<Widget> propertyWidgets;
+	private Map<String, Property> propertyLookup;
 
 	public PropertiesPage () {
 		super(PageType.PropertiesPageType);
@@ -80,8 +82,7 @@ public class PropertiesPage extends Page implements
 		if (isValid()) {
 			loading();
 
-			PropertyController.get().updateProperties(
-					PropertyHelper.properties());
+			PropertyController.get().updateProperties(propertyLookup.values());
 		} else {
 			showErrors();
 		}
@@ -102,7 +103,11 @@ public class PropertiesPage extends Page implements
 	private void addProperties () {
 		boolean first = true;
 		Widget w;
-		for (Property property : PropertyHelper.properties()) {
+		List<Property> values;
+		propertyLookup = PropertyHelper.toLookup(values = PropertyHelper
+				.properties());
+
+		for (Property property : values) {
 			pnlProperties.add(w = widget(property, first));
 
 			if (propertyWidgets == null) {
@@ -220,7 +225,14 @@ public class PropertiesPage extends Page implements
 	 * (com.google.gwt.event.logical.shared.ValueChangeEvent) */
 	@Override
 	public void onValueChange (ValueChangeEvent<String> event) {
-		Window.alert(event.getValue());
+		String name = null;
+		if (event.getSource() instanceof HasName) {
+			name = ((HasName) event.getSource()).getName();
+		}
+
+		if (name != null) {
+			propertyLookup.get(name).value = event.getValue();
+		}
 	}
 
 }

@@ -55,13 +55,6 @@ public class CommentPart extends AbstractPropertyPart {
 		elDescription.setInnerText(description);
 	}
 
-	/**
-	 * @param name
-	 */
-	public void setName (String name) {
-		elName.setInnerText(name);
-	}
-
 	/* (non-Javadoc)
 	 * 
 	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object,
@@ -82,7 +75,7 @@ public class CommentPart extends AbstractPropertyPart {
 			rdoDisqus.setValue(Boolean.TRUE, true);
 			break;
 		}
-		
+
 		this.value = value;
 
 		if (value.equals(oldValue)) { return; }
@@ -105,5 +98,21 @@ public class CommentPart extends AbstractPropertyPart {
 			setValue(vce.getSource() == rdoNone ? NONE_VALUE : DISQUS_VALUE,
 					true);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasName#getName() */
+	@Override
+	public String getName () {
+		return elName.getInnerText();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasName#setName(java.lang.String) */
+	@Override
+	public void setName (String name) {
+		elName.setInnerText(name);
 	}
 }
