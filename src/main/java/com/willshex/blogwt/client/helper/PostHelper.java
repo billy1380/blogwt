@@ -19,13 +19,13 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.willshex.blogwt.client.markdown.Processor;
+import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class PostHelper extends
-		com.willshex.blogwt.shared.helper.PostHelper {
+public class PostHelper extends com.willshex.blogwt.shared.helper.PostHelper {
 
 	private static MarkdownProcessor processor;
 	private static final PluginContentReadyEventHandler DEFAULT_PLUGIN_READY_HANDLER = new PluginContentReadyEventHandler() {
@@ -39,6 +39,12 @@ public class PostHelper extends
 
 				if (el != null && content != null) {
 					el.setInnerHTML(content);
+				}
+			} else if (plugin instanceof MapPlugin) {
+				Element el = Document.get().getElementById(id);
+
+				if (el != null) {
+					MapHelper.showMap(el, lines, params);
 				}
 			}
 		}
