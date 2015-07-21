@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
@@ -71,6 +72,33 @@ public class PropertyValidator {
 
 	public static Property lookup (Property property, String name)
 			throws InputValidationException {
-		return property;
+		if (property == null)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, type + ": " + name);
+
+		boolean isIdLookup = false, isNameLookup = false;
+		if (property.id != null) {
+			isIdLookup = true;
+		} else if (property.name != null) {
+			isNameLookup = true;
+		}
+
+		if (!(isIdLookup || isNameLookup))
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNoLookup, type + ": " + name);
+
+		Property lookupProperty;
+
+		if (isIdLookup) {
+			lookupProperty = PropertyServiceProvider.provide().getProperty(property.id);
+		} else {
+			lookupProperty = PropertyServiceProvider.provide().getNamedProperty(property.name);
+		}
+
+		if (lookupProperty == null)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNotFound, type + ": " + name);
+
+		return lookupProperty;
 	}
 }
