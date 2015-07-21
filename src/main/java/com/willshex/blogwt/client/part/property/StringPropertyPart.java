@@ -48,13 +48,6 @@ public class StringPropertyPart extends AbstractPropertyPart {
 	}
 
 	/**
-	 * @param name
-	 */
-	public void setName (String name) {
-		elName.setInnerText(name);
-	}
-
-	/**
 	 */
 	public void setAutofocus () {
 		UiHelper.autoFocus(txtValue);
@@ -92,6 +85,22 @@ public class StringPropertyPart extends AbstractPropertyPart {
 	@Override
 	public String getValue () {
 		return value;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasName#getName() */
+	@Override
+	public String getName () {
+		return elName.getInnerText();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.HasName#setName(java.lang.String) */
+	@Override
+	public void setName (String name) {
+		elName.setInnerText(name);
 	}
 
 }

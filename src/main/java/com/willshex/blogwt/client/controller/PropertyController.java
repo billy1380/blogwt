@@ -8,6 +8,7 @@
 package com.willshex.blogwt.client.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -163,17 +164,26 @@ public class PropertyController extends ListDataProvider<Property> {
 		return PropertyHelper.value(propertyLookup.get(name));
 	}
 
-	public void updateProperties (List<Property> properties) {
+	public void updateProperties (Collection<Property> properties) {
 		List<Property> changed = null;
 
 		String existingPropertyValue;
+		boolean addToChanged;
 		for (Property property : properties) {
+			addToChanged = false;
+
 			existingPropertyValue = PropertyHelper.value(propertyLookup
 					.get(property.name));
 
-			if ((existingPropertyValue == null && !PropertyHelper
-					.isEmpty(property))
-					|| !property.value.equals(existingPropertyValue)) {
+			if (!PropertyHelper.isEmpty(property)) {
+				if (existingPropertyValue == null) {
+					addToChanged = true;
+				} else if (!property.value.equals(existingPropertyValue)) {
+					addToChanged = true;
+				}
+			}
+
+			if (addToChanged) {
 				if (changed == null) {
 					changed = new ArrayList<Property>();
 				}

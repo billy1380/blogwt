@@ -442,6 +442,44 @@ public final class BlogApi extends ActionHandler {
 		LOG.finer("Entering updateProperties");
 		UpdatePropertiesResponse output = new UpdatePropertiesResponse();
 		try {
+			ApiValidator.notNull(input, UpdatePropertiesRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			List<Role> roles = new ArrayList<Role>();
+			roles.add(RoleHelper.createAdmin());
+
+			UserValidator.authorisation(input.session.user, roles, null,
+					"input.session.user");
+
+			List<Property> updatedProperties = PropertyValidator.validateAll(
+					input.properties, "input.properties");
+
+			Property existingProperty = null;
+			boolean found;
+			for (Property property : updatedProperties) {
+				found = false;
+				try {
+					existingProperty = PropertyValidator.lookup(property,
+							"input.properties[n]");
+					found = true;
+				} catch (InputValidationException ex) {
+					LOG.info("Property [" + property.name
+							+ "] does not exist. Will add with value ["
+							+ property.value + "].");
+				}
+
+				if (found) {
+					existingProperty.value = property.value;
+					PropertyServiceProvider.provide().updateProperty(existingProperty);
+				} else {
+					PropertyServiceProvider.provide().addProperty(property);
+				}
+			}
+
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

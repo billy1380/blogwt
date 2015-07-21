@@ -106,13 +106,7 @@ public class MainServlet extends ContextAwareServlet {
 		if (title != null) {
 			appendSession(scriptVariables);
 			scriptVariables.append("\n");
-			appendProperties(scriptVariables, title,
-					propertyService
-							.getNamedProperty(PropertyHelper.EXTENDED_TITLE),
-					propertyService
-							.getNamedProperty(PropertyHelper.COPYRIGHT_HOLDER),
-					propertyService
-							.getNamedProperty(PropertyHelper.COPYRIGHT_URL));
+			appendProperties(scriptVariables);
 			scriptVariables.append("\n");
 			appendPages(scriptVariables);
 			scriptVariables.append("\n");
@@ -183,9 +177,11 @@ public class MainServlet extends ContextAwareServlet {
 	 * @param scriptVariables
 	 * @param properties
 	 */
-	private void appendProperties (StringBuffer scriptVariables,
-			Property... properties) {
-		if (properties.length >= 0) {
+	private void appendProperties (StringBuffer scriptVariables) {
+		List<Property> properties = PropertyServiceProvider.provide()
+				.getProperties();
+
+		if (properties.size() >= 0) {
 			scriptVariables.append("var properties='[");
 
 			boolean first = true;
