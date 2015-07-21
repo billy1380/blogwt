@@ -7,6 +7,9 @@
 //
 package com.willshex.blogwt.client.page.admin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -46,6 +49,8 @@ public class PropertiesPage extends Page implements
 
 	@UiField HTMLPanel pnlProperties;
 	@UiField SubmitButton btnUpdate;
+
+	private List<Widget> propertyWidgets;
 
 	public PropertiesPage () {
 		super(PageType.PropertiesPageType);
@@ -96,9 +101,15 @@ public class PropertiesPage extends Page implements
 	 */
 	private void addProperties () {
 		boolean first = true;
-
+		Widget w;
 		for (Property property : PropertyHelper.properties()) {
-			pnlProperties.add(widget(property, first));
+			pnlProperties.add(w = widget(property, first));
+
+			if (propertyWidgets == null) {
+				propertyWidgets = new ArrayList<Widget>();
+			}
+
+			propertyWidgets.add(w);
 			first = false;
 		}
 	}
@@ -146,6 +157,14 @@ public class PropertiesPage extends Page implements
 	@Override
 	protected void reset () {
 		super.reset();
+
+		if (propertyWidgets != null) {
+			for (Widget widget : propertyWidgets) {
+				widget.removeFromParent();
+			}
+
+			propertyWidgets.clear();
+		}
 	}
 
 	private void ready () {
