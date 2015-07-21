@@ -22,6 +22,7 @@ import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.markdown.plugin.CachedIncludePlugin;
 import com.willshex.blogwt.client.markdown.plugin.GalleryPlugin;
 import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -84,7 +85,7 @@ public class Processor extends MarkdownProcessor {
 		includePlugin.setProcessor(this);
 
 		String mapsApiKey = PropertyController.get().stringProperty(
-				"maps.api.key");
+				PropertyHelper.MARKDOWN_MAPS_API_KEY);
 
 		if (mapsApiKey != null && mapsApiKey.trim().length() == 0) {
 			mapsApiKey = null;
