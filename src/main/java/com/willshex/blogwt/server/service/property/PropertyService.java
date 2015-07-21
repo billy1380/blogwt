@@ -11,6 +11,7 @@ import static com.willshex.blogwt.server.service.PersistenceService.ofy;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import com.googlecode.objectify.Key;
 import com.willshex.blogwt.shared.api.datatype.Property;
@@ -26,10 +27,8 @@ final class PropertyService implements IPropertyService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.services.property.IPropertyService
-	 * #addProperty(com.willshex.blogwt.shared.api.datatypes.Property
-	 * ) */
+	 * @see com.willshex.blogwt.server.services.property.IPropertyService
+	 * #addProperty(com.willshex.blogwt.shared.api.datatypes.Property ) */
 	@Override
 	public Property addProperty (Property property) {
 		if (property.created == null) {
@@ -43,10 +42,8 @@ final class PropertyService implements IPropertyService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.services.property.IPropertyService
-	 * #updateProperty(com.willshex.blogwt.shared.api.datatypes
-	 * .Property) */
+	 * @see com.willshex.blogwt.server.services.property.IPropertyService
+	 * #updateProperty(com.willshex.blogwt.shared.api.datatypes .Property) */
 	@Override
 	public Property updateProperty (Property property) {
 		ofy().save().entity(property).now();
@@ -55,10 +52,8 @@ final class PropertyService implements IPropertyService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.services.property.IPropertyService
-	 * #deleteProperty(com.willshex.blogwt.shared.api.datatypes
-	 * .Property) */
+	 * @see com.willshex.blogwt.server.services.property.IPropertyService
+	 * #deleteProperty(com.willshex.blogwt.shared.api.datatypes .Property) */
 	@Override
 	public void deleteProperty (Property property) {
 		ofy().delete().entity(property).now();
@@ -66,8 +61,7 @@ final class PropertyService implements IPropertyService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.services.property.IPropertyService
+	 * @see com.willshex.blogwt.server.services.property.IPropertyService
 	 * #getNamedProperty(java.lang.String) */
 	@Override
 	public Property getNamedProperty (String name) {
@@ -89,6 +83,16 @@ final class PropertyService implements IPropertyService {
 		}
 
 		ofy().save().entities(properties).now();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.property.IPropertyService#getProperties
+	 * () */
+	@Override
+	public List<Property> getProperties () {
+		return ofy().load().type(Property.class).list();
 	}
 
 }
