@@ -38,9 +38,13 @@ public class UserValidator extends ApiValidator {
 			Collection<Permission> permissions, String name)
 			throws AuthorisationException {
 
-		for (Role role : roles) {}
+		if (roles != null) {
+			for (Role role : roles) {}
+		}
 
-		for (Permission permission : permissions) {}
+		if (permissions != null) {
+			for (Permission permission : permissions) {}
+		}
 	}
 
 	public static User lookup (User user, String name)
