@@ -114,10 +114,12 @@ public class MainServlet extends ContextAwareServlet {
 			scriptVariables.append("\n");
 		}
 
+		String pageTitle = (title == null ? "Blogwt" : title.value);
+
 		RESPONSE.get()
 				.getOutputStream()
-				.print(String.format(PAGE_FORMAT, (title == null ? "Blogwt"
-						: title.value), scriptVariables.toString()));
+				.print(String.format(PAGE_FORMAT, pageTitle + " (RSS feed)",
+						pageTitle, scriptVariables.toString()));
 
 	}
 

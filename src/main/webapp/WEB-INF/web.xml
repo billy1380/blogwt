@@ -26,6 +26,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet>
 
 	<servlet>
+		<servlet-name>Feed</servlet-name>
+		<servlet-class>com.willshex.blogwt.server.FeedServlet</servlet-class>
+		<init-param>
+			<param-name>default.feed.type</param-name>
+			<param-value>rss_2.0</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet>
 		<servlet-name>Dev</servlet-name>
 		<servlet-class>com.willshex.blogwt.server.DevServlet</servlet-class>
 	</servlet>
@@ -73,6 +82,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet-mapping>
 		<servlet-name>Dev</servlet-name>
 		<url-pattern>/dev</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Feed</servlet-name>
+		<url-pattern>/feed</url-pattern>
 	</servlet-mapping>
 
 	<!-- Objectify -->

@@ -35,7 +35,7 @@ import com.willshex.service.ContextAwareServlet;
 public class SiteMapServlet extends ContextAwareServlet {
 
 	private static final long serialVersionUID = 3133978953838954164L;
-
+	private static final String MIME_TYPE = "application/xml; charset=UTF-8";
 	private static final String LOC_FORMAT = "    <loc>%s/%s</loc>";
 
 	/* (non-Javadoc)
@@ -54,7 +54,7 @@ public class SiteMapServlet extends ContextAwareServlet {
 		HttpServletResponse response = RESPONSE.get();
 		PrintWriter p = response.getWriter();
 
-		response.setContentType("text/xml");
+		response.setContentType(MIME_TYPE);
 
 		p.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		p.println("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
