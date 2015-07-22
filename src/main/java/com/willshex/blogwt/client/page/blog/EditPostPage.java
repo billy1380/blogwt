@@ -16,6 +16,7 @@ import gwtupload.client.PreloadedImage;
 import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -29,6 +30,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -38,8 +40,10 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.ListDataProvider;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.cell.blog.TagCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PostController;
@@ -50,6 +54,7 @@ import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.client.part.InlineBootstrapGwtCellList;
 import com.willshex.blogwt.client.part.MarkdownToolbar;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
@@ -64,8 +69,10 @@ import com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
+import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
+import com.willshex.blogwt.shared.helper.TagHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -106,6 +113,12 @@ public class EditPostPage extends Page implements
 	@UiField HTMLPanel pnlImagePreviews;
 	@UiField MarkdownToolbar tbrSummary;
 	@UiField MarkdownToolbar tbrContent;
+
+	@UiField(provided = true) CellList<Tag> clTags = new CellList<Tag>(
+			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
+
+	private ListDataProvider<Tag> tagList = new ListDataProvider<Tag>();
+
 	private Map<String, Resource> resources;
 	private HTMLPanel currentResourceRow;
 
@@ -190,6 +203,8 @@ public class EditPostPage extends Page implements
 		tbrSummary.setText(txtSummary);
 		tbrContent.setText(txtContent);
 
+		tagList.addDataDisplay(clTags);
+
 	}
 
 	/* (non-Javadoc)
@@ -257,10 +272,13 @@ public class EditPostPage extends Page implements
 		on.setInnerText(DateTimeHelper.ago(PropertyController.get().started()));
 		pnlPreview.getElement().appendChild(on);
 
-		DivElement tags = d.createDivElement();
-		tags.getStyle().setColor("green");
-		tags.setInnerText(txtTags.getText());
-		pnlPreview.getElement().appendChild(tags);
+		tagList.getList().clear();
+		List<String> tags = TagHelper.convertToTagList(txtTags.getValue());
+		if (tags != null) {
+			for (String tag : tags) {
+				tagList.getList().add(new Tag().name(tag));
+			}
+		}
 
 		DivElement summary = d.createDivElement();
 		summary.setInnerHTML(markup(txtSummary));
@@ -500,6 +518,8 @@ public class EditPostPage extends Page implements
 		if (resources != null) {
 			resources.clear();
 		}
+
+		tagList.getList().clear();
 
 		// TODO: hide error messages etc
 

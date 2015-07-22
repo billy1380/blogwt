@@ -7,6 +7,10 @@
 	.bottom-margin {
 		margin-bottom: 10px;
 	}
+	
+	.tags {
+		margin: 20px 0 10px 0;
+	}
 	</ui:style>
 	<g:HTMLPanel>
 		<div class="btn-toolbar {style.bottom-margin}">
@@ -38,7 +42,7 @@
 
 				<g:HTMLPanel ui:field="pnlContent" />
 
-				<c:CellList ui:field="clTags" />
+				<c:CellList ui:field="clTags" styleName="{style.tags}" />
 
 				<div id="disqus_thread" />
 			</div>
