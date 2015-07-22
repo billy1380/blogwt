@@ -42,6 +42,7 @@ import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.TagHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -301,14 +302,16 @@ public class PostController extends AsyncDataProvider<Post> {
 	 * @return
 	 */
 	public String disqusId () {
-		return PropertyController.get().stringProperty("disqus.id");
+		return PropertyController.get().stringProperty(
+				PropertyHelper.POST_DISQUS_ID);
 	};
 
 	/**
 	 * @return
 	 */
 	public String categoryId () {
-		return PropertyController.get().stringProperty("category.id");
+		return PropertyController.get().stringProperty(
+				PropertyHelper.POST_CATEGORY_ID);
 	};
 
 	/**
