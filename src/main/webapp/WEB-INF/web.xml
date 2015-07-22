@@ -21,6 +21,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet>
 
 	<servlet>
+		<servlet-name>Site Map</servlet-name>
+		<servlet-class>com.willshex.blogwt.server.SiteMapServlet</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>Dev</servlet-name>
 		<servlet-class>com.willshex.blogwt.server.DevServlet</servlet-class>
 	</servlet>
@@ -59,11 +64,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>Site</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
-        <servlet-name>Dev</servlet-name>
-        <url-pattern>/dev</url-pattern>
-    </servlet-mapping>
+		<servlet-name>Site Map</servlet-name>
+		<url-pattern>/sitemap</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Dev</servlet-name>
+		<url-pattern>/dev</url-pattern>
+	</servlet-mapping>
 
 	<!-- Objectify -->
 	<filter>
@@ -86,5 +96,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>blobStore</servlet-name>
 		<url-pattern>/upload</url-pattern>
 	</servlet-mapping>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Dev</web-resource-name>
+			<url-pattern>/dev</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>admin</role-name>
+		</auth-constraint>
+	</security-constraint>
 
 </web-app>
