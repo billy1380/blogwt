@@ -26,8 +26,8 @@
 		</div>
 
 		<g:HTMLPanel styleName="row">
-			<c:CellList ui:field="clPosts" styleName="col-sm-8" />
-			<p:TagsPart ui:field="coTags" styleName="col-sm-4" />
+			<c:CellList ui:field="clPosts" styleName="col-sm-9" />
+			<p:TagsPart ui:field="coTags" styleName="col-sm-3" />
 		</g:HTMLPanel>
 
 		<p:NoneFoundPanel subject="posts" ui:field="pnlNoPosts" />
