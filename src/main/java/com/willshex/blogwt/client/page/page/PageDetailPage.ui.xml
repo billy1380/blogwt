@@ -24,7 +24,7 @@
 			</div>
 		</div>
 		<g:HTMLPanel styleName="row">
-			<div class="col-sm-8">
+			<div class="col-sm-9">
 
 				<g:HTMLPanel styleName="text-center" ui:field="pnlLoading">
 					<g:Image visible="true" resource="{CELL_TABLE_RES.cellTableLoading}" />
