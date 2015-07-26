@@ -40,6 +40,7 @@ public class User extends DataType {
 	public String group;
 	public String password;
 	public Date lastLoggedIn;
+	public String summary;
 	public Boolean verified;
 	@Index public Date added;
 	public Date expires;
@@ -92,6 +93,9 @@ public class User extends DataType {
 		JsonElement jsonLastLoggedIn = lastLoggedIn == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(lastLoggedIn.getTime());
 		object.add("lastLoggedIn", jsonLastLoggedIn);
+		JsonElement jsonSummary = summary == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(summary);
+		object.add("summary", jsonSummary);
 		JsonElement jsonVerified = verified == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(verified);
 		object.add("verified", jsonVerified);
@@ -188,6 +192,12 @@ public class User extends DataType {
 				lastLoggedIn = new Date(jsonLastLoggedIn.getAsLong());
 			}
 		}
+		if (jsonObject.has("summary")) {
+			JsonElement jsonSummary = jsonObject.get("summary");
+			if (jsonSummary != null) {
+				summary = jsonSummary.getAsString();
+			}
+		}
 		if (jsonObject.has("verified")) {
 			JsonElement jsonVerified = jsonObject.get("verified");
 			if (jsonVerified != null) {
@@ -261,6 +271,11 @@ public class User extends DataType {
 
 	public User lastLoggedIn (Date lastLoggedIn) {
 		this.lastLoggedIn = lastLoggedIn;
+		return this;
+	}
+
+	public User summary (String summary) {
+		this.summary = summary;
 		return this;
 	}
 
