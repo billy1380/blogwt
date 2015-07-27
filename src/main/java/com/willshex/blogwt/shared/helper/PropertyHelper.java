@@ -39,18 +39,18 @@ public class PropertyHelper {
 	public static final String POST_SHOW_AUTHOR = "post.show.author";
 	public static final String POST_SHOW_AUTHOR_SUMMARY = "post.show.author.summary";
 
-	private static final String SHOW_SIGN_IN = "header.show.signin";
+	public static final String SHOW_SIGN_IN = "header.show.signin";
 
-	private static final String GENERATE_RSS_FEED = "content.rss.generate";
+	public static final String GENERATE_RSS_FEED = "content.rss.generate";
 	public static final String SHORT_DESCRIPTION = "content.short.description";
 
-	private static final String SMALL_LOGO_URL = "content.small.logo.url";
-	private static final String LARGE_LOGO_URL = "content.large_logo_url";
+	public static final String SMALL_LOGO_URL = "content.small.logo.url";
+	public static final String LARGE_LOGO_URL = "content.large_logo_url";
 
-	private static final String FOOTER_SHOW_VERSION = "footer.show.site.version";
+	public static final String FOOTER_SHOW_VERSION = "footer.show.site.version";
 
 	// user properties
-	private static final String ALLOW_USER_REGISTRATION = "user.allow.registration";
+	public static final String ALLOW_USER_REGISTRATION = "user.allow.registration";
 
 	// Descriptions
 	public static final String TITLE_DESCRIPTION = "Blog Title";
@@ -72,6 +72,17 @@ public class PropertyHelper {
 	public static final String POST_SHOW_AUTHOR_SUMMARY_DESCRIPTION = "Shows the author summary on post details";
 
 	public static final String SHORT_DESCRIPTION_DESCRIPTION = "A short description of the blog";
+
+	public static final String SHOW_SIGN_IN_DESCRIPTION = "Show the sign in button on the top right hand of the header";
+
+	public static final String GENERATE_RSS_FEED_DESCRIPTION = "Enables RSS feed generation";
+
+	public static final String SMALL_LOGO_URL_DESCRIPTION = "A small logo to display on the blog header";
+	public static final String LARGE_LOGO_URL_DESCRIPTION = "A large logo to display anywhere on the site";
+
+	public static final String FOOTER_SHOW_VERSION_DESCRIPTION = "Shows the blogwt version on the site footer";
+
+	public static final String ALLOW_USER_REGISTRATION_DESCRIPTION = "Allow users to register with lowest role e.g. to comment";
 
 	private static List<Property> properties = null;
 
@@ -116,26 +127,6 @@ public class PropertyHelper {
 		return new Property().name(POST_ENABLE_EMOJI)
 				.description(POST_ENABLE_EMOJI_DESCRIPTION).value(value)
 				.group("Functional").type("string");
-	}
-
-	public static boolean isEmpty (Property property) {
-		return property == null || property.value == null
-				|| property.value.length() == 0;
-	}
-
-	/**
-	 * @return
-	 */
-	public static List<Property> properties () {
-		if (properties == null) {
-			properties = Arrays.asList(createTitle(null),
-					createExtendedTitle(null), createCopyrightHolder(null),
-					createCopyrightUrl(null), createMarkdownMapsApiKey(null),
-					createPostCommentsEnabled(null), createDisqusId(null),
-					createCategoryId(null));
-		}
-
-		return properties;
 	}
 
 	public static Property createPostCommentsEnabled (String value) {
@@ -186,6 +177,72 @@ public class PropertyHelper {
 		return new Property().name(SHORT_DESCRIPTION)
 				.description(SHORT_DESCRIPTION_DESCRIPTION).group("Functional")
 				.type("string").value(value);
+	}
+
+	public static Property createShowSignIn (Boolean value) {
+		return new Property().name(SHOW_SIGN_IN)
+				.description(SHOW_SIGN_IN_DESCRIPTION).group("Functional")
+				.type("boolean").value(value == null ? null : value.toString());
+	}
+
+	public static Property createGenerateRssFeed (Boolean value) {
+		return new Property().name(GENERATE_RSS_FEED)
+				.description(GENERATE_RSS_FEED_DESCRIPTION).group("Functional")
+				.type("boolean").value(value == null ? null : value.toString());
+	}
+
+	public static Property createSmallLogoUrl (String value) {
+		return new Property().name(SMALL_LOGO_URL)
+				.description(SMALL_LOGO_URL_DESCRIPTION).group("Functional")
+				.type("string").value(value);
+	}
+
+	public static Property createLargeLogoUrl (String value) {
+		return new Property().name(LARGE_LOGO_URL)
+				.description(LARGE_LOGO_URL_DESCRIPTION).group("Functional")
+				.type("string").value(value);
+	}
+
+	public static Property createFooterShowVersion (Boolean value) {
+		return new Property().name(FOOTER_SHOW_VERSION)
+				.description(FOOTER_SHOW_VERSION_DESCRIPTION)
+				.group("Functional").type("boolean")
+				.value(value == null ? null : value.toString());
+	}
+
+	public static Property createAllowUserRegistration (Boolean value) {
+		return new Property().name(ALLOW_USER_REGISTRATION)
+				.description(ALLOW_USER_REGISTRATION_DESCRIPTION).group("User")
+				.type("boolean").value(value == null ? null : value.toString());
+	}
+
+	public static boolean isEmpty (Property property) {
+		return property == null || property.value == null
+				|| property.value.length() == 0;
+	}
+
+	/**
+	 * @return
+	 */
+	public static List<Property> properties () {
+		if (properties == null) {
+			properties = Arrays.asList(createTitle(null),
+					createExtendedTitle(null), createCopyrightHolder(null),
+					createCopyrightUrl(null), createPasswordHashSalt(null),
+					createPostEnableEmoji(null),
+					createPostCommentsEnabled(null),
+					createMarkdownMapsApiKey(null), createDisqusId(null),
+					createCategoryId(null),
+					createMarkdownPrefechIncludes(null),
+					createPostShowAuthor(null),
+					createPostShowAuthorSummary(null),
+					createShortDescription(null), createShowSignIn(null),
+					createGenerateRssFeed(null), createSmallLogoUrl(null),
+					createLargeLogoUrl(null), createFooterShowVersion(null),
+					createAllowUserRegistration(null));
+		}
+
+		return properties;
 	}
 
 	/**

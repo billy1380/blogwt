@@ -27,6 +27,7 @@ import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.client.part.property.BooleanPropertyPart;
 import com.willshex.blogwt.client.part.property.CommentPart;
 import com.willshex.blogwt.client.part.property.StringPropertyPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
@@ -130,6 +131,16 @@ public class PropertiesPage extends Page implements
 		if (PropertyHelper.POST_COMMENTS_ENABLED.equals(property.name)) {
 			CommentPart formPart = new CommentPart();
 
+			formPart.setDescription(property.description);
+			formPart.setName(property.name);
+			formPart.setValue(PropertyController.get().stringProperty(
+					property.name));
+			register(formPart.addValueChangeHandler(this));
+
+			w = formPart;
+		} else if (property.type.equals("boolean")) {
+			BooleanPropertyPart formPart = new BooleanPropertyPart();
+			
 			formPart.setDescription(property.description);
 			formPart.setName(property.name);
 			formPart.setValue(PropertyController.get().stringProperty(
