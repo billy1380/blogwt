@@ -81,14 +81,6 @@ public class StringPropertyPart extends AbstractPropertyPart {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see com.google.gwt.user.client.ui.HasValue#getValue() */
-	@Override
-	public String getValue () {
-		return value;
-	}
-
-	/* (non-Javadoc)
-	 * 
 	 * @see com.google.gwt.user.client.ui.HasName#getName() */
 	@Override
 	public String getName () {
