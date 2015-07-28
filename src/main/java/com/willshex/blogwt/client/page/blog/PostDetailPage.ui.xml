@@ -29,10 +29,8 @@
 		</div>
 		<g:HTMLPanel styleName="row">
 			<div class="col-sm-9">
-				<div ui:field="elTitle"></div>
+				<div ui:field="elTitle" />
 				<div class="{style.bottom-margin}">
-					By
-					<img ui:field="imgAvatar" class="img-circle" />
 					<span ui:field="elAuthor" />
 					<span ui:field="elDate" />
 				</div>

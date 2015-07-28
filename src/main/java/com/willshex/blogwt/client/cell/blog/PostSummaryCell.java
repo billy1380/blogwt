@@ -16,10 +16,12 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiRenderer;
+import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 
 /**
@@ -28,8 +30,8 @@ import com.willshex.blogwt.shared.helper.UserHelper;
  */
 public class PostSummaryCell extends AbstractCell<Post> {
 
-	public interface DateTemplate extends SafeHtmlTemplates {
-		DateTemplate INSTANCE = GWT.create(DateTemplate.class);
+	public interface Templates extends SafeHtmlTemplates {
+		Templates INSTANCE = GWT.create(Templates.class);
 
 		@Template("<span class=\"label label-info\">Created {0} - Not published</span>")
 		SafeHtml notPublished (String formattedDate);
@@ -39,12 +41,16 @@ public class PostSummaryCell extends AbstractCell<Post> {
 
 		@Template("<span class=\"label label-warning\">Not visible</span>")
 		SafeHtml notVisible ();
+
+		@Template("By <img src=\"{0}\" class=\"img-circle\" /> {1}")
+		SafeHtml author (SafeUri avatarUrl, String authorName);
+
 	}
 
 	interface PostSummaryCellRenderer extends UiRenderer {
 		void render (SafeHtmlBuilder sb, SafeUri link, SafeHtml title,
-				SafeHtml summary, SafeUri avatar, String author,
-				SafeHtml published, SafeHtml visible);
+				SafeHtml summary, SafeHtml author, SafeHtml published,
+				SafeHtml visible);
 	}
 
 	private static PostSummaryCellRenderer RENDERER = GWT
@@ -54,11 +60,11 @@ public class PostSummaryCell extends AbstractCell<Post> {
 	public void render (Context context, Post value, SafeHtmlBuilder builder) {
 		SafeUri link = PageType.PostDetailPageType.asHref(PostHelper
 				.getSlug(value));
-		SafeHtml published = DateTemplate.INSTANCE.notPublished(DateTimeHelper
+		SafeHtml published = Templates.INSTANCE.notPublished(DateTimeHelper
 				.ago(value.created));
 
 		if (value.published != null) {
-			published = DateTemplate.INSTANCE.publishedDate(DateTimeHelper
+			published = Templates.INSTANCE.publishedDate(DateTimeHelper
 					.ago(value.published));
 		}
 
@@ -71,13 +77,21 @@ public class PostSummaryCell extends AbstractCell<Post> {
 			body = value.content.body;
 		}
 
+		SafeHtml author = SafeHtmlUtils.EMPTY_SAFE_HTML;
+
+		if (PropertyController.get().booleanProperty(
+				PropertyHelper.POST_SHOW_AUTHOR, false)) {
+			author = Templates.INSTANCE.author(
+					UriUtils.fromString(value.author.avatar + "?s="
+							+ UserHelper.AVATAR_SIZE + "&default=retro"),
+					UserHelper.handle(value.author));
+		}
+
 		RENDERER.render(builder, link, SafeHtmlUtils
 				.fromTrustedString(PostHelper.makeHeading2(value.title)),
 				SafeHtmlUtils.fromTrustedString(PostHelper.makeMarkup(body)),
-				UriUtils.fromString(value.author.avatar + "?s="
-						+ UserHelper.AVATAR_SIZE + "&default=retro"),
-				UserHelper.handle(value.author), published, value.listed
-						.booleanValue() ? SafeHtmlUtils.EMPTY_SAFE_HTML
-						: DateTemplate.INSTANCE.notVisible());
+				author, published,
+				value.listed.booleanValue() ? SafeHtmlUtils.EMPTY_SAFE_HTML
+						: Templates.INSTANCE.notVisible());
 	}
 }
