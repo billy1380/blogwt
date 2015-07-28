@@ -223,4 +223,21 @@ public class PropertyController extends ListDataProvider<Property> {
 					});
 		}
 	}
+
+	/**
+	 * @param name
+	 * @param defaultValue
+	 * @return
+	 */
+	public boolean booleanProperty (String name, boolean defaultValue) {
+		boolean value = defaultValue;
+
+		String stringValue = stringProperty(name);
+
+		if (stringValue != null) {
+			value = Boolean.valueOf(stringValue);
+		}
+
+		return value;
+	}
 }

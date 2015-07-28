@@ -12,8 +12,10 @@ import java.util.Arrays;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -31,6 +33,7 @@ import com.willshex.blogwt.client.cell.blog.TagCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PostController;
+import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PostHelper;
@@ -47,6 +50,7 @@ import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -71,7 +75,6 @@ public class PostDetailPage extends Page implements
 	@UiField HTMLPanel pnlContent;
 	@UiField InlineHyperlink lnkEditPost;
 	@UiField Button btnDeletePost;
-	@UiField ImageElement imgAvatar;
 
 	@UiField(provided = true) CellList<Tag> clTags = new CellList<Tag>(
 			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
@@ -87,6 +90,11 @@ public class PostDetailPage extends Page implements
 		initWidget(uiBinder.createAndBindUi(this));
 
 		tagList.addDataDisplay(clTags);
+
+		if (!PropertyController.get().booleanProperty(
+				PropertyHelper.POST_SHOW_AUTHOR, false)) {
+			elAuthor.removeFromParent();
+		}
 	}
 
 	@UiHandler("btnDeletePost")
@@ -131,16 +139,24 @@ public class PostDetailPage extends Page implements
 	}
 
 	private void show (Post post) {
-		imgAvatar.setSrc(post.author.avatar + "?s=" + UserHelper.AVATAR_SIZE
-				+ "&default=retro");
 		elTitle.setInnerHTML(PostHelper.makeHeading(post.title));
-		elAuthor.setInnerText(UserHelper.handle(post.author));
+
+		SafeHtml author = SafeHtmlUtils.EMPTY_SAFE_HTML;
+		if (PropertyController.get().booleanProperty(
+				PropertyHelper.POST_SHOW_AUTHOR, false)) {
+			author = PostSummaryCell.Templates.INSTANCE.author(
+					UriUtils.fromString(post.author.avatar + "?s="
+							+ UserHelper.AVATAR_SIZE + "&default=retro"),
+					UserHelper.handle(post.author));
+		}
+
+		elAuthor.setInnerSafeHtml(author);
 
 		if (post.published != null) {
-			elDate.setInnerSafeHtml(PostSummaryCell.DateTemplate.INSTANCE
+			elDate.setInnerSafeHtml(PostSummaryCell.Templates.INSTANCE
 					.publishedDate(DateTimeHelper.ago(post.published)));
 		} else {
-			elDate.setInnerSafeHtml(PostSummaryCell.DateTemplate.INSTANCE
+			elDate.setInnerSafeHtml(PostSummaryCell.Templates.INSTANCE
 					.notPublished(DateTimeHelper.ago(post.created)));
 		}
 
