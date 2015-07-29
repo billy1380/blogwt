@@ -31,6 +31,7 @@ import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
+import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.service.ContextAwareServlet;
@@ -64,22 +65,30 @@ public class FeedServlet extends ContextAwareServlet {
 	protected void doGet () throws ServletException, IOException {
 		super.doGet();
 
-		HttpServletRequest request = REQUEST.get();
-		HttpServletResponse response = RESPONSE.get();
+		Property generateRss = PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.GENERATE_RSS_FEED);
 
-		try {
-			SyndFeed feed = getFeed(request);
+		if (PropertyHelper.isEmpty(generateRss)
+				|| Boolean.valueOf(generateRss.value) == Boolean.TRUE) {
 
-			String feedType = request.getParameter(FEED_TYPE);
-			feedType = (feedType != null) ? feedType : defaultFeedType;
-			feed.setFeedType(feedType);
+			HttpServletRequest request = REQUEST.get();
+			HttpServletResponse response = RESPONSE.get();
 
-			response.setContentType(MIME_TYPE);
-			SyndFeedOutput output = new SyndFeedOutput();
-			output.output(feed, response.getWriter());
-		} catch (FeedException ex) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-					"Could not generate feed");
+			try {
+				SyndFeed feed = getFeed(request);
+
+				String feedType = request.getParameter(FEED_TYPE);
+				feedType = (feedType != null) ? feedType : defaultFeedType;
+				feed.setFeedType(feedType);
+
+				response.setContentType(MIME_TYPE);
+				SyndFeedOutput output = new SyndFeedOutput();
+				output.output(feed, response.getWriter());
+			} catch (FeedException ex) {
+				response.sendError(
+						HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+						"Could not generate feed");
+			}
 		}
 	}
 
