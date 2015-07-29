@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
@@ -61,6 +62,8 @@ public class MainServlet extends ContextAwareServlet {
 	private static final long MAX_LOOP_CHECKS = 2;
 	private static final String CHAR_ENCODING = "UTF-8";
 
+	private static final String RSS_LINK_FORMAT = "\n<link rel=\"alternate\" type=\"application/rss+xml\" title=\"%s\" href=\"/feed\" />\n";
+
 	static {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
 				MainServlet.class.getResourceAsStream("res/index.html")))) {
@@ -99,14 +102,15 @@ public class MainServlet extends ContextAwareServlet {
 	private void processRequest () throws IOException {
 		IPropertyService propertyService = PropertyServiceProvider.provide();
 
-		Property title = null;
 		StringBuffer scriptVariables = new StringBuffer();
-		title = propertyService.getNamedProperty(PropertyHelper.TITLE);
+		Property title = propertyService.getNamedProperty(PropertyHelper.TITLE);
+		List<Property> properties = null;
+		Map<String, Property> propertyLookup = null;
 
 		if (title != null) {
 			appendSession(scriptVariables);
 			scriptVariables.append("\n");
-			appendProperties(scriptVariables);
+			properties = appendProperties(scriptVariables);
 			scriptVariables.append("\n");
 			appendPages(scriptVariables);
 			scriptVariables.append("\n");
@@ -115,11 +119,25 @@ public class MainServlet extends ContextAwareServlet {
 		}
 
 		String pageTitle = (title == null ? "Blogwt" : title.value);
+		String rssLink = "\n";
+		String rssPropertyValue = null;
+
+		if (properties != null) {
+			propertyLookup = PropertyHelper.toLookup(properties);
+
+			rssPropertyValue = PropertyHelper.value(propertyLookup
+					.get(PropertyHelper.GENERATE_RSS_FEED));
+		}
+
+		if (rssPropertyValue == null
+				|| Boolean.TRUE.toString().equals(rssPropertyValue)) {
+			rssLink = String.format(RSS_LINK_FORMAT, pageTitle + " (RSS feed)");
+		}
 
 		RESPONSE.get()
 				.getOutputStream()
-				.print(String.format(PAGE_FORMAT, pageTitle + " (RSS feed)",
-						pageTitle, scriptVariables.toString()));
+				.print(String.format(PAGE_FORMAT, rssLink, pageTitle,
+						scriptVariables.toString()));
 
 	}
 
@@ -177,9 +195,9 @@ public class MainServlet extends ContextAwareServlet {
 
 	/**
 	 * @param scriptVariables
-	 * @param properties
+	 * @return 
 	 */
-	private void appendProperties (StringBuffer scriptVariables) {
+	private List<Property> appendProperties (StringBuffer scriptVariables) {
 		List<Property> properties = PropertyServiceProvider.provide()
 				.getProperties();
 
@@ -199,6 +217,8 @@ public class MainServlet extends ContextAwareServlet {
 
 			scriptVariables.append("]';");
 		}
+
+		return properties;
 	}
 
 	/**
