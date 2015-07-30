@@ -52,6 +52,7 @@ import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
 import com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler;
 import com.willshex.blogwt.shared.api.user.call.event.LogoutEventHandler;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -252,9 +253,15 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				: PageType.LogoutPageType.asHref());
 		SafeUri href = login ? PageType.LogoutPageType.asHref()
 				: PageType.LoginPageType.asHref();
-		addItem(elNavRight, HeaderTemplates.INSTANCE.glyphItem(href,
-				login ? "log-out" : "log-in", login ? "Sign Out" : "Sign In"),
-				href);
+
+		if (login
+				|| PropertyController.get().booleanProperty(
+						PropertyHelper.SHOW_SIGN_IN, true)) {
+			addItem(elNavRight, HeaderTemplates.INSTANCE.glyphItem(href,
+					login ? "log-out" : "log-in", login ? "Sign Out"
+							: "Sign In"), href);
+		}
+
 		addAdminNav(login);
 	}
 
