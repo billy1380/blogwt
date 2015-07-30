@@ -83,6 +83,7 @@ public class PostDetailPage extends Page implements
 
 	private boolean installed;
 	private Element elComments;
+	@UiField Element elCommentsPlaceholder;
 	private Post post;
 
 	public PostDetailPage () {
@@ -187,8 +188,17 @@ public class PostDetailPage extends Page implements
 				(new Timer() {
 					@Override
 					public void run () {
-						elComments = Document.get().getElementById(
-								"disqus_thread");
+						if (elComments == null) {
+							elComments = Document.get().getElementById(
+									"disqus_thread");
+						}
+
+						if (elCommentsPlaceholder.hasParentElement()) {
+							elCommentsPlaceholder.getParentElement()
+									.replaceChild(elComments,
+											elCommentsPlaceholder);
+
+						}
 
 						if (elComments != null) {
 							if (!installed) {
@@ -204,6 +214,11 @@ public class PostDetailPage extends Page implements
 						}
 					}
 				}).scheduleRepeating(100);
+			} else {
+				if (elComments != null && elComments.hasParentElement()) {
+					elComments.getParentElement().replaceChild(
+							elCommentsPlaceholder, elComments);
+				}
 			}
 		}
 
