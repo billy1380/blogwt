@@ -18,6 +18,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.SubmitButton;
@@ -140,7 +141,7 @@ public class PropertiesPage extends Page implements
 			w = formPart;
 		} else if (property.type.equals("boolean")) {
 			BooleanPropertyPart formPart = new BooleanPropertyPart();
-			
+
 			formPart.setDescription(property.description);
 			formPart.setName(property.name);
 			formPart.setValue(PropertyController.get().stringProperty(
@@ -215,6 +216,9 @@ public class PropertiesPage extends Page implements
 	public void updatePropertiesSuccess (UpdatePropertiesRequest input,
 			UpdatePropertiesResponse output) {
 		ready();
+
+		// FIXME: this is a work around for refreshing properties and tags - can probably do better
+		Window.Location.replace("/");
 	}
 
 	/* (non-Javadoc)
