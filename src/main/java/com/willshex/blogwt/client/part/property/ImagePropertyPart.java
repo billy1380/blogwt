@@ -42,4 +42,9 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 		return null;
 	}
 
+	@Override
+	public void setDescription (String description) {
+
+	}
+
 }
