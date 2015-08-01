@@ -49,5 +49,7 @@ public abstract class AbstractPropertyPart extends Composite implements
 	public String getValue () {
 		return value;
 	}
+	
+	public abstract void setDescription(String description);
 
 }

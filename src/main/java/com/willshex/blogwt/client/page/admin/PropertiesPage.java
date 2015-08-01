@@ -28,8 +28,11 @@ import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.client.part.property.AbstractPropertyPart;
 import com.willshex.blogwt.client.part.property.BooleanPropertyPart;
 import com.willshex.blogwt.client.part.property.CommentPart;
+import com.willshex.blogwt.client.part.property.EmojiPropertyPart;
+import com.willshex.blogwt.client.part.property.ImagePropertyPart;
 import com.willshex.blogwt.client.part.property.StringPropertyPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
@@ -127,45 +130,34 @@ public class PropertiesPage extends Page implements
 	 * @return
 	 */
 	private Widget widget (Property property, boolean first) {
-		Widget w = null;
+		AbstractPropertyPart propertyWidget = null;
 
 		if (PropertyHelper.POST_COMMENTS_ENABLED.equals(property.name)) {
-			CommentPart formPart = new CommentPart();
-
-			formPart.setDescription(property.description);
-			formPart.setName(property.name);
-			formPart.setValue(PropertyController.get().stringProperty(
-					property.name));
-			register(formPart.addValueChangeHandler(this));
-
-			w = formPart;
-		} else if (property.type.equals("boolean")) {
-			BooleanPropertyPart formPart = new BooleanPropertyPart();
-
-			formPart.setDescription(property.description);
-			formPart.setName(property.name);
-			formPart.setValue(PropertyController.get().stringProperty(
-					property.name));
-			register(formPart.addValueChangeHandler(this));
-
-			w = formPart;
+			propertyWidget = new CommentPart();
+		} else if (PropertyHelper.POST_ENABLE_EMOJI.equals(property.name)) {
+			propertyWidget = new EmojiPropertyPart();
+		} else if (PropertyHelper.SMALL_LOGO_URL.equals(property.name)
+				|| PropertyHelper.LARGE_LOGO_URL.equals(property.name)) {
+			
+			propertyWidget = new ImagePropertyPart();
+		} else if (property.type
+				.equals("boolean")) {
+			propertyWidget = new BooleanPropertyPart();
 		} else {
-			StringPropertyPart formPart = new StringPropertyPart();
+			propertyWidget = new StringPropertyPart();
 
 			if (first) {
-				formPart.setAutofocus();
+				((StringPropertyPart) propertyWidget).setAutofocus();
 			}
-
-			formPart.setDescription(property.description);
-			formPart.setName(property.name);
-			formPart.setValue(PropertyController.get().stringProperty(
-					property.name));
-			register(formPart.addValueChangeHandler(this));
-
-			w = formPart;
 		}
+		
+		propertyWidget.setDescription(property.description);
+		propertyWidget.setName(property.name);
+		propertyWidget.setValue(PropertyController.get().stringProperty(
+				property.name));
+		register(propertyWidget.addValueChangeHandler(this));
 
-		return w;
+		return propertyWidget;
 	}
 
 	/* (non-Javadoc)
