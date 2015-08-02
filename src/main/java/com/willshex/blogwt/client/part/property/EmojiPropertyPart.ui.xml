@@ -6,16 +6,19 @@
 		padding-left: 5px;
 	}
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="form-group">
 		<label class="control-label" ui:field="elDescription" />
 		<label class="small text-muted" ui:field="elName" />
 		<div>
 			<g:RadioButton ui:field="rdoNone" name="post_enable_emoji"
 				text="None" styleName="{style.radiobutton}" />
+			<br />
 			<g:RadioButton ui:field="rdoApple" name="post_enable_emoji"
 				styleName="{style.radiobutton}" />
+			<br />
 			<g:RadioButton ui:field="rdoGoogleNoto" name="post_enable_emoji"
 				styleName="{style.radiobutton}" />
+			<br />
 			<g:RadioButton ui:field="rdoTwitter" name="post_enable_emoji"
 				styleName="{style.radiobutton}" />
 		</div>

@@ -9,12 +9,20 @@ package com.willshex.blogwt.client.part.property;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
+
+import emoji.gwt.emoji.Emoji;
+import emoji.gwt.emoji.res.Apple;
+import emoji.gwt.emoji.res.Emojis;
+import emoji.gwt.emoji.res.Noto;
+import emoji.gwt.emoji.res.Twemoji;
 
 /**
  * @author billy1380
@@ -42,6 +50,35 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 
 	public EmojiPropertyPart () {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		appendAll(rdoApple.getElement().getChild(1), Apple.INSTANCE);
+		appendAll(rdoGoogleNoto.getElement().getChild(1), Noto.INSTANCE);
+		appendAll(rdoTwitter.getElement().getChild(1), Twemoji.INSTANCE);
+
+		// revert to noto for now;
+		Emoji.get(Noto.INSTANCE);
+	}
+
+	/**
+	 * @param appleLabel
+	 * @param instance
+	 */
+	private void appendAll (Node node, Emojis theme) {
+		append(node, theme, ":poultry_leg:");
+		append(node, theme, ":eggplant:");
+		append(node, theme, ":birthday:");
+		append(node, theme, ":moneybag:");
+	}
+
+	/**
+	 * @param instance
+	 * @param string
+	 */
+	private void append (Node node, Emojis theme, String name) {
+		Image one = new Image(Emoji.get(theme).resource(name));
+		one.setHeight("32px");
+		one.setWidth("32px");
+		node.appendChild(one.getElement());
 	}
 
 	@UiHandler({ "rdoNone", "rdoApple", "rdoGoogleNoto", "rdoTwitter" })
