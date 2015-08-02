@@ -84,14 +84,6 @@ public class CommentPart extends AbstractPropertyPart {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasValue#getValue() */
-	@Override
-	public String getValue () {
-		return value;
-	}
-
 	@UiHandler({ "rdoNone", "rdoDisqus" })
 	void onSelectionValueChanged (ValueChangeEvent<Boolean> vce) {
 		if (vce.getValue() == Boolean.TRUE) {
