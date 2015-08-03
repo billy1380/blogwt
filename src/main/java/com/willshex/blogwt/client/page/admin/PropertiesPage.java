@@ -30,7 +30,7 @@ import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.property.AbstractPropertyPart;
 import com.willshex.blogwt.client.part.property.BooleanPropertyPart;
-import com.willshex.blogwt.client.part.property.CommentPart;
+import com.willshex.blogwt.client.part.property.CommentPropertyPart;
 import com.willshex.blogwt.client.part.property.EmojiPropertyPart;
 import com.willshex.blogwt.client.part.property.ImagePropertyPart;
 import com.willshex.blogwt.client.part.property.StringPropertyPart;
@@ -133,7 +133,7 @@ public class PropertiesPage extends Page implements
 		AbstractPropertyPart propertyWidget = null;
 
 		if (PropertyHelper.POST_COMMENTS_ENABLED.equals(property.name)) {
-			propertyWidget = new CommentPart();
+			propertyWidget = new CommentPropertyPart();
 		} else if (PropertyHelper.POST_ENABLE_EMOJI.equals(property.name)) {
 			propertyWidget = new EmojiPropertyPart();
 		} else if (PropertyHelper.SMALL_LOGO_URL.equals(property.name)
