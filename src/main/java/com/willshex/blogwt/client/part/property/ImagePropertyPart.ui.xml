@@ -1,8 +1,36 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:gu="urn:import:gwtupload.client">
+	<ui:import field="com.willshex.blogwt.client.helper.ApiHelper.UPLOAD_END_POINT" />
 	<ui:style>
+	@external upld-drop-zone, GWTUpld;
+	.upld-drop-zone {
+		color: #ccc;
+		border-style: dashed;
+		border-color: #ccc;
+		line-height: 120px;
+		text-align: center;
+		height: 120px;
+		border-width: 2px;
+		display: block;
+		vertical-align: middle;
+		border-radius: 6px
+	}
+	
+	.GWTUpld {
+		width: 100%;
+		margin: 10px 0;
+	}
 	</ui:style>
-	<g:HTMLPanel>
-		
+	<g:HTMLPanel styleName="form-group">
+		<label class="control-label" ui:field="elDescription" />
+		<label class="small text-muted" ui:field="elName" />
+		<g:TextBox ui:field="txtValue" styleName="form-control" enabled="false" />
+		<gu:SingleUploader ui:field="uplDragAndDrop" autoSubmit="true"
+			avoidRepeatFiles="true" validExtensions="jpg,png" servletPath="{UPLOAD_END_POINT}"
+			type="DROPZONE" />
+		<g:HTMLPanel styleName="control-label small" ui:field="pnlValueNote"
+			visible="false" />
+		<g:HTMLPanel ui:field="pnlImagePreviews" />
 	</g:HTMLPanel>
 </ui:UiBinder> 

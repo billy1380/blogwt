@@ -24,10 +24,11 @@ import com.willshex.gson.json.service.shared.Error;
 public class ApiHelper {
 
 	public static final String ACCESS_CODE = "2bfe5f0e-9138-401c-8619-9a66f6367c9a";
-	public static final String BLOG_END_POINT = "//" + getHost() + "/blog";
-	public static final String USER_END_POINT = "//" + getHost() + "/user";
-	public static final String PAGE_END_POINT = "//" + getHost() + "/page";
-	public static final String UPLOAD_END_POINT = "//" + getHost() + "/upload";
+	public static final String BASE_URL = "//" + getHost() + "/";
+	public static final String BLOG_END_POINT = BASE_URL + "blog";
+	public static final String USER_END_POINT = BASE_URL + "user";
+	public static final String PAGE_END_POINT = BASE_URL + "page";
+	public static final String UPLOAD_END_POINT = BASE_URL + "upload";
 
 	public static BlogService createBlogClient () {
 		BlogService service = new BlogService();
@@ -42,7 +43,7 @@ public class ApiHelper {
 		service.setBus(DefaultEventBus.get());
 		return service;
 	}
-	
+
 	public static PageService createPageClient () {
 		PageService service = new PageService();
 		service.setUrl(PAGE_END_POINT);
