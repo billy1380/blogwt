@@ -84,6 +84,11 @@ public class PropertyHelper {
 
 	public static final String ALLOW_USER_REGISTRATION_DESCRIPTION = "Allow users to register with lowest role e.g. to comment";
 
+	public static final String NONE_VALUE = "none";
+	public static final String APPLE_VALUE = "apple";
+	public static final String NOTO_VALUE = "noto";
+	public static final String TWITTER_VALUE = "twitter";
+
 	private static List<Property> properties = null;
 
 	public static Map<String, Property> toLookup (List<Property> properties) {
