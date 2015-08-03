@@ -50,6 +50,7 @@ import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
@@ -180,7 +181,8 @@ public class EditPostPage extends Page implements
 
 						for (String url : uploader.getServerMessage()
 								.getUploadedFileUrls()) {
-							resource.data = url;
+							resource.data = url
+									.replace(ApiHelper.BASE_URL, "/");
 							break;
 						}
 
