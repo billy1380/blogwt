@@ -1,5 +1,5 @@
 //
-//  CommentPart.java
+//  CommentPropertyPart.java
 //  blogwt
 //
 //  Created by William Shakour (billy1380) on 20 Jul 2015.
@@ -22,7 +22,7 @@ import com.willshex.blogwt.client.part.Resources;
  * @author William Shakour (billy1380)
  *
  */
-public class CommentPart extends AbstractPropertyPart {
+public class CommentPropertyPart extends AbstractPropertyPart {
 
 	@UiField Element elDescription;
 	@UiField Element elName;
@@ -32,12 +32,13 @@ public class CommentPart extends AbstractPropertyPart {
 	private static final String NONE_VALUE = "none";
 	private static final String DISQUS_VALUE = "disqus";
 
-	private static CommentPartUiBinder uiBinder = GWT
-			.create(CommentPartUiBinder.class);
+	private static CommentPropertyPartUiBinder uiBinder = GWT
+			.create(CommentPropertyPartUiBinder.class);
 
-	interface CommentPartUiBinder extends UiBinder<Widget, CommentPart> {}
+	interface CommentPropertyPartUiBinder extends
+			UiBinder<Widget, CommentPropertyPart> {}
 
-	public CommentPart () {
+	public CommentPropertyPart () {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		Image disqus = new Image(Resources.RES.disqusLogo());
