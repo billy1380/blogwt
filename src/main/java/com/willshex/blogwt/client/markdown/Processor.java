@@ -24,6 +24,12 @@ import com.willshex.blogwt.client.markdown.plugin.GalleryPlugin;
 import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
+import emoji.gwt.emoji.Emoji;
+import emoji.gwt.emoji.res.Apple;
+import emoji.gwt.emoji.res.Emojis;
+import emoji.gwt.emoji.res.Noto;
+import emoji.gwt.emoji.res.Twemoji;
+
 /**
  * @author William Shakour (billy1380)
  *
@@ -48,27 +54,38 @@ public class Processor extends MarkdownProcessor {
 			@Override
 			public void emitEmoji (StringBuilder out, String name,
 					Decorator decorator) {
-				SafeUri safeLink = emoji.gwt.emoji.Emoji.get().safeUri(name);
-				String link;
-				String comment;
-				if (safeLink != null
-						&& (link = safeLink.asString()).length() != 0) {
-					comment = name + " emoji";
+				String enableEmoji = PropertyController.get().stringProperty(
+						PropertyHelper.POST_ENABLE_EMOJI);
+				boolean addedImage = false;
 
-					out.append("<img class=\"" + Resources.RES.styles().emoji()
-							+ "\" src=\"");
-					MarkdownUtils.appendValue(out, link, 0, link.length());
-					out.append("\" alt=\"");
-					MarkdownUtils.appendValue(out, name, 0, name.length());
-					out.append('"');
-					if (comment != null) {
-						out.append(" title=\"");
-						MarkdownUtils.appendValue(out, comment, 0,
-								comment.length());
+				if (!PropertyHelper.NONE_VALUE.equals(enableEmoji)) {
+					SafeUri safeLink = Emoji.get(theme(enableEmoji)).safeUri(
+							name);
+					String link;
+					String comment;
+					if (safeLink != null
+							&& (link = safeLink.asString()).length() != 0) {
+						comment = name + " emoji";
+
+						out.append("<img class=\""
+								+ Resources.RES.styles().emoji() + "\" src=\"");
+						MarkdownUtils.appendValue(out, link, 0, link.length());
+						out.append("\" alt=\"");
+						MarkdownUtils.appendValue(out, name, 0, name.length());
 						out.append('"');
+						if (comment != null) {
+							out.append(" title=\"");
+							MarkdownUtils.appendValue(out, comment, 0,
+									comment.length());
+							out.append('"');
+						}
+						out.append(" />");
+
+						addedImage = true;
 					}
-					out.append(" />");
-				} else {
+				}
+
+				if (!addedImage) {
 					out.append(name);
 				}
 			}
@@ -137,5 +154,28 @@ public class Processor extends MarkdownProcessor {
 			}
 		});
 		decorator.addStyleClass("text-justify", "p");
+	}
+
+	private Emojis theme (String enableEmoji) {
+		Emojis theme = Noto.INSTANCE;
+
+		if (enableEmoji != null) {
+			switch (enableEmoji) {
+			case PropertyHelper.APPLE_VALUE:
+				theme = Apple.INSTANCE;
+				break;
+			case PropertyHelper.TWITTER_VALUE:
+				theme = Twemoji.INSTANCE;
+				break;
+			}
+		}
+
+		return theme;
+	}
+
+	public void resetEmojiTheme () {
+		String enableEmoji = PropertyController.get().stringProperty(
+				PropertyHelper.POST_ENABLE_EMOJI);
+		Emoji.get(theme(enableEmoji));
 	}
 }

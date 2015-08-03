@@ -17,6 +17,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.helper.PostHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 import emoji.gwt.emoji.Emoji;
 import emoji.gwt.emoji.res.Apple;
@@ -37,11 +39,6 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 	@UiField RadioButton rdoGoogleNoto;
 	@UiField RadioButton rdoTwitter;
 
-	private static final String NONE_VALUE = "none";
-	private static final String APPLE_VALUE = "apple";
-	private static final String NOTO_VALUE = "noto";
-	private static final String TWITTER_VALUE = "twitter";
-
 	private static EmojiPropertyPartUiBinder uiBinder = GWT
 			.create(EmojiPropertyPartUiBinder.class);
 
@@ -55,8 +52,7 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 		appendAll(rdoGoogleNoto.getElement().getChild(1), Noto.INSTANCE);
 		appendAll(rdoTwitter.getElement().getChild(1), Twemoji.INSTANCE);
 
-		// revert to noto for now;
-		Emoji.get(Noto.INSTANCE);
+		PostHelper.resetEmojiTheme();
 	}
 
 	/**
@@ -84,14 +80,14 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 	@UiHandler({ "rdoNone", "rdoApple", "rdoGoogleNoto", "rdoTwitter" })
 	void onSelectionValueChanged (ValueChangeEvent<Boolean> vce) {
 		if (vce.getValue() == Boolean.TRUE) {
-			String value = NONE_VALUE;
+			String value = PropertyHelper.NONE_VALUE;
 
 			if (rdoApple == vce.getSource()) {
-				value = APPLE_VALUE;
+				value = PropertyHelper.APPLE_VALUE;
 			} else if (rdoGoogleNoto == vce.getSource()) {
-				value = NOTO_VALUE;
+				value = PropertyHelper.NOTO_VALUE;
 			} else if (rdoTwitter == vce.getSource()) {
-				value = TWITTER_VALUE;
+				value = PropertyHelper.TWITTER_VALUE;
 			}
 
 			setValue(value, true);
@@ -101,22 +97,22 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 	@Override
 	public void setValue (String value, boolean fireEvents) {
 		if (value == null) {
-			value = NOTO_VALUE;
+			value = PropertyHelper.NOTO_VALUE;
 		}
 
 		String oldValue = getValue();
 
 		switch (value) {
-		case NONE_VALUE:
+		case PropertyHelper.NONE_VALUE:
 			rdoNone.setValue(Boolean.TRUE, true);
 			break;
-		case APPLE_VALUE:
+		case PropertyHelper.APPLE_VALUE:
 			rdoApple.setValue(Boolean.TRUE, true);
 			break;
-		case NOTO_VALUE:
+		case PropertyHelper.NOTO_VALUE:
 			rdoGoogleNoto.setValue(Boolean.TRUE, true);
 			break;
-		case TWITTER_VALUE:
+		case PropertyHelper.TWITTER_VALUE:
 			rdoTwitter.setValue(Boolean.TRUE, true);
 			break;
 		}
