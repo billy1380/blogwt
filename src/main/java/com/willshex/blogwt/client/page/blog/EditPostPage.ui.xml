@@ -60,7 +60,7 @@
 						<g:HTMLPanel ui:field="pnlImagePreviews" styleName="container-fluid">
 						</g:HTMLPanel>
 						<gu:MultiUploader ui:field="uplDragAndDrop" autoSubmit="true"
-							avoidRepeatFiles="true" validExtensions="jpg,png" servletPath="{UPLOAD_END_POINT}"
+							avoidRepeatFiles="true" validExtensions="jpg,jpeg,png" servletPath="{UPLOAD_END_POINT}"
 							type="DROPZONE" />
 					</g:HTMLPanel>
 
