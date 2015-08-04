@@ -25,7 +25,12 @@
 	<g:HTMLPanel styleName="form-group">
 		<label class="control-label" ui:field="elDescription" />
 		<label class="small text-muted" ui:field="elName" />
-		<g:TextBox ui:field="txtValue" styleName="form-control" enabled="false" />
+		<div class="input-group">
+			<g:TextBox ui:field="txtValue" styleName="form-control" enabled="false" />
+			<span class="input-group-btn">
+				<g:Button ui:field="btnClear" styleName="btn btn-default" />
+			</span>
+		</div>
 		<gu:SingleUploader ui:field="uplDragAndDrop" autoSubmit="true"
 			avoidRepeatFiles="true" validExtensions="jpg,png" servletPath="{UPLOAD_END_POINT}"
 			type="DROPZONE" />

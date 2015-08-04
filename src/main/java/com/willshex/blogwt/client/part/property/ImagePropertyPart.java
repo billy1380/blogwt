@@ -20,11 +20,13 @@ import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -51,6 +53,7 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 	@UiField SingleUploader uplDragAndDrop;
 	@UiField HTMLPanel pnlValueNote;
 	@UiField HTMLPanel pnlImagePreviews;
+	@UiField Button btnClear;
 
 	private Map<String, Resource> resources;
 	private HTMLPanel currentResourceRow;
@@ -114,6 +117,9 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 			}
 		});
 		uplDragAndDrop.setStatusWidget(new BaseUploadStatus());
+
+		btnClear.getElement().setInnerHTML(
+				"<span class=\"glyphicon glyphicon-remove\"><span>");
 	}
 
 	private Map<String, Resource> ensureResources () {
@@ -138,6 +144,11 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 	@UiHandler("txtValue")
 	void onTextValueChanged (ValueChangeEvent<String> vce) {
 		setValue(vce.getValue(), true);
+	}
+
+	@UiHandler("btnClear")
+	void onBtnClear (ClickEvent ce) {
+		setValue("", true);
 	}
 
 	/* (non-Javadoc)
