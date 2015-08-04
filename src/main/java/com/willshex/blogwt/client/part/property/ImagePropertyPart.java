@@ -34,6 +34,7 @@ import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 /**
  * @author billy1380
@@ -148,7 +149,7 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 
 	@UiHandler("btnClear")
 	void onBtnClear (ClickEvent ce) {
-		setValue("", true);
+		setValue(PropertyHelper.NONE_VALUE, true);
 	}
 
 	/* (non-Javadoc)
