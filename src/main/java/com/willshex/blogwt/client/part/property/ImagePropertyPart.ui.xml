@@ -32,7 +32,7 @@
 			</span>
 		</div>
 		<gu:SingleUploader ui:field="uplDragAndDrop" autoSubmit="true"
-			avoidRepeatFiles="true" validExtensions="jpg,png" servletPath="{UPLOAD_END_POINT}"
+			avoidRepeatFiles="true" validExtensions="jpg,jpeg,png" servletPath="{UPLOAD_END_POINT}"
 			type="DROPZONE" />
 		<g:HTMLPanel styleName="control-label small" ui:field="pnlValueNote"
 			visible="false" />
