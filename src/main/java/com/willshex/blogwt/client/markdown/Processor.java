@@ -127,7 +127,7 @@ public class Processor extends MarkdownProcessor {
 			@Override
 			public void openImage (StringBuilder out, String link, String title) {
 				super.openImage(out, link, title);
-				out.append(" class=\"" + Resources.RES.styles().image() + "\" ");
+				out.append(" class=\"img-responsive " + Resources.RES.styles().image() + "\" ");
 			}
 
 			/* (non-Javadoc)
