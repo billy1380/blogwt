@@ -114,7 +114,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		String logoImage;
 		if ((logoImage = PropertyController.get().stringProperty(
 				PropertyHelper.SMALL_LOGO_URL)) != null
-				&& logoImage.length() > 0) {
+				&& !PropertyHelper.NONE_VALUE.equalsIgnoreCase(logoImage)) {
 			imgLogo.setUrl(logoImage);
 
 			String title = PropertyController.get().title();
