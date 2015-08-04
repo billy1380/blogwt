@@ -29,6 +29,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -91,6 +92,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiField InlineHyperlink btnAccount;
 	@UiField Element elUserName;
 	@UiField ImageElement imgAvatar;
+	@UiField Image imgLogo;
 
 	private Map<String, Element> items;
 
@@ -108,6 +110,18 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		initWidget(uiBinder.createAndBindUi(this));
 
 		Resources.RES.styles().ensureInjected();
+
+		String logoImage;
+		if ((logoImage = PropertyController.get().stringProperty(
+				PropertyHelper.SMALL_LOGO_URL)) != null
+				&& logoImage.length() > 0) {
+			imgLogo.setUrl(logoImage);
+
+			String title = PropertyController.get().title();
+
+			imgLogo.setTitle(title);
+			imgLogo.setAltText(title);
+		}
 
 		setupNavBarPages();
 	}
