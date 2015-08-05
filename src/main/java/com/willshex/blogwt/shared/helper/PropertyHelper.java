@@ -45,7 +45,8 @@ public class PropertyHelper {
 	public static final String SHORT_DESCRIPTION = "content.short.description";
 
 	public static final String SMALL_LOGO_URL = "content.small.logo.url";
-	public static final String LARGE_LOGO_URL = "content.large_logo_url";
+	public static final String LARGE_LOGO_URL = "content.large.logo.url";
+	public static final String FAVICON_URL = "content.favicon.url";
 
 	public static final String FOOTER_SHOW_VERSION = "footer.show.site.version";
 
@@ -79,6 +80,7 @@ public class PropertyHelper {
 
 	public static final String SMALL_LOGO_URL_DESCRIPTION = "A small logo to display on the blog header";
 	public static final String LARGE_LOGO_URL_DESCRIPTION = "A large logo to display anywhere on the site";
+	public static final String FAVICON_URL_DESCRIPTION = "A favicon (.ico) for the site";
 
 	public static final String FOOTER_SHOW_VERSION_DESCRIPTION = "Shows the blogwt version on the site footer";
 
@@ -221,6 +223,12 @@ public class PropertyHelper {
 				.type("boolean").value(value == null ? null : value.toString());
 	}
 
+	public static Property createFaviconUrl (String value) {
+		return new Property().name(FAVICON_URL)
+				.description(FAVICON_URL_DESCRIPTION).group("Functional")
+				.type("string").value(value);
+	}
+
 	public static boolean isEmpty (Property property) {
 		return property == null || property.value == null
 				|| property.value.length() == 0;
@@ -244,7 +252,7 @@ public class PropertyHelper {
 					createShortDescription(null), createShowSignIn(null),
 					createGenerateRssFeed(null), createSmallLogoUrl(null),
 					createLargeLogoUrl(null), createFooterShowVersion(null),
-					createAllowUserRegistration(null));
+					createAllowUserRegistration(null), createFaviconUrl(null));
 		}
 
 		return properties;
