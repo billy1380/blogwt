@@ -62,7 +62,8 @@ public class MainServlet extends ContextAwareServlet {
 	private static final long MAX_LOOP_CHECKS = 2;
 	private static final String CHAR_ENCODING = "UTF-8";
 
-	private static final String RSS_LINK_FORMAT = "\n<link rel=\"alternate\" type=\"application/rss+xml\" title=\"%s\" href=\"/feed\" />\n";
+	private static final String RSS_LINK_FORMAT = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"%s\" href=\"/feed\" />";
+	private static final String FAVICON_FORMAT = "<link rel=\"icon\" href=\"%s\" type=\"image/x-icon\">";
 
 	static {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -109,24 +110,23 @@ public class MainServlet extends ContextAwareServlet {
 
 		if (title != null) {
 			appendSession(scriptVariables);
-			scriptVariables.append("\n");
 			properties = appendProperties(scriptVariables);
-			scriptVariables.append("\n");
 			appendPages(scriptVariables);
-			scriptVariables.append("\n");
 			appendTags(scriptVariables);
-			scriptVariables.append("\n");
 		}
 
 		String pageTitle = (title == null ? "Blogwt" : title.value);
-		String rssLink = "\n";
-		String rssPropertyValue = null;
+		String rssLink = "", faviconLink = null;
+		String rssPropertyValue = null, faviconPropertyValue = null;
 
 		if (properties != null) {
 			propertyLookup = PropertyHelper.toLookup(properties);
 
 			rssPropertyValue = PropertyHelper.value(propertyLookup
 					.get(PropertyHelper.GENERATE_RSS_FEED));
+
+			faviconPropertyValue = PropertyHelper.value(propertyLookup
+					.get(PropertyHelper.FAVICON_URL));
 		}
 
 		if (rssPropertyValue == null
@@ -134,10 +134,17 @@ public class MainServlet extends ContextAwareServlet {
 			rssLink = String.format(RSS_LINK_FORMAT, pageTitle + " (RSS feed)");
 		}
 
+		if (faviconPropertyValue == null
+				|| PropertyHelper.NONE_VALUE.equals(faviconPropertyValue)) {
+			faviconLink = String.format(FAVICON_FORMAT, "favicon.ico");
+		} else {
+			faviconLink = String.format(FAVICON_FORMAT, faviconPropertyValue);
+		}
+
 		RESPONSE.get()
 				.getOutputStream()
-				.print(String.format(PAGE_FORMAT, rssLink, pageTitle,
-						scriptVariables.toString()));
+				.print(String.format(PAGE_FORMAT, rssLink, faviconLink,
+						pageTitle, scriptVariables.toString()));
 
 	}
 
