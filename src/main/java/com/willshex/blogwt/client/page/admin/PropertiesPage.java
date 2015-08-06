@@ -87,7 +87,10 @@ public class PropertiesPage extends Page implements
 		if (isValid()) {
 			loading();
 
-			PropertyController.get().updateProperties(propertyLookup.values());
+			if (!PropertyController.get().updateProperties(
+					propertyLookup.values())) {
+				ready();
+			}
 		} else {
 			showErrors();
 		}
