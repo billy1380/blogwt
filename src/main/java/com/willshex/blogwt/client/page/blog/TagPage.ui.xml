@@ -4,7 +4,7 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="container">
 		<h2 ui:field="elHeading">
 			Posts tagged with
 		</h2>

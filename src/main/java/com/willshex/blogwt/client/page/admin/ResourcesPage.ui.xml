@@ -4,7 +4,7 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="container">
 		<h2>Resources</h2>
 
 		<c:CellTable ui:field="tblResources" styleName="col-sm-12 table table-striped" />

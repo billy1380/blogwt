@@ -5,13 +5,13 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="container">
 		<h2>Users</h2>
 
-		<!-- <div class="container"><div class="btn-toolbar"> <div class="btn-group"> <g:InlineHyperlink ui:field="lnkNewPost" 
+		<!-- <div class="btn-toolbar"> <div class="btn-group"> <g:InlineHyperlink ui:field="lnkNewPost" 
 			styleName="btn btn-default" targetHistoryToken="{ChangeDetailsPageType.asTargetHistoryToken}/new"> 
 			<span class="glyphicon glyphicon-plus"></span> New User </g:InlineHyperlink> </div> 
-			</div></div> -->
+			</div> -->
 
 		<c:CellTable ui:field="tblUsers" styleName="col-sm-12 table table-striped" />
 		<c:SimplePager ui:field="pgrUsers" location="LEFT" />

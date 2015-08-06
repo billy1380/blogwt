@@ -39,7 +39,7 @@
 		margin: 20px 0 10px 0;
 	}
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="container-fluid">
 		<g:HTMLPanel styleName="row">
 			<g:HTMLPanel styleName="text-center col-xs-12" ui:field="pnlLoading"
 				visible="false">
