@@ -6,55 +6,61 @@
 	.bottom {
 		vertical-align: bottom;
 	}
+	
+	.pad-top {
+		padding-top: 20px;
+	}
 	</ui:style>
 
-	<g:HTMLPanel styleName="navbar navbar-inverse">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<g:Button ui:field="btnExpand" styleName="navbar-toggle collapsed" />
-				<a class="navbar-brand" ui:field="btnHome">
-					<span>
-						<g:Image altText="Blogwt" title="Blogwt" ui:field="imgLogo"
-							styleName="img-rounded {style.bottom}" resource="{RES.brand}" width="20px"
-							height="20px" />
-					</span>
-					<span ui:field="elName" class="text-capitalize">Blogwt</span>
-				</a>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav" ui:field="elNavLeft">
+	<g:HTMLPanel styleName="container {style.pad-top}">
+		<div class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<g:Button ui:field="btnExpand" styleName="navbar-toggle collapsed" />
+					<a class="navbar-brand" ui:field="btnHome">
+						<span>
+							<g:Image altText="Blogwt" title="Blogwt" ui:field="imgLogo"
+								styleName="img-rounded {style.bottom}" resource="{RES.brand}" width="20px"
+								height="20px" />
+						</span>
+						<span ui:field="elName" class="text-capitalize">Blogwt</span>
+					</a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav" ui:field="elNavLeft">
 
-					<li class="dropdown" ui:field="elAdmin">
-						<g:Anchor ui:field="btnAdmin" styleName="dropdown-toggle">
-							Admin
-							<span class="caret" />
-						</g:Anchor>
-						<ul class="dropdown-menu" ui:field="elAdminDropdown">
-							<li ui:field="elPages">
-								<a href="{PagesPageType.asHref}">Pages</a>
-							</li>
-							<li ui:field="elProperties">
-								<a href="{PropertiesPageType.asHref}">Properties</a>
-							</li>
-							<li ui:field="elUsers">
-								<a href="{UsersPageType.asHref}">Users</a>
-							</li>
-							<li ui:field="elResources">
-								<a href="{ResourcesPageType.asHref}">Resources</a>
-							</li>
-						</ul>
-					</li>
+						<li class="dropdown" ui:field="elAdmin">
+							<g:Anchor ui:field="btnAdmin" styleName="dropdown-toggle">
+								Admin
+								<span class="caret" />
+							</g:Anchor>
+							<ul class="dropdown-menu" ui:field="elAdminDropdown">
+								<li ui:field="elPages">
+									<a href="{PagesPageType.asHref}">Pages</a>
+								</li>
+								<li ui:field="elProperties">
+									<a href="{PropertiesPageType.asHref}">Properties</a>
+								</li>
+								<li ui:field="elUsers">
+									<a href="{UsersPageType.asHref}">Users</a>
+								</li>
+								<li ui:field="elResources">
+									<a href="{ResourcesPageType.asHref}">Resources</a>
+								</li>
+							</ul>
+						</li>
 
-				</ul>
-				<ul class="nav navbar-nav navbar-right" ui:field="elNavRight">
-					<li ui:field="elAccount">
-						<g:InlineHyperlink ui:field="btnAccount"
-							targetHistoryToken="{ChangeDetailsPageType.asTargetHistoryToken}">
-							<span ui:field="elUserName">-</span>
-							<img ui:field="imgAvatar" class="img-circle" />
-						</g:InlineHyperlink>
-					</li>
-				</ul>
+					</ul>
+					<ul class="nav navbar-nav navbar-right" ui:field="elNavRight">
+						<li ui:field="elAccount">
+							<g:InlineHyperlink ui:field="btnAccount"
+								targetHistoryToken="{ChangeDetailsPageType.asTargetHistoryToken}">
+								<span ui:field="elUserName">-</span>
+								<img ui:field="imgAvatar" class="img-circle" />
+							</g:InlineHyperlink>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</g:HTMLPanel>

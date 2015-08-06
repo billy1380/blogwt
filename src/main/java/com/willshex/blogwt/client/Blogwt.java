@@ -36,8 +36,8 @@ public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
 
 	private void createContent () {
 		content = new HTMLPanel("<!-- content -->");
-		content.getElement().setId("content");
-		content.getElement().setClassName("container");
+//		content.getElement().setId("content");
+//		content.getElement().setClassName("container");
 		RootPanel.get().add(content);
 	}
 }
