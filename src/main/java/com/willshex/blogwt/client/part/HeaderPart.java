@@ -87,6 +87,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiField Element elAdminDropdown;
 	@UiField Element elPages;
 	@UiField Element elProperties;
+	@UiField Element elResources;
 	@UiField Element elUsers;
 	@UiField Element elAccount;
 	@UiField InlineHyperlink btnAccount;
@@ -162,6 +163,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				elProperties);
 		ensureItems().put(PageType.UsersPageType.asTargetHistoryToken(),
 				elUsers);
+		ensureItems().put(PageType.ResourcesPageType.asTargetHistoryToken(),
+				elResources);
 
 		elAdmin.removeFromParent();
 		elAccount.removeFromParent();
@@ -289,6 +292,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 					.create(PermissionHelper.MANAGE_PERMISSIONS);
 			Permission manageUsers = PermissionHelper
 					.create(PermissionHelper.MANAGE_POSTS);
+			Permission manageResources = PermissionHelper
+					.create(PermissionHelper.MANAGE_RESOURCES);
 
 			if (SessionController.get().isAdmin()) {
 				addAdmin = true;
@@ -316,6 +321,14 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				elAdminDropdown.appendChild(elUsers);
 			} else {
 				elUsers.removeFromParent();
+			}
+
+			if (addAdmin
+					|| SessionController.get().isAuthorised(manageResources)) {
+				addAdmin = true;
+				elAdminDropdown.appendChild(elResources);
+			} else {
+				elResources.removeFromParent();
 			}
 		}
 

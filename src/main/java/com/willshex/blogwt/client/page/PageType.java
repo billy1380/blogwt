@@ -21,6 +21,7 @@ import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.client.page.admin.PagesPage;
 import com.willshex.blogwt.client.page.admin.PermissionsPage;
 import com.willshex.blogwt.client.page.admin.PropertiesPage;
+import com.willshex.blogwt.client.page.admin.ResourcesPage;
 import com.willshex.blogwt.client.page.admin.RolesPage;
 import com.willshex.blogwt.client.page.admin.UsersPage;
 import com.willshex.blogwt.client.page.blog.EditPostPage;
@@ -62,7 +63,8 @@ public enum PageType {
 	PageDetailPageType("page", false),
 	PagesPageType("pages", PermissionHelper.MANAGE_PAGES),
 	EditPropertyPageType("propertyedit", RoleHelper.ADMIN),
-	TagPagePageType("tag", false), ;
+	TagPagePageType("tag", false),
+	ResourcesPageType("resources", PermissionHelper.MANAGE_RESOURCES), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -205,6 +207,9 @@ public enum PageType {
 			break;
 		case PropertiesPageType:
 			page = new PropertiesPage();
+			break;
+		case ResourcesPageType:
+			page = new ResourcesPage();
 			break;
 		case PagesPageType:
 			page = new PagesPage();
