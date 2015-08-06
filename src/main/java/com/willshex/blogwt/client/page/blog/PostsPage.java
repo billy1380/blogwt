@@ -36,6 +36,7 @@ import com.willshex.blogwt.client.part.BootstrapGwtCellList;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -51,6 +52,7 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 	@UiField Element elTitle;
 	@UiField Element elExtendedTitle;
 	@UiField Element elJumbotron;
+	@UiField Image imgLargeBrand;
 
 	@UiField NoneFoundPanel pnlNoPosts;
 	@UiField InlineHyperlink lnkNewPost;
@@ -63,6 +65,16 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 
 		elTitle.setInnerText(PropertyController.get().title());
 		elExtendedTitle.setInnerText(PropertyController.get().extendedTitle());
+		imgLargeBrand.setAltText(PropertyController.get().title());
+
+		String largeLogo = PropertyController.get().stringProperty(
+				PropertyHelper.LARGE_LOGO_URL);
+		if (largeLogo != null && !PropertyHelper.NONE_VALUE.equals(largeLogo)) {
+			imgLargeBrand.getElement().removeAttribute("width");
+			imgLargeBrand.getElement().removeAttribute("height");
+			imgLargeBrand.addStyleName("img-responsive");
+			imgLargeBrand.setUrl(largeLogo);
+		}
 
 		pnlNoPosts.removeFromParent();
 		clPosts.setEmptyListWidget(pnlNoPosts);
