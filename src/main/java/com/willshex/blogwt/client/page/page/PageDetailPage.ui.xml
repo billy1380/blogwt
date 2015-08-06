@@ -9,31 +9,30 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<div class="btn-toolbar {style.bottom-margin}">
-			<div class="btn-group pull-right">
-				<g:Button ui:field="btnDeletePage" styleName="btn btn-danger">
-					<span class="glyphicon glyphicon-trash"></span>
-				</g:Button>
-			</div>
-			<div class="btn-group pull-right">
-				<g:InlineHyperlink ui:field="lnkEditPage" styleName="btn btn-default"
-					targetHistoryToken="{EditPagePageType.asTargetHistoryToken}/xxx">
-					<span class="glyphicon glyphicon-edit"></span>
-					Edit Page
-				</g:InlineHyperlink>
+		<div class="container" ui:field="elToolbar">
+			<div class="btn-toolbar {style.bottom-margin}">
+				<div class="btn-group pull-right">
+					<g:Button ui:field="btnDeletePage" styleName="btn btn-danger">
+						<span class="glyphicon glyphicon-trash"></span>
+					</g:Button>
+				</div>
+				<div class="btn-group pull-right">
+					<g:InlineHyperlink ui:field="lnkEditPage" styleName="btn btn-default"
+						targetHistoryToken="{EditPagePageType.asTargetHistoryToken}/xxx">
+						<span class="glyphicon glyphicon-edit"></span>
+						Edit Page
+					</g:InlineHyperlink>
+				</div>
 			</div>
 		</div>
-		<g:HTMLPanel styleName="row">
-			<div class="col-sm-9">
 
-				<g:HTMLPanel styleName="text-center" ui:field="pnlLoading">
-					<g:Image visible="true" resource="{CELL_TABLE_RES.cellTableLoading}" />
-				</g:HTMLPanel>
-
-				<g:HTMLPanel ui:field="pnlContent" />
-
-			</div>
+		<g:HTMLPanel styleName="text-center" ui:field="pnlLoading">
+			<g:Image visible="true" resource="{CELL_TABLE_RES.cellTableLoading}" />
 		</g:HTMLPanel>
+
+		<g:HTMLPanel ui:field="pnlContent" />
+
+
 		<p:BackToTop />
 	</g:HTMLPanel>
 </ui:UiBinder> 

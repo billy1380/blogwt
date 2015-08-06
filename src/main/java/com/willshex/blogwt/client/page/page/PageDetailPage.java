@@ -55,12 +55,13 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 
 	@UiField HTMLPanel pnlLoading;
 	@UiField HTMLPanel pnlContent;
+	@UiField Element elToolbar;
 
 	@UiField InlineHyperlink lnkEditPage;
 	@UiField Button btnDeletePage;
 
 	private Page page;
-	
+
 	public PageDetailPage () {
 		super(PageType.PageDetailPageType);
 		initWidget(uiBinder.createAndBindUi(this));
@@ -125,8 +126,11 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 		boolean canChange = SessionController.get().isAuthorised(
 				Arrays.asList(PermissionHelper
 						.create(PermissionHelper.MANAGE_PAGES)));
-		lnkEditPage.setVisible(canChange);
-		btnDeletePage.setVisible(canChange);
+		if (canChange) {
+			getElement().insertFirst(elToolbar);
+		} else {
+			elToolbar.removeFromParent();
+		}
 
 	}
 
@@ -183,17 +187,21 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 		pnlContent.getElement().removeAllChildren();
 
 		String html;
-		Element e;
+		Element a, section, content;
 		for (Post post : page.posts) {
 			if (post.content != null && post.content.body != null) {
 				html = PostHelper.makeMarkup(post.content.body);
-				e = Document.get().createAnchorElement();
-				e.setAttribute("name", "!" + page.slug + "/" + post.slug);
-				pnlContent.getElement().appendChild(e);
+				a = Document.get().createAnchorElement();
+				a.setAttribute("name", "!" + page.slug + "/" + post.slug);
+				pnlContent.getElement().appendChild(a);
 
-				e = Document.get().createDivElement();
-				e.setInnerHTML(html);
-				pnlContent.getElement().appendChild(e);
+				section = Document.get().createElement("section");
+				pnlContent.getElement().appendChild(section);
+
+				content = Document.get().createDivElement();
+				content.setClassName("container");
+				content.setInnerHTML(html);
+				section.appendChild(content);
 			}
 		}
 

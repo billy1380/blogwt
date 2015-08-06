@@ -13,18 +13,20 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<div class="btn-toolbar {style.bottom-margin}">
-			<div class="btn-group pull-right">
-				<g:Button ui:field="btnDeletePost" styleName="btn btn-danger">
-					<span class="glyphicon glyphicon-trash"></span>
-				</g:Button>
-			</div>
-			<div class="btn-group pull-right">
-				<g:InlineHyperlink ui:field="lnkEditPost" styleName="btn btn-default"
-					targetHistoryToken="{EditPostPageType.asTargetHistoryToken}/xxx">
-					<span class="glyphicon glyphicon-edit"></span>
-					Edit Post
-				</g:InlineHyperlink>
+		<div class="container" ui:field="elToolbar">
+			<div class="btn-toolbar {style.bottom-margin}">
+				<div class="btn-group pull-right">
+					<g:Button ui:field="btnDeletePost" styleName="btn btn-danger">
+						<span class="glyphicon glyphicon-trash"></span>
+					</g:Button>
+				</div>
+				<div class="btn-group pull-right">
+					<g:InlineHyperlink ui:field="lnkEditPost" styleName="btn btn-default"
+						targetHistoryToken="{EditPostPageType.asTargetHistoryToken}/xxx">
+						<span class="glyphicon glyphicon-edit"></span>
+						Edit Post
+					</g:InlineHyperlink>
+				</div>
 			</div>
 		</div>
 		<g:HTMLPanel styleName="row">
@@ -42,7 +44,7 @@
 
 				<c:CellList ui:field="clTags" styleName="{style.tags}" />
 
-                <div ui:field="elCommentsPlaceholder" />
+				<div ui:field="elCommentsPlaceholder" />
 				<div id="disqus_thread" />
 			</div>
 		</g:HTMLPanel>
