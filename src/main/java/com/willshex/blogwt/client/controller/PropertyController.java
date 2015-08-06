@@ -164,7 +164,7 @@ public class PropertyController extends ListDataProvider<Property> {
 		return PropertyHelper.value(propertyLookup.get(name));
 	}
 
-	public void updateProperties (Collection<Property> properties) {
+	public boolean updateProperties (Collection<Property> properties) {
 		List<Property> changed = null;
 
 		String existingPropertyValue;
@@ -192,7 +192,9 @@ public class PropertyController extends ListDataProvider<Property> {
 			}
 		}
 
-		if (changed != null) {
+		boolean updating = changed != null;
+
+		if (updating) {
 			final UpdatePropertiesRequest input = SessionController.get()
 					.setSession(
 							ApiHelper.setAccessCode(
@@ -222,6 +224,8 @@ public class PropertyController extends ListDataProvider<Property> {
 						}
 					});
 		}
+
+		return updating;
 	}
 
 	/**
