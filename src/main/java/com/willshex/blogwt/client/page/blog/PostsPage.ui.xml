@@ -2,6 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:import field="com.willshex.blogwt.client.page.PageType.EditPostPageType" />
+	<ui:import field="com.willshex.blogwt.client.Resources.RES" />
 	<ui:style>
 	.inline, .inline p {
 		display: inline;
@@ -10,26 +11,32 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<div ui:field="elJumbotron" class="jumbotron">
-			<h1 ui:field="elTitle">Posts</h1>
-			<p ui:field="elExtendedTitle" class="small">Extended Title</p>
-		</div>
-
-		<div class="btn-toolbar">
-			<div class="btn-group">
-				<g:InlineHyperlink ui:field="lnkNewPost" styleName="btn btn-default"
-					targetHistoryToken="{EditPostPageType.asTargetHistoryToken}/new">
-					<span class="glyphicon glyphicon-plus"></span>
-					New Post
-				</g:InlineHyperlink>
+		<div ui:field="elJumbotron" class="jumbotron text-center">
+			<div class="container">
+				<g:Image ui:field="imgLargeBrand" resource="{RES.largeBrand}" />
+				<h1 ui:field="elTitle">Title</h1>
+				<p ui:field="elExtendedTitle" class="small">Extended Title</p>
 			</div>
 		</div>
 
-		<g:HTMLPanel styleName="row">
-			<c:CellList ui:field="clPosts" styleName="col-sm-9" />
-			<p:TagsPart ui:field="coTags" styleName="col-sm-3" />
-		</g:HTMLPanel>
+		<div class="container">
+			<h1>Blog</h1>
 
+			<div class="btn-toolbar">
+				<div class="btn-group">
+					<g:InlineHyperlink ui:field="lnkNewPost" styleName="btn btn-default"
+						targetHistoryToken="{EditPostPageType.asTargetHistoryToken}/new">
+						<span class="glyphicon glyphicon-plus"></span>
+						New Post
+					</g:InlineHyperlink>
+				</div>
+			</div>
+
+			<g:HTMLPanel styleName="row">
+				<c:CellList ui:field="clPosts" styleName="col-sm-9" />
+				<p:TagsPart ui:field="coTags" styleName="col-sm-3" />
+			</g:HTMLPanel>
+		</div>
 		<p:NoneFoundPanel subject="posts" ui:field="pnlNoPosts" />
 
 		<p:BackToTop />

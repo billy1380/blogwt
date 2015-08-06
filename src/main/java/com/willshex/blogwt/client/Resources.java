@@ -20,7 +20,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 public interface Resources extends ClientBundle {
 	public interface ResourceStyles extends CssResource {
 		String primaryLoader ();
-		
+
 		String defaultLoader ();
 
 		String image ();
@@ -29,11 +29,13 @@ public interface Resources extends ClientBundle {
 
 		String brand ();
 
+		String largeBrand ();
+
 		String internalLink ();
 
 		String externalLink ();
-		
-		String blink();
+
+		String blink ();
 	}
 
 	public static final Resources RES = GWT.create(Resources.class);
@@ -46,11 +48,14 @@ public interface Resources extends ClientBundle {
 
 	@Source("res/primary-loader.gif")
 	ImageResource primaryLoader ();
-	
+
 	@Source("res/default-loader.gif")
 	ImageResource defaultLoader ();
 
 	@Source("res/brand.png")
 	ImageResource brand ();
+
+	@Source("res/large-brand.png")
+	ImageResource largeBrand ();
 
 }
