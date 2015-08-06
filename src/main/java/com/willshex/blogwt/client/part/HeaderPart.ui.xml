@@ -39,6 +39,9 @@
 							<li ui:field="elUsers">
 								<a href="{UsersPageType.asHref}">Users</a>
 							</li>
+							<li ui:field="elResources">
+								<a href="{ResourcesPageType.asHref}">Resources</a>
+							</li>
 						</ul>
 					</li>
 
