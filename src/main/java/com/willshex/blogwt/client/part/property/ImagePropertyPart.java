@@ -189,4 +189,7 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 		elName.setInnerText(name);
 	}
 
+	public void setValidExtensions (String extensions) {
+		uplDragAndDrop.setValidExtensions(extensions);
+	}
 }

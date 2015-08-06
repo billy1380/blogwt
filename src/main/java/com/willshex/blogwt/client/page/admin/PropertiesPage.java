@@ -138,10 +138,11 @@ public class PropertiesPage extends Page implements
 			propertyWidget = new EmojiPropertyPart();
 		} else if (PropertyHelper.SMALL_LOGO_URL.equals(property.name)
 				|| PropertyHelper.LARGE_LOGO_URL.equals(property.name)) {
-			
 			propertyWidget = new ImagePropertyPart();
-		} else if (property.type
-				.equals("boolean")) {
+		} else if (PropertyHelper.FAVICON_URL.equals(property.name)) {
+			propertyWidget = new ImagePropertyPart();
+			((ImagePropertyPart) propertyWidget).setValidExtensions("ico");
+		} else if (property.type.equals("boolean")) {
 			propertyWidget = new BooleanPropertyPart();
 		} else {
 			propertyWidget = new StringPropertyPart();
@@ -150,7 +151,7 @@ public class PropertiesPage extends Page implements
 				((StringPropertyPart) propertyWidget).setAutofocus();
 			}
 		}
-		
+
 		propertyWidget.setDescription(property.description);
 		propertyWidget.setName(property.name);
 		propertyWidget.setValue(PropertyController.get().stringProperty(
