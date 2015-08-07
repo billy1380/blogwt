@@ -39,6 +39,8 @@ import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetTagsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetTagsResponse;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
@@ -67,6 +69,19 @@ import com.willshex.gson.json.service.shared.StatusType;
 
 public final class BlogApi extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(BlogApi.class.getName());
+
+	public GetRelatedPostsResponse getRelatedPosts (GetRelatedPostsRequest input) {
+		LOG.finer("Entering getRelatedPosts");
+		GetRelatedPostsResponse output = new GetRelatedPostsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getRelatedPosts");
+		return output;
+	}
 
 	public GetPostResponse getPost (GetPostRequest input) {
 		LOG.finer("Entering getPost");
@@ -472,7 +487,8 @@ public final class BlogApi extends ActionHandler {
 
 				if (found) {
 					existingProperty.value = property.value;
-					PropertyServiceProvider.provide().updateProperty(existingProperty);
+					PropertyServiceProvider.provide().updateProperty(
+							existingProperty);
 				} else {
 					PropertyServiceProvider.provide().addProperty(property);
 				}
