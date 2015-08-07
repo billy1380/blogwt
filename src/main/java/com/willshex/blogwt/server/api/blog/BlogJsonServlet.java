@@ -12,6 +12,7 @@ import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetTagsRequest;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
@@ -24,7 +25,11 @@ public final class BlogJsonServlet extends JsonServlet {
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
 		BlogApi service = new BlogApi();
-		if ("UpdateProperties".equals(action)) {
+		if ("GetRelatedPosts".equals(action)) {
+			GetRelatedPostsRequest input = new GetRelatedPostsRequest();
+			input.fromJson(request);
+			output = service.getRelatedPosts(input).toString();
+		} else if ("UpdateProperties".equals(action)) {
 			UpdatePropertiesRequest input = new UpdatePropertiesRequest();
 			input.fromJson(request);
 			output = service.updateProperties(input).toString();
