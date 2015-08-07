@@ -22,6 +22,7 @@ import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.markdown.plugin.CachedIncludePlugin;
 import com.willshex.blogwt.client.markdown.plugin.GalleryPlugin;
 import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
+import com.willshex.blogwt.client.markdown.plugin.YoutubePlugin;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 import emoji.gwt.emoji.Emoji;
@@ -110,7 +111,7 @@ public class Processor extends MarkdownProcessor {
 
 		registerPlugins(new WebSequencePlugin(ensureManager()), includePlugin,
 				new GalleryPlugin(), mapsApiKey == null ? null : new MapPlugin(
-						mapsApiKey, ensureManager()));
+						mapsApiKey, ensureManager()), new YoutubePlugin());
 	}
 
 	public Processor () {
@@ -127,7 +128,8 @@ public class Processor extends MarkdownProcessor {
 			@Override
 			public void openImage (StringBuilder out, String link, String title) {
 				super.openImage(out, link, title);
-				out.append(" class=\"img-responsive " + Resources.RES.styles().image() + "\" ");
+				out.append(" class=\"img-responsive "
+						+ Resources.RES.styles().image() + "\" ");
 			}
 
 			/* (non-Javadoc)
