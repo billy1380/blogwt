@@ -27,7 +27,6 @@ import com.willshex.blogwt.server.service.user.IUserService;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
-import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.RoleSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
@@ -60,7 +59,6 @@ import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
-import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -92,7 +90,6 @@ public final class UserApi extends ActionHandler {
 					input.session, "input.session");
 
 			UserValidator.authorisation(input.session.user, Arrays
-					.asList(RoleHelper.createAdmin()), Arrays
 					.asList(PermissionServiceProvider.provide()
 							.getCodePermission(PermissionHelper.MANAGE_USERS)),
 					"input.session.user");
@@ -285,16 +282,13 @@ public final class UserApi extends ActionHandler {
 
 			// if the not logged in user
 			if (input.user.id.longValue() != input.session.userKey.getId()) {
-				List<Role> roles = new ArrayList<Role>();
-				roles.add(RoleHelper.createAdmin());
-
 				List<Permission> permissions = new ArrayList<Permission>();
 				Permission postPermission = PermissionServiceProvider.provide()
 						.getCodePermission(PermissionHelper.MANAGE_USERS);
 				permissions.add(postPermission);
 
-				UserValidator.authorisation(input.session.user, roles,
-						permissions, "input.session.user");
+				UserValidator.authorisation(input.session.user, permissions,
+						"input.session.user");
 			}
 
 			updatedUser = UserValidator.validate(updatedUser, "input.user");
@@ -391,7 +385,6 @@ public final class UserApi extends ActionHandler {
 					input.session, "input.session");
 
 			UserValidator.authorisation(input.session.user, Arrays
-					.asList(RoleHelper.createAdmin()), Arrays
 					.asList(PermissionServiceProvider.provide()
 							.getCodePermission(PermissionHelper.MANAGE_USERS)),
 					"input.session.user");
@@ -441,7 +434,6 @@ public final class UserApi extends ActionHandler {
 					input.session, "input.session");
 
 			UserValidator.authorisation(input.session.user, Arrays
-					.asList(RoleHelper.createAdmin()), Arrays
 					.asList(PermissionServiceProvider.provide()
 							.getCodePermission(
 									PermissionHelper.MANAGE_PERMISSIONS)),
@@ -472,15 +464,12 @@ public final class UserApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			List<Role> roles = new ArrayList<Role>();
-			roles.add(RoleHelper.createAdmin());
-
 			List<Permission> permissions = new ArrayList<Permission>();
 			Permission postPermission = PermissionServiceProvider.provide()
 					.getCodePermission(PermissionHelper.MANAGE_ROLES);
 			permissions.add(postPermission);
 
-			UserValidator.authorisation(input.session.user, roles, permissions,
+			UserValidator.authorisation(input.session.user, permissions,
 					"input.session.user");
 
 			output.roles = RoleServiceProvider.provide().getRoles(
