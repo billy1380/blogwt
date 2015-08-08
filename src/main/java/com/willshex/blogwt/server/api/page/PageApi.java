@@ -21,7 +21,6 @@ import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
-import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
@@ -35,7 +34,6 @@ import com.willshex.blogwt.shared.api.page.call.UpdatePageResponse;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PostHelper;
-import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.InputValidationException;
@@ -54,15 +52,12 @@ public final class PageApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			List<Role> roles = new ArrayList<Role>();
-			roles.add(RoleHelper.createAdmin());
-
 			List<Permission> permissions = new ArrayList<Permission>();
 			Permission postPermission = PermissionServiceProvider.provide()
 					.getCodePermission(PermissionHelper.MANAGE_PAGES);
 			permissions.add(postPermission);
 
-			UserValidator.authorisation(input.session.user, roles, permissions,
+			UserValidator.authorisation(input.session.user, permissions,
 					"input.session.user");
 
 			Page updatedPage = input.page;
@@ -100,15 +95,12 @@ public final class PageApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			List<Role> roles = new ArrayList<Role>();
-			roles.add(RoleHelper.createAdmin());
-
 			List<Permission> permissions = new ArrayList<Permission>();
 			Permission postPermission = PermissionServiceProvider.provide()
 					.getCodePermission(PermissionHelper.MANAGE_PAGES);
 			permissions.add(postPermission);
 
-			UserValidator.authorisation(input.session.user, roles, permissions,
+			UserValidator.authorisation(input.session.user, permissions,
 					"input.session.user");
 
 			input.page = PageValidator.lookup(input.page, "input.page");
@@ -136,15 +128,12 @@ public final class PageApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			List<Role> roles = new ArrayList<Role>();
-			roles.add(RoleHelper.createAdmin());
-
 			List<Permission> permissions = new ArrayList<Permission>();
 			Permission postPermission = PermissionServiceProvider.provide()
 					.getCodePermission(PermissionHelper.MANAGE_PAGES);
 			permissions.add(postPermission);
 
-			UserValidator.authorisation(input.session.user, roles, permissions,
+			UserValidator.authorisation(input.session.user, permissions,
 					"input.session.user");
 
 			input.page = PageValidator.validate(input.page, "input.page");

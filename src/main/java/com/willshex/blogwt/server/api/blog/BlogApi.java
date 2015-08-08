@@ -53,7 +53,6 @@ import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Property;
-import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
@@ -131,15 +130,12 @@ public final class BlogApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			List<Role> roles = new ArrayList<Role>();
-			roles.add(RoleHelper.createAdmin());
-
 			List<Permission> permissions = new ArrayList<Permission>();
 			Permission postPermission = PermissionServiceProvider.provide()
 					.getCodePermission(PermissionHelper.MANAGE_POSTS);
 			permissions.add(postPermission);
 
-			UserValidator.authorisation(input.session.user, roles, permissions,
+			UserValidator.authorisation(input.session.user, permissions,
 					"input.session.user");
 
 			Post updatedPost = input.post;
@@ -199,9 +195,6 @@ public final class BlogApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			List<Role> roles = new ArrayList<Role>();
-			roles.add(RoleHelper.createAdmin());
-
 			List<Permission> permissions = new ArrayList<Permission>();
 			Permission postPermission = PermissionServiceProvider.provide()
 					.getCodePermission(PermissionHelper.MANAGE_POSTS);
@@ -210,7 +203,7 @@ public final class BlogApi extends ActionHandler {
 			input.session.user = UserServiceProvider.provide().getUser(
 					Long.valueOf(input.session.userKey.getId()));
 
-			UserValidator.authorisation(input.session.user, roles, permissions,
+			UserValidator.authorisation(input.session.user, permissions,
 					"input.session.user");
 
 			input.post = PostValidator.validate(input.post, "input.post");
@@ -255,15 +248,12 @@ public final class BlogApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			List<Role> roles = new ArrayList<Role>();
-			roles.add(RoleHelper.createAdmin());
-
 			List<Permission> permissions = new ArrayList<Permission>();
 			Permission postPermission = PermissionServiceProvider.provide()
 					.getCodePermission(PermissionHelper.MANAGE_POSTS);
 			permissions.add(postPermission);
 
-			UserValidator.authorisation(input.session.user, roles, permissions,
+			UserValidator.authorisation(input.session.user, permissions,
 					"input.session.user");
 
 			input.post = PostValidator.lookup(input.post, "input.post");
@@ -294,9 +284,6 @@ public final class BlogApi extends ActionHandler {
 					output.session = input.session = SessionValidator
 							.lookupAndExtend(input.session, "input.session");
 
-					List<Role> roles = new ArrayList<Role>();
-					roles.add(RoleHelper.createAdmin());
-
 					List<Permission> permissions = new ArrayList<Permission>();
 					Permission postPermission = PermissionServiceProvider
 							.provide().getCodePermission(
@@ -307,7 +294,7 @@ public final class BlogApi extends ActionHandler {
 							Long.valueOf(input.session.userKey.getId()));
 
 					try {
-						UserValidator.authorisation(input.session.user, roles,
+						UserValidator.authorisation(input.session.user,
 								permissions, "input.session.user");
 						showAll = Boolean.TRUE;
 					} catch (AuthorisationException aEx) {
@@ -462,10 +449,7 @@ public final class BlogApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			List<Role> roles = new ArrayList<Role>();
-			roles.add(RoleHelper.createAdmin());
-
-			UserValidator.authorisation(input.session.user, roles, null,
+			UserValidator.authorisation(input.session.user, null,
 					"input.session.user");
 
 			List<Property> updatedProperties = PropertyValidator.validateAll(

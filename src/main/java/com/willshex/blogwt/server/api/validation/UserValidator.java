@@ -8,13 +8,20 @@
 package com.willshex.blogwt.server.api.validation;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import com.willshex.blogwt.server.api.exception.AuthorisationException;
+import com.willshex.blogwt.server.service.PersistenceService;
+import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
+import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
+import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.gson.json.service.server.InputValidationException;
 
 /**
@@ -34,17 +41,37 @@ public class UserValidator extends ApiValidator {
 		return users;
 	}
 
-	public static void authorisation (User user, Collection<Role> roles,
-			Collection<Permission> permissions, String name)
+	public static boolean isAdmin (User user) {
+		List<Role> roles = RoleServiceProvider.provide().getIdRolesBatch(
+				PersistenceService.keysToIds(user.roleKeys));
+		return user != null && roles != null
+				&& RoleHelper.toLookup(roles).containsKey(RoleHelper.ADMIN);
+	}
+
+	public static void authorisation (User user,
+			Collection<Permission> requiredPermissions, String name)
 			throws AuthorisationException {
+		boolean authorised = isAdmin(user);
+		List<Permission> permissions = PermissionServiceProvider.provide()
+				.getIdPermissionsBatch(
+						PersistenceService.keysToIds(user.permissionKeys));
 
-		if (roles != null) {
-			for (Role role : roles) {}
+		if (!authorised && user != null && permissions != null) {
+			if (requiredPermissions != null && requiredPermissions.size() > 0) {
+				Map<String, Permission> lookup = PermissionHelper
+						.toLookup(permissions);
+				for (Permission permission : requiredPermissions) {
+					if (permission.code != null
+							&& lookup.containsKey(permission.code)) {
+						authorised = true;
+						break;
+					}
+				}
+			}
 		}
 
-		if (permissions != null) {
-			for (Permission permission : permissions) {}
-		}
+		if (!authorised)
+			throw new AuthorisationException(user, permissions, name);
 	}
 
 	public static User lookup (User user, String name)
