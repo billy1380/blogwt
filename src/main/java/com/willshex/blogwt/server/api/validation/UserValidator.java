@@ -42,8 +42,9 @@ public class UserValidator extends ApiValidator {
 	}
 
 	public static boolean isAdmin (User user) {
-		List<Role> roles = RoleServiceProvider.provide().getIdRolesBatch(
-				PersistenceService.keysToIds(user.roleKeys));
+		List<Role> roles = user.roles == null ? RoleServiceProvider.provide()
+				.getIdRolesBatch(PersistenceService.keysToIds(user.roleKeys))
+				: user.roles;
 		return user != null && roles != null
 				&& RoleHelper.toLookup(roles).containsKey(RoleHelper.ADMIN);
 	}
@@ -52,9 +53,10 @@ public class UserValidator extends ApiValidator {
 			Collection<Permission> requiredPermissions, String name)
 			throws AuthorisationException {
 		boolean authorised = isAdmin(user);
-		List<Permission> permissions = PermissionServiceProvider.provide()
-				.getIdPermissionsBatch(
-						PersistenceService.keysToIds(user.permissionKeys));
+		List<Permission> permissions = user.permissions == null ? PermissionServiceProvider
+				.provide().getIdPermissionsBatch(
+						PersistenceService.keysToIds(user.permissionKeys))
+				: user.permissions;
 
 		if (!authorised && user != null && permissions != null) {
 			if (requiredPermissions != null && requiredPermissions.size() > 0) {
