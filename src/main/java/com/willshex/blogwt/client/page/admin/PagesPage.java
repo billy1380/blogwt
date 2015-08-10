@@ -20,6 +20,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.PageController;
@@ -175,7 +176,10 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 
 			@Override
 			public void update (int index, Page object, String value) {
-				PageController.get().deletePage(object);
+				if (Window.confirm("Are you sure you want to delete page: "
+						+ object.title + "?")) {
+					PageController.get().deletePage(object);
+				}
 			}
 		});
 
