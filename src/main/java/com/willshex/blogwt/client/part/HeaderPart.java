@@ -88,6 +88,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiField Element elPages;
 	@UiField Element elProperties;
 	@UiField Element elResources;
+	@UiField Element elRoles;
+	@UiField Element elPermissions;
 	@UiField Element elUsers;
 	@UiField Element elAccount;
 	@UiField InlineHyperlink btnAccount;
@@ -163,6 +165,10 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				elProperties);
 		ensureItems().put(PageType.UsersPageType.asTargetHistoryToken(),
 				elUsers);
+		ensureItems().put(PageType.RolesPageType.asTargetHistoryToken(),
+				elRoles);
+		ensureItems().put(PageType.PermissionsPageType.asTargetHistoryToken(),
+				elPermissions);
 		ensureItems().put(PageType.ResourcesPageType.asTargetHistoryToken(),
 				elResources);
 
@@ -288,8 +294,10 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		if (login) {
 			Permission managePages = PermissionHelper
 					.create(PermissionHelper.MANAGE_PAGES);
-			Permission manageProperties = PermissionHelper
+			Permission managePermissions= PermissionHelper
 					.create(PermissionHelper.MANAGE_PERMISSIONS);
+			Permission manageRoles = PermissionHelper
+					.create(PermissionHelper.MANAGE_ROLES);
 			Permission manageUsers = PermissionHelper
 					.create(PermissionHelper.MANAGE_POSTS);
 			Permission manageResources = PermissionHelper
@@ -297,6 +305,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 			if (SessionController.get().isAdmin()) {
 				addAdmin = true;
+				elAdminDropdown.appendChild(elProperties);
 			} else {
 				elAdminDropdown.removeAllChildren();
 			}
@@ -308,19 +317,25 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				elPages.removeFromParent();
 			}
 
-			if (addAdmin
-					|| SessionController.get().isAuthorised(manageProperties)) {
-				addAdmin = true;
-				elAdminDropdown.appendChild(elProperties);
-			} else {
-				elProperties.removeFromParent();
-			}
-
 			if (addAdmin || SessionController.get().isAuthorised(manageUsers)) {
 				addAdmin = true;
 				elAdminDropdown.appendChild(elUsers);
 			} else {
 				elUsers.removeFromParent();
+			}
+
+			if (addAdmin || SessionController.get().isAuthorised(manageRoles)) {
+				addAdmin = true;
+				elAdminDropdown.appendChild(elRoles);
+			} else {
+				elRoles.removeFromParent();
+			}
+			
+			if (addAdmin || SessionController.get().isAuthorised(managePermissions)) {
+				addAdmin = true;
+				elAdminDropdown.appendChild(elPermissions);
+			} else {
+				elPermissions.removeFromParent();
 			}
 
 			if (addAdmin
