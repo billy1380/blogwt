@@ -54,9 +54,12 @@ public class PersistenceService {
 	}
 
 	public static <T> Collection<Long> keysToIds (Collection<Key<T>> keys) {
-		List<Long> collection = new ArrayList<Long>();
-		for (Key<T> key : keys) {
-			collection.add(Long.valueOf(key.getId()));
+		List<Long> collection = null;
+		if (keys != null) {
+			collection = new ArrayList<Long>();
+			for (Key<T> key : keys) {
+				collection.add(Long.valueOf(key.getId()));
+			}
 		}
 		return collection;
 	}
