@@ -436,6 +436,9 @@ public final class UserApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
+			input.session.user = UserServiceProvider.provide().getUser(
+					Long.valueOf(input.session.userKey.getId()));
+
 			UserValidator.authorisation(input.session.user, Arrays
 					.asList(PermissionServiceProvider.provide()
 							.getCodePermission(
@@ -467,12 +470,13 @@ public final class UserApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			List<Permission> permissions = new ArrayList<Permission>();
-			Permission postPermission = PermissionServiceProvider.provide()
-					.getCodePermission(PermissionHelper.MANAGE_ROLES);
-			permissions.add(postPermission);
+			input.session.user = UserServiceProvider.provide().getUser(
+					Long.valueOf(input.session.userKey.getId()));
 
-			UserValidator.authorisation(input.session.user, permissions,
+			UserValidator.authorisation(input.session.user, Arrays
+					.asList(PermissionServiceProvider.provide()
+							.getCodePermission(
+									PermissionHelper.MANAGE_PERMISSIONS)),
 					"input.session.user");
 
 			output.roles = RoleServiceProvider.provide().getRoles(
