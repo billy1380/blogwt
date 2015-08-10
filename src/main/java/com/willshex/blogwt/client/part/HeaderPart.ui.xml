@@ -44,6 +44,12 @@
 								<li ui:field="elUsers">
 									<a href="{UsersPageType.asHref}">Users</a>
 								</li>
+								<li ui:field="elRoles">
+									<a href="{RolesPageType.asHref}">Roles</a>
+								</li>
+								<li ui:field="elPermissions">
+									<a href="{PermissionsPageType.asHref}">Permissions</a>
+								</li>
 								<li ui:field="elResources">
 									<a href="{ResourcesPageType.asHref}">Resources</a>
 								</li>
