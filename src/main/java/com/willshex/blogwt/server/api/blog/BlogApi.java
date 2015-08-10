@@ -35,12 +35,16 @@ import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostResponse;
+import com.willshex.blogwt.shared.api.blog.call.DeleteResourceRequest;
+import com.willshex.blogwt.shared.api.blog.call.DeleteResourceResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetResourcesRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetResourcesResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetTagsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetTagsResponse;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
@@ -68,6 +72,32 @@ import com.willshex.gson.json.service.shared.StatusType;
 
 public final class BlogApi extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(BlogApi.class.getName());
+
+	public DeleteResourceResponse deleteResource (DeleteResourceRequest input) {
+		LOG.finer("Entering deleteResource");
+		DeleteResourceResponse output = new DeleteResourceResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting deleteResource");
+		return output;
+	}
+
+	public GetResourcesResponse getResources (GetResourcesRequest input) {
+		LOG.finer("Entering getResources");
+		GetResourcesResponse output = new GetResourcesResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getResources");
+		return output;
+	}
 
 	public GetRelatedPostsResponse getRelatedPosts (GetRelatedPostsRequest input) {
 		LOG.finer("Entering getRelatedPosts");
