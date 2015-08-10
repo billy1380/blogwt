@@ -89,6 +89,9 @@ public final class UserApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
+			output.session.user = UserServiceProvider.provide().getUser(
+					Long.valueOf(output.session.userKey.getId()));
+
 			UserValidator.authorisation(input.session.user, Arrays
 					.asList(PermissionServiceProvider.provide()
 							.getCodePermission(PermissionHelper.MANAGE_USERS)),
