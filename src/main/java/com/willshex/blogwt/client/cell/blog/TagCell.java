@@ -53,7 +53,7 @@ public class TagCell extends AbstractSafeHtmlCell<Tag> {
 			SafeHtmlBuilder builder = new SafeHtmlBuilder();
 
 			if (displayLabel) {
-				builder.appendHtmlConstant("<span class=\"glyphicon glyphicon-tags\"></span> ");
+				builder.appendHtmlConstant("<span class=\"glyphicon glyphicon-tags\" style=\"margin-right:2px;\"></span> ");
 			}
 
 			SafeUri href = PageType.TagPagePageType
