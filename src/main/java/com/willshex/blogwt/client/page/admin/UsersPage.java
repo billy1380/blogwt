@@ -10,7 +10,6 @@ package com.willshex.blogwt.client.page.admin;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.ImageCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
@@ -24,12 +23,13 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.cell.PrettyButtonCell;
+import com.willshex.blogwt.client.cell.StyledImageCell;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
-import com.willshex.blogwt.client.part.PrettyButtonCell;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
@@ -59,7 +59,7 @@ public class UsersPage extends Page {
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField SimplePager pgrUsers;
 	@UiField NoneFoundPanel pnlNoUsers;
-	private ImageCell imagePrototype = new ImageCell();
+	private StyledImageCell imagePrototype = new StyledImageCell();
 	private Cell<SafeHtml> safeHtmlPrototype = new SafeHtmlCell();
 	private ButtonCell actionButtonPrototype = new PrettyButtonCell();
 
@@ -67,6 +67,7 @@ public class UsersPage extends Page {
 		super(PageType.UsersPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
+		imagePrototype.addClassName("img-rounded");
 		createColumns();
 
 		tblUsers.setEmptyTableWidget(pnlNoUsers);
@@ -166,7 +167,7 @@ public class UsersPage extends Page {
 
 			@Override
 			public void update (int index, User object, String value) {
-				
+
 			}
 		});
 		tblUsers.setColumnWidth(admin, 1.0, Unit.PX);
