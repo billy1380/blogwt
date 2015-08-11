@@ -7,9 +7,7 @@
 //
 package com.willshex.blogwt.server.api.user;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +23,6 @@ import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.server.service.user.IUserService;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
-import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
 import com.willshex.blogwt.shared.api.datatype.RoleSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
@@ -285,12 +282,13 @@ public final class UserApi extends ActionHandler {
 
 			// if the not logged in user
 			if (input.user.id.longValue() != input.session.userKey.getId()) {
-				List<Permission> permissions = new ArrayList<Permission>();
-				Permission postPermission = PermissionServiceProvider.provide()
-						.getCodePermission(PermissionHelper.MANAGE_USERS);
-				permissions.add(postPermission);
+				input.session.user = UserServiceProvider.provide().getUser(
+						Long.valueOf(input.session.userKey.getId()));
 
-				UserValidator.authorisation(input.session.user, permissions,
+				UserValidator.authorisation(input.session.user, Arrays
+						.asList(PermissionServiceProvider.provide()
+								.getCodePermission(
+										PermissionHelper.MANAGE_USERS)),
 						"input.session.user");
 			}
 
@@ -386,6 +384,9 @@ public final class UserApi extends ActionHandler {
 
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
+
+			input.session.user = UserServiceProvider.provide().getUser(
+					Long.valueOf(input.session.userKey.getId()));
 
 			UserValidator.authorisation(input.session.user, Arrays
 					.asList(PermissionServiceProvider.provide()
