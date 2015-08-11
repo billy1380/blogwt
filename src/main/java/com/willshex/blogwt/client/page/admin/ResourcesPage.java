@@ -87,7 +87,15 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 
 			@Override
 			public SafeHtml getValue (Resource object) {
-				return SafeHtmlUtils.fromString(object.data);
+				String data = object.data;
+
+				if (data == null) {
+					data = "none";
+				} else if (data.length() > 10) {
+					data = data.substring(0, 10);
+					data += "...";
+				}
+				return SafeHtmlUtils.fromString(data);
 			}
 		};
 
@@ -103,7 +111,7 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 
 			@Override
 			public String getValue (Resource object) {
-				return object.type.toString();
+				return object.type == null ? "none" : object.type.toString();
 			}
 		};
 

@@ -7,8 +7,12 @@
 //
 package com.willshex.blogwt.server.service.resource;
 
+import java.util.List;
+
 import com.spacehopperstudios.service.IService;
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Resource;
+import com.willshex.blogwt.shared.api.datatype.ResourceSortType;
 
 public interface IResourceService extends IService {
 
@@ -36,5 +40,15 @@ public interface IResourceService extends IService {
 	 * @param resource
 	 */
 	public void deleteResource (Resource resource);
+
+	/**
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
+	 * @return
+	 */
+	public List<Resource> getResrouces (Integer start, Integer count,
+			ResourceSortType sortBy, SortDirectionType sortDirection);
 
 }
