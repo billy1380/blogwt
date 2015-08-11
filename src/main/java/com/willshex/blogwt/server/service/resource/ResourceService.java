@@ -11,9 +11,13 @@ package com.willshex.blogwt.server.service.resource;
 import static com.willshex.blogwt.server.service.PersistenceService.ofy;
 
 import java.util.Date;
+import java.util.List;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Resource;
+import com.willshex.blogwt.shared.api.datatype.ResourceSortType;
 
 final class ResourceService implements IResourceService {
 
@@ -70,6 +74,46 @@ final class ResourceService implements IResourceService {
 	@Override
 	public void deleteResource (Resource resource) {
 		ofy().delete().entity(resource).now();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.resource.IResourceService#getResrouces
+	 * (java.lang.Integer, java.lang.Integer,
+	 * com.willshex.blogwt.shared.api.datatype.ResourceSortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	@Override
+	public List<Resource> getResrouces (Integer start, Integer count,
+			ResourceSortType sortBy, SortDirectionType sortDirection) {
+		Query<Resource> query = ofy().load().type(Resource.class);
+
+		if (start != null) {
+			query = query.offset(start.intValue());
+		}
+
+		if (count != null) {
+			query = query.limit(count.intValue());
+		}
+
+		if (sortBy != null) {
+			String condition = sortBy == ResourceSortType.ResourceSortTypeId ? "__key__"
+					: sortBy.toString();
+
+			if (sortDirection != null) {
+				switch (sortDirection) {
+				case SortDirectionTypeDescending:
+					condition = "-" + condition;
+					break;
+				default:
+					break;
+				}
+			}
+
+			query = query.order(condition);
+		}
+
+		return query.list();
 	}
 
 }

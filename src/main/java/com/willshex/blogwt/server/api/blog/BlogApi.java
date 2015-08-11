@@ -28,6 +28,7 @@ import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
+import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
@@ -91,6 +92,20 @@ public final class BlogApi extends ActionHandler {
 		LOG.finer("Entering getResources");
 		GetResourcesResponse output = new GetResourcesResponse();
 		try {
+			ApiValidator.notNull(input, UpdatePostRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			output.resources = ResourceServiceProvider.provide().getResrouces(
+					input.pager.start, input.pager.count, null,
+					SortDirectionType.SortDirectionTypeDescending);
+
+			output.pager = PagerHelper.moveForward(input.pager);
+
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
