@@ -8,6 +8,7 @@
 package com.willshex.blogwt.server.api.page;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -95,12 +96,12 @@ public final class PageApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			List<Permission> permissions = new ArrayList<Permission>();
-			Permission postPermission = PermissionServiceProvider.provide()
-					.getCodePermission(PermissionHelper.MANAGE_PAGES);
-			permissions.add(postPermission);
+			input.session.user = UserServiceProvider.provide().getUser(
+					Long.valueOf(input.session.userKey.getId()));
 
-			UserValidator.authorisation(input.session.user, permissions,
+			UserValidator.authorisation(input.session.user, Arrays
+					.asList(PermissionServiceProvider.provide()
+							.getCodePermission(PermissionHelper.MANAGE_PAGES)),
 					"input.session.user");
 
 			input.page = PageValidator.lookup(input.page, "input.page");
@@ -128,12 +129,12 @@ public final class PageApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			List<Permission> permissions = new ArrayList<Permission>();
-			Permission postPermission = PermissionServiceProvider.provide()
-					.getCodePermission(PermissionHelper.MANAGE_PAGES);
-			permissions.add(postPermission);
+			input.session.user = UserServiceProvider.provide().getUser(
+					Long.valueOf(input.session.userKey.getId()));
 
-			UserValidator.authorisation(input.session.user, permissions,
+			UserValidator.authorisation(input.session.user, Arrays
+					.asList(PermissionServiceProvider.provide()
+							.getCodePermission(PermissionHelper.MANAGE_PAGES)),
 					"input.session.user");
 
 			input.page = PageValidator.validate(input.page, "input.page");
