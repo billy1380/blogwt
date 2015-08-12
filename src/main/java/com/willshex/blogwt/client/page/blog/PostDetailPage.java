@@ -23,7 +23,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -42,6 +41,7 @@ import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.client.part.DisqusComments;
 import com.willshex.blogwt.client.part.InlineBootstrapGwtCellList;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostResponse;
@@ -79,6 +79,9 @@ public class PostDetailPage extends Page implements
 	@UiField InlineHyperlink lnkEditPost;
 	@UiField Button btnDeletePost;
 
+	@UiField(provided = true) DisqusComments dsqComments = new DisqusComments(
+			PostController.categoryId(), PostController.disqusId());
+
 	@UiField AnchorElement lnkAddToAny;
 	@UiField Element elAddToAny;
 	private ScriptElement elAddToAnyScript;
@@ -87,10 +90,6 @@ public class PostDetailPage extends Page implements
 			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
 
 	private ListDataProvider<Tag> tagList = new ListDataProvider<Tag>();
-
-	private boolean installed;
-	private Element elComments;
-	@UiField Element elCommentsPlaceholder;
 	private Post post;
 
 	public PostDetailPage () {
@@ -189,45 +188,24 @@ public class PostDetailPage extends Page implements
 
 			pnlContent.getElement().setInnerHTML(markup);
 
-			if (post.commentsEnabled == Boolean.TRUE) {
+			String comments = PropertyController.get().stringProperty(
+					PropertyHelper.POST_COMMENTS_ENABLED);
+
+			if (comments == null || comments.equals(PropertyHelper.NONE_VALUE)) {
+				dsqComments.removeFromParent();
+			} else if (post.commentsEnabled == Boolean.TRUE) {
 				final String identifier = "post" + post.id.toString();
-				final String tag = post.tags == null || post.tags.size() == 0 ? "None"
+				final String tag = post.tags == null || post.tags.size() == 0 ? "none"
 						: post.tags.get(0);
 
-				(new Timer() {
-					@Override
-					public void run () {
-						if (elComments == null) {
-							elComments = Document.get().getElementById(
-									"disqus_thread");
-						}
+				dsqComments.setUrl(url);
+				dsqComments.setTitle(title);
+				dsqComments.setIdentifier(identifier);
+				dsqComments.setTag(tag);
 
-						if (elCommentsPlaceholder.hasParentElement()) {
-							elCommentsPlaceholder.getParentElement()
-									.replaceChild(elComments,
-											elCommentsPlaceholder);
-
-						}
-
-						if (elComments != null) {
-							if (!installed) {
-								installDisqus(PostController.get().disqusId(),
-										PostController.get().categoryId(),
-										identifier, url, title, tag);
-								installed = true;
-							} else {
-								resetDisqus(identifier, url, title, tag);
-							}
-
-							this.cancel();
-						}
-					}
-				}).scheduleRepeating(100);
+				dsqComments.setVisible(true);
 			} else {
-				if (elComments != null && elComments.hasParentElement()) {
-					elComments.getParentElement().replaceChild(
-							elCommentsPlaceholder, elComments);
-				}
+				dsqComments.setVisible(false);
 			}
 		}
 
@@ -265,43 +243,6 @@ public class PostDetailPage extends Page implements
 		lnkEditPost.setVisible(canChange);
 		btnDeletePost.setVisible(canChange);
 	}
-
-	private static native void installDisqus (String discusShortName,
-			String categoryId, String postId, String url, String title,
-			String category) /*-{
-								$wnd.disqus_shortname = discusShortName;
-
-								// $wnd.disqus_identifier = postId;
-								$wnd.disqus_url = url;
-								$wnd.disqus_title = title;
-								$wnd.disqus_category_id = categoryId;
-
-								($wnd.installDisqus = function() {
-								var dsq = $wnd.document.createElement('script');
-								dsq.type = 'text/javascript';
-								dsq.async = true;
-								dsq.src = '//' + $wnd.disqus_shortname + '.disqus.com/embed.js';
-								($wnd.document.getElementsByTagName('head')[0] || $wnd.document
-								.getElementsByTagName('body')[0]).appendChild(dsq);
-								})();
-
-								$wnd.reset = function(resetPostId, resetUrl, resetTitle, categoryId) {
-								$wnd.DISQUS.reset({
-								reload : true,
-								config : function() {
-								// this.page.identifier = resetPostId;
-								this.page.url = resetUrl;
-								this.page.title = resetTitle;
-								this.page.category_id = categoryId;
-								}
-								});
-								};
-								}-*/;
-
-	private static native void resetDisqus (String postId, String url,
-			String title, String categoryId) /*-{
-												$wnd.reset(postId, url, title, categoryId);
-												}-*/;
 
 	@Override
 	public void deletePostSuccess (DeletePostRequest input,
@@ -358,7 +299,9 @@ public class PostDetailPage extends Page implements
 
 		pnlContent.getElement().setInnerHTML("");
 		pnlLoading.setVisible(true);
-		
+
+		dsqComments.setVisible(false);
+
 		removeAddToAny();
 
 	}
