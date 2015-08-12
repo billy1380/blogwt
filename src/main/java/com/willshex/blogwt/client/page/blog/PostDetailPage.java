@@ -10,8 +10,11 @@ package com.willshex.blogwt.client.page.blog;
 import java.util.Arrays;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.ScriptElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -75,6 +78,10 @@ public class PostDetailPage extends Page implements
 	@UiField HTMLPanel pnlContent;
 	@UiField InlineHyperlink lnkEditPost;
 	@UiField Button btnDeletePost;
+
+	@UiField AnchorElement lnkAddToAny;
+	@UiField Element elAddToAny;
+	private ScriptElement elAddToAnyScript;
 
 	@UiField(provided = true) CellList<Tag> clTags = new CellList<Tag>(
 			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
@@ -170,6 +177,13 @@ public class PostDetailPage extends Page implements
 			}
 		}
 
+		final String url = GWT.getHostPageBaseURL()
+				+ PageType.PostDetailPageType.asHref(post.slug).asString();
+		final String title = post.title;
+
+		configureAddToAny(url, title);
+		installAddToAny(url, title);
+
 		if (post.content != null) {
 			String markup = PostHelper.makeMarkup(post.content.body);
 
@@ -177,11 +191,6 @@ public class PostDetailPage extends Page implements
 
 			if (post.commentsEnabled == Boolean.TRUE) {
 				final String identifier = "post" + post.id.toString();
-				final String url = GWT.getHostPageBaseURL()
-						+ PageType.PostDetailPageType
-								.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-										post.slug).asString();
-				final String title = post.title;
 				final String tag = post.tags == null || post.tags.size() == 0 ? "None"
 						: post.tags.get(0);
 
@@ -246,6 +255,7 @@ public class PostDetailPage extends Page implements
 			if ((postParam = current.getAction()) != null) {
 				PostController.get().getPost(postParam);
 				pnlLoading.setVisible(true);
+				removeAddToAny();
 			}
 		}
 
@@ -306,6 +316,30 @@ public class PostDetailPage extends Page implements
 	@Override
 	public void deletePostFailure (DeletePostRequest input, Throwable caught) {}
 
+	private static native void configureAddToAny (String url, String title) /*-{
+																			$wnd.a2a_config = $wnd.a2a_config || {};
+																			$wnd.a2a_config.linkname = title;
+																			$wnd.a2a_config.linkurl = url;
+																			}-*/;
+
+	private void installAddToAny (String url, String title) {
+		lnkAddToAny.getStyle().setDisplay(Display.BLOCK);
+		lnkAddToAny.setHref("https://www.addtoany.com/share_save?linkurl="
+				+ url + "&linkname=" + title + "");
+
+		elAddToAnyScript = Document.get().createScriptElement();
+		elAddToAnyScript.setType("text/javascript");
+		elAddToAnyScript.setSrc("//static.addtoany.com/menu/page.js");
+		Document.get().getBody().appendChild(elAddToAnyScript);
+	}
+
+	private void removeAddToAny () {
+		if (elAddToAnyScript != null && elAddToAnyScript.hasParentElement()) {
+			elAddToAnyScript.removeFromParent();
+			lnkAddToAny.getStyle().setDisplay(Display.NONE);
+		}
+	}
+
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.client.page.Page#reset() */
@@ -324,5 +358,8 @@ public class PostDetailPage extends Page implements
 
 		pnlContent.getElement().setInnerHTML("");
 		pnlLoading.setVisible(true);
+		
+		removeAddToAny();
+
 	}
 }
