@@ -10,11 +10,7 @@ package com.willshex.blogwt.client.page.blog;
 import java.util.Arrays;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.AnchorElement;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.ScriptElement;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -41,6 +37,7 @@ import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.client.part.AddToAny;
 import com.willshex.blogwt.client.part.DisqusComments;
 import com.willshex.blogwt.client.part.InlineBootstrapGwtCellList;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
@@ -82,9 +79,7 @@ public class PostDetailPage extends Page implements
 	@UiField(provided = true) DisqusComments dsqComments = new DisqusComments(
 			PostController.categoryId(), PostController.disqusId());
 
-	@UiField AnchorElement lnkAddToAny;
-	@UiField Element elAddToAny;
-	private ScriptElement elAddToAnyScript;
+	@UiField AddToAny ataShare;
 
 	@UiField(provided = true) CellList<Tag> clTags = new CellList<Tag>(
 			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
@@ -180,8 +175,10 @@ public class PostDetailPage extends Page implements
 				+ PageType.PostDetailPageType.asHref(post.slug).asString();
 		final String title = post.title;
 
-		configureAddToAny(url, title);
-		installAddToAny(url, title);
+		ataShare.setUrl(url);
+		ataShare.setTitle(title);
+		
+		ataShare.setVisible(true);
 
 		if (post.content != null) {
 			String markup = PostHelper.makeMarkup(post.content.body);
@@ -233,7 +230,8 @@ public class PostDetailPage extends Page implements
 			if ((postParam = current.getAction()) != null) {
 				PostController.get().getPost(postParam);
 				pnlLoading.setVisible(true);
-				removeAddToAny();
+				dsqComments.setVisible(false);
+				ataShare.setVisible(false);
 			}
 		}
 
@@ -257,30 +255,6 @@ public class PostDetailPage extends Page implements
 	@Override
 	public void deletePostFailure (DeletePostRequest input, Throwable caught) {}
 
-	private static native void configureAddToAny (String url, String title) /*-{
-																			$wnd.a2a_config = $wnd.a2a_config || {};
-																			$wnd.a2a_config.linkname = title;
-																			$wnd.a2a_config.linkurl = url;
-																			}-*/;
-
-	private void installAddToAny (String url, String title) {
-		lnkAddToAny.getStyle().setDisplay(Display.BLOCK);
-		lnkAddToAny.setHref("https://www.addtoany.com/share_save?linkurl="
-				+ url + "&linkname=" + title + "");
-
-		elAddToAnyScript = Document.get().createScriptElement();
-		elAddToAnyScript.setType("text/javascript");
-		elAddToAnyScript.setSrc("//static.addtoany.com/menu/page.js");
-		Document.get().getBody().appendChild(elAddToAnyScript);
-	}
-
-	private void removeAddToAny () {
-		if (elAddToAnyScript != null && elAddToAnyScript.hasParentElement()) {
-			elAddToAnyScript.removeFromParent();
-			lnkAddToAny.getStyle().setDisplay(Display.NONE);
-		}
-	}
-
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.client.page.Page#reset() */
@@ -301,8 +275,7 @@ public class PostDetailPage extends Page implements
 		pnlLoading.setVisible(true);
 
 		dsqComments.setVisible(false);
-
-		removeAddToAny();
+		ataShare.setVisible(false);
 
 	}
 }

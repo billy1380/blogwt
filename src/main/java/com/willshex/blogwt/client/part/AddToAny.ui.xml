@@ -4,6 +4,13 @@
 	
 	</ui:style>
 	<g:HTMLPanel>
-
+		<div ui:field="elAddToAny" class="a2a_kit a2a_kit_size_32 a2a_default_style pull-right">
+			<a ui:field="lnkAddToAny" href="" />
+			<a class="a2a_button_google_plus" />
+			<a class="a2a_button_twitter" />
+			<a class="a2a_button_facebook" />
+			<a class="a2a_button_reddit" />
+			<a class="a2a_button_linkedin" />
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 
