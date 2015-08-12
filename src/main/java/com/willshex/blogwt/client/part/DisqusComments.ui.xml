@@ -4,6 +4,6 @@
 	
 	</ui:style>
 	<g:HTMLPanel>
-
+		<div id="disqus_thread" />
 	</g:HTMLPanel>
 </ui:UiBinder> 
