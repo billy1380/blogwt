@@ -301,7 +301,7 @@ public class PostController extends AsyncDataProvider<Post> {
 	/**
 	 * @return
 	 */
-	public String disqusId () {
+	public static String disqusId () {
 		return PropertyController.get().stringProperty(
 				PropertyHelper.POST_DISQUS_ID);
 	};
@@ -309,7 +309,7 @@ public class PostController extends AsyncDataProvider<Post> {
 	/**
 	 * @return
 	 */
-	public String categoryId () {
+	public static String categoryId () {
 		return PropertyController.get().stringProperty(
 				PropertyHelper.POST_CATEGORY_ID);
 	};

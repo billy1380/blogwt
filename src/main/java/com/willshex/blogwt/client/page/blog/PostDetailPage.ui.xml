@@ -43,7 +43,8 @@
 
 				<c:CellList ui:field="clTags" styleName="{style.tags}" />
 
-				<div ui:field="elAddToAny" class="a2a_kit a2a_kit_size_32 a2a_default_style pull-right {style.bottom-margin}">
+				<div ui:field="elAddToAny"
+					class="a2a_kit a2a_kit_size_32 a2a_default_style pull-right {style.bottom-margin}">
 					<a ui:field="lnkAddToAny" href="" />
 					<a class="a2a_button_google_plus" />
 					<a class="a2a_button_twitter" />
@@ -52,8 +53,8 @@
 					<a class="a2a_button_linkedin" />
 				</div>
 
-				<div ui:field="elCommentsPlaceholder" />
-				<div id="disqus_thread" />
+				<p:DisqusComments ui:field="dsqComments" />
+
 			</div>
 		</g:HTMLPanel>
 
