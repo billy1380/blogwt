@@ -35,6 +35,8 @@ public class PropertyHelper {
 	public static final String POST_DISQUS_ID = "post.comments.disqus.id";
 	public static final String POST_CATEGORY_ID = "post.comments.disqus.category.id";
 
+	public static final String POST_SHARE_ENABLED = "post.share.enabled";
+
 	public static final String POST_ENABLE_EMOJI = "post.enable.emoji";
 	public static final String POST_SHOW_AUTHOR = "post.show.author";
 	public static final String POST_SHOW_AUTHOR_SUMMARY = "post.show.author.summary";
@@ -67,6 +69,8 @@ public class PropertyHelper {
 	public static final String POST_COMMENTS_ENABLED_DESCRIPTION = "Enable Comments";
 	public static final String POST_DISQUS_ID_DESCRIPTION = "Disqus Identifier";
 	public static final String POST_CATEGORY_ID_DESCRIPTION = "Disqus Category Identifier";
+
+	public static final String POST_SHARE_ENABLED_DESCRIPTION = "Enable sharing in posts";
 
 	public static final String POST_ENABLE_EMOJI_DESCRIPTION = "Enable emoji in posts and on pages";
 	public static final String POST_SHOW_AUTHOR_DESCRIPTION = "Show the authors on the post and post summaries";
@@ -139,6 +143,12 @@ public class PropertyHelper {
 	public static Property createPostCommentsEnabled (String value) {
 		return new Property().name(POST_COMMENTS_ENABLED)
 				.description(POST_COMMENTS_ENABLED_DESCRIPTION)
+				.group("Functional").type("string").value(value);
+	}
+
+	public static Property createPostShareEnabled (String value) {
+		return new Property().name(POST_SHARE_ENABLED)
+				.description(POST_SHARE_ENABLED_DESCRIPTION)
 				.group("Functional").type("string").value(value);
 	}
 
@@ -245,7 +255,7 @@ public class PropertyHelper {
 					createPostEnableEmoji(null),
 					createPostCommentsEnabled(null),
 					createMarkdownMapsApiKey(null), createDisqusId(null),
-					createCategoryId(null),
+					createCategoryId(null), createPostShareEnabled(null),
 					createMarkdownPrefechIncludes(null),
 					createPostShowAuthor(null),
 					createPostShowAuthorSummary(null),
