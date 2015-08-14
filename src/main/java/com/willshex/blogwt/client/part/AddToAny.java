@@ -16,6 +16,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.controller.PropertyController;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -36,6 +38,20 @@ public class AddToAny extends Composite {
 
 	public AddToAny () {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		String share = PropertyController.get().stringProperty(
+				PropertyHelper.POST_SHARE_ENABLED);
+		if (!PropertyHelper.NONE_VALUE.equals(share) && share != null) {
+			String[] shareWith = share.split(",");
+
+			AnchorElement anchor;
+			Document doc = Document.get();
+			for (String service : shareWith) {
+				anchor = doc.createAnchorElement();
+				anchor.setClassName("a2a_button_" + service);
+				elAddToAny.appendChild(anchor);
+			}
+		}
 	}
 
 	/**
