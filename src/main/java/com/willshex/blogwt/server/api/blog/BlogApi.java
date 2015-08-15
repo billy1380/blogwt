@@ -20,6 +20,7 @@ import com.willshex.blogwt.server.api.exception.AuthorisationException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PostValidator;
 import com.willshex.blogwt.server.api.validation.PropertyValidator;
+import com.willshex.blogwt.server.api.validation.ResourceValidator;
 import com.willshex.blogwt.server.api.validation.RoleValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
@@ -79,6 +80,18 @@ public final class BlogApi extends ActionHandler {
 		LOG.finer("Entering deleteResource");
 		DeleteResourceResponse output = new DeleteResourceResponse();
 		try {
+			ApiValidator.notNull(input, UpdatePostRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			input.resource = ResourceValidator.lookup(input.resource,
+					"input.resource");
+
+			ResourceServiceProvider.provide().deleteResource(input.resource);
+
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
