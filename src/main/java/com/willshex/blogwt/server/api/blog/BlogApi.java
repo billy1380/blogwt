@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.googlecode.objectify.Key;
 import com.willshex.blogwt.server.api.exception.AuthorisationException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
@@ -87,6 +89,9 @@ public final class BlogApi extends ActionHandler {
 
 			input.resource = ResourceValidator.lookup(input.resource,
 					"input.resource");
+
+			BlobstoreServiceFactory.getBlobstoreService().delete(
+					new BlobKey(input.resource.data.substring(5)));
 
 			ResourceServiceProvider.provide().deleteResource(input.resource);
 
