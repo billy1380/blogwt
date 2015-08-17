@@ -32,7 +32,7 @@ public class ResourceValidator {
 			isIdLookup = true;
 		}
 
-		if (isIdLookup)
+		if (!isIdLookup)
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.DataTypeNoLookup, type + ": " + name);
 
