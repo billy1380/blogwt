@@ -10,7 +10,7 @@
 				<div class="input-group">
 					<g:TextBox styleName="form-control" ui:field="txtSearch" />
 					<span class="input-group-btn">
-						<g:SubmitButton styleName="btn btn-default" ui:field="btnSubmit">
+						<g:SubmitButton styleName="btn btn-primary" ui:field="btnSubmit">
 							<span class="glyphicon glyphicon-search"></span>
 						</g:SubmitButton>
 					</span>
