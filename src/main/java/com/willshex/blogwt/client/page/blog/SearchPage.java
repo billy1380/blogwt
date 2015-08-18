@@ -1,8 +1,8 @@
 //
-//  TagPage.java
+//  SearchPage.java
 //  blogwt
 //
-//  Created by William Shakour (billy1380) on 15 Jul 2015.
+//  Created by William Shakour (billy1380) on 18 Aug 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.client.page.blog;
@@ -23,7 +23,6 @@ import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
-import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
@@ -36,44 +35,46 @@ import com.willshex.blogwt.shared.api.datatype.Post;
  * @author William Shakour (billy1380)
  *
  */
-public class TagPage extends Page implements NavigationChangedEventHandler {
+public class SearchPage extends Page implements NavigationChangedEventHandler {
 
-	private static TagPageUiBinder uiBinder = GWT.create(TagPageUiBinder.class);
+	private static SearchPageUiBinder uiBinder = GWT
+			.create(SearchPageUiBinder.class);
 
-	interface TagPageUiBinder extends UiBinder<Widget, TagPage> {}
+	interface SearchPageUiBinder extends UiBinder<Widget, SearchPage> {}
 
-	interface TagPageTemplates extends SafeHtmlTemplates {
-		TagPageTemplates INSTANCE = GWT.create(TagPageTemplates.class);
+	interface SearchPageTemplates extends SafeHtmlTemplates {
+		SearchPageTemplates INSTANCE = GWT.create(SearchPageTemplates.class);
 
-		@Template("Posts tagged with <strong>&apos;{0}&apos;</strong>")
+		@Template("Search for <strong>&apos;{0}&apos;</strong>")
 		SafeHtml heading (String tag);
 	}
 
 	@UiField Element elHeading;
-	@UiField(provided = true) CellList<Post> clPosts = new CellList<Post>(
+	@UiField(provided = true) CellList<Post> clResults = new CellList<Post>(
 			new PostSummaryCell(), BootstrapGwtCellList.INSTANCE);
-	@UiField NoneFoundPanel pnlNoPosts;
+	@UiField NoneFoundPanel pnlNoResults;
 
-	public TagPage () {
-		super(PageType.TagPostsPageType);
+	public SearchPage () {
+		super(PageType.SearchPostsPageType);
+
 		initWidget(uiBinder.createAndBindUi(this));
 
-		pnlNoPosts.removeFromParent();
-		clPosts.setEmptyListWidget(pnlNoPosts);
+		pnlNoResults.removeFromParent();
+		clResults.setEmptyListWidget(pnlNoResults);
 
 		HTMLPanel loadingWidget = new HTMLPanel(SafeHtmlUtils.EMPTY_SAFE_HTML);
 		loadingWidget.addStyleName("text-center");
 		loadingWidget
 				.add(new Image(Resources.CELL_TABLE_RES.cellTableLoading()));
 
-		clPosts.setLoadingIndicator(loadingWidget);
+		clResults.setLoadingIndicator(loadingWidget);
 
-		PostController.get().addDataDisplay(clPosts);
+		//		PostController.get().addDataDisplay(clPosts);
 	}
 
 	/* (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
 	@Override
 	protected void onAttach () {
 		register(PostHelper.handlePluginContentReady());
@@ -93,18 +94,18 @@ public class TagPage extends Page implements NavigationChangedEventHandler {
 	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
-		String tag;
-		if ((tag = current.getAction()) != null) {
-			elHeading.setInnerSafeHtml(TagPageTemplates.INSTANCE.heading(tag));
+		String search;
+		if ((search = current.getAction()) != null) {
+			elHeading.setInnerSafeHtml(SearchPageTemplates.INSTANCE.heading(search));
 
-			PostController.get().setTag(tag);
+			// PostController.get().setTag(tag);
 
 			refresh();
 		}
 	}
 
 	private void refresh () {
-		clPosts.setVisibleRangeAndClearData(clPosts.getVisibleRange(), true);
+		clResults.setVisibleRangeAndClearData(clResults.getVisibleRange(), true);
 	}
 
 }

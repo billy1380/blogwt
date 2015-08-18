@@ -4,8 +4,6 @@
 	
 	</ui:style>
 	<g:HTMLPanel>
-
-		<h3>Archive</h3>
-
+		<h3>Related</h3>
 	</g:HTMLPanel>
 </ui:UiBinder> 

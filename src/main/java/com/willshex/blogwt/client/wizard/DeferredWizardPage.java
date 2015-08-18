@@ -79,7 +79,7 @@ public final class DeferredWizardPage<T> implements WizardPage<T> {
 	 * 
 	 * @see com.spacehopperstudios.gwt.wizard.WizardPage#validate() */
 	@Override
-	public boolean validate () {
+	public boolean isValid () {
 		return false;
 	}
 

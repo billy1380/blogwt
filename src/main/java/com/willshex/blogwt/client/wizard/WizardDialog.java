@@ -128,7 +128,7 @@ public class WizardDialog extends Composite {
 	@UiHandler("btnNext")
 	void onBtnNextClicked (ClickEvent event) {
 
-		if (plan.get(currentPage).validate()) {
+		if (plan.get(currentPage).isValid()) {
 			if (plan.count() - 1 == currentPage) {
 				btnNext.getElement().setInnerSafeHtml(
 						WizardDialogTemplates.INSTANCE.loadingButton(

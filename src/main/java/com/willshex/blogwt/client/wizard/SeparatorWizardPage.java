@@ -54,7 +54,7 @@ public final class SeparatorWizardPage implements WizardPage<Void> {
 	}
 
 	@Override
-	public boolean validate() {
+	public boolean isValid() {
 		return true;
 	}
 

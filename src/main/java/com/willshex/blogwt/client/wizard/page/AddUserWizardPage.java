@@ -110,7 +110,7 @@ public class AddUserWizardPage extends Composite implements WizardPage<User> {
 	 * 
 	 * @see com.willshex.blogwt.client.wizard.WizardPage#validate() */
 	@Override
-	public boolean validate () {
+	public boolean isValid () {
 		return true;
 	}
 

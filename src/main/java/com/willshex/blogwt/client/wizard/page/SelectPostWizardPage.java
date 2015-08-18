@@ -111,7 +111,7 @@ public class SelectPostWizardPage extends Composite implements WizardPage<Post> 
 	 * 
 	 * @see com.willshex.blogwt.client.wizard.WizardPage#validate() */
 	@Override
-	public boolean validate () {
+	public boolean isValid () {
 		return true;
 	}
 

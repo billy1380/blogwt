@@ -103,7 +103,7 @@ public class BlogPropertiesWizardPage extends Composite implements
 	 * 
 	 * @see com.willshex.blogwt.client.wizard.WizardPage#validate() */
 	@Override
-	public boolean validate () {
+	public boolean isValid () {
 		return true;
 	}
 

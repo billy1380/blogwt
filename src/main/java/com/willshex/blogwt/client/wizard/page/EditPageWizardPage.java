@@ -158,7 +158,7 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 	 * 
 	 * @see com.willshex.blogwt.client.wizard.WizardPage#validate() */
 	@Override
-	public boolean validate () {
+	public boolean isValid () {
 		return true;
 	}
 
