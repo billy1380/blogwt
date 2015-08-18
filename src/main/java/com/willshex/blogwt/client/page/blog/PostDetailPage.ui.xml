@@ -48,6 +48,12 @@
 				<p:DisqusComments ui:field="dsqComments" />
 
 			</div>
+
+			<div class="col-sm-3">
+				<p:SearchPart ui:field="coSearch" />
+
+				<p:RelatedPart ui:field="coRelated" />
+			</div>
 		</g:HTMLPanel>
 
 		<p:BackToTop />

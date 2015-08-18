@@ -1,0 +1,23 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel>
+		<h3>Search</h3>
+		<g:FormPanel>
+			<g:HTMLPanel>
+				<div class="input-group">
+					<g:TextBox styleName="form-control" ui:field="txtSearch" />
+					<span class="input-group-btn">
+						<g:SubmitButton styleName="btn btn-default" ui:field="btnSubmit">
+							<span class="glyphicon glyphicon-search"></span>
+						</g:SubmitButton>
+					</span>
+				</div>
+				<g:HTMLPanel styleName="control-label small" ui:field="pnlSearchNote"
+					visible="false" />
+			</g:HTMLPanel>
+		</g:FormPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

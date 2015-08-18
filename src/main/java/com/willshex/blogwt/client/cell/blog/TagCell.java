@@ -56,7 +56,7 @@ public class TagCell extends AbstractSafeHtmlCell<Tag> {
 				builder.appendHtmlConstant("<span class=\"glyphicon glyphicon-tags\" style=\"margin-right:2px;\"></span> ");
 			}
 
-			SafeUri href = PageType.TagPagePageType
+			SafeUri href = PageType.TagPostsPageType
 					.asHref(object.slug == null ? PostHelper
 							.slugify(object.name) : object.slug);
 

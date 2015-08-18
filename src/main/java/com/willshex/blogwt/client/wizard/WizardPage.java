@@ -30,7 +30,7 @@ public interface WizardPage<T> {
 
 	WizardPage<?> another();
 
-	boolean validate();
+	boolean isValid();
 
 	Focusable getAutoFocusField();
 
