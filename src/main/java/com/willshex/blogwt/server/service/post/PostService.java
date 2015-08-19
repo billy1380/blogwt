@@ -17,6 +17,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Field;
+import com.google.appengine.api.search.Index;
+import com.google.appengine.api.search.IndexSpec;
+import com.google.appengine.api.search.PutException;
+import com.google.appengine.api.search.SearchServiceFactory;
+import com.google.appengine.api.search.StatusCode;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
@@ -27,6 +34,7 @@ import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.PostHelper;
+import com.willshex.blogwt.shared.helper.UserHelper;
 
 /**
  * 
@@ -71,6 +79,46 @@ final class PostService implements IPostService {
 
 		updateTags(post);
 
+		if (post.published != null && post.listed == Boolean.TRUE) {
+			com.google.appengine.api.search.Document.Builder documentBuilder = Document
+					.newBuilder();
+			documentBuilder
+					.setId(getName() + post.id.toString())
+					.addField(
+							Field.newBuilder().setName("author")
+									.setAtom(post.author.username))
+					.addField(
+							Field.newBuilder().setName("author")
+									.setText(UserHelper.name(post.author)))
+					.addField(
+							Field.newBuilder().setName("body")
+									.setText(post.content.body))
+					.addField(
+							Field.newBuilder().setName("created")
+									.setDate(post.created))
+					.addField(
+							Field.newBuilder().setName("published")
+									.setDate(post.published))
+					.addField(
+							Field.newBuilder().setName("slug")
+									.setAtom(post.slug))
+					.addField(
+							Field.newBuilder().setName("summary")
+									.setText(post.summary))
+					.addField(
+							Field.newBuilder().setName("title")
+									.setText(post.title));
+
+			if (post.tags != null) {
+				for (String tag : post.tags) {
+					documentBuilder.addField(Field.newBuilder().setName("tag")
+							.setText(tag));
+				}
+			}
+
+			indexDocument(documentBuilder.build());
+		}
+
 		return post;
 	}
 
@@ -93,7 +141,7 @@ final class PostService implements IPostService {
 		ofy().save().entity(post).now();
 
 		updateTags(post);
-		
+
 		deleteFromTags(post, removedTags);
 
 		return post;
@@ -271,6 +319,27 @@ final class PostService implements IPostService {
 
 			if (tag != null) {
 				TagServiceProvider.provide().removeTagPost(tag, post);
+			}
+		}
+	}
+
+	private void indexDocument (Document document) {
+		indexDocument(document, 0);
+	}
+
+	private void indexDocument (Document document, int count) {
+		IndexSpec indexSpec = IndexSpec.newBuilder().setName("all").build();
+		Index index = SearchServiceFactory.getSearchService().getIndex(
+				indexSpec);
+
+		try {
+			index.put(document);
+		} catch (PutException e) {
+			if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult()
+					.getCode())) {
+				if (count < 2) {
+					indexDocument(document, count++);
+				}
 			}
 		}
 	}
