@@ -115,4 +115,9 @@ public interface IPostService extends IService {
 	 */
 	public List<Post> getPostBatch (Collection<Long> ids);
 
+	/**
+	 * 
+	 */
+	public void indexAll ();
+
 }

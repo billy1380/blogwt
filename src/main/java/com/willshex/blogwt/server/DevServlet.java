@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.service.ContextAwareServlet;
 
@@ -28,12 +29,17 @@ public class DevServlet extends ContextAwareServlet {
 	@Override
 	protected void doGet () throws ServletException, IOException {
 		super.doGet();
-		
+
 		String action = REQUEST.get().getParameter("action");
-		
-		if ("gentags".equalsIgnoreCase(action)) {
+
+		if (action != null) {
+			action = action.toLowerCase();
+		}
+
+		if ("gentags".equals(action)) {
 			TagServiceProvider.provide().generateTags();
+		} else if ("indexall".equals(action)) {
+			PostServiceProvider.provide().indexAll();
 		}
 	}
-
 }

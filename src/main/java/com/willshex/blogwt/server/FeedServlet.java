@@ -69,7 +69,7 @@ public class FeedServlet extends ContextAwareServlet {
 				.getNamedProperty(PropertyHelper.GENERATE_RSS_FEED);
 
 		if (PropertyHelper.isEmpty(generateRss)
-				|| Boolean.valueOf(generateRss.value) == Boolean.TRUE) {
+				|| Boolean.valueOf(generateRss.value).booleanValue()) {
 
 			HttpServletRequest request = REQUEST.get();
 			HttpServletResponse response = RESPONSE.get();

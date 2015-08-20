@@ -210,7 +210,7 @@ public final class PageApi extends ActionHandler {
 			output.page = input.page = PageValidator.lookup(input.page,
 					"input.page");
 
-			if (input.includePosts == Boolean.TRUE) {
+			if (Boolean.TRUE.equals(input.includePosts)) {
 				output.page = PageServiceProvider.provide().getPage(
 						input.page.id, input.includePosts);
 			}

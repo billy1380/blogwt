@@ -66,4 +66,9 @@ public interface IPageService extends IService {
 	public List<Page> getPages (Boolean includePostContents, Integer start,
 			Integer count, PageSortType sortBy, SortDirectionType sortDirection);
 
+	/**
+	 * 
+	 */
+	public void indexAll ();
+
 }

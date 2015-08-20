@@ -87,7 +87,7 @@ public class CommentPropertyPart extends AbstractPropertyPart {
 
 	@UiHandler({ "rdoNone", "rdoDisqus" })
 	void onSelectionValueChanged (ValueChangeEvent<Boolean> vce) {
-		if (vce.getValue() == Boolean.TRUE) {
+		if (Boolean.TRUE.equals(vce.getValue())) {
 			setValue(vce.getSource() == rdoNone ? NONE_VALUE : DISQUS_VALUE,
 					true);
 		}
