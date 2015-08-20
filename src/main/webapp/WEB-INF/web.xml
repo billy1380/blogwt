@@ -54,6 +54,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-class>com.willshex.blogwt.server.api.page.PageJsonServlet</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>Search API</servlet-name>
+		<servlet-class>com.willshex.blogwt.server.api.search.SearchJsonServlet</servlet-class>
+	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>Blog API</servlet-name>
 		<url-pattern>/blog</url-pattern>
@@ -67,6 +72,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet-mapping>
 		<servlet-name>Page API</servlet-name>
 		<url-pattern>/page</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Search API</servlet-name>
+		<url-pattern>/search</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
