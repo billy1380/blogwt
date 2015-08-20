@@ -1,6 +1,6 @@
 //  
 //  GetPagesRequest.java
-//  xsdwsdl2code
+//  blogwt
 //
 //  Created by William Shakour on June 21, 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
