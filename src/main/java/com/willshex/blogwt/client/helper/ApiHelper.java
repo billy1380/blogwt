@@ -13,6 +13,7 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.BlogService;
 import com.willshex.blogwt.client.api.page.PageService;
 import com.willshex.blogwt.client.api.user.UserService;
+import com.willshex.blogwt.client.api.user.search.SearchService;
 import com.willshex.blogwt.shared.api.Request;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.json.service.shared.Error;
@@ -28,6 +29,7 @@ public class ApiHelper {
 	public static final String BLOG_END_POINT = BASE_URL + "blog";
 	public static final String USER_END_POINT = BASE_URL + "user";
 	public static final String PAGE_END_POINT = BASE_URL + "page";
+	public static final String SEARCH_END_POINT = BASE_URL + "search";
 	public static final String UPLOAD_END_POINT = BASE_URL + "upload";
 
 	public static BlogService createBlogClient () {
@@ -51,6 +53,13 @@ public class ApiHelper {
 		return service;
 	}
 
+	public static SearchService createSearchClient () {
+		SearchService service = new SearchService();
+		service.setUrl(SEARCH_END_POINT);
+		service.setBus(DefaultEventBus.get());
+		return service;
+	}
+	
 	public static <T extends Request> T setAccessCode (T input) {
 		input.accessCode = ACCESS_CODE;
 		return input;
