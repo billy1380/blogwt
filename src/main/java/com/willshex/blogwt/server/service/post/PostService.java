@@ -19,20 +19,19 @@ import java.util.Map;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
-import com.google.appengine.api.search.Index;
-import com.google.appengine.api.search.IndexSpec;
-import com.google.appengine.api.search.PutException;
-import com.google.appengine.api.search.SearchServiceFactory;
-import com.google.appengine.api.search.StatusCode;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
+import com.willshex.blogwt.server.service.user.UserServiceProvider;
+import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PostHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 
@@ -79,9 +78,21 @@ final class PostService implements IPostService {
 
 		updateTags(post);
 
-		if (post.published != null && post.listed == Boolean.TRUE) {
-			com.google.appengine.api.search.Document.Builder documentBuilder = Document
-					.newBuilder();
+		SearchHelper.indexDocument(toDocument(post));
+
+		return post;
+	}
+
+	/**
+	 * @param post
+	 * @return
+	 */
+	private Document toDocument (Post post) {
+		Document document = null;
+
+		if (post.published != null && Boolean.TRUE.equals(post.listed)
+				&& post.content != null) {
+			Document.Builder documentBuilder = Document.newBuilder();
 			documentBuilder
 					.setId(getName() + post.id.toString())
 					.addField(
@@ -116,10 +127,10 @@ final class PostService implements IPostService {
 				}
 			}
 
-			indexDocument(documentBuilder.build());
+			document = documentBuilder.build();
 		}
 
-		return post;
+		return document;
 	}
 
 	@Override
@@ -199,7 +210,7 @@ final class PostService implements IPostService {
 
 		List<Post> posts = query.list();
 
-		if (includeContents) {
+		if (Boolean.TRUE.equals(includeContents)) {
 			List<Long> postContentIds = new ArrayList<Long>();
 
 			for (Post post : posts) {
@@ -210,7 +221,8 @@ final class PostService implements IPostService {
 					.type(PostContent.class).ids(postContentIds);
 
 			for (Post post : posts) {
-				post.content = contents.get(post.id);
+				post.content = contents.get(Long.valueOf(post.contentKey
+						.getId()));
 			}
 		}
 
@@ -290,7 +302,7 @@ final class PostService implements IPostService {
 	 * @param post
 	 */
 	private void updateTags (Post post) {
-		if (post.listed == Boolean.TRUE && post.published != null
+		if (Boolean.TRUE.equals(post.listed) && post.published != null
 				&& post.tags != null) {
 			Tag tag;
 			for (String name : post.tags) {
@@ -323,25 +335,27 @@ final class PostService implements IPostService {
 		}
 	}
 
-	private void indexDocument (Document document) {
-		indexDocument(document, 0);
-	}
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.post.IPostService#indexAll() */
+	@Override
+	public void indexAll () {
+		Pager pager = PagerHelper.createDefaultPager();
 
-	private void indexDocument (Document document, int count) {
-		IndexSpec indexSpec = IndexSpec.newBuilder().setName("all").build();
-		Index index = SearchServiceFactory.getSearchService().getIndex(
-				indexSpec);
+		List<Post> posts = null;
+		do {
+			posts = getPosts(Boolean.FALSE, Boolean.TRUE, pager.start,
+					pager.count, null, null);
 
-		try {
-			index.put(document);
-		} catch (PutException e) {
-			if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult()
-					.getCode())) {
-				if (count < 2) {
-					indexDocument(document, count++);
-				}
+			for (Post post : posts) {
+				post.author = UserServiceProvider.provide().getUser(
+						Long.valueOf(post.authorKey.getId()));
+
+				SearchHelper.indexDocument(toDocument(post));
 			}
-		}
+
+			PagerHelper.moveForward(pager);
+		} while (posts != null && posts.size() >= pager.count.intValue());
 	}
 
 }

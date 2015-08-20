@@ -16,14 +16,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.appengine.api.search.Document;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
+import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Post;
+import com.willshex.blogwt.shared.helper.PagerHelper;
 
 final class PageService implements IPageService {
 	public String getName () {
@@ -56,6 +60,55 @@ final class PageService implements IPageService {
 		page.id = Long.valueOf(pageKey.getId());
 
 		return page;
+	}
+
+	/**
+	 * @param page
+	 * @return
+	 */
+	private Document toDocument (Page page) {
+		Document document = null;
+
+		//		if (page.published != null && Boolean.TRUE.equals(page.listed)) {
+		//			Document.Builder documentBuilder = Document.newBuilder();
+		//			documentBuilder
+		//					.setId(getName() + page.id.toString())
+		//					.addField(
+		//							Field.newBuilder().setName("author")
+		//									.setAtom(page.author.username))
+		//					.addField(
+		//							Field.newBuilder().setName("author")
+		//									.setText(UserHelper.name(page.author)))
+		//					.addField(
+		//							Field.newBuilder().setName("body")
+		//									.setText(page.content.body))
+		//					.addField(
+		//							Field.newBuilder().setName("created")
+		//									.setDate(page.created))
+		//					.addField(
+		//							Field.newBuilder().setName("published")
+		//									.setDate(page.published))
+		//					.addField(
+		//							Field.newBuilder().setName("slug")
+		//									.setAtom(page.slug))
+		//					.addField(
+		//							Field.newBuilder().setName("summary")
+		//									.setText(page.summary))
+		//					.addField(
+		//							Field.newBuilder().setName("title")
+		//									.setText(page.title));
+		//
+		//			if (page.tags != null) {
+		//				for (String tag : page.tags) {
+		//					documentBuilder.addField(Field.newBuilder().setName("tag")
+		//							.setText(tag));
+		//				}
+		//			}
+		//
+		//			document = documentBuilder.build();
+		//		}
+
+		return document;
 	}
 
 	@Override
@@ -91,7 +144,7 @@ final class PageService implements IPageService {
 				.filter(PageSortType.PageSortTypeSlug.toString(), slug).first()
 				.now();
 
-		if (includePostContents == Boolean.TRUE) {
+		if (Boolean.TRUE.equals(includePostContents)) {
 			populatePostContents(Arrays.asList(page));
 		}
 
@@ -136,7 +189,7 @@ final class PageService implements IPageService {
 
 		List<Page> pages = query.list();
 
-		if (includePostContents == Boolean.TRUE) {
+		if (Boolean.TRUE.equals(includePostContents)) {
 			populatePostContents(pages);
 		}
 
@@ -181,10 +234,29 @@ final class PageService implements IPageService {
 	public Page getPage (Long id, Boolean includePostContents) {
 		Page page = getPage(id);
 
-		if (includePostContents == Boolean.TRUE) {
+		if (Boolean.TRUE.equals(includePostContents)) {
 			populatePostContents(Arrays.asList(page));
 		}
 
 		return page;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.page.IPageService#indexAll() */
+	@Override
+	public void indexAll () {
+		Pager pager = PagerHelper.createDefaultPager();
+
+		List<Page> pages = null;
+		do {
+			pages = getPages(Boolean.TRUE, pager.start, pager.count, null, null);
+
+			for (Page page : pages) {
+				SearchHelper.indexDocument(toDocument(page));
+			}
+
+			PagerHelper.moveForward(pager);
+		} while (pages != null && pages.size() >= pager.count.intValue());
 	}
 }

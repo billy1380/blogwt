@@ -177,7 +177,7 @@ public class PostDetailPage extends Page implements
 
 		ataShare.setUrl(url);
 		ataShare.setTitle(title);
-		
+
 		ataShare.setVisible(true);
 
 		if (post.content != null) {
@@ -190,7 +190,7 @@ public class PostDetailPage extends Page implements
 
 			if (comments == null || comments.equals(PropertyHelper.NONE_VALUE)) {
 				dsqComments.removeFromParent();
-			} else if (post.commentsEnabled == Boolean.TRUE) {
+			} else if (Boolean.TRUE.equals(post.commentsEnabled)) {
 				final String identifier = "post" + post.id.toString();
 				final String tag = post.tags == null || post.tags.size() == 0 ? "none"
 						: post.tags.get(0);

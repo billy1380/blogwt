@@ -79,7 +79,7 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 
 	@UiHandler({ "rdoNone", "rdoApple", "rdoGoogleNoto", "rdoTwitter" })
 	void onSelectionValueChanged (ValueChangeEvent<Boolean> vce) {
-		if (vce.getValue() == Boolean.TRUE) {
+		if (Boolean.TRUE.equals(vce.getValue())) {
 			String value = PropertyHelper.NONE_VALUE;
 
 			if (rdoApple == vce.getSource()) {

@@ -233,7 +233,8 @@ public final class BlogApi extends ActionHandler {
 			input.post.title = updatedPost.title;
 
 			// don't change the original publish date
-			if (input.publish == Boolean.TRUE && input.post.published == null) {
+			if (Boolean.TRUE.equals(input.publish)
+					&& input.post.published == null) {
 				input.post.published = new Date();
 			}
 
@@ -274,7 +275,7 @@ public final class BlogApi extends ActionHandler {
 
 			input.post.author = input.session.user;
 
-			if (input.publish == Boolean.TRUE) {
+			if (Boolean.TRUE.equals(input.publish)) {
 				input.post.published = new Date();
 			}
 
