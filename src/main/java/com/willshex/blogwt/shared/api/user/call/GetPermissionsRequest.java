@@ -1,6 +1,6 @@
 //  
 //  GetPermissionsRequest.java
-//  xsdwsdl2code
+//  blogwt
 //
 //  Created by William Shakour on June 22, 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.

@@ -1,6 +1,6 @@
 //  
 //  UpdatePropertiesEventHandler.java
-//  xsdwsdl2code
+//  blogwt
 //
 //  Created by William Shakour on July 20, 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
