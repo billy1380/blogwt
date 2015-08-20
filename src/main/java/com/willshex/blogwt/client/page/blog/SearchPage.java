@@ -20,16 +20,17 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
-import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
+import com.willshex.blogwt.client.cell.blog.ResultSummaryCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
+import com.willshex.blogwt.client.controller.SearchController;
+import com.willshex.blogwt.client.controller.SearchController.SearchResult;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellList;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
-import com.willshex.blogwt.shared.api.datatype.Post;
 
 /**
  * @author William Shakour (billy1380)
@@ -50,8 +51,8 @@ public class SearchPage extends Page implements NavigationChangedEventHandler {
 	}
 
 	@UiField Element elHeading;
-	@UiField(provided = true) CellList<Post> clResults = new CellList<Post>(
-			new PostSummaryCell(), BootstrapGwtCellList.INSTANCE);
+	@UiField(provided = true) CellList<SearchResult> clResults = new CellList<SearchResult>(
+			new ResultSummaryCell(), BootstrapGwtCellList.INSTANCE);
 	@UiField NoneFoundPanel pnlNoResults;
 
 	public SearchPage () {
@@ -69,7 +70,7 @@ public class SearchPage extends Page implements NavigationChangedEventHandler {
 
 		clResults.setLoadingIndicator(loadingWidget);
 
-		//		PostController.get().addDataDisplay(clPosts);
+		SearchController.get().addDataDisplay(clResults);
 	}
 
 	/* (non-Javadoc)
@@ -94,18 +95,20 @@ public class SearchPage extends Page implements NavigationChangedEventHandler {
 	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
-		String search;
-		if ((search = current.getAction()) != null) {
-			elHeading.setInnerSafeHtml(SearchPageTemplates.INSTANCE.heading(search));
+		String query;
+		if ((query = current.getAction()) != null) {
+			elHeading.setInnerSafeHtml(SearchPageTemplates.INSTANCE
+					.heading(query));
 
-			// PostController.get().setTag(tag);
+			SearchController.get().setQuery(query);
 
 			refresh();
 		}
 	}
 
 	private void refresh () {
-		clResults.setVisibleRangeAndClearData(clResults.getVisibleRange(), true);
+		clResults
+				.setVisibleRangeAndClearData(clResults.getVisibleRange(), true);
 	}
 
 }
