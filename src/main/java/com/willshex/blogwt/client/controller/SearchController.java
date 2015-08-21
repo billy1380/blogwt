@@ -71,16 +71,37 @@ public class SearchController extends
 			this.user = user;
 		}
 
-		boolean isUser () {
+		public boolean isUser () {
 			return user != null;
 		}
 
-		boolean isPage () {
+		public boolean isPage () {
 			return page != null;
 		}
 
-		boolean isPost () {
+		public boolean isPost () {
 			return post != null;
+		}
+
+		/**
+		 * @return the user
+		 */
+		public User getUser () {
+			return user;
+		}
+
+		/**
+		 * @return the page
+		 */
+		public Page getPage () {
+			return page;
+		}
+
+		/**
+		 * @return the post
+		 */
+		public Post getPost () {
+			return post;
 		}
 	}
 
@@ -147,7 +168,7 @@ public class SearchController extends
 	}
 
 	public void setQuery (String value) {
-		if (value != null && !query.equals(value)) {
+		if (value != null) {
 			query = value;
 
 			fetchSearchResults(query);
