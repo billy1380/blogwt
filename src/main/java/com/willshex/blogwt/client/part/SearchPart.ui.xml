@@ -5,17 +5,17 @@
 	</ui:style>
 	<g:HTMLPanel>
 		<h3>Search</h3>
-		<g:FormPanel>
+		<g:FormPanel ui:field="frmSearch">
 			<g:HTMLPanel>
 				<div class="input-group">
-					<g:TextBox styleName="form-control" ui:field="txtSearch" />
+					<g:TextBox styleName="form-control" ui:field="txtQuery" />
 					<span class="input-group-btn">
 						<g:SubmitButton styleName="btn btn-primary" ui:field="btnSubmit">
 							<span class="glyphicon glyphicon-search"></span>
 						</g:SubmitButton>
 					</span>
 				</div>
-				<g:HTMLPanel styleName="control-label small" ui:field="pnlSearchNote"
+				<g:HTMLPanel styleName="control-label small" ui:field="pnlQueryNote"
 					visible="false" />
 			</g:HTMLPanel>
 		</g:FormPanel>

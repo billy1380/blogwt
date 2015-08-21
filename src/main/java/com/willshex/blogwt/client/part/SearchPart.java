@@ -8,11 +8,12 @@
 package com.willshex.blogwt.client.part;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.page.PageType;
@@ -28,20 +29,23 @@ public class SearchPart extends Composite {
 
 	interface SearchPartUiBinder extends UiBinder<Widget, SearchPart> {}
 
-	@UiField TextBox txtSearch;
+	@UiField TextBox txtQuery;
+	@UiField FormPanel frmSearch;
 
 	public SearchPart () {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	@UiHandler("btnSubmit")
-	void onSubmitClicked (ClickEvent event) {
+	@UiHandler("frmSearch")
+	void onSearchSubmit (SubmitEvent event) {
 		if (isValid()) {
-			PageType.SearchPostsPageType.show(txtSearch.getValue());
-			txtSearch.setValue("");
+			PageType.SearchPostsPageType.show(txtQuery.getValue());
+			txtQuery.setValue("");
 		} else {
 			showErrors();
 		}
+
+		event.cancel();
 	}
 
 	private boolean isValid () {
