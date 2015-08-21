@@ -44,19 +44,23 @@ public class BackToTop extends Composite {
 
 		@Override
 		public void run () {
-			if (Window.getScrollTop() > 200) {
-				$(btnBackToTop).fadeIn(300, new Function() {
-					public void f () {
-						btnBackToTop.getElement().getStyle().setOpacity(1.0);
-					}
-				});
+			if (shouldShow()) {
+				$(btnBackToTop).fadeIn(300, fadeInComplete);
 			} else {
-				$(btnBackToTop).fadeOut(300, new Function() {
-					public void f () {
-						btnBackToTop.getElement().getStyle().setOpacity(0.0);
-					}
-				});
+				$(btnBackToTop).fadeOut(300, fadeOutComplete);
 			}
+		}
+	};
+
+	private final Function fadeInComplete = new Function() {
+		public void f () {
+			btnBackToTop.getElement().getStyle().setOpacity(1.0);
+		}
+	};
+
+	private final Function fadeOutComplete = new Function() {
+		public void f () {
+			btnBackToTop.getElement().getStyle().setOpacity(0.0);
 		}
 	};
 
@@ -90,24 +94,34 @@ public class BackToTop extends Composite {
 		registration = Window.addWindowScrollHandler(new ScrollHandler() {
 
 			@Override
-			public void onWindowScroll(ScrollEvent event) {
+			public void onWindowScroll (ScrollEvent event) {
 				toggleTop.cancel();
 				toggleTop.schedule(150);
 			}
 		});
+
+		if (shouldShow()) {
+			fadeInComplete.f();
+		} else {
+			fadeOutComplete.f();
+		}
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see com.google.gwt.user.client.ui.Composite#onDetach()
-	 */
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
 	@Override
 	protected void onDetach () {
 		super.onDetach();
-		
+
 		if (registration != null) {
 			registration.removeHandler();
 		}
-		
+
 		toggleTop.cancel();
+	}
+
+	private boolean shouldShow () {
+		return Window.getScrollTop() > 200;
 	}
 }
