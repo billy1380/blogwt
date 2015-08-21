@@ -17,6 +17,8 @@ import com.willshex.blogwt.client.controller.SearchController.SearchResult;
  */
 public class ResultSummaryCell extends AbstractCell<SearchResult> {
 
+	private static final PostSummaryCell POST_CELL = new PostSummaryCell();
+
 	/* (non-Javadoc)
 	 * 
 	 * @see
@@ -26,6 +28,10 @@ public class ResultSummaryCell extends AbstractCell<SearchResult> {
 	@Override
 	public void render (com.google.gwt.cell.client.Cell.Context context,
 			SearchResult value, SafeHtmlBuilder sb) {
+
+		if (value.isPost()) {
+			POST_CELL.render(context, value.getPost(), sb);
+		}
 
 	}
 
