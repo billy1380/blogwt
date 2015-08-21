@@ -160,8 +160,6 @@ public class SearchController extends
 	 * com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google
 	 * .gwt.view.client.HasData) */
 	@Override
-	protected void onRangeChanged (HasData<SearchResult> display) {
-		fetchSearchResults(query);
-	}
+	protected void onRangeChanged (HasData<SearchResult> display) {}
 
 }
