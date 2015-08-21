@@ -46,7 +46,7 @@ public class SearchPage extends Page implements NavigationChangedEventHandler {
 	interface SearchPageTemplates extends SafeHtmlTemplates {
 		SearchPageTemplates INSTANCE = GWT.create(SearchPageTemplates.class);
 
-		@Template("Search for <strong>&apos;{0}&apos;</strong>")
+		@Template("Matches for <strong>&apos;{0}&apos;</strong>")
 		SafeHtml heading (String tag);
 	}
 
@@ -96,14 +96,15 @@ public class SearchPage extends Page implements NavigationChangedEventHandler {
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
 		String query;
-		if ((query = current.getAction()) != null) {
-			elHeading.setInnerSafeHtml(SearchPageTemplates.INSTANCE
-					.heading(query));
-
-			SearchController.get().setQuery(query);
-
-			refresh();
+		if ((query = current.getAction()) == null) {
+			query = "";
 		}
+
+		elHeading.setInnerSafeHtml(SearchPageTemplates.INSTANCE.heading(query));
+
+		SearchController.get().setQuery(query);
+
+		refresh();
 	}
 
 	private void refresh () {
