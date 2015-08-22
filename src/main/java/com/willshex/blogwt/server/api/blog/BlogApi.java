@@ -313,6 +313,9 @@ public final class BlogApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
+			input.session.user = UserServiceProvider.provide().getUser(
+					Long.valueOf(input.session.userKey.getId()));
+
 			List<Permission> permissions = new ArrayList<Permission>();
 			Permission postPermission = PermissionServiceProvider.provide()
 					.getCodePermission(PermissionHelper.MANAGE_POSTS);
