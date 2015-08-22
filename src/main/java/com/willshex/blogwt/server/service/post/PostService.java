@@ -92,6 +92,12 @@ final class PostService implements IPostService {
 
 		if (post.published != null && Boolean.TRUE.equals(post.listed)
 				&& post.content != null) {
+
+			if (post.author == null) {
+				post.author = UserServiceProvider.provide().getUser(
+						Long.valueOf(post.authorKey.getId()));
+			}
+
 			Document.Builder documentBuilder = Document.newBuilder();
 			documentBuilder
 					.setId(getName() + post.id.toString())
@@ -155,6 +161,8 @@ final class PostService implements IPostService {
 
 		deleteFromTags(post, removedTags);
 
+		SearchHelper.indexDocument(toDocument(post));
+
 		return post;
 	}
 
@@ -165,6 +173,8 @@ final class PostService implements IPostService {
 		ofy().delete().entity(post).now();
 
 		ofy().delete().key(post.contentKey).now();
+
+		SearchHelper.deleteSearch(getName() + post.id.toString());
 	}
 
 	@Override

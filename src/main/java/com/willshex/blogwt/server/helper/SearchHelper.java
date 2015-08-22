@@ -39,12 +39,8 @@ public class SearchHelper {
 	}
 
 	private static void indexDocument (Document document, int count) {
-		IndexSpec indexSpec = IndexSpec.newBuilder().setName(ALL_INDEX_NAME)
-				.build();
-		Index index = ensureSearchService().getIndex(indexSpec);
-
 		try {
-			index.put(document);
+			getIndex().put(document);
 		} catch (PutException e) {
 			if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult()
 					.getCode())) {
@@ -63,11 +59,7 @@ public class SearchHelper {
 	}
 
 	public static List<Post> searchPosts (String query) {
-		IndexSpec indexSpec = IndexSpec.newBuilder().setName(ALL_INDEX_NAME)
-				.build();
-		Index index = ensureSearchService().getIndex(indexSpec);
-
-		Results<ScoredDocument> matches = index.search(query);
+		Results<ScoredDocument> matches = getIndex().search(query);
 		List<Post> posts = new ArrayList<Post>();
 		String id;
 		Post post;
@@ -90,5 +82,14 @@ public class SearchHelper {
 		}
 
 		return posts;
+	}
+
+	public static void deleteSearch (String documentId) {
+		getIndex().delete(documentId);
+	}
+
+	private static Index getIndex () {
+		return ensureSearchService().getIndex(
+				IndexSpec.newBuilder().setName(ALL_INDEX_NAME).build());
 	}
 }
