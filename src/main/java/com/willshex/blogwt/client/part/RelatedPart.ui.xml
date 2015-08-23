@@ -1,9 +1,14 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:style>
 	
 	</ui:style>
 	<g:HTMLPanel>
 		<h3>Related</h3>
+
+		<c:CellList ui:field="clPosts" />
+
+		<p:NoneFoundPanel subject="related posts" ui:field="pnlNoPosts" />
 	</g:HTMLPanel>
 </ui:UiBinder> 
