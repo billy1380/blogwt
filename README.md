@@ -1,7 +1,7 @@
 # blogwt
 
 ##Intro
-This project is a blog written in GWT on top of app engine. I started this project because I wanted a blog site for my [willshex.com](http://www.willshex.com "willshex.com") domain. The project does not use gwtrpc, I am using a json based API (or 3 - user, blog, and page split by functional area).
+This project is a blog written in GWT on top of app engine. I started this project because I wanted a blog site for my [willshex.com](http://www.willshex.com "willshex.com") domain. The project does not use gwtrpc, I am using a json based API (or 4 - search, user, blog, and page split by functional area).
 
 ##Incomplete
 There are things missing from the project, but I am working on it everyday, and making good progress too.
