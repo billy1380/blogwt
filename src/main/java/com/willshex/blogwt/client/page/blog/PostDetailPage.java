@@ -165,6 +165,8 @@ public class PostDetailPage extends Page implements
 		lnkEditPost.setTargetHistoryToken(PageType.EditPostPageType
 				.asTargetHistoryToken(post.slug));
 
+		tagList.getList().clear();
+
 		if (post.tags != null) {
 			for (String tag : post.tags) {
 				tagList.getList().add(new Tag().name(tag));
