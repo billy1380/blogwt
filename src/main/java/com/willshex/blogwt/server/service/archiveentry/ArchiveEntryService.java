@@ -11,13 +11,21 @@ package com.willshex.blogwt.server.service.archiveentry;
 import static com.willshex.blogwt.server.service.PersistenceService.ofy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.TimeZone;
 
 import com.googlecode.objectify.Key;
+import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.Post;
 
 final class ArchiveEntryService implements IArchiveEntryService {
+
+	private ThreadLocal<Calendar> calendar = new ThreadLocal<Calendar>();
+
 	public String getName () {
 		return NAME;
 	}
@@ -48,8 +56,9 @@ final class ArchiveEntryService implements IArchiveEntryService {
 			archiveEntry.postKeys.add(Key.create(post));
 		}
 
-		Key<ArchiveEntry> pageKey = ofy().save().entity(archiveEntry).now();
-		archiveEntry.id = Long.valueOf(pageKey.getId());
+		Key<ArchiveEntry> archiveEntryKey = ofy().save().entity(archiveEntry)
+				.now();
+		archiveEntry.id = Long.valueOf(archiveEntryKey.getId());
 
 		return archiveEntry;
 	}
@@ -87,7 +96,45 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	 * #archivePost(com.willshex.blogwt.shared.api.datatype.Post) */
 	@Override
 	public void archivePost (Post post) {
+		if (post.published != null) {
+			Calendar c = ensureCalendar();
+			c.setTime(post.published);
+			Integer month = Integer.valueOf(c.get(java.util.Calendar.MONTH));
+			Integer year = Integer.valueOf(c.get(java.util.Calendar.YEAR));
+			ArchiveEntry archiveEntry = getMonthArchiveEntry(month, year);
 
+			if (archiveEntry == null) {
+				archiveEntry = new ArchiveEntry().month(month).year(year)
+						.posts(Arrays.asList(post));
+				addArchiveEntry(archiveEntry);
+			} else {
+				HashSet<Long> set = new HashSet<Long>();
+				for (Key<Post> key : archiveEntry.postKeys) {
+					set.add(Long.valueOf(key.getId()));
+				}
+				set.add(post.id);
+
+				archiveEntry.posts = PersistenceService.dataTypeList(
+						Post.class, set);
+
+				updateArchiveEntry(archiveEntry);
+			}
+		}
+	}
+
+	@Override
+	public ArchiveEntry getMonthArchiveEntry (Integer month, Integer year) {
+		return ofy().load().type(ArchiveEntry.class).filter("year", year)
+				.filter("month", month).first().now();
+	}
+
+	private Calendar ensureCalendar () {
+		if (calendar.get() == null) {
+			calendar.set(Calendar.getInstance());
+			calendar.get().setTimeZone(TimeZone.getTimeZone("UTC"));
+		}
+
+		return calendar.get();
 	}
 
 }

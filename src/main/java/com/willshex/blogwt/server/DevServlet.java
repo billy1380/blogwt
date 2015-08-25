@@ -40,7 +40,7 @@ public class DevServlet extends ContextAwareServlet {
 			TagServiceProvider.provide().generateTags();
 		} else if ("indexall".equals(action)) {
 			PostServiceProvider.provide().indexAll();
-		} else if ("".equals(action)) {
+		} else if ("archiveall".equals(action)) {
 			PostServiceProvider.provide().archiveAll();
 		}
 	}
