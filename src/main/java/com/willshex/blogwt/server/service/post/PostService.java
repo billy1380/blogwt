@@ -51,11 +51,21 @@ final class PostService implements IPostService {
 		return NAME;
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.post.IPostService#getPost(java.lang
+	 * .Long) */
 	@Override
 	public Post getPost (Long id) {
 		return ofy().load().type(Post.class).id(id.longValue()).now();
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.post.IPostService#addPost(com.willshex
+	 * .blogwt.shared.api.datatype.Post) */
 	@Override
 	public Post addPost (Post post) {
 		if (post.created == null) {
@@ -79,12 +89,15 @@ final class PostService implements IPostService {
 
 		updateTags(post);
 
+		ArchiveEntryServiceProvider.provide().archivePost(post);
+
 		SearchHelper.indexDocument(toDocument(post));
 
 		return post;
 	}
 
 	/**
+	 * To search-able document
 	 * @param post
 	 * @return
 	 */
@@ -140,6 +153,11 @@ final class PostService implements IPostService {
 		return document;
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.post.IPostService#updatePost(com.
+	 * willshex.blogwt.shared.api.datatype.Post, java.util.Collection) */
 	@Override
 	public Post updatePost (Post post, Collection<String> removedTags) {
 		post.slug = PostHelper.slugify(post.title);
@@ -162,14 +180,23 @@ final class PostService implements IPostService {
 
 		deleteFromTags(post, removedTags);
 
+		ArchiveEntryServiceProvider.provide().archivePost(post);
+
 		SearchHelper.indexDocument(toDocument(post));
 
 		return post;
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.post.IPostService#deletePost(com.
+	 * willshex.blogwt.shared.api.datatype.Post) */
 	@Override
 	public void deletePost (Post post) {
 		deleteFromTags(post, post.tags);
+
+		deleteFromArchive(post);
 
 		ofy().delete().entity(post).now();
 
@@ -178,6 +205,25 @@ final class PostService implements IPostService {
 		SearchHelper.deleteSearch(getName() + post.id.toString());
 	}
 
+	/**
+	 * @param post
+	 */
+	private void deleteFromArchive (Post post) {
+		if (Boolean.FALSE.equals(post.listed) && post.published != null) {
+			ArchiveEntryServiceProvider.provide().deleteArchiveEntryPost(
+					ArchiveEntryServiceProvider.provide().getDateArchiveEntry(
+							post.published), post);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.post.IPostService#getUserViewablePosts
+	 * (com.willshex.blogwt.shared.api.datatype.User, java.lang.Boolean,
+	 * java.lang.Boolean, java.lang.Integer, java.lang.Integer,
+	 * com.willshex.blogwt.shared.api.datatype.PostSortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
 	public List<Post> getUserViewablePosts (User user, Boolean showAll,
 			Boolean includeContents, Integer start, Integer count,
@@ -363,26 +409,6 @@ final class PostService implements IPostService {
 						Long.valueOf(post.authorKey.getId()));
 
 				SearchHelper.indexDocument(toDocument(post));
-			}
-
-			PagerHelper.moveForward(pager);
-		} while (posts != null && posts.size() >= pager.count.intValue());
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.post.IPostService#archiveAll() */
-	@Override
-	public void archiveAll () {
-		Pager pager = PagerHelper.createDefaultPager();
-
-		List<Post> posts = null;
-		do {
-			posts = getPosts(Boolean.FALSE, Boolean.FALSE, pager.start,
-					pager.count, null, null);
-
-			for (Post post : posts) {
-				ArchiveEntryServiceProvider.provide().archivePost(post);
 			}
 
 			PagerHelper.moveForward(pager);
