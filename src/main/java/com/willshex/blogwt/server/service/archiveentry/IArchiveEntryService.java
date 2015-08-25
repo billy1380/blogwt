@@ -45,4 +45,12 @@ public interface IArchiveEntryService extends IService {
 	 */
 	public void archivePost (Post post);
 
+	/**
+	 * Get month archive entry
+	 * @param month
+	 * @param year
+	 * @return
+	 */
+	public ArchiveEntry getMonthArchiveEntry (Integer month, Integer year);
+
 }
