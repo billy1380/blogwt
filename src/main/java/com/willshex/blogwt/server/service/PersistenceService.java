@@ -15,6 +15,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -43,6 +44,7 @@ public class PersistenceService {
 		factory().register(PostContent.class);
 		factory().register(Page.class);
 		factory().register(Tag.class);
+		factory().register(ArchiveEntry.class);
 	}
 
 	public static Objectify ofy () {
@@ -85,15 +87,21 @@ public class PersistenceService {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends DataType> List<T> dataTypeList (Class<T> t,
-			Collection<Key<T>> keys) {
+			Collection<?> ids) {
 		List<T> list = new ArrayList<T>();
 
 		try {
-			for (Key<T> key : keys) {
-				list.add((T) t.newInstance().id(Long.valueOf(key.getId())));
+			for (Object id : ids) {
+				if (id instanceof Key) {
+					list.add((T) t.newInstance().id(
+							Long.valueOf(((Key<T>) id).getId())));
+				} else if (id instanceof Long) {
+					list.add((T) t.newInstance().id((Long) id));
+				}
 			}
 		} catch (InstantiationException | IllegalAccessException ex) {}
 
 		return list;
 	}
+
 }
