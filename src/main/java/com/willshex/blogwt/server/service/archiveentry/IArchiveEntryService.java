@@ -8,6 +8,8 @@
 
 package com.willshex.blogwt.server.service.archiveentry;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import com.spacehopperstudios.service.IService;
@@ -60,5 +62,38 @@ public interface IArchiveEntryService extends IService {
 	 * @return
 	 */
 	public List<ArchiveEntry> getArchiveEntries ();
+
+	/**
+	 * Generate archive
+	 */
+	public void generateArchive ();
+
+	/**
+	 * Add archive entry batch
+	 * @param archiveEntries
+	 */
+	public void addArchiveEntryBatch (Collection<ArchiveEntry> archiveEntries);
+
+	/**
+	 * Get date archive entry
+	 * @param date
+	 * @return
+	 */
+	public ArchiveEntry getDateArchiveEntry (Date date);
+
+	/**
+	 * 
+	 * @param archiveEntry
+	 * @param post
+	 * @return
+	 */
+	public ArchiveEntry updateArchiveEntryPost (ArchiveEntry archiveEntry,
+			Post post);
+
+	/**
+	 * Delete post archive entry
+	 * @param post
+	 */
+	public void deleteArchiveEntryPost (ArchiveEntry archiveEntry, Post post);
 
 }

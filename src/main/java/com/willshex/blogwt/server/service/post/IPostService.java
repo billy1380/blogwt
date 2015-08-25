@@ -120,9 +120,4 @@ public interface IPostService extends IService {
 	 */
 	public void indexAll ();
 
-	/**
-	 * Archive all
-	 */
-	public void archiveAll ();
-
 }
