@@ -19,6 +19,8 @@ import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
@@ -39,6 +41,52 @@ import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class BlogService extends JsonService {
+
+	public static final String BlogMethodGetArchiveEntries = "GetArchiveEntries";
+
+	public Request getArchiveEntries (final GetArchiveEntriesRequest input,
+			final AsyncCallback<GetArchiveEntriesResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(BlogMethodGetArchiveEntries, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								GetArchiveEntriesResponse outputParameter = new GetArchiveEntriesResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(BlogService.this,
+										BlogMethodGetArchiveEntries, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(BlogService.this,
+										BlogMethodGetArchiveEntries, input,
+										exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(BlogService.this,
+									BlogMethodGetArchiveEntries, input,
+									exception);
+						}
+					});
+			onCallStart(BlogService.this, BlogMethodGetArchiveEntries, input,
+					handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodGetArchiveEntries, input,
+					exception);
+		}
+		return handle;
+	}
+
 	public static final String BlogMethodDeleteResource = "DeleteResource";
 
 	public Request deleteResource (final DeleteResourceRequest input,

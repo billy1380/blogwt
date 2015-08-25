@@ -42,6 +42,8 @@ import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
@@ -77,6 +79,20 @@ import com.willshex.gson.json.service.shared.StatusType;
 
 public final class BlogApi extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(BlogApi.class.getName());
+
+	public GetArchiveEntriesResponse getArchiveEntries (
+			GetArchiveEntriesRequest input) {
+		LOG.finer("Entering getArchiveEntries");
+		GetArchiveEntriesResponse output = new GetArchiveEntriesResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getArchiveEntries");
+		return output;
+	}
 
 	public DeleteResourceResponse deleteResource (DeleteResourceRequest input) {
 		LOG.finer("Entering deleteResource");

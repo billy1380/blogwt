@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsRequest;
@@ -27,7 +28,11 @@ public final class BlogJsonServlet extends JsonServlet {
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
 		BlogApi service = new BlogApi();
-		if ("DeleteResource".equals(action)) {
+		if ("GetArchiveEntries".equals(action)) {
+			GetArchiveEntriesRequest input = new GetArchiveEntriesRequest();
+			input.fromJson(request);
+			output = service.getArchiveEntries(input).toString();
+		} else if ("DeleteResource".equals(action)) {
 			DeleteResourceRequest input = new DeleteResourceRequest();
 			input.fromJson(request);
 			output = service.deleteResource(input).toString();
