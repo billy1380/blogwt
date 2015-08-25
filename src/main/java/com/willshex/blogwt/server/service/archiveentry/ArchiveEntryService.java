@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.TimeZone;
 
 import com.googlecode.objectify.Key;
@@ -135,6 +136,11 @@ final class ArchiveEntryService implements IArchiveEntryService {
 		}
 
 		return calendar.get();
+	}
+
+	@Override
+	public List<ArchiveEntry> getArchiveEntries () {
+		return ofy().load().type(ArchiveEntry.class).list();
 	}
 
 }

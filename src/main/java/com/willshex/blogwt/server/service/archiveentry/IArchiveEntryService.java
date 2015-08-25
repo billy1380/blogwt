@@ -8,6 +8,8 @@
 
 package com.willshex.blogwt.server.service.archiveentry;
 
+import java.util.List;
+
 import com.spacehopperstudios.service.IService;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.Post;
@@ -52,5 +54,11 @@ public interface IArchiveEntryService extends IService {
 	 * @return
 	 */
 	public ArchiveEntry getMonthArchiveEntry (Integer month, Integer year);
+
+	/**
+	 * Get archive entries
+	 * @return
+	 */
+	public List<ArchiveEntry> getArchiveEntries ();
 
 }
