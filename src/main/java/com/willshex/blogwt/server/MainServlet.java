@@ -30,6 +30,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
+import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
@@ -37,6 +38,7 @@ import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
+import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Post;
@@ -113,6 +115,7 @@ public class MainServlet extends ContextAwareServlet {
 			properties = appendProperties(scriptVariables);
 			appendPages(scriptVariables);
 			appendTags(scriptVariables);
+			appendArchiveEntries(scriptVariables);
 		}
 
 		String pageTitle = (title == null ? "Blogwt" : title.value);
@@ -194,6 +197,33 @@ public class MainServlet extends ContextAwareServlet {
 				}
 
 				scriptVariables.append(tag.toString().replace("'", "\\'"));
+			}
+
+			scriptVariables.append("]';");
+		}
+	}
+
+	/**
+	 * @param scriptVariables
+	 */
+	private void appendArchiveEntries (StringBuffer scriptVariables) {
+		List<ArchiveEntry> archiveEntries = ArchiveEntryServiceProvider.provide().getArchiveEntries();
+
+		if (archiveEntries.size() >= 0) {
+			scriptVariables.append("var archiveEntries='[");
+
+			boolean first = true;
+			for (ArchiveEntry archiveEntry : archiveEntries) {
+				archiveEntry.posts = PersistenceService.dataTypeList(Post.class,
+						archiveEntry.postKeys);
+
+				if (first) {
+					first = false;
+				} else {
+					scriptVariables.append(",");
+				}
+
+				scriptVariables.append(archiveEntry.toString().replace("'", "\\'"));
 			}
 
 			scriptVariables.append("]';");
