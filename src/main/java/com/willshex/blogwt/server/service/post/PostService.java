@@ -22,6 +22,7 @@ import com.google.appengine.api.search.Field;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.SearchHelper;
+import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
@@ -362,6 +363,26 @@ final class PostService implements IPostService {
 						Long.valueOf(post.authorKey.getId()));
 
 				SearchHelper.indexDocument(toDocument(post));
+			}
+
+			PagerHelper.moveForward(pager);
+		} while (posts != null && posts.size() >= pager.count.intValue());
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.post.IPostService#archiveAll() */
+	@Override
+	public void archiveAll () {
+		Pager pager = PagerHelper.createDefaultPager();
+
+		List<Post> posts = null;
+		do {
+			posts = getPosts(Boolean.FALSE, Boolean.TRUE, pager.start,
+					pager.count, null, null);
+
+			for (Post post : posts) {
+				ArchiveEntryServiceProvider.provide().archivePost(post);
 			}
 
 			PagerHelper.moveForward(pager);
