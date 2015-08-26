@@ -1,11 +1,13 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<ui:style>
 	
 	</ui:style>
 	<g:HTMLPanel>
 
 		<h3>Archive</h3>
+
+        <c:CellTree ui:field="ctArchiveEntries" />
 
 	</g:HTMLPanel>
 </ui:UiBinder> 
