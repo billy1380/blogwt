@@ -53,6 +53,8 @@
 				<p:SearchPart ui:field="coSearch" />
 
 				<p:RelatedPart ui:field="coRelated" />
+				
+				<p:ArchivePart />
 			</div>
 		</g:HTMLPanel>
 

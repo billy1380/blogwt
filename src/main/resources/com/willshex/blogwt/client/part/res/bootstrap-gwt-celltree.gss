@@ -1,3 +1,5 @@
+@external badge;
+
 .cellTreeWidget {
   
 }
@@ -6,7 +8,6 @@
 }
 
 .cellTreeItem {
-
 }
 
 .cellTreeItemImage {
@@ -18,6 +19,11 @@
 }
 
 .cellTreeItemValue {
+    margin: 5px;
+}
+
+.cellTreeItemValue:focus {
+    outline:0;
 }
 
 .cellTreeKeyboardSelectedItem {
@@ -28,6 +34,8 @@
 }
 
 .cellTreeTopItem {
+  font-weight: bold;
+  font-size: 25px;
 }
 
 .cellTreeTopItemImage {
@@ -35,7 +43,10 @@
 }
 
 .cellTreeTopItemImageValue {
-  
+}
+
+.cellTreeTopItemImageValue .badge {
+    margin-bottom: 5px;
 }
 
 .cellTreeSelectedItem {
