@@ -30,7 +30,8 @@ public class ArchivePart extends Composite {
 
 	public ArchivePart () {
 		ctArchiveEntries = new CellTree(
-				new ArchiveEntryController.ArchiveModel(), null);
+				new ArchiveEntryController.ArchiveModel(), null,
+				BootstrapGwtCellTree.INSTANCE);
 		initWidget(uiBinder.createAndBindUi(this));
 		ctArchiveEntries.setAnimationEnabled(true);
 	}
