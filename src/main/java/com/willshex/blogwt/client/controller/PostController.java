@@ -38,6 +38,7 @@ import com.willshex.blogwt.shared.api.blog.call.event.GetPostsEventHandler.GetPo
 import com.willshex.blogwt.shared.api.blog.call.event.GetPostsEventHandler.GetPostsSuccess;
 import com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler.UpdatePostFailure;
 import com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler.UpdatePostSuccess;
+import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
@@ -62,6 +63,12 @@ public class PostController extends AsyncDataProvider<Post> {
 		return one;
 	}
 
+	public static PostController archived (ArchiveEntry archiveEntry) {
+		PostController archiveEntryPostController = new PostController();
+		archiveEntryPostController.archiveEntry = archiveEntry;
+		return archiveEntryPostController;
+	}
+
 	private String tag;
 
 	private Pager pager = PagerHelper.createDefaultPager().sortBy(
@@ -69,12 +76,18 @@ public class PostController extends AsyncDataProvider<Post> {
 	private Request getPostsRequest;
 	private Request getPostRequest;
 
+	private ArchiveEntry archiveEntry;
+
 	private void fetchPosts () {
 		final GetPostsRequest input = ApiHelper
 				.setAccessCode(new GetPostsRequest());
-		input.pager = pager;
+		
 		input.session = SessionController.get().sessionForApiCall();
 		input.includePostContents = Boolean.FALSE;
+		
+		input.archiveEntry = archiveEntry;
+		
+		input.pager = pager;
 		input.tag = tag;
 
 		if (getPostsRequest != null) {
