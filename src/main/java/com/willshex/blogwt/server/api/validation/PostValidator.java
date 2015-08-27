@@ -7,6 +7,9 @@
 //
 package com.willshex.blogwt.server.api.validation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.validation.ApiError;
@@ -24,7 +27,7 @@ public class PostValidator {
 		if (post == null)
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + ": " + name);
-		
+
 		return post;
 	}
 
@@ -58,6 +61,26 @@ public class PostValidator {
 					ApiError.DataTypeNotFound, type + ": " + name);
 
 		return lookupPost;
+	}
+
+	/**
+	 * @param posts
+	 * @return 
+	 * @throws InputValidationException 
+	 */
+	public static List<Post> lookupAll (List<Post> posts, String name)
+			throws InputValidationException {
+		if (posts == null)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, type + "[]: " + name);
+
+		List<Post> lookupPosts = new ArrayList<Post>();
+
+		for (Post post : posts) {
+			lookupPosts.add(lookup(post, name + "[n]"));
+		}
+
+		return lookupPosts;
 	}
 
 }
