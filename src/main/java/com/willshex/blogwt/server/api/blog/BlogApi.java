@@ -20,6 +20,7 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.googlecode.objectify.Key;
 import com.willshex.blogwt.server.api.exception.AuthorisationException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
+import com.willshex.blogwt.server.api.validation.ArchiveEntryValidator;
 import com.willshex.blogwt.server.api.validation.PostValidator;
 import com.willshex.blogwt.server.api.validation.PropertyValidator;
 import com.willshex.blogwt.server.api.validation.ResourceValidator;
@@ -393,7 +394,7 @@ public final class BlogApi extends ActionHandler {
 				input.includePostContents = Boolean.FALSE;
 			}
 
-			boolean postsForTag = false;
+			boolean postsForTag = false, postsForArchiveEntry = false;
 			if (input.tag != null && input.tag.length() > 0) {
 				postsForTag = true;
 				Tag tag = TagServiceProvider.provide().getSlugTag(input.tag);
@@ -404,7 +405,23 @@ public final class BlogApi extends ActionHandler {
 				}
 			}
 
-			if (!postsForTag) {
+			if (!postsForTag && input.archiveEntry != null) {
+				postsForTag = true;
+				if (input.archiveEntry.posts != null) {
+					output.posts = input.archiveEntry.posts = PostValidator
+							.lookupAll(input.archiveEntry.posts,
+									"input.archiveEntry.posts");
+				} else {
+					input.archiveEntry = ArchiveEntryValidator.lookup(
+							input.archiveEntry, "input.archiveEntry");
+
+					output.posts = PostServiceProvider.provide().getPostBatch(
+							PersistenceService
+									.keysToIds(input.archiveEntry.postKeys));
+				}
+			}
+
+			if (!postsForTag && !postsForArchiveEntry) {
 				if (input.session != null && input.session.user != null) {
 					output.posts = PostServiceProvider
 							.provide()

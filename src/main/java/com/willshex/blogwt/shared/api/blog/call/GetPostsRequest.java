@@ -13,11 +13,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.Request;
+import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 
 public class GetPostsRequest extends Request {
+
 	public Pager pager;
 	public Boolean includePostContents;
 	public String tag;
+	public ArchiveEntry archiveEntry;
 
 	@Override
 	public JsonObject toJson () {
@@ -31,6 +34,9 @@ public class GetPostsRequest extends Request {
 		JsonElement jsonTag = tag == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(tag);
 		object.add("tag", jsonTag);
+		JsonElement jsonArchiveEntry = archiveEntry == null ? JsonNull.INSTANCE
+				: archiveEntry.toJson();
+		object.add("archiveEntry", jsonArchiveEntry);
 		return object;
 	}
 
@@ -58,6 +64,13 @@ public class GetPostsRequest extends Request {
 				tag = jsonTag.getAsString();
 			}
 		}
+		if (jsonObject.has("archiveEntry")) {
+			JsonElement jsonArchiveEntry = jsonObject.get("archiveEntry");
+			if (jsonArchiveEntry != null) {
+				archiveEntry = new ArchiveEntry();
+				archiveEntry.fromJson(jsonArchiveEntry.getAsJsonObject());
+			}
+		}
 	}
 
 	public GetPostsRequest pager (Pager pager) {
@@ -72,6 +85,11 @@ public class GetPostsRequest extends Request {
 
 	public GetPostsRequest tag (String tag) {
 		this.tag = tag;
+		return this;
+	}
+
+	public GetPostsRequest archiveEntry (ArchiveEntry archiveEntry) {
+		this.archiveEntry = archiveEntry;
 		return this;
 	}
 }
