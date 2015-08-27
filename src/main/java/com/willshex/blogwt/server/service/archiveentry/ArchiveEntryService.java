@@ -98,7 +98,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	 * #archivePost(com.willshex.blogwt.shared.api.datatype.Post) */
 	@Override
 	public void archivePost (Post post) {
-		if (Boolean.FALSE.equals(post.listed) && post.published != null) {
+		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
 			Calendar c = ensureCalendar();
 			c.setTime(post.published);
 			Integer month = Integer.valueOf(c.get(java.util.Calendar.MONTH));
@@ -237,7 +237,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 			final ArchiveEntry archiveEntry, final Post post) {
 		ArchiveEntry updated = null;
 
-		if (Boolean.FALSE.equals(post.listed) && post.published != null) {
+		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
 			updated = ofy().transact(new Work<ArchiveEntry>() {
 
 				@Override

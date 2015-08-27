@@ -104,7 +104,7 @@ final class PostService implements IPostService {
 	private Document toDocument (Post post) {
 		Document document = null;
 
-		if (post.published != null && Boolean.TRUE.equals(post.listed)
+		if (Boolean.TRUE.equals(post.listed) && post.published != null
 				&& post.content != null) {
 
 			if (post.author == null) {
@@ -209,7 +209,7 @@ final class PostService implements IPostService {
 	 * @param post
 	 */
 	private void deleteFromArchive (Post post) {
-		if (Boolean.FALSE.equals(post.listed) && post.published != null) {
+		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
 			ArchiveEntryServiceProvider.provide().deleteArchiveEntryPost(
 					ArchiveEntryServiceProvider.provide().getDateArchiveEntry(
 							post.published), post);
