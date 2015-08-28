@@ -8,11 +8,12 @@
 package com.willshex.blogwt.client.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.AbstractSafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocaleInfo;
@@ -20,6 +21,7 @@ import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
+import com.google.gwt.text.shared.SafeHtmlRenderer;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.TreeViewModel;
 import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
@@ -38,7 +40,31 @@ public class ArchiveModel implements TreeViewModel {
 		ArchiveModelTemplate INSTANCE = GWT.create(ArchiveModelTemplate.class);
 
 		@Template("{0} <span class=\"badge\">{1}</span>")
-		SafeHtml textWithBadge (String name, int count);
+		SafeHtml textWithBadge (String text, int badge);
+	}
+
+	private static final class TextWithBadgeCell<T> extends
+			AbstractSafeHtmlCell<T> {
+		/**
+		 * @param renderer
+		 */
+		public TextWithBadgeCell (SafeHtmlRenderer<T> renderer) {
+			super(renderer);
+		}
+
+		/* (non-Javadoc)
+		 * 
+		 * @see
+		 * com.google.gwt.cell.client.AbstractSafeHtmlCell#render(com.google
+		 * .gwt.cell.client.Cell.Context,
+		 * com.google.gwt.safehtml.shared.SafeHtml,
+		 * com.google.gwt.safehtml.shared.SafeHtmlBuilder) */
+		@Override
+		protected void render (com.google.gwt.cell.client.Cell.Context context,
+				SafeHtml data, SafeHtmlBuilder sb) {
+			sb.append(data);
+		}
+
 	}
 
 	private static final String[] months = LocaleInfo.getCurrentLocale()
@@ -48,6 +74,15 @@ public class ArchiveModel implements TreeViewModel {
 	private Map<Integer, Integer> yearPostCount = new HashMap<Integer, Integer>();
 
 	private static final PostSummaryCell POST_CELL = new PostSummaryCell();
+
+	private static final Comparator<Integer> DESCENDING_COMPARATOR = Collections.<Integer>reverseOrder();
+	private static final Comparator<ArchiveEntry> MONTH_COMPARATOR = new Comparator<ArchiveEntry>() {
+
+		@Override
+		public int compare (ArchiveEntry o1, ArchiveEntry o2) {
+			return o1.month.compareTo(o2.month);
+		}
+	};
 
 	/* (non-Javadoc)
 	 * 
@@ -60,34 +95,28 @@ public class ArchiveModel implements TreeViewModel {
 		if (value == null) {
 			createYearCountLookup();
 
+			List<Integer> sortedYears = new ArrayList<Integer>(years.keySet());
+			Collections.sort(sortedYears, DESCENDING_COMPARATOR);
+
 			info = new DefaultNodeInfo<Integer>(new ListDataProvider<Integer>(
-					new ArrayList<Integer>(years.keySet())),
-					new AbstractSafeHtmlCell<Integer>(
-							new AbstractSafeHtmlRenderer<Integer>() {
-
-								@Override
-								public SafeHtml render (Integer value) {
-									return ArchiveModelTemplate.INSTANCE
-											.textWithBadge(value.toString(),
-													yearPostCount.get(value)
-															.intValue());
-								}
-							}) {
-
+					sortedYears), new TextWithBadgeCell<Integer>(
+					new AbstractSafeHtmlRenderer<Integer>() {
 						@Override
-						protected void render (
-								com.google.gwt.cell.client.Cell.Context context,
-								SafeHtml data, SafeHtmlBuilder sb) {
-							sb.append(data);
+						public SafeHtml render (Integer value) {
+							return ArchiveModelTemplate.INSTANCE.textWithBadge(
+									value.toString(), yearPostCount.get(value)
+											.intValue());
 						}
-					});
+					}));
 		} else if (value instanceof Integer) {
-			info = new DefaultNodeInfo<ArchiveEntry>(
-					new ListDataProvider<ArchiveEntry>(
-							years.get((Integer) value)),
-					(new AbstractSafeHtmlCell<ArchiveEntry>(
-							new AbstractSafeHtmlRenderer<ArchiveEntry>() {
+			List<ArchiveEntry> sortedArchiveEntries = years
+					.get((Integer) value);
+			Collections.sort(sortedArchiveEntries, MONTH_COMPARATOR);
 
+			info = new DefaultNodeInfo<ArchiveEntry>(
+					new ListDataProvider<ArchiveEntry>(sortedArchiveEntries),
+					new TextWithBadgeCell<ArchiveEntry>(
+							new AbstractSafeHtmlRenderer<ArchiveEntry>() {
 								@Override
 								public SafeHtml render (ArchiveEntry value) {
 									return ArchiveModelTemplate.INSTANCE
@@ -95,26 +124,10 @@ public class ArchiveModel implements TreeViewModel {
 													.intValue()], value.posts
 													.size());
 								}
-							}) {
-
-						@Override
-						protected void render (
-								com.google.gwt.cell.client.Cell.Context context,
-								SafeHtml data, SafeHtmlBuilder sb) {
-							sb.append(data);
-						}
-					}));
+							}));
 		} else if (value instanceof ArchiveEntry) {
 			info = new DefaultNodeInfo<Post>(
-					PostController.archived((ArchiveEntry) value),
-					new AbstractCell<Post>() {
-						@Override
-						public void render (
-								com.google.gwt.cell.client.Cell.Context context,
-								Post value, SafeHtmlBuilder sb) {
-							POST_CELL.render(context, value, sb);
-						}
-					});
+					PostController.archived((ArchiveEntry) value), POST_CELL);
 		}
 
 		return info;
