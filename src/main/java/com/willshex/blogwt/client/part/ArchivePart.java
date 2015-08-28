@@ -13,7 +13,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.blogwt.client.controller.ArchiveEntryController;
+import com.willshex.blogwt.client.model.ArchiveModel;
 
 /**
  * @author William Shakour (billy1380)
@@ -30,7 +30,7 @@ public class ArchivePart extends Composite {
 
 	public ArchivePart () {
 		ctArchiveEntries = new CellTree(
-				new ArchiveEntryController.ArchiveModel(), null,
+				new ArchiveModel(), null,
 				BootstrapGwtCellTree.INSTANCE);
 		initWidget(uiBinder.createAndBindUi(this));
 		ctArchiveEntries.setAnimationEnabled(true);
