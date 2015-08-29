@@ -10,9 +10,7 @@ package com.willshex.blogwt.client.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.cell.client.AbstractSafeHtmlCell;
 import com.google.gwt.core.client.GWT;
@@ -70,12 +68,10 @@ public class ArchiveModel implements TreeViewModel {
 	private static final String[] months = LocaleInfo.getCurrentLocale()
 			.getDateTimeFormatInfo().monthsFull();
 
-	private Map<Integer, List<ArchiveEntry>> years = new HashMap<Integer, List<ArchiveEntry>>();
-	private Map<Integer, Integer> yearPostCount = new HashMap<Integer, Integer>();
-
 	private static final PostSummaryCell POST_CELL = new PostSummaryCell();
 
-	private static final Comparator<Integer> DESCENDING_COMPARATOR = Collections.<Integer>reverseOrder();
+	private static final Comparator<Integer> DESCENDING_COMPARATOR = Collections
+			.<Integer> reverseOrder();
 	private static final Comparator<ArchiveEntry> MONTH_COMPARATOR = new Comparator<ArchiveEntry>() {
 
 		@Override
@@ -93,9 +89,8 @@ public class ArchiveModel implements TreeViewModel {
 		NodeInfo<?> info = null;
 
 		if (value == null) {
-			createYearCountLookup();
-
-			List<Integer> sortedYears = new ArrayList<Integer>(years.keySet());
+			List<Integer> sortedYears = new ArrayList<Integer>(
+					ArchiveEntryController.get().getYears());
 			Collections.sort(sortedYears, DESCENDING_COMPARATOR);
 
 			info = new DefaultNodeInfo<Integer>(new ListDataProvider<Integer>(
@@ -104,13 +99,13 @@ public class ArchiveModel implements TreeViewModel {
 						@Override
 						public SafeHtml render (Integer value) {
 							return ArchiveModelTemplate.INSTANCE.textWithBadge(
-									value.toString(), yearPostCount.get(value)
-											.intValue());
+									value.toString(), ArchiveEntryController
+											.get().getYearPostCount(value));
 						}
 					}));
 		} else if (value instanceof Integer) {
-			List<ArchiveEntry> sortedArchiveEntries = years
-					.get((Integer) value);
+			List<ArchiveEntry> sortedArchiveEntries = ArchiveEntryController
+					.get().getYearArchiveEntries((Integer) value);
 			Collections.sort(sortedArchiveEntries, MONTH_COMPARATOR);
 
 			info = new DefaultNodeInfo<ArchiveEntry>(
@@ -131,28 +126,6 @@ public class ArchiveModel implements TreeViewModel {
 		}
 
 		return info;
-	}
-
-	/**
-	 * 
-	 */
-	private void createYearCountLookup () {
-		List<ArchiveEntry> yearArchiveEntries = null;
-		for (ArchiveEntry archiveEntry : ArchiveEntryController.get().getList()) {
-			yearArchiveEntries = years.get(archiveEntry.year);
-
-			if (yearArchiveEntries == null) {
-				yearArchiveEntries = new ArrayList<ArchiveEntry>();
-				years.put(archiveEntry.year, yearArchiveEntries);
-				yearPostCount.put(archiveEntry.year, Integer.valueOf(0));
-			}
-
-			yearArchiveEntries.add(archiveEntry);
-			yearPostCount.put(
-					archiveEntry.year,
-					Integer.valueOf(yearPostCount.get(archiveEntry.year)
-							.intValue() + archiveEntry.posts.size()));
-		}
 	}
 
 	/* (non-Javadoc)
