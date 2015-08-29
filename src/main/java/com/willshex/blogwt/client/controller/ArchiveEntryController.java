@@ -7,6 +7,12 @@
 //
 package com.willshex.blogwt.client.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gwt.view.client.ListDataProvider;
@@ -27,6 +33,9 @@ public class ArchiveEntryController extends ListDataProvider<ArchiveEntry> {
 		return one;
 	}
 
+	private Map<Integer, List<ArchiveEntry>> years = new HashMap<Integer, List<ArchiveEntry>>();
+	private Map<Integer, Integer> yearPostCount = new HashMap<Integer, Integer>();
+
 	public ArchiveEntryController () {
 		String archiveEntriesJson = archiveEntries();
 
@@ -36,11 +45,28 @@ public class ArchiveEntryController extends ListDataProvider<ArchiveEntry> {
 			getList().clear();
 
 			ArchiveEntry item = null;
+			List<ArchiveEntry> yearArchiveEntries;
 			for (int i = 0; i < jsonArchiveEntryArray.size(); i++) {
 				if (jsonArchiveEntryArray.get(i).isJsonObject()) {
 					(item = new ArchiveEntry()).fromJson(jsonArchiveEntryArray
 							.get(i).getAsJsonObject());
 					getList().add(item);
+
+					// manage the groups and the count
+					yearArchiveEntries = years.get(item.year);
+
+					if (yearArchiveEntries == null) {
+						yearArchiveEntries = new ArrayList<ArchiveEntry>();
+						years.put(item.year, yearArchiveEntries);
+						yearPostCount.put(item.year, Integer.valueOf(0));
+					}
+
+					yearArchiveEntries.add(item);
+					yearPostCount.put(
+							item.year,
+							Integer.valueOf(yearPostCount.get(item.year)
+									.intValue() + item.posts.size()));
+
 				}
 			}
 		}
@@ -50,4 +76,27 @@ public class ArchiveEntryController extends ListDataProvider<ArchiveEntry> {
 	/*-{
 		return $wnd['archiveEntries'];
 	}-*/;
+
+	/**
+	 * @return
+	 */
+	public Collection<Integer> getYears () {
+		return years.keySet();
+	}
+
+	/**
+	 * @param year
+	 * @return
+	 */
+	public int getYearPostCount (Integer year) {
+		return yearPostCount.get(year).intValue();
+	}
+
+	/**
+	 * @param value
+	 * @return
+	 */
+	public List<ArchiveEntry> getYearArchiveEntries (Integer value) {
+		return years.get((Integer) value);
+	}
 }
