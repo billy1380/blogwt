@@ -33,23 +33,6 @@ public abstract class ErrorHandlingEntryPoint implements EntryPoint {
 			public void onUncaughtException (Throwable e) {
 				GWT.log("An unhandled GWT exception was caugth!", e);
 			}
-
-			//			private String messageForThrowable(Throwable e) {
-			//				String message = "";
-			//				if (e.getCause() != null) {
-			//					message += "Caused by: " + messageForThrowable(e.getCause());
-			//				}
-			//
-			//				message += e.getMessage() + "\n";
-			//
-			//				message += "-- Frames --\n";
-			//
-			//				for (StackTraceElement frame : e.getStackTrace()) {
-			//					message += frame.getFileName() + ": " + frame.getClassName() + "." + frame.getMethodName() + " on line " + frame.getLineNumber() + "\n";
-			//				}
-			//
-			//				return message;
-			//			}
 		});
 	}
 
