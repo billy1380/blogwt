@@ -22,6 +22,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.cell.StyledImageCell;
@@ -54,14 +55,15 @@ public class UsersPage extends Page {
 		SafeHtml emailLink (String email, String emailDescription);
 	}
 
+	private static final StyledImageCell imagePrototype = new StyledImageCell();
+	private static final Cell<SafeHtml> safeHtmlPrototype = new SafeHtmlCell();
+	private static final ButtonCell actionButtonPrototype = new PrettyButtonCell();
+
 	@UiField(provided = true) CellTable<User> tblUsers = new CellTable<User>(
 			PagerHelper.DEFAULT_COUNT.intValue(),
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField SimplePager pgrUsers;
 	@UiField NoneFoundPanel pnlNoUsers;
-	private StyledImageCell imagePrototype = new StyledImageCell();
-	private Cell<SafeHtml> safeHtmlPrototype = new SafeHtmlCell();
-	private ButtonCell actionButtonPrototype = new PrettyButtonCell();
 
 	public UsersPage () {
 		super(PageType.UsersPageType);
@@ -79,7 +81,6 @@ public class UsersPage extends Page {
 	 * 
 	 */
 	private void createColumns () {
-
 		Column<User, String> avatar = new Column<User, String>(imagePrototype) {
 
 			@Override
@@ -91,7 +92,6 @@ public class UsersPage extends Page {
 		tblUsers.setColumnWidth(avatar, 20.0, Unit.PX);
 
 		TextColumn<User> username = new TextColumn<User>() {
-
 			@Override
 			public String getValue (User object) {
 				return object.username;
@@ -99,7 +99,6 @@ public class UsersPage extends Page {
 		};
 
 		TextColumn<User> name = new TextColumn<User>() {
-
 			@Override
 			public String getValue (User object) {
 				return UserHelper.name(object);
@@ -108,7 +107,6 @@ public class UsersPage extends Page {
 
 		Column<User, SafeHtml> email = new Column<User, SafeHtml>(
 				safeHtmlPrototype) {
-
 			@Override
 			public SafeHtml getValue (User object) {
 				return UsersPageTemplates.INSTANCE.emailLink(object.email,
@@ -117,7 +115,6 @@ public class UsersPage extends Page {
 		};
 
 		TextColumn<User> lastLoggedIn = new TextColumn<User>() {
-
 			@Override
 			public String getValue (User object) {
 				return DateTimeHelper.ago(object.lastLoggedIn);
@@ -126,7 +123,6 @@ public class UsersPage extends Page {
 
 		Column<User, SafeHtml> edit = new Column<User, SafeHtml>(
 				safeHtmlPrototype) {
-
 			@Override
 			public SafeHtml getValue (User object) {
 				return SafeHtmlUtils
@@ -140,24 +136,24 @@ public class UsersPage extends Page {
 
 		Column<User, String> delete = new Column<User, String>(
 				actionButtonPrototype) {
-
 			@Override
 			public String getValue (User object) {
 				return "delete";
 			}
 		};
 		delete.setFieldUpdater(new FieldUpdater<User, String>() {
-
 			@Override
 			public void update (int index, User object, String value) {
-
+				if (Window.confirm("Are you sure you want to delete "
+						+ object.username + "'s account?")) {
+					// delete user (preferably if not the last user)
+				}
 			}
 		});
 		tblUsers.setColumnWidth(delete, 1.0, Unit.PX);
 
 		Column<User, String> admin = new Column<User, String>(
 				actionButtonPrototype) {
-
 			@Override
 			public String getValue (User object) {
 				return "admin";
@@ -167,7 +163,7 @@ public class UsersPage extends Page {
 
 			@Override
 			public void update (int index, User object, String value) {
-
+				// make admin
 			}
 		});
 		tblUsers.setColumnWidth(admin, 1.0, Unit.PX);
