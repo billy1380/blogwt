@@ -55,7 +55,7 @@ public class AddUserWizardPage extends Composite implements WizardPage<User> {
 		UiHelper.addPlaceholder(txtForename, "Forename");
 		UiHelper.addPlaceholder(txtSurname, "Surname");
 		UiHelper.addPlaceholder(txtPassword, "Password");
-		UiHelper.addPlaceholder(txtConfirmPassword, "Confirm Password");
+		UiHelper.addPlaceholder(txtConfirmPassword, "Confirm password");
 	}
 
 	/* (non-Javadoc)
