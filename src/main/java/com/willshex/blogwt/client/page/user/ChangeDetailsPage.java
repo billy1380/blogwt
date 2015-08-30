@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
@@ -67,6 +68,11 @@ public class ChangeDetailsPage extends Page implements
 	@UiField TextBox txtUsername;
 	@UiField HTMLPanel pnlUsernameNote;
 
+	@UiField HTMLPanel pnlPassword;
+	@UiField PasswordTextBox txtPassword;
+	@UiField PasswordTextBox txtConfirmPassword;
+	@UiField HTMLPanel pnlPasswordNote;
+
 	@UiField HTMLPanel pnlForename;
 	@UiField TextBox txtForename;
 	@UiField HTMLPanel pnlForenameNote;
@@ -90,6 +96,10 @@ public class ChangeDetailsPage extends Page implements
 
 		UiHelper.addPlaceholder(txtUsername, "Username");
 		UiHelper.autoFocus(txtUsername);
+
+		UiHelper.addPlaceholder(txtPassword, "Password");
+		UiHelper.addPlaceholder(txtConfirmPassword, "Confirm password");
+
 		UiHelper.addPlaceholder(txtForename, "Forename");
 		UiHelper.addPlaceholder(txtSurname, "Surname");
 		UiHelper.addPlaceholder(txtEmail, "Email");
@@ -134,6 +144,13 @@ public class ChangeDetailsPage extends Page implements
 			user.id(id);
 
 			UserController.get().getUser(user);
+
+			lnkChangePassword.setVisible(true);
+			pnlPassword.setVisible(false);
+		} else if ("new".equals(current.getAction())) {
+			elDates.setInnerText("Create new user");
+			lnkChangePassword.setVisible(false);
+			pnlPassword.setVisible(true);
 		}
 	}
 
@@ -155,6 +172,9 @@ public class ChangeDetailsPage extends Page implements
 			txtForename.setText(user.forename);
 			txtSurname.setText(user.surname);
 			txtEmail.setText(user.email);
+			
+			lnkChangePassword.setVisible(true);
+			pnlPassword.setVisible(false);
 		}
 	}
 
