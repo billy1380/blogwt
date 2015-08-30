@@ -22,6 +22,23 @@
 		right: -9999px;
 		margin: auto;
 	}
+	
+	.top-of-pair {
+		margin-bottom: -1px;
+		border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+	
+	.bottom-of-pair {
+		margin-bottom: 10px;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+	
+	.top-of-pair:focus, .bottom-of-pair:focus {
+		position: relative;
+		z-index: 2;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">
 		<div class="row">
@@ -46,6 +63,16 @@
 								visible="false" />
 							<g:Hyperlink text="Change password" ui:field="lnkChangePassword"
 								styleName="text-right" targetHistoryToken="{ChangePasswordPageType.asTargetHistoryToken}" />
+						</g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="pnlPassword" styleName="form-group">
+							<label class="control-label">Password</label>
+							<g:PasswordTextBox ui:field="txtPassword"
+								styleName="form-control {style.top-of-pair}" />
+							<g:PasswordTextBox ui:field="txtConfirmPassword"
+								styleName="form-control {style.bottom-of-pair}" />
+							<g:HTMLPanel styleName="control-label small" ui:field="pnlPasswordNote"
+								visible="false" />
 						</g:HTMLPanel>
 
 						<g:HTMLPanel ui:field="pnlForename" styleName="form-group">
