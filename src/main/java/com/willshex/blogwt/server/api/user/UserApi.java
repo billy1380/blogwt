@@ -69,6 +69,23 @@ public final class UserApi extends ActionHandler {
 		LOG.finer("Entering getEmailAvatar");
 		GetEmailAvatarResponse output = new GetEmailAvatarResponse();
 		try {
+			ApiValidator.notNull(input, GetEmailAvatarRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			if (input.session != null) {
+				try {
+					output.session = input.session = SessionValidator
+							.lookupAndExtend(input.session, "input.session");
+				} catch (InputValidationException ex) {
+					output.session = input.session = null;
+				}
+			}
+
+			ApiValidator.notNull(input.email, String.class, "input.email");
+
+			output.avatar = UserHelper.emailAvatar(input.email);
+
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
