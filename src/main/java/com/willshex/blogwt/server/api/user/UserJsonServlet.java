@@ -12,6 +12,7 @@ import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
+import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
 import com.willshex.blogwt.shared.api.user.call.GetPermissionsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetRolesRequest;
@@ -29,7 +30,11 @@ public final class UserJsonServlet extends JsonServlet {
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
 		UserApi service = new UserApi();
-		if ("RegisterUser".equals(action)) {
+		if ("GetEmailAvatar".equals(action)) {
+			GetEmailAvatarRequest input = new GetEmailAvatarRequest();
+			input.fromJson(request);
+			output = service.getEmailAvatar(input).toString();
+		} else if ("RegisterUser".equals(action)) {
 			RegisterUserRequest input = new RegisterUserRequest();
 			input.fromJson(request);
 			output = service.registerUser(input).toString();
