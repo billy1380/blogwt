@@ -14,30 +14,31 @@ import com.google.gson.JsonPrimitive;
 import com.willshex.blogwt.shared.api.Request;
 
 public class GetEmailAvatarRequest extends Request {
-	public String emailAddress;
+
+	public String email;
 
 	@Override
 	public JsonObject toJson () {
 		JsonObject object = super.toJson();
-		JsonElement jsonEmailAddress = emailAddress == null ? JsonNull.INSTANCE
-				: new JsonPrimitive(emailAddress);
-		object.add("emailAddress", jsonEmailAddress);
+		JsonElement jsonEmail = email == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(email);
+		object.add("email", jsonEmail);
 		return object;
 	}
 
 	@Override
 	public void fromJson (JsonObject jsonObject) {
 		super.fromJson(jsonObject);
-		if (jsonObject.has("emailAddress")) {
-			JsonElement jsonEmailAddress = jsonObject.get("emailAddress");
-			if (jsonEmailAddress != null) {
-				emailAddress = jsonEmailAddress.getAsString();
+		if (jsonObject.has("email")) {
+			JsonElement jsonEmail = jsonObject.get("email");
+			if (jsonEmail != null) {
+				email = jsonEmail.getAsString();
 			}
 		}
 	}
 
-	public GetEmailAvatarRequest emailAddress (String emailAddress) {
-		this.emailAddress = emailAddress;
+	public GetEmailAvatarRequest email (String email) {
+		this.email = email;
 		return this;
 	}
 }
