@@ -11,6 +11,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -36,9 +37,12 @@ import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
+import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
+import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler;
+import com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler;
 import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
@@ -50,7 +54,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class ChangeDetailsPage extends Page implements
 		NavigationChangedEventHandler, GetUserDetailsEventHandler,
-		ChangeUserDetailsEventHandler {
+		ChangeUserDetailsEventHandler, GetEmailAvatarEventHandler {
 
 	private static ChangeDetailsPageUiBinder uiBinder = GWT
 			.create(ChangeDetailsPageUiBinder.class);
@@ -117,9 +121,10 @@ public class ChangeDetailsPage extends Page implements
 				this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetUserDetailsEventHandler.TYPE, UserController.get(), this));
-
 		register(DefaultEventBus.get().addHandlerToSource(
 				ChangeUserDetailsEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(
+				GetEmailAvatarEventHandler.TYPE, UserController.get(), this));
 
 		ready();
 	}
@@ -154,6 +159,18 @@ public class ChangeDetailsPage extends Page implements
 		}
 	}
 
+	@UiHandler("txtUsername")
+	void onUsernameChanged (ValueChangeEvent<String> vce) {
+		String username = "@" + vce.getValue();
+		imgAvatar.setAltText(username);
+		h3Username.setInnerHTML(username);
+	}
+
+	@UiHandler("txtEmail")
+	void onEmailChanged (ValueChangeEvent<String> vce) {
+		UserController.get().getEmailAvatar(vce.getValue());
+	}
+
 	private void showUserDetails (User user) {
 		if (user != null) {
 			String username = "@" + user.username;
@@ -172,7 +189,7 @@ public class ChangeDetailsPage extends Page implements
 			txtForename.setText(user.forename);
 			txtSurname.setText(user.surname);
 			txtEmail.setText(user.email);
-			
+
 			lnkChangePassword.setVisible(true);
 			pnlPassword.setVisible(false);
 		}
@@ -310,6 +327,33 @@ public class ChangeDetailsPage extends Page implements
 		h3Username.setInnerText("");
 
 		super.reset();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler
+	 * #getEmailAvatarSuccess(com.willshex.blogwt.shared.api.user.call.
+	 * GetEmailAvatarRequest,
+	 * com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse) */
+	@Override
+	public void getEmailAvatarSuccess (GetEmailAvatarRequest input,
+			GetEmailAvatarResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			imgAvatar.setUrl(output.avatar + "?s=160&default=retro");
+		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler
+	 * #getEmailAvatarFailure(com.willshex.blogwt.shared.api.user.call.
+	 * GetEmailAvatarRequest, java.lang.Throwable) */
+	@Override
+	public void getEmailAvatarFailure (GetEmailAvatarRequest input,
+			Throwable caught) {
+		GWT.log("getEmailAvatarFailure", caught);
 	}
 
 }
