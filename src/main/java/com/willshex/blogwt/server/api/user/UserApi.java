@@ -35,6 +35,8 @@ import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameResponse;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordResponse;
+import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
+import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse;
 import com.willshex.blogwt.shared.api.user.call.GetPermissionsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetPermissionsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsRequest;
@@ -62,6 +64,19 @@ import com.willshex.gson.json.service.shared.StatusType;
 
 public final class UserApi extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(UserApi.class.getName());
+
+	public GetEmailAvatarResponse getEmailAvatar (GetEmailAvatarRequest input) {
+		LOG.finer("Entering getEmailAvatar");
+		GetEmailAvatarResponse output = new GetEmailAvatarResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getEmailAvatar");
+		return output;
+	}
 
 	public RegisterUserResponse registerUser (RegisterUserRequest input) {
 		LOG.finer("Entering registerUser");

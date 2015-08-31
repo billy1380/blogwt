@@ -21,6 +21,8 @@ import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameResponse;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordResponse;
+import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
+import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse;
 import com.willshex.blogwt.shared.api.user.call.GetPermissionsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetPermissionsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsRequest;
@@ -43,6 +45,50 @@ import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class UserService extends JsonService {
+	public static final String UserMethodGetEmailAvatar = "GetEmailAvatar";
+
+	public Request getEmailAvatar (final GetEmailAvatarRequest input,
+			final AsyncCallback<GetEmailAvatarResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(UserMethodGetEmailAvatar, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								GetEmailAvatarResponse outputParameter = new GetEmailAvatarResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(UserService.this,
+										UserMethodGetEmailAvatar, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(UserService.this,
+										UserMethodGetEmailAvatar, input,
+										exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(UserService.this,
+									UserMethodGetEmailAvatar, input, exception);
+						}
+					});
+			onCallStart(UserService.this, UserMethodGetEmailAvatar, input,
+					handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(UserService.this, UserMethodGetEmailAvatar, input,
+					exception);
+		}
+		return handle;
+	}
+
 	public static final String UserMethodRegisterUser = "RegisterUser";
 
 	public Request registerUser (final RegisterUserRequest input,
