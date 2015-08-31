@@ -99,7 +99,7 @@ public final class BlogApi extends ActionHandler {
 		LOG.finer("Entering deleteResource");
 		DeleteResourceResponse output = new DeleteResourceResponse();
 		try {
-			ApiValidator.notNull(input, UpdatePostRequest.class, "input");
+			ApiValidator.notNull(input, DeleteResourceRequest.class, "input");
 			ApiValidator.accessCode(input.accessCode, "input.accessCode");
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
@@ -127,7 +127,7 @@ public final class BlogApi extends ActionHandler {
 		LOG.finer("Entering getResources");
 		GetResourcesResponse output = new GetResourcesResponse();
 		try {
-			ApiValidator.notNull(input, UpdatePostRequest.class, "input");
+			ApiValidator.notNull(input, GetResourcesRequest.class, "input");
 			ApiValidator.accessCode(input.accessCode, "input.accessCode");
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
@@ -167,7 +167,7 @@ public final class BlogApi extends ActionHandler {
 		LOG.finer("Entering getPost");
 		GetPostResponse output = new GetPostResponse();
 		try {
-			ApiValidator.notNull(input, CreatePostRequest.class, "input");
+			ApiValidator.notNull(input, GetPostRequest.class, "input");
 			ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 			if (input.session != null) {
@@ -325,7 +325,7 @@ public final class BlogApi extends ActionHandler {
 		LOG.finer("Entering deletePost");
 		DeletePostResponse output = new DeletePostResponse();
 		try {
-			ApiValidator.notNull(input, UpdatePostRequest.class, "input");
+			ApiValidator.notNull(input, DeletePostRequest.class, "input");
 			ApiValidator.accessCode(input.accessCode, "input.accessCode");
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
