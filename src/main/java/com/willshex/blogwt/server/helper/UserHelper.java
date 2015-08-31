@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.helper;
 
+import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
@@ -35,5 +36,14 @@ public class UserHelper extends com.willshex.blogwt.shared.helper.UserHelper {
 										.keysToIds(user.permissionKeys));
 			}
 		}
+	}
+
+	/**
+	 * @param email
+	 * @return
+	 */
+	public static String emailAvatar (String email) {
+		return "https://secure.gravatar.com/avatar/"
+				+ StringUtils.md5Hash(email.trim().toLowerCase());
 	}
 }

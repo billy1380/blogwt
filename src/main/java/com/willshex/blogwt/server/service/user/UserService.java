@@ -17,6 +17,7 @@ import java.util.List;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
@@ -162,9 +163,8 @@ final class UserService implements IUserService {
 	}
 
 	private User addAvatar (User user) {
-		return user == null ? null : user
-				.avatar("https://secure.gravatar.com/avatar/"
-						+ StringUtils.md5Hash(user.email.trim().toLowerCase()));
+		return user == null ? null : user.avatar(UserHelper
+				.emailAvatar(user.email));
 	}
 
 	@Override
