@@ -24,6 +24,8 @@ import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
+import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
+import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
@@ -32,6 +34,8 @@ import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler
 import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler.ChangePasswordSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsFailure;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsSuccess;
+import com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler.GetEmailAvatarFailure;
+import com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler.GetEmailAvatarSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler.GetUserDetailsFailure;
 import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler.GetUserDetailsSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetUsersEventHandler.GetUsersFailure;
@@ -60,6 +64,7 @@ public class UserController extends AsyncDataProvider<User> {
 
 	private Request getUsersRequest;
 	private Request getUserRequest;
+	private Request getEmailAvatarRequest;
 
 	private void fetchUsers () {
 		final GetUsersRequest input = ApiHelper
@@ -246,6 +251,46 @@ public class UserController extends AsyncDataProvider<User> {
 	public static void resetPassword (String email) {
 		Window.alert("Tried to reset the password for [" + email
 				+ "]. This feature is coming soon!");
+	}
+
+	/**
+	 * @param email
+	 */
+	public void getEmailAvatar (String email) {
+		final GetEmailAvatarRequest input = ApiHelper
+				.setAccessCode(new GetEmailAvatarRequest());
+
+		input.session = SessionController.get().sessionForApiCall();
+		input.email = email;
+
+		if (getEmailAvatarRequest != null) {
+			getEmailAvatarRequest.cancel();
+		}
+
+		getEmailAvatarRequest = ApiHelper.createUserClient().getEmailAvatar(
+				input, new AsyncCallback<GetEmailAvatarResponse>() {
+
+					@Override
+					public void onSuccess (GetEmailAvatarResponse output) {
+						getEmailAvatarRequest = null;
+
+						if (output.status == StatusType.StatusTypeSuccess) {
+
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new GetEmailAvatarSuccess(input, output),
+								UserController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new GetEmailAvatarFailure(input, caught),
+								UserController.this);
+					}
+
+				});
 	}
 
 }
