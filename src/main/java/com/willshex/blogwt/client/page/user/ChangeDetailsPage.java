@@ -41,9 +41,12 @@ import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
+import com.willshex.blogwt.shared.api.user.call.RegisterUserRequest;
+import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler;
 import com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler;
 import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler;
+import com.willshex.blogwt.shared.api.user.call.event.RegisterUserEventHandler;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -54,13 +57,18 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class ChangeDetailsPage extends Page implements
 		NavigationChangedEventHandler, GetUserDetailsEventHandler,
-		ChangeUserDetailsEventHandler, GetEmailAvatarEventHandler {
+		ChangeUserDetailsEventHandler, GetEmailAvatarEventHandler,
+		RegisterUserEventHandler {
 
 	private static ChangeDetailsPageUiBinder uiBinder = GWT
 			.create(ChangeDetailsPageUiBinder.class);
 
 	interface ChangeDetailsPageUiBinder extends
 			UiBinder<Widget, ChangeDetailsPage> {}
+
+	private static final String UPDATE_ACTION_TEXT = "Update";
+	private static final String CREATE_ACTION_TEXT = "Create";
+	private static final String REGISTER_ACTION_TEXT = "Register";
 
 	@UiField FormPanel frmDetails;
 
@@ -93,6 +101,7 @@ public class ChangeDetailsPage extends Page implements
 	@UiField Hyperlink lnkChangePassword;
 
 	private User user;
+	private String actionText;
 
 	public ChangeDetailsPage () {
 		super(PageType.ChangeDetailsPageType);
@@ -107,6 +116,8 @@ public class ChangeDetailsPage extends Page implements
 		UiHelper.addPlaceholder(txtForename, "Forename");
 		UiHelper.addPlaceholder(txtSurname, "Surname");
 		UiHelper.addPlaceholder(txtEmail, "Email");
+
+		actionText = UPDATE_ACTION_TEXT;
 	}
 
 	/* (non-Javadoc)
@@ -125,8 +136,8 @@ public class ChangeDetailsPage extends Page implements
 				ChangeUserDetailsEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetEmailAvatarEventHandler.TYPE, UserController.get(), this));
-
-		ready();
+		register(DefaultEventBus.get().addHandlerToSource(
+				RegisterUserEventHandler.TYPE, UserController.get(), this));
 	}
 
 	/* (non-Javadoc)
@@ -137,6 +148,8 @@ public class ChangeDetailsPage extends Page implements
 	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
+		reset();
+
 		if (current.getAction() == null) {
 			showUserDetails(user = SessionController.get().user());
 			lnkChangePassword
@@ -156,7 +169,15 @@ public class ChangeDetailsPage extends Page implements
 			elDates.setInnerText("Create new user");
 			lnkChangePassword.setVisible(false);
 			pnlPassword.setVisible(true);
+
+			if (SessionController.get().isAdmin()) {
+				actionText = CREATE_ACTION_TEXT;
+			} else {
+				actionText = REGISTER_ACTION_TEXT;
+			}
 		}
+
+		ready();
 	}
 
 	@UiHandler("txtUsername")
@@ -231,13 +252,17 @@ public class ChangeDetailsPage extends Page implements
 	void onUpdateClicked (ClickEvent ce) {
 		if (isValid()) {
 			loading();
-			User updatedUser = new User();
-			updatedUser.id(user.id);
-			UserController.get().changeUserDetails(
-					updatedUser.username(txtUsername.getText())
-							.forename(txtForename.getText())
-							.surname(txtSurname.getText())
-							.email(txtEmail.getText()));
+			User user = new User().username(txtUsername.getText())
+					.forename(txtForename.getText())
+					.surname(txtSurname.getText()).email(txtEmail.getText());
+
+			if (this.user == null) {
+				user.password(txtPassword.getText());
+				UserController.get().registerUser(user);
+			} else {
+				user.id(this.user.id);
+				UserController.get().changeUserDetails(user);
+			}
 		} else {
 			showErrors();
 		}
@@ -255,19 +280,21 @@ public class ChangeDetailsPage extends Page implements
 	private void ready () {
 		btnUpdate.getElement().setInnerSafeHtml(
 				WizardDialog.WizardDialogTemplates.INSTANCE
-						.nextButton("Update"));
+						.nextButton(actionText));
 
 		btnUpdate.setEnabled(true);
 		txtUsername.setEnabled(true);
 		txtForename.setEnabled(true);
 		txtSurname.setEnabled(true);
 		txtEmail.setEnabled(true);
+		txtPassword.setEnabled(true);
+		txtConfirmPassword.setEnabled(true);
 	}
 
 	private void loading () {
 		btnUpdate.getElement().setInnerSafeHtml(
 				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
-						"Updating... ", Resources.RES.primaryLoader()
+						getLoadingText(), Resources.RES.primaryLoader()
 								.getSafeUri()));
 
 		btnUpdate.setEnabled(false);
@@ -275,6 +302,8 @@ public class ChangeDetailsPage extends Page implements
 		txtForename.setEnabled(false);
 		txtSurname.setEnabled(false);
 		txtEmail.setEnabled(false);
+		txtPassword.setEnabled(false);
+		txtConfirmPassword.setEnabled(false);
 
 		pnlUsername.removeStyleName("has-error");
 		pnlUsernameNote.setVisible(false);
@@ -284,6 +313,25 @@ public class ChangeDetailsPage extends Page implements
 		pnlSurnameNote.setVisible(false);
 		pnlEmail.removeStyleName("has-error");
 		pnlEmailNote.setVisible(false);
+		pnlPassword.removeStyleName("has-error");
+		pnlPasswordNote.setVisible(false);
+	}
+
+	private String getLoadingText () {
+		String loadingText = null;
+		switch (actionText) {
+		case UPDATE_ACTION_TEXT:
+			loadingText = "Updating... ";
+			break;
+		case CREATE_ACTION_TEXT:
+			loadingText = "Creating...";
+			break;
+		case REGISTER_ACTION_TEXT:
+			loadingText = "Registering...";
+			break;
+		}
+
+		return loadingText;
 	}
 
 	/* (non-Javadoc)
@@ -325,6 +373,8 @@ public class ChangeDetailsPage extends Page implements
 		imgAvatar.setUrl("");
 		elDates.setInnerText("");
 		h3Username.setInnerText("");
+		actionText = "Update";
+		user = null;
 
 		super.reset();
 	}
@@ -354,6 +404,38 @@ public class ChangeDetailsPage extends Page implements
 	public void getEmailAvatarFailure (GetEmailAvatarRequest input,
 			Throwable caught) {
 		GWT.log("getEmailAvatarFailure", caught);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.RegisterUserEventHandler
+	 * #registerUserSuccess
+	 * (com.willshex.blogwt.shared.api.user.call.RegisterUserRequest,
+	 * com.willshex.blogwt.shared.api.user.call.RegisterUserResponse) */
+	@Override
+	public void registerUserSuccess (RegisterUserRequest input,
+			RegisterUserResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			if (SessionController.get().isAdmin()) {
+				PageType.ChangeDetailsPageType.show("id",
+						output.user.id.toString());
+			} else {
+				PageType.LoginPageType.show(output.user.username.toString());
+			}
+		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.RegisterUserEventHandler
+	 * #registerUserFailure
+	 * (com.willshex.blogwt.shared.api.user.call.RegisterUserRequest,
+	 * java.lang.Throwable) */
+	@Override
+	public void registerUserFailure (RegisterUserRequest input, Throwable caught) {
+		GWT.log("registerUserFailure", caught);
 	}
 
 }
