@@ -147,7 +147,9 @@ public class UsersPage extends Page {
 				if (Window.confirm("Are you sure you want to delete "
 						+ object.username + "'s account?")) {
 					// delete user (preferably if not the last user)
+					Window.alert("Users cannot, currently, be deleted.");
 				}
+
 			}
 		});
 		tblUsers.setColumnWidth(delete, 1.0, Unit.PX);
