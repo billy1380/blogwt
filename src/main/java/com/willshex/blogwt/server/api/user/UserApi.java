@@ -99,6 +99,24 @@ public final class UserApi extends ActionHandler {
 		LOG.finer("Entering registerUser");
 		RegisterUserResponse output = new RegisterUserResponse();
 		try {
+			ApiValidator.notNull(input, GetEmailAvatarRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			if (input.session != null) {
+				try {
+					output.session = input.session = SessionValidator
+							.lookupAndExtend(input.session, "input.session");
+				} catch (InputValidationException ex) {
+					output.session = input.session = null;
+				}
+			}
+
+			input.user = UserValidator.validate(input.user, "input.user");
+
+			output.user = UserServiceProvider.provide().addUser(input.user);
+			UserHelper.stripPassword(output.user);
+
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
