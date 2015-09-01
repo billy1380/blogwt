@@ -40,16 +40,20 @@ import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
+import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
 import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
+import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler;
 import com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler;
 import com.willshex.blogwt.shared.api.user.call.event.LogoutEventHandler;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
@@ -58,7 +62,8 @@ import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public class HeaderPart extends Composite implements LoginEventHandler,
-		LogoutEventHandler, NavigationChangedEventHandler, ClickHandler {
+		LogoutEventHandler, NavigationChangedEventHandler, ClickHandler,
+		ChangeUserDetailsEventHandler {
 
 	private static HeaderPartUiBinder uiBinder = GWT
 			.create(HeaderPartUiBinder.class);
@@ -232,6 +237,10 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				this));
 		registration.add(RootPanel.get().addDomHandler(this,
 				ClickEvent.getType()));
+		registration
+				.add(DefaultEventBus.get().addHandlerToSource(
+						ChangeUserDetailsEventHandler.TYPE,
+						UserController.get(), this));
 
 		Session session = SessionController.get().session();
 		if (session != null && session.user != null) {
@@ -257,10 +266,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	 * @param user
 	 */
 	private void setLoggedInUser (User user) {
-		imgAvatar.setAlt(user.username);
-		imgAvatar.setSrc(user.avatar + "?s=" + UserHelper.AVATAR_HEADER_SIZE
-				+ "&default=retro");
-		elUserName.setInnerText(user.forename + " " + user.surname);
+		showUserDetails(user);
 
 		configureNavBar(true);
 	}
@@ -294,7 +300,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		if (login) {
 			Permission managePages = PermissionHelper
 					.create(PermissionHelper.MANAGE_PAGES);
-			Permission managePermissions= PermissionHelper
+			Permission managePermissions = PermissionHelper
 					.create(PermissionHelper.MANAGE_PERMISSIONS);
 			Permission manageRoles = PermissionHelper
 					.create(PermissionHelper.MANAGE_ROLES);
@@ -330,8 +336,9 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 			} else {
 				elRoles.removeFromParent();
 			}
-			
-			if (addAdmin || SessionController.get().isAuthorised(managePermissions)) {
+
+			if (addAdmin
+					|| SessionController.get().isAuthorised(managePermissions)) {
 				addAdmin = true;
 				elAdminDropdown.appendChild(elPermissions);
 			} else {
@@ -435,4 +442,40 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 			elAdmin.removeClassName("open");
 		}
 	}
+
+	private void showUserDetails (User user) {
+		imgAvatar.setAlt(user.username);
+		imgAvatar.setSrc(user.avatar + "?s=" + UserHelper.AVATAR_HEADER_SIZE
+				+ "&default=retro");
+		elUserName.setInnerText(user.forename + " " + user.surname);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler
+	 * #changeUserDetailsSuccess(com.willshex.blogwt.shared.api.user.call.
+	 * ChangeUserDetailsRequest,
+	 * com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse) */
+	@Override
+	public void changeUserDetailsSuccess (ChangeUserDetailsRequest input,
+			ChangeUserDetailsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			User user = SessionController.get().user();
+
+			if (user != null && user.id.equals(output.user.id)) {
+				showUserDetails(output.user);
+			}
+		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler
+	 * #changeUserDetailsFailure(com.willshex.blogwt.shared.api.user.call.
+	 * ChangeUserDetailsRequest, java.lang.Throwable) */
+	@Override
+	public void changeUserDetailsFailure (ChangeUserDetailsRequest input,
+			Throwable caught) {}
 }
