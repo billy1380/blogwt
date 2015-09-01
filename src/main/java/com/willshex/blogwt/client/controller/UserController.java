@@ -30,6 +30,8 @@ import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUsersResponse;
+import com.willshex.blogwt.shared.api.user.call.RegisterUserRequest;
+import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
 import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler.ChangePasswordFailure;
 import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler.ChangePasswordSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsFailure;
@@ -40,6 +42,8 @@ import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler
 import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler.GetUserDetailsSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetUsersEventHandler.GetUsersFailure;
 import com.willshex.blogwt.shared.api.user.call.event.GetUsersEventHandler.GetUsersSuccess;
+import com.willshex.blogwt.shared.api.user.call.event.RegisterUserEventHandler.RegisterUserFailure;
+import com.willshex.blogwt.shared.api.user.call.event.RegisterUserEventHandler.RegisterUserSuccess;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -182,17 +186,11 @@ public class UserController extends AsyncDataProvider<User> {
 		input.session = SessionController.get().sessionForApiCall();
 		input.user = user;
 
-		if (getUserRequest != null) {
-			getUserRequest.cancel();
-		}
-
-		getUserRequest = ApiHelper.createUserClient().changeUserDetails(input,
+		ApiHelper.createUserClient().changeUserDetails(input,
 				new AsyncCallback<ChangeUserDetailsResponse>() {
 
 					@Override
 					public void onSuccess (ChangeUserDetailsResponse output) {
-						getUserRequest = null;
-
 						if (output.status == StatusType.StatusTypeSuccess) {
 
 						}
@@ -290,6 +288,39 @@ public class UserController extends AsyncDataProvider<User> {
 								UserController.this);
 					}
 
+				});
+	}
+
+	/**
+	 * @param user
+	 */
+	public void registerUser (User user) {
+		final RegisterUserRequest input = ApiHelper
+				.setAccessCode(new RegisterUserRequest());
+
+		input.session = SessionController.get().sessionForApiCall();
+		input.user = user;
+
+		ApiHelper.createUserClient().registerUser(input,
+				new AsyncCallback<RegisterUserResponse>() {
+
+					@Override
+					public void onSuccess (RegisterUserResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {
+
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new RegisterUserSuccess(input, output),
+								UserController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new RegisterUserFailure(input, caught),
+								UserController.this);
+					}
 				});
 	}
 
