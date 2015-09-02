@@ -7,7 +7,9 @@
 //
 package com.willshex.blogwt.client.controller;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.Window;
@@ -18,12 +20,16 @@ import com.google.gwt.view.client.Range;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.shared.api.Pager;
+import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersResponse;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
@@ -36,6 +42,8 @@ import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler
 import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler.ChangePasswordSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsFailure;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsSuccess;
+import com.willshex.blogwt.shared.api.user.call.event.ChangeUserPowersEventHandler.ChangeUserPowersFailure;
+import com.willshex.blogwt.shared.api.user.call.event.ChangeUserPowersEventHandler.ChangeUserPowersSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler.GetEmailAvatarFailure;
 import com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler.GetEmailAvatarSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler.GetUserDetailsFailure;
@@ -319,6 +327,59 @@ public class UserController extends AsyncDataProvider<User> {
 					public void onFailure (Throwable caught) {
 						DefaultEventBus.get().fireEventFromSource(
 								new RegisterUserFailure(input, caught),
+								UserController.this);
+					}
+				});
+	}
+
+	/**
+	 * @param assign
+	 * @param user
+	 * @param roles
+	 */
+	public void changeUserRoles (boolean assign, User user, Role... roles) {
+		changeUserPowers(assign, user, null, Arrays.asList(roles));
+	}
+
+	/**
+	 * @param assign
+	 * @param user
+	 * @param permissions
+	 */
+	public void changeUserPermissions (boolean assign, User user,
+			Permission... permissions) {
+		changeUserPowers(assign, user, Arrays.asList(permissions), null);
+	}
+
+	private void changeUserPowers (boolean assign, User user,
+			List<Permission> permissions, List<Role> roles) {
+		final ChangeUserPowersRequest input = ApiHelper
+				.setAccessCode(new ChangeUserPowersRequest());
+
+		input.session = SessionController.get().sessionForApiCall();
+		input.user = user;
+		input.assign = Boolean.valueOf(assign);
+		input.roles = roles;
+		input.premissions = permissions;
+
+		ApiHelper.createUserClient().changeUserPowers(input,
+				new AsyncCallback<ChangeUserPowersResponse>() {
+
+					@Override
+					public void onSuccess (ChangeUserPowersResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {
+
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new ChangeUserPowersSuccess(input, output),
+								UserController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new ChangeUserPowersFailure(input, caught),
 								UserController.this);
 					}
 				});
