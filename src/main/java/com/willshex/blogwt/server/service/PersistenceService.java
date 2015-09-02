@@ -55,12 +55,24 @@ public class PersistenceService {
 		return ObjectifyService.factory();
 	}
 
-	public static <T> Collection<Long> keysToIds (Collection<Key<T>> keys) {
+	public static <T> List<Long> keysToIds (Collection<Key<T>> keys) {
 		List<Long> collection = null;
 		if (keys != null) {
 			collection = new ArrayList<Long>();
 			for (Key<T> key : keys) {
 				collection.add(Long.valueOf(key.getId()));
+			}
+		}
+		return collection;
+	}
+
+	public static <T> List<Key<T>> idsToKeys (Class<? extends T> kindClass,
+			Collection<Long> ids) {
+		List<Key<T>> collection = null;
+		if (ids != null) {
+			collection = new ArrayList<Key<T>>();
+			for (Long id : ids) {
+				collection.add(Key.create(kindClass, id.longValue()));
 			}
 		}
 		return collection;
