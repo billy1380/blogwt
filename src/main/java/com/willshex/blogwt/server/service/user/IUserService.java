@@ -12,6 +12,8 @@ import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 import com.willshex.blogwt.shared.api.SortDirectionType;
+import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
 
@@ -89,4 +91,24 @@ public interface IUserService extends IService {
 	 * @return
 	 */
 	public String generatePassword (String password);
+
+	/**
+	 * Add user roles and permissions
+	 * @param user
+	 * @param roles
+	 * @param permissions
+	 * @return
+	 */
+	public User addUserRolesAndPermissions (User user, List<Role> roles,
+			List<Permission> permissions);
+
+	/**
+	 * Remove user roles and permissions
+	 * @param user
+	 * @param roles
+	 * @param permissions
+	 * @return
+	 */
+	public User removeUserRolesAndPermissions (User user, List<Role> roles,
+			List<Permission> permissions);
 }

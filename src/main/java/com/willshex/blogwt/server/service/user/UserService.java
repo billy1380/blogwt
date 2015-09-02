@@ -12,12 +12,16 @@ import static com.willshex.blogwt.server.service.PersistenceService.ofy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.server.helper.UserHelper;
+import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
@@ -227,4 +231,130 @@ final class UserService implements IUserService {
 		return StringUtils.sha1Hash(password + SALT);
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.user.IUserService#
+	 * addUserRolesAndPermissions(com.willshex.blogwt.shared.api.datatype.User,
+	 * java.util.List, java.util.List) */
+	@Override
+	public User addUserRolesAndPermissions (final User user,
+			final List<Role> roles, final List<Permission> permissions) {
+		return ofy().transact(new Work<User>() {
+
+			@Override
+			public User run () {
+				User latest = getUser(user.id);
+
+				Set<Long> current = null;
+
+				if (latest.permissionKeys != null) {
+					current = new HashSet<Long>();
+
+					for (Key<Permission> key : latest.permissionKeys) {
+						current.add(Long.valueOf(key.getId()));
+					}
+				}
+
+				if (permissions != null) {
+					if (current != null) {
+						current.clear();
+					} else {
+						current = new HashSet<Long>();
+					}
+
+					for (Permission permission : permissions) {
+						current.add(permission.id);
+					}
+
+					latest.permissionKeys = PersistenceService.idsToKeys(
+							Permission.class, current);
+				}
+
+				if (latest.roleKeys != null) {
+					if (current != null) {
+						current.clear();
+					} else {
+						current = new HashSet<Long>();
+					}
+				}
+
+				if (roles != null) {
+					if (current != null) {
+						current.clear();
+					} else {
+						current = new HashSet<Long>();
+					}
+
+					for (Role role : roles) {
+						current.add(role.id);
+					}
+
+					latest.roleKeys = PersistenceService.idsToKeys(Role.class,
+							current);
+				}
+
+				ofy().save().entity(latest).now();
+
+				return latest;
+			}
+		});
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.user.IUserService#
+	 * removeUserRolesAndPermissions
+	 * (com.willshex.blogwt.shared.api.datatype.User, java.util.List,
+	 * java.util.List) */
+	@Override
+	public User removeUserRolesAndPermissions (final User user,
+			final List<Role> roles, final List<Permission> permissions) {
+		return ofy().transact(new Work<User>() {
+
+			@Override
+			public User run () {
+				User latest = getUser(user.id);
+
+				Set<Long> current = null;
+
+				if (latest.permissionKeys != null) {
+					current = new HashSet<Long>();
+
+					for (Key<Permission> key : latest.permissionKeys) {
+						current.add(Long.valueOf(key.getId()));
+					}
+
+					if (permissions != null) {
+						for (Permission permission : permissions) {
+							current.remove(permission.id);
+						}
+					}
+
+					latest.permissionKeys = PersistenceService.idsToKeys(
+							Permission.class, current);
+				}
+
+				if (latest.roleKeys != null) {
+					if (current != null) {
+						current.clear();
+					} else {
+						current = new HashSet<Long>();
+					}
+
+					if (roles != null) {
+						for (Role role : roles) {
+							current.remove(role.id);
+						}
+					}
+
+					latest.roleKeys = PersistenceService.idsToKeys(Role.class,
+							current);
+				}
+
+				ofy().save().entity(latest).now();
+
+				return latest;
+			}
+		});
+	}
 }

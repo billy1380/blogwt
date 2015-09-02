@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.exception.AuthenticationException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
+import com.willshex.blogwt.server.api.validation.PermissionValidator;
+import com.willshex.blogwt.server.api.validation.RoleValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.helper.UserHelper;
@@ -72,6 +74,39 @@ public final class UserApi extends ActionHandler {
 		LOG.finer("Entering changeUserPowers");
 		ChangeUserPowersResponse output = new ChangeUserPowersResponse();
 		try {
+			ApiValidator.notNull(input, ChangeUserPowersRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			ApiValidator.notNull(input.assign, Boolean.class, "input.assign");
+
+			input.user = UserValidator.lookup(input.user, "input.user");
+
+			if (input.roles != null) {
+				input.roles = RoleValidator.lookupAll(input.roles,
+						"input.roles");
+			}
+
+			if (input.permissions != null) {
+				input.permissions = PermissionValidator.lookupAll(
+						input.permissions, "input.permissions");
+			}
+
+			if (Boolean.TRUE.equals(input.assign)) {
+				output.user = UserServiceProvider.provide()
+						.addUserRolesAndPermissions(input.user, input.roles,
+								input.permissions);
+			} else {
+				output.user = UserServiceProvider.provide()
+						.removeUserRolesAndPermissions(input.user, input.roles,
+								input.permissions);
+			}
+
+			UserHelper.stripPassword(output.user);
+
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -462,7 +497,7 @@ public final class UserApi extends ActionHandler {
 			output.user = input.user = UserValidator.lookup(input.user,
 					"input.user");
 			UserHelper.stripPassword(output.user);
-			UserHelper.addRolesAndPermissions(output.user);
+			UserHelper.populateRolesAndPermissionsFromKeys(output.user);
 
 			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
