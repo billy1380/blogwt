@@ -21,9 +21,10 @@ import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 
 public class ChangeUserPowersRequest extends Request {
+
 	public User user;
 	public List<Role> roles;
-	public List<Permission> premissions;
+	public List<Permission> permissions;
 	public Boolean assign;
 
 	@Override
@@ -41,16 +42,16 @@ public class ChangeUserPowersRequest extends Request {
 			}
 		}
 		object.add("roles", jsonRoles);
-		JsonElement jsonPremissions = JsonNull.INSTANCE;
-		if (premissions != null) {
-			jsonPremissions = new JsonArray();
-			for (int i = 0; i < premissions.size(); i++) {
-				JsonElement jsonPremissionsItem = premissions.get(i) == null ? JsonNull.INSTANCE
-						: premissions.get(i).toJson();
-				((JsonArray) jsonPremissions).add(jsonPremissionsItem);
+		JsonElement jsonPermissions = JsonNull.INSTANCE;
+		if (permissions != null) {
+			jsonPermissions = new JsonArray();
+			for (int i = 0; i < permissions.size(); i++) {
+				JsonElement jsonPermissionsItem = permissions.get(i) == null ? JsonNull.INSTANCE
+						: permissions.get(i).toJson();
+				((JsonArray) jsonPermissions).add(jsonPermissionsItem);
 			}
 		}
-		object.add("premissions", jsonPremissions);
+		object.add("permissions", jsonPermissions);
 		JsonElement jsonAssign = assign == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(assign);
 		object.add("assign", jsonAssign);
@@ -82,16 +83,16 @@ public class ChangeUserPowersRequest extends Request {
 			}
 		}
 
-		if (jsonObject.has("premissions")) {
-			JsonElement jsonPremissions = jsonObject.get("premissions");
-			if (jsonPremissions != null) {
-				premissions = new ArrayList<Permission>();
+		if (jsonObject.has("permissions")) {
+			JsonElement jsonPermissions = jsonObject.get("permissions");
+			if (jsonPermissions != null) {
+				permissions = new ArrayList<Permission>();
 				Permission item = null;
-				for (int i = 0; i < jsonPremissions.getAsJsonArray().size(); i++) {
-					if (jsonPremissions.getAsJsonArray().get(i) != null) {
-						(item = new Permission()).fromJson(jsonPremissions
+				for (int i = 0; i < jsonPermissions.getAsJsonArray().size(); i++) {
+					if (jsonPermissions.getAsJsonArray().get(i) != null) {
+						(item = new Permission()).fromJson(jsonPermissions
 								.getAsJsonArray().get(i).getAsJsonObject());
-						premissions.add(item);
+						permissions.add(item);
 					}
 				}
 			}
@@ -115,8 +116,8 @@ public class ChangeUserPowersRequest extends Request {
 		return this;
 	}
 
-	public ChangeUserPowersRequest premissions (List<Permission> premissions) {
-		this.premissions = premissions;
+	public ChangeUserPowersRequest permissions (List<Permission> permissions) {
+		this.permissions = permissions;
 		return this;
 	}
 
