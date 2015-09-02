@@ -287,7 +287,7 @@ public class MainServlet extends ContextAwareServlet {
 						userSession.user = UserServiceProvider.provide()
 								.getUser(userSession.userKey.getId());
 						UserHelper.stripPassword(userSession.user);
-						UserHelper.addRolesAndPermissions(userSession.user);
+						UserHelper.populateRolesAndPermissionsFromKeys(userSession.user);
 					} else {
 						sessionService.deleteSession(userSession);
 						userSession = null;

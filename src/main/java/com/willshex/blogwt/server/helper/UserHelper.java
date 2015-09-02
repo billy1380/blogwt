@@ -22,7 +22,7 @@ public class UserHelper extends com.willshex.blogwt.shared.helper.UserHelper {
 	 * Adds roles and permissions to user object based on roleKeys and permissionKeys respectively 
 	 * @param user
 	 */
-	public static void addRolesAndPermissions (User user) {
+	public static void populateRolesAndPermissionsFromKeys (User user) {
 		if (user != null) {
 			if (user.roleKeys != null) {
 				user.roles = RoleServiceProvider.provide().getIdRolesBatch(
