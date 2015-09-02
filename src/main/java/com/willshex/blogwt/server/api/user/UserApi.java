@@ -31,6 +31,8 @@ import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersResponse;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameResponse;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
@@ -64,6 +66,20 @@ import com.willshex.gson.json.service.shared.StatusType;
 
 public final class UserApi extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(UserApi.class.getName());
+
+	public ChangeUserPowersResponse changeUserPowers (
+			ChangeUserPowersRequest input) {
+		LOG.finer("Entering changeUserPowers");
+		ChangeUserPowersResponse output = new ChangeUserPowersResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting changeUserPowers");
+		return output;
+	}
 
 	public GetEmailAvatarResponse getEmailAvatar (GetEmailAvatarRequest input) {
 		LOG.finer("Entering getEmailAvatar");

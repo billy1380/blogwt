@@ -17,6 +17,8 @@ import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersResponse;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameResponse;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
@@ -45,6 +47,52 @@ import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class UserService extends JsonService {
+
+	public static final String UserMethodChangeUserPowers = "ChangeUserPowers";
+
+	public Request changeUserPowers (final ChangeUserPowersRequest input,
+			final AsyncCallback<ChangeUserPowersResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(UserMethodChangeUserPowers, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								ChangeUserPowersResponse outputParameter = new ChangeUserPowersResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(UserService.this,
+										UserMethodChangeUserPowers, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(UserService.this,
+										UserMethodChangeUserPowers, input,
+										exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(UserService.this,
+									UserMethodChangeUserPowers, input,
+									exception);
+						}
+					});
+			onCallStart(UserService.this, UserMethodChangeUserPowers, input,
+					handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(UserService.this, UserMethodChangeUserPowers, input,
+					exception);
+		}
+		return handle;
+	}
+
 	public static final String UserMethodGetEmailAvatar = "GetEmailAvatar";
 
 	public Request getEmailAvatar (final GetEmailAvatarRequest input,
