@@ -10,6 +10,7 @@ package com.willshex.blogwt.server.api.user;
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
@@ -30,7 +31,11 @@ public final class UserJsonServlet extends JsonServlet {
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
 		UserApi service = new UserApi();
-		if ("GetEmailAvatar".equals(action)) {
+		if ("ChangeUserPowers".equals(action)) {
+			ChangeUserPowersRequest input = new ChangeUserPowersRequest();
+			input.fromJson(request);
+			output = service.changeUserPowers(input).toString();
+		} else if ("GetEmailAvatar".equals(action)) {
 			GetEmailAvatarRequest input = new GetEmailAvatarRequest();
 			input.fromJson(request);
 			output = service.getEmailAvatar(input).toString();
