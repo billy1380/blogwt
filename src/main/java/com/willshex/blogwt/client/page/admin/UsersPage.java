@@ -31,9 +31,11 @@ import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
+import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 
 /**
@@ -161,11 +163,18 @@ public class UsersPage extends Page {
 				return "admin";
 			}
 		};
+
+		final Role adminRole = RoleHelper.createFullAdmin();
+
 		admin.setFieldUpdater(new FieldUpdater<User, String>() {
 
 			@Override
 			public void update (int index, User object, String value) {
-				// make admin
+				if (Window.confirm("Are you sure you want to make "
+						+ object.username + " a " + adminRole.name + "?")) {
+					UserController.get().changeUserRoles(true, object,
+							adminRole);
+				}
 			}
 		});
 		tblUsers.setColumnWidth(admin, 1.0, Unit.PX);
