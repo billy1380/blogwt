@@ -26,6 +26,10 @@ public class RoleHelper {
 		return create(ADMIN);
 	}
 
+	public static Role createFullAdmin () {
+		return createFull(ADMIN, ADMIN_NAME, ADMIN_DESCRIPTION);
+	}
+
 	public static Map<String, Role> toLookup (Collection<Role> roles) {
 		Map<String, Role> lookup = new HashMap<String, Role>();
 
