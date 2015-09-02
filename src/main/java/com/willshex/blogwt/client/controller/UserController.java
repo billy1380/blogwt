@@ -360,7 +360,7 @@ public class UserController extends AsyncDataProvider<User> {
 		input.user = user;
 		input.assign = Boolean.valueOf(assign);
 		input.roles = roles;
-		input.premissions = permissions;
+		input.permissions = permissions;
 
 		ApiHelper.createUserClient().changeUserPowers(input,
 				new AsyncCallback<ChangeUserPowersResponse>() {
