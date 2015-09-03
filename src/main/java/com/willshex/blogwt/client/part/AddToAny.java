@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.client.part;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
@@ -18,6 +20,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.blogwt.shared.helper.TagHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -41,8 +44,8 @@ public class AddToAny extends Composite {
 
 		String share = PropertyController.get().stringProperty(
 				PropertyHelper.POST_SHARE_ENABLED);
-		if (!PropertyHelper.NONE_VALUE.equals(share) && share != null) {
-			String[] shareWith = share.split(",");
+		if (!PropertyHelper.NONE_VALUE.equals(share)) {
+			List<String> shareWith = TagHelper.convertToTagList(share);
 
 			AnchorElement anchor;
 			Document doc = Document.get();
