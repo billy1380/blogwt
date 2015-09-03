@@ -91,11 +91,11 @@ public class PropertyHelper {
 	public static final String FAVICON_URL_DESCRIPTION = "A favicon (.ico) for the site";
 
 	public static final String FOOTER_SHOW_VERSION_DESCRIPTION = "Shows the blogwt version on the site footer";
-	public static final String OUTGOING_EMAIL_DESCRIPTION = "An email address used as the sender on outgoing messages (should be configured in appengine)";
+	public static final String OUTGOING_EMAIL_DESCRIPTION = "Appengine outgoing email address";
 
-	public static final String ALLOW_USER_REGISTRATION_DESCRIPTION = "Allow users to register with lowest role e.g. to comment";
-	public static final String NEW_USER_PERMISSIONS_DESCRIPTION = "The set of permission codes assigned to a newly created or registering user (comma delimmited)";
-	public static final String NEW_USER_ROLES_DESCRIPTION = "The set of role codes assigned to a newly created or registering user (comma delimmited)";
+	public static final String ALLOW_USER_REGISTRATION_DESCRIPTION = "Allow users to register";
+	public static final String NEW_USER_PERMISSIONS_DESCRIPTION = "New user permissions";
+	public static final String NEW_USER_ROLES_DESCRIPTION = "New user roles";
 
 	public static final String NONE_VALUE = "none";
 	public static final String APPLE_VALUE = "apple";
@@ -287,9 +287,9 @@ public class PropertyHelper {
 					createShortDescription(null), createShowSignIn(null),
 					createGenerateRssFeed(null), createSmallLogoUrl(null),
 					createLargeLogoUrl(null), createFooterShowVersion(null),
-					createAllowUserRegistration(null), createFaviconUrl(null),
-					createOutgoingEmail(null), createNewUserPermissions(null),
-					createNewUserRoles(null));
+					createAllowUserRegistration(null),
+					createNewUserPermissions(null), createNewUserRoles(null),
+					createFaviconUrl(null), createOutgoingEmail(null));
 		}
 
 		return properties;
