@@ -52,8 +52,12 @@ public class PropertyHelper {
 
 	public static final String FOOTER_SHOW_VERSION = "footer.show.site.version";
 
+	public static final String OUTGOING_EMAIL = "email.outgoing";
+
 	// user properties
 	public static final String ALLOW_USER_REGISTRATION = "user.allow.registration";
+	public static final String NEW_USER_PERMISSIONS = "user.new.permissions";
+	public static final String NEW_USER_ROLES = "user.new.roles";
 
 	// Descriptions
 	public static final String TITLE_DESCRIPTION = "Blog Title";
@@ -87,8 +91,11 @@ public class PropertyHelper {
 	public static final String FAVICON_URL_DESCRIPTION = "A favicon (.ico) for the site";
 
 	public static final String FOOTER_SHOW_VERSION_DESCRIPTION = "Shows the blogwt version on the site footer";
+	public static final String OUTGOING_EMAIL_DESCRIPTION = "An email address used as the sender on outgoing messages (should be configured in appengine)";
 
 	public static final String ALLOW_USER_REGISTRATION_DESCRIPTION = "Allow users to register with lowest role e.g. to comment";
+	public static final String NEW_USER_PERMISSIONS_DESCRIPTION = "The set of permission codes assigned to a newly created or registering user (comma delimmited)";
+	public static final String NEW_USER_ROLES_DESCRIPTION = "The set of role codes assigned to a newly created or registering user (comma delimmited)";
 
 	public static final String NONE_VALUE = "none";
 	public static final String APPLE_VALUE = "apple";
@@ -239,6 +246,24 @@ public class PropertyHelper {
 				.type("string").value(value);
 	}
 
+	public static Property createNewUserPermissions (String value) {
+		return new Property().name(NEW_USER_PERMISSIONS)
+				.description(NEW_USER_PERMISSIONS_DESCRIPTION).group("User")
+				.type("string").value(value);
+	}
+
+	public static Property createNewUserRoles (String value) {
+		return new Property().name(NEW_USER_ROLES)
+				.description(NEW_USER_ROLES_DESCRIPTION).group("User")
+				.type("string").value(value);
+	}
+
+	public static Property createOutgoingEmail (String value) {
+		return new Property().name(OUTGOING_EMAIL)
+				.description(OUTGOING_EMAIL_DESCRIPTION).group("Functional")
+				.type("string").value(value);
+	}
+
 	public static boolean isEmpty (Property property) {
 		return property == null || property.value == null
 				|| property.value.length() == 0;
@@ -262,7 +287,9 @@ public class PropertyHelper {
 					createShortDescription(null), createShowSignIn(null),
 					createGenerateRssFeed(null), createSmallLogoUrl(null),
 					createLargeLogoUrl(null), createFooterShowVersion(null),
-					createAllowUserRegistration(null), createFaviconUrl(null));
+					createAllowUserRegistration(null), createFaviconUrl(null),
+					createOutgoingEmail(null), createNewUserPermissions(null),
+					createNewUserRoles(null));
 		}
 
 		return properties;
