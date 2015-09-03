@@ -7,8 +7,10 @@
 //
 package com.willshex.blogwt.shared.helper;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.willshex.blogwt.shared.api.datatype.Role;
@@ -46,5 +48,13 @@ public class RoleHelper {
 
 	public static Role create (String code) {
 		return new Role().code(code);
+	}
+
+	public static Collection<Role> createAll () {
+		List<Role> all = new ArrayList<Role>();
+
+		all.add(createAdmin());
+
+		return all;
 	}
 }
