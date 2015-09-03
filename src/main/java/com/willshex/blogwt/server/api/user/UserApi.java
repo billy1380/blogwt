@@ -7,7 +7,9 @@
 //
 package com.willshex.blogwt.server.api.user;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,12 +22,16 @@ import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
+import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.server.service.user.IUserService;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
+import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
+import com.willshex.blogwt.shared.api.datatype.Property;
+import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.RoleSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
@@ -62,6 +68,8 @@ import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.blogwt.shared.helper.TagHelper;
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -163,6 +171,51 @@ public final class UserApi extends ActionHandler {
 			}
 
 			input.user = UserValidator.validate(input.user, "input.user");
+
+			List<String> codes;
+
+			List<Permission> permissions = null;
+			Property property = PropertyServiceProvider.provide()
+					.getNamedProperty(PropertyHelper.NEW_USER_PERMISSIONS);
+
+			if (!PropertyHelper.isEmpty(property)
+					&& !PropertyHelper.NONE_VALUE.equals(property.value)) {
+				codes = TagHelper.convertToTagList(property.value, true);
+
+				for (String code : codes) {
+					if (permissions == null) {
+						permissions = new ArrayList<Permission>();
+					}
+
+					permissions.add(new Permission().code(code.toUpperCase()));
+				}
+
+				permissions = PermissionValidator.lookupAll(permissions,
+						PropertyHelper.NEW_USER_PERMISSIONS);
+			}
+
+			List<Role> roles = null;
+			property = PropertyServiceProvider.provide().getNamedProperty(
+					PropertyHelper.NEW_USER_ROLES);
+
+			if (!PropertyHelper.isEmpty(property)
+					&& !PropertyHelper.NONE_VALUE.equals(property.value)) {
+				codes = TagHelper.convertToTagList(property.value, true);
+
+				for (String code : codes) {
+					if (roles == null) {
+						roles = new ArrayList<Role>();
+					}
+
+					roles.add(new Role().code(code.toUpperCase()));
+				}
+
+				roles = RoleValidator.lookupAll(roles,
+						PropertyHelper.NEW_USER_ROLES);
+			}
+
+			input.user.permissions = permissions;
+			input.user.roles = roles;
 
 			output.user = UserServiceProvider.provide().addUser(input.user);
 			UserHelper.stripPassword(output.user);
