@@ -95,8 +95,11 @@ public class SessionController {
 				if (result.status == StatusType.StatusTypeSuccess
 						&& result.session != null) {
 					session = result.session;
-
 					Cookies.setCookie(COOKIE_KEY_ID, session.id.toString());
+
+					if (user() != null && user().lastLoggedIn == null) {
+						user().lastLoggedIn = new Date();
+					}
 				}
 
 				DefaultEventBus.get()
