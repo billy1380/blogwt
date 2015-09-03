@@ -77,6 +77,8 @@ public class PermissionHelper {
 				MANAGE_POSTS_DESCRIPTION));
 		all.add(createFull(MANAGE_PAGES, MANAGE_PAGES_NAME,
 				MANAGE_PAGES_DESCRIPTION));
+		all.add(createFull(MANAGE_RESOURCES, MANAGE_RESOURCES_NAME,
+				MANAGE_RESOURCES_DESCRIPTION));
 
 		return all;
 	}
