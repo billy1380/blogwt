@@ -15,9 +15,12 @@ import javax.servlet.ServletException;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
+import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.service.ContextAwareServlet;
 
 /**
@@ -48,7 +51,16 @@ public class DevServlet extends ContextAwareServlet {
 		} else if ("archiveall".equals(action)) {
 			ArchiveEntryServiceProvider.provide().generateArchive();
 		} else if ("fixroles".equals(action)) {
-			// currently only admin
+			Collection<Role> all = RoleHelper.createAll();
+
+			Role loaded;
+			for (Role role : all) {
+				loaded = RoleServiceProvider.provide().getCodeRole(role.code);
+
+				if (loaded == null || loaded.id == null) {
+					RoleServiceProvider.provide().addRole(role);
+				}
+			}
 		} else if ("fixpermissions".equals(action)) {
 			Collection<Permission> all = PermissionHelper.createAll();
 
