@@ -245,6 +245,8 @@ public class ChangeDetailsPage extends Page implements
 	@Override
 	public void getUserDetailsFailure (GetUserDetailsRequest input,
 			Throwable caught) {
+		GWT.log("getUserDetailsFailure", caught);
+
 		ready();
 	}
 
@@ -360,6 +362,8 @@ public class ChangeDetailsPage extends Page implements
 	@Override
 	public void changeUserDetailsFailure (ChangeUserDetailsRequest input,
 			Throwable caught) {
+		GWT.log("changeUserDetailsFailure", caught);
+
 		ready();
 	}
 
@@ -424,6 +428,8 @@ public class ChangeDetailsPage extends Page implements
 				PageType.LoginPageType.show(output.user.username.toString());
 			}
 		}
+
+		ready();
 	}
 
 	/* (non-Javadoc)
@@ -436,6 +442,8 @@ public class ChangeDetailsPage extends Page implements
 	@Override
 	public void registerUserFailure (RegisterUserRequest input, Throwable caught) {
 		GWT.log("registerUserFailure", caught);
+
+		ready();
 	}
 
 }
