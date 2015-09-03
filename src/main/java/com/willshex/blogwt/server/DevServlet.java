@@ -8,12 +8,16 @@
 package com.willshex.blogwt.server;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import javax.servlet.ServletException;
 
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
+import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
+import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.service.ContextAwareServlet;
 
 /**
@@ -43,6 +47,21 @@ public class DevServlet extends ContextAwareServlet {
 			PostServiceProvider.provide().indexAll();
 		} else if ("archiveall".equals(action)) {
 			ArchiveEntryServiceProvider.provide().generateArchive();
+		} else if ("fixroles".equals(action)) {
+			// currently only admin
+		} else if ("fixpermissions".equals(action)) {
+			Collection<Permission> all = PermissionHelper.createAll();
+
+			Permission loaded;
+			for (Permission permission : all) {
+				loaded = PermissionServiceProvider.provide().getCodePermission(
+						permission.code);
+
+				if (loaded == null || loaded.id == null) {
+					PermissionServiceProvider.provide().addPermission(
+							permission);
+				}
+			}
 		}
 	}
 }
