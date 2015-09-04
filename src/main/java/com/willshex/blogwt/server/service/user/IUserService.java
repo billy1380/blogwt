@@ -111,4 +111,10 @@ public interface IUserService extends IService {
 	 */
 	public User removeUserRolesAndPermissions (User user, List<Role> roles,
 			List<Permission> permissions);
+
+	/**
+	 * Reset user password
+	 * @param user
+	 */
+	public void resetPassword (User user);
 }
