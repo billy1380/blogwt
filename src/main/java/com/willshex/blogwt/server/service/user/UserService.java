@@ -12,25 +12,33 @@ import static com.willshex.blogwt.server.service.PersistenceService.ofy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
 import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.blogwt.server.helper.EmailHelper;
+import com.willshex.blogwt.server.helper.InflatorHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
+import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 final class UserService implements IUserService {
 
 	private static final String SALT = "af1d3250-f8d1-11e4-bbd2-7054d251af02";
+	private static final String ACTION_EMAIL_TEMPLATE = "Hi ${user.forname},\n\nPlease click the link below to ${action}:\n\n${link}\n\n${property.value}";
 
 	public String getName () {
 		return NAME;
@@ -356,5 +364,39 @@ final class UserService implements IUserService {
 				return latest;
 			}
 		});
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.user.IUserService#resetPassword(com
+	 * .willshex.blogwt.shared.api.datatype.User) */
+	@Override
+	public void resetPassword (User user) {
+		sendActionEmail(user, "changepassword/reset", "reset password");
+	}
+
+	/**
+	 * @param user
+	 */
+	private void sendActionEmail (User user, String action, String actionName) {
+		if (user.forename == null) {
+			user = getUser(user.id);
+		}
+
+		user.actionCode = UUID.randomUUID().toString();
+		user = updateUser(user);
+
+		Map<String, Object> values = new HashMap<String, Object>();
+
+		values.put("user", user);
+		values.put("link", String.format("#!%s/%s", action, user.actionCode));
+		values.put("action", actionName);
+		values.put("property", PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.TITLE));
+
+		EmailHelper.sendEmail(user.email, UserHelper.name(user), actionName,
+				InflatorHelper.inflate(values, ACTION_EMAIL_TEMPLATE), false);
+
 	}
 }
