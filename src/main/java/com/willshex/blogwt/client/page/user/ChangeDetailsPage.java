@@ -291,6 +291,8 @@ public class ChangeDetailsPage extends Page implements
 		txtEmail.setEnabled(true);
 		txtPassword.setEnabled(true);
 		txtConfirmPassword.setEnabled(true);
+
+		txtUsername.setFocus(true);
 	}
 
 	private void loading () {
