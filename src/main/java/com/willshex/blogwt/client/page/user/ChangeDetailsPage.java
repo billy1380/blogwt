@@ -425,7 +425,8 @@ public class ChangeDetailsPage extends Page implements
 				PageType.ChangeDetailsPageType.show("id",
 						output.user.id.toString());
 			} else {
-				PageType.LoginPageType.show(output.user.username.toString());
+				PageType.LoginPageType.show("username="
+						+ output.user.username.toString());
 			}
 		}
 
