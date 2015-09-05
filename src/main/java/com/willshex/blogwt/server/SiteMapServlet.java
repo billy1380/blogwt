@@ -12,9 +12,9 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
@@ -45,11 +45,7 @@ public class SiteMapServlet extends ContextAwareServlet {
 	protected void doGet () throws ServletException, IOException {
 		super.doGet();
 
-		HttpServletRequest request = REQUEST.get();
-		String scheme = request.getScheme();
-		String serverName = request.getServerName();
-		int serverPort = request.getServerPort();
-		String url = scheme + "://" + serverName + ":" + serverPort;
+		String url = ServletHelper.constructBaseUrl(REQUEST.get());
 
 		HttpServletResponse response = RESPONSE.get();
 		PrintWriter p = response.getWriter();

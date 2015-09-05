@@ -28,6 +28,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
@@ -207,15 +208,16 @@ public class MainServlet extends ContextAwareServlet {
 	 * @param scriptVariables
 	 */
 	private void appendArchiveEntries (StringBuffer scriptVariables) {
-		List<ArchiveEntry> archiveEntries = ArchiveEntryServiceProvider.provide().getArchiveEntries();
+		List<ArchiveEntry> archiveEntries = ArchiveEntryServiceProvider
+				.provide().getArchiveEntries();
 
 		if (archiveEntries.size() >= 0) {
 			scriptVariables.append("var archiveEntries='[");
 
 			boolean first = true;
 			for (ArchiveEntry archiveEntry : archiveEntries) {
-				archiveEntry.posts = PersistenceService.dataTypeList(Post.class,
-						archiveEntry.postKeys);
+				archiveEntry.posts = PersistenceService.dataTypeList(
+						Post.class, archiveEntry.postKeys);
 
 				if (first) {
 					first = false;
@@ -223,7 +225,8 @@ public class MainServlet extends ContextAwareServlet {
 					scriptVariables.append(",");
 				}
 
-				scriptVariables.append(archiveEntry.toString().replace("'", "\\'"));
+				scriptVariables.append(archiveEntry.toString().replace("'",
+						"\\'"));
 			}
 
 			scriptVariables.append("]';");
@@ -287,7 +290,8 @@ public class MainServlet extends ContextAwareServlet {
 						userSession.user = UserServiceProvider.provide()
 								.getUser(userSession.userKey.getId());
 						UserHelper.stripPassword(userSession.user);
-						UserHelper.populateRolesAndPermissionsFromKeys(userSession.user);
+						UserHelper
+								.populateRolesAndPermissionsFromKeys(userSession.user);
 					} else {
 						sessionService.deleteSession(userSession);
 						userSession = null;
@@ -321,12 +325,9 @@ public class MainServlet extends ContextAwareServlet {
 		HttpServletRequest request = REQUEST.get();
 		String fragmentParameter = request.getParameter("_escaped_fragment_");
 
-		String scheme = request.getScheme();
-		String serverName = request.getServerName();
-		int serverPort = request.getServerPort();
 		String uri = request.getRequestURI();
-		String url = scheme + "://" + serverName + ":" + serverPort + uri
-				+ "#!" + StringUtils.urldecode(fragmentParameter);
+		String url = ServletHelper.constructBaseUrl(request) + uri + "#!"
+				+ StringUtils.urldecode(fragmentParameter);
 
 		HttpServletResponse response = RESPONSE.get();
 

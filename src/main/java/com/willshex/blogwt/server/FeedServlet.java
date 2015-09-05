@@ -25,6 +25,7 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.feed.synd.SyndFeedImpl;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedOutput;
+import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
@@ -95,11 +96,7 @@ public class FeedServlet extends ContextAwareServlet {
 	protected SyndFeed getFeed (HttpServletRequest request) throws IOException,
 			FeedException {
 		SyndFeed feed = new SyndFeedImpl();
-
-		String scheme = request.getScheme();
-		String serverName = request.getServerName();
-		int serverPort = request.getServerPort();
-		String url = scheme + "://" + serverName + ":" + serverPort;
+		String url = ServletHelper.constructBaseUrl(request);
 
 		feed.setTitle(PropertyServiceProvider.provide().getNamedProperty(
 				PropertyHelper.TITLE).value);
