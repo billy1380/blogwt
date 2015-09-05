@@ -218,6 +218,8 @@ public final class UserApi extends ActionHandler {
 			input.user.roles = roles;
 
 			output.user = UserServiceProvider.provide().addUser(input.user);
+			UserServiceProvider.provide().verifyAccount(output.user);
+			
 			UserHelper.stripPassword(output.user);
 
 			UserHelper.stripPassword(output.session.user);

@@ -25,6 +25,7 @@ import com.googlecode.objectify.cmd.Query;
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.server.helper.EmailHelper;
 import com.willshex.blogwt.server.helper.InflatorHelper;
+import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
@@ -34,11 +35,12 @@ import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.service.ContextAwareServlet;
 
 final class UserService implements IUserService {
 
 	private static final String SALT = "af1d3250-f8d1-11e4-bbd2-7054d251af02";
-	private static final String ACTION_EMAIL_TEMPLATE = "Hi ${user.forname},\n\nPlease click the link below to ${action}:\n\n${link}\n\n${property.value}";
+	private static final String ACTION_EMAIL_TEMPLATE = "Hi ${user.forename},\n\nPlease click the link below to ${action}:\n\n${link}\n\n${property.value}";
 
 	public String getName () {
 		return NAME;
@@ -373,7 +375,17 @@ final class UserService implements IUserService {
 	 * .willshex.blogwt.shared.api.datatype.User) */
 	@Override
 	public void resetPassword (User user) {
-		sendActionEmail(user, "changepassword/reset", "reset password");
+		sendActionEmail(user, "changepassword/reset", "reset your password");
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.user.IUserService#verifyAccount(com
+	 * .willshex.blogwt.shared.api.datatype.User) */
+	@Override
+	public void verifyAccount (User user) {
+		sendActionEmail(user, "verifyaccount", "verify your account");
 	}
 
 	/**
@@ -389,8 +401,12 @@ final class UserService implements IUserService {
 
 		Map<String, Object> values = new HashMap<String, Object>();
 
+		String url = ServletHelper.constructBaseUrl(ContextAwareServlet.REQUEST
+				.get());
+
 		values.put("user", user);
-		values.put("link", String.format("#!%s/%s", action, user.actionCode));
+		values.put("link",
+				String.format("%s#!%s/%s", url, action, user.actionCode));
 		values.put("action", actionName);
 		values.put("property", PropertyServiceProvider.provide()
 				.getNamedProperty(PropertyHelper.TITLE));
@@ -399,4 +415,5 @@ final class UserService implements IUserService {
 				InflatorHelper.inflate(values, ACTION_EMAIL_TEMPLATE), false);
 
 	}
+
 }
