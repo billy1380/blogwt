@@ -117,4 +117,10 @@ public interface IUserService extends IService {
 	 * @param user
 	 */
 	public void resetPassword (User user);
+
+	/**
+	 * Verify account
+	 * @param user
+	 */
+	public void verifyAccount (User user);
 }
