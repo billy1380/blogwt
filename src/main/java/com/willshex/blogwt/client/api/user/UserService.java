@@ -43,10 +43,102 @@ import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
 import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
 import com.willshex.blogwt.shared.api.user.call.RegisterUserRequest;
 import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
+import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
+import com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse;
+import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
+import com.willshex.blogwt.shared.api.user.call.VerifyAccountResponse;
 import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class UserService extends JsonService {
+
+	public static final String UserMethodVerifyAccount = "VerifyAccount";
+
+	public Request verifyAccount (final VerifyAccountRequest input,
+			final AsyncCallback<VerifyAccountResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(UserMethodVerifyAccount, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								VerifyAccountResponse outputParameter = new VerifyAccountResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(UserService.this,
+										UserMethodVerifyAccount, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(UserService.this,
+										UserMethodVerifyAccount, input,
+										exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(UserService.this,
+									UserMethodVerifyAccount, input, exception);
+						}
+					});
+			onCallStart(UserService.this, UserMethodVerifyAccount, input,
+					handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(UserService.this, UserMethodVerifyAccount, input,
+					exception);
+		}
+		return handle;
+	}
+
+	public static final String UserMethodResetPassword = "ResetPassword";
+
+	public Request resetPassword (final ResetPasswordRequest input,
+			final AsyncCallback<ResetPasswordResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(UserMethodResetPassword, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								ResetPasswordResponse outputParameter = new ResetPasswordResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(UserService.this,
+										UserMethodResetPassword, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(UserService.this,
+										UserMethodResetPassword, input,
+										exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(UserService.this,
+									UserMethodResetPassword, input, exception);
+						}
+					});
+			onCallStart(UserService.this, UserMethodResetPassword, input,
+					handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(UserService.this, UserMethodResetPassword, input,
+					exception);
+		}
+		return handle;
+	}
 
 	public static final String UserMethodChangeUserPowers = "ChangeUserPowers";
 
