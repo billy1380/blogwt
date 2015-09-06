@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.gwt.http.client.Request;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -38,6 +37,8 @@ import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUsersResponse;
 import com.willshex.blogwt.shared.api.user.call.RegisterUserRequest;
 import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
+import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
+import com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler.ChangePasswordFailure;
 import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler.ChangePasswordSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsFailure;
@@ -52,6 +53,8 @@ import com.willshex.blogwt.shared.api.user.call.event.GetUsersEventHandler.GetUs
 import com.willshex.blogwt.shared.api.user.call.event.GetUsersEventHandler.GetUsersSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.RegisterUserEventHandler.RegisterUserFailure;
 import com.willshex.blogwt.shared.api.user.call.event.RegisterUserEventHandler.RegisterUserSuccess;
+import com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler.ResetPasswordFailure;
+import com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler.ResetPasswordSuccess;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -254,9 +257,35 @@ public class UserController extends AsyncDataProvider<User> {
 	/**
 	 * @param email
 	 */
-	public static void resetPassword (String email) {
-		Window.alert("Tried to reset the password for [" + email
-				+ "]. This feature is coming soon!");
+	public void resetPassword (String email) {
+		final ResetPasswordRequest input = ApiHelper
+				.setAccessCode(new ResetPasswordRequest());
+
+		input.session = SessionController.get().sessionForApiCall();
+		input.email = email;
+
+		ApiHelper.createUserClient().resetPassword(input,
+				new AsyncCallback<ResetPasswordResponse>() {
+
+					@Override
+					public void onSuccess (ResetPasswordResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {
+
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new ResetPasswordSuccess(input, output),
+								UserController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new ResetPasswordFailure(input, caught),
+								UserController.this);
+					}
+
+				});
 	}
 
 	/**
