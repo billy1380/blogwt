@@ -17,18 +17,23 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.wizard.WizardDialog;
+import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
+import com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse;
+import com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class ResetPasswordPage extends Page {
+public class ResetPasswordPage extends Page implements
+		ResetPasswordEventHandler {
 
 	private static ResetPasswordPageUiBinder uiBinder = GWT
 			.create(ResetPasswordPageUiBinder.class);
@@ -58,6 +63,9 @@ public class ResetPasswordPage extends Page {
 	protected void onAttach () {
 		super.onAttach();
 
+		register(DefaultEventBus.get().addHandlerToSource(
+				ResetPasswordEventHandler.TYPE, UserController.get(), this));
+
 		ready();
 	}
 
@@ -66,7 +74,7 @@ public class ResetPasswordPage extends Page {
 		if (isValid()) {
 			loading();
 
-			UserController.resetPassword(txtEmail.getText());
+			UserController.get().resetPassword(txtEmail.getText());
 		} else {
 			showErrors();
 		}
@@ -108,5 +116,31 @@ public class ResetPasswordPage extends Page {
 
 		pnlEmail.removeStyleName("has-error");
 		pnlEmailNote.setVisible(false);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler
+	 * #resetPasswordSuccess
+	 * (com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest,
+	 * com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse) */
+	@Override
+	public void resetPasswordSuccess (ResetPasswordRequest input,
+			ResetPasswordResponse output) {
+		// probably show a message about expecting an email 
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler
+	 * #resetPasswordFailure
+	 * (com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest,
+	 * java.lang.Throwable) */
+	@Override
+	public void resetPasswordFailure (ResetPasswordRequest input,
+			Throwable caught) {
+		GWT.log("resetPasswordFailure", caught);
 	}
 }
