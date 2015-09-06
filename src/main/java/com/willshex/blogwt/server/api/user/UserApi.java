@@ -65,6 +65,10 @@ import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
 import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
 import com.willshex.blogwt.shared.api.user.call.RegisterUserRequest;
 import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
+import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
+import com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse;
+import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
+import com.willshex.blogwt.shared.api.user.call.VerifyAccountResponse;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
@@ -76,6 +80,32 @@ import com.willshex.gson.json.service.shared.StatusType;
 
 public final class UserApi extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(UserApi.class.getName());
+
+	public VerifyAccountResponse verifyAccount (VerifyAccountRequest input) {
+		LOG.finer("Entering verifyAccount");
+		VerifyAccountResponse output = new VerifyAccountResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting verifyAccount");
+		return output;
+	}
+
+	public ResetPasswordResponse resetPassword (ResetPasswordRequest input) {
+		LOG.finer("Entering resetPassword");
+		ResetPasswordResponse output = new ResetPasswordResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting resetPassword");
+		return output;
+	}
 
 	public ChangeUserPowersResponse changeUserPowers (
 			ChangeUserPowersRequest input) {
@@ -219,7 +249,7 @@ public final class UserApi extends ActionHandler {
 
 			output.user = UserServiceProvider.provide().addUser(input.user);
 			UserServiceProvider.provide().verifyAccount(output.user);
-			
+
 			UserHelper.stripPassword(output.user);
 
 			UserHelper.stripPassword(output.session.user);

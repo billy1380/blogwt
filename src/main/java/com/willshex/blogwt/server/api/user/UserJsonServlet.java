@@ -23,6 +23,8 @@ import com.willshex.blogwt.shared.api.user.call.IsAuthorisedRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
 import com.willshex.blogwt.shared.api.user.call.RegisterUserRequest;
+import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
+import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
 import com.willshex.gson.json.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
@@ -31,7 +33,15 @@ public final class UserJsonServlet extends JsonServlet {
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
 		UserApi service = new UserApi();
-		if ("ChangeUserPowers".equals(action)) {
+		if ("VerifyAccount".equals(action)) {
+			VerifyAccountRequest input = new VerifyAccountRequest();
+			input.fromJson(request);
+			output = service.verifyAccount(input).toString();
+		} else if ("ResetPassword".equals(action)) {
+			ResetPasswordRequest input = new ResetPasswordRequest();
+			input.fromJson(request);
+			output = service.resetPassword(input).toString();
+		} else if ("ChangeUserPowers".equals(action)) {
 			ChangeUserPowersRequest input = new ChangeUserPowersRequest();
 			input.fromJson(request);
 			output = service.changeUserPowers(input).toString();
