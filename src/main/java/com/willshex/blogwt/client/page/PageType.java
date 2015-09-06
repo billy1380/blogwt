@@ -37,6 +37,7 @@ import com.willshex.blogwt.client.page.user.ChangePasswordPage;
 import com.willshex.blogwt.client.page.user.LoginPage;
 import com.willshex.blogwt.client.page.user.RegisterPage;
 import com.willshex.blogwt.client.page.user.ResetPasswordPage;
+import com.willshex.blogwt.client.page.user.VerifyAccountPage;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
@@ -66,7 +67,8 @@ public enum PageType {
 	EditPropertyPageType("propertyedit", RoleHelper.ADMIN),
 	TagPostsPageType("tag", false),
 	ResourcesPageType("resources", PermissionHelper.MANAGE_RESOURCES),
-	SearchPostsPageType("search", false), ;
+	SearchPostsPageType("search", false),
+	VerifyAccountPageType("verifyaccount", false), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -228,6 +230,9 @@ public enum PageType {
 			break;
 		case SearchPostsPageType:
 			page = new SearchPage();
+			break;
+		case VerifyAccountPageType:
+			page = new VerifyAccountPage();
 			break;
 		case PageDetailPageType:
 		default:
