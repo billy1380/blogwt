@@ -85,6 +85,48 @@ public final class UserApi extends ActionHandler {
 		LOG.finer("Entering verifyAccount");
 		VerifyAccountResponse output = new VerifyAccountResponse();
 		try {
+			ApiValidator.notNull(input, VerifyAccountRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			ApiValidator.validateToken(input.actionCode, "input.actionCode");
+			User user = UserServiceProvider.provide().getActionCodeUser(
+					input.actionCode);
+
+			if (user == null)
+				ApiValidator.throwServiceError(InputValidationException.class,
+						ApiError.DataTypeNotFound, User.class.getSimpleName()
+								+ ": " + "input.actionCode");
+
+			user.verified = Boolean.TRUE;
+			user.actionCode = null;
+
+			user = UserServiceProvider.provide().updateUser(user);
+
+			output.session = SessionServiceProvider.provide().getUserSession(
+					user);
+
+			if (output.session == null) {
+				if (LOG.isLoggable(Level.FINER)) {
+					LOG.finer("Existing session not found, creating new session");
+				}
+
+				output.session = SessionServiceProvider.provide()
+						.createUserSession(user, false);
+
+				if (output.session != null) {
+					output.session.user = user;
+				} else {
+					throw new Exception(
+							"Unexpected blank session after creating user session.");
+				}
+			} else {
+				output.session = SessionServiceProvider.provide()
+						.extendSession(output.session,
+								ISessionService.MILLIS_MINUTES);
+				output.session.user = user;
+			}
+
+			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -98,6 +140,13 @@ public final class UserApi extends ActionHandler {
 		LOG.finer("Entering resetPassword");
 		ResetPasswordResponse output = new ResetPasswordResponse();
 		try {
+			ApiValidator.notNull(input, ResetPasswordRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			if (output.session != null) {
+				UserHelper.stripPassword(output.session.user);
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
