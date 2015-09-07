@@ -416,4 +416,10 @@ final class UserService implements IUserService {
 
 	}
 
+	@Override
+	public User getActionCodeUser (String actionCode) {
+		return addAvatar(ofy().load().type(User.class)
+				.filter("actionCode", actionCode).first().now());
+	}
+
 }

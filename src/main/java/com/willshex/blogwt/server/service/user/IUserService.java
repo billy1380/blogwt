@@ -123,4 +123,9 @@ public interface IUserService extends IService {
 	 * @param user
 	 */
 	public void verifyAccount (User user);
+
+	/**
+	 * @return
+	 */
+	public User getActionCodeUser (String actionCode);
 }
