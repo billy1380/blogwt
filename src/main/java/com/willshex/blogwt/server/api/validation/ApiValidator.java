@@ -9,10 +9,10 @@ package com.willshex.blogwt.server.api.validation;
 
 import java.lang.reflect.InvocationTargetException;
 
+import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
 import com.willshex.gson.json.service.shared.Request;
-import com.willshex.blogwt.shared.api.validation.ApiError;
 
 /**
  * @author William Shakour (billy1380)
@@ -22,18 +22,25 @@ public class ApiValidator {
 
 	public static String accessCode (String accessCode, String name)
 			throws InputValidationException {
-		if (accessCode == null)
-			throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, "String: " + name);
-
-		if (!accessCode
-				.matches("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})"))
-			throwServiceError(InputValidationException.class,
-					ApiError.TokenNoMatch, name);
+		accessCode = validateToken(accessCode, name);
 
 		// TODO: if all is good look it up
 
 		return accessCode;
+	}
+
+	public static String validateToken (String token, String name)
+			throws InputValidationException {
+		if (token == null)
+			throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, "String: " + name);
+
+		if (!token
+				.matches("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})"))
+			throwServiceError(InputValidationException.class,
+					ApiError.TokenNoMatch, name);
+
+		return token;
 	}
 
 	public static <R extends Request> R request (R input, Class<R> c)
