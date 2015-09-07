@@ -271,4 +271,11 @@ public enum PageType {
 
 		return value;
 	}
+
+	/**
+	 * @return
+	 */
+	public static PageType home () {
+		return PostsPageType;
+	}
 }
