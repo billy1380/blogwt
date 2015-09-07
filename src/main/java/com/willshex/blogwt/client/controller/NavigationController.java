@@ -259,7 +259,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 		} else {
 			if (PropertyController.get().blog() != null
 					&& p == PageType.SetupBlogPageType) {
-				PageType.PostsPageType.show();
+				PageType.home().show();
 			} else if (p != null && p.requiresLogin()
 					&& !SessionController.get().isValidSession()) {
 				SessionController.get().logout(PageType.LoginPageType,
@@ -270,7 +270,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 					&& p.getRequiredPermissions().size() > 0
 					&& !SessionController.get().isAuthorised(
 							p.getRequiredPermissions())) {
-				PageType.PostsPageType.show();
+				PageType.home().show();
 			} else {
 				if (intended != null && intended.equals(s.toString())) {
 					intended = null;
@@ -352,7 +352,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	public void showIntendedPage () {
 		if (intended == null) {
-			intended = PageType.PostsPageType.toString();
+			intended = PageType.home().toString();
 		}
 
 		addPage(intended);
@@ -367,7 +367,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 			PageType.fromString(stack.getNext().getPage()).show(
 					stack.getNext().toString(1));
 		} else {
-			PageType.PostsPageType.show();
+			PageType.home().show();
 		}
 
 	}
@@ -377,7 +377,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 			PageType.fromString(stack.getPrevious().getPage()).show(
 					stack.getPrevious().toString(1));
 		} else {
-			PageType.PostsPageType.show();
+			PageType.home().show();
 		}
 	}
 
