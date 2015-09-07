@@ -39,6 +39,8 @@ import com.willshex.blogwt.shared.api.user.call.RegisterUserRequest;
 import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse;
+import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
+import com.willshex.blogwt.shared.api.user.call.VerifyAccountResponse;
 import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler.ChangePasswordFailure;
 import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler.ChangePasswordSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsFailure;
@@ -55,6 +57,8 @@ import com.willshex.blogwt.shared.api.user.call.event.RegisterUserEventHandler.R
 import com.willshex.blogwt.shared.api.user.call.event.RegisterUserEventHandler.RegisterUserSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler.ResetPasswordFailure;
 import com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler.ResetPasswordSuccess;
+import com.willshex.blogwt.shared.api.user.call.event.VerifyAccountEventHandler.VerifyAccountFailure;
+import com.willshex.blogwt.shared.api.user.call.event.VerifyAccountEventHandler.VerifyAccountSuccess;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -255,6 +259,43 @@ public class UserController extends AsyncDataProvider<User> {
 	}
 
 	/**
+	 * @param actionCode
+	 * @param newPassword
+	 */
+	public void changeUserPassword (String actionCode, String newPassword) {
+		final ChangePasswordRequest input = ApiHelper
+				.setAccessCode(new ChangePasswordRequest());
+
+		input.session = SessionController.get().sessionForApiCall();
+		input.resetCode = actionCode;
+		input.changedPassword = newPassword;
+
+		// change password should take a user parameter
+
+		ApiHelper.createUserClient().changePassword(input,
+				new AsyncCallback<ChangePasswordResponse>() {
+
+					@Override
+					public void onSuccess (ChangePasswordResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {
+
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new ChangePasswordSuccess(input, output),
+								UserController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new ChangePasswordFailure(input, caught),
+								UserController.this);
+					}
+				});
+	}
+
+	/**
 	 * @param email
 	 */
 	public void resetPassword (String email) {
@@ -409,6 +450,39 @@ public class UserController extends AsyncDataProvider<User> {
 					public void onFailure (Throwable caught) {
 						DefaultEventBus.get().fireEventFromSource(
 								new ChangeUserPowersFailure(input, caught),
+								UserController.this);
+					}
+				});
+	}
+
+	/**
+	 * @param actionCode
+	 */
+	public void verifyAccount (String actionCode) {
+		final VerifyAccountRequest input = ApiHelper
+				.setAccessCode(new VerifyAccountRequest());
+
+		input.session = SessionController.get().sessionForApiCall();
+		input.actionCode = actionCode;
+
+		ApiHelper.createUserClient().verifyAccount(input,
+				new AsyncCallback<VerifyAccountResponse>() {
+
+					@Override
+					public void onSuccess (VerifyAccountResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {
+
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new VerifyAccountSuccess(input, output),
+								UserController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new VerifyAccountFailure(input, caught),
 								UserController.this);
 					}
 				});
