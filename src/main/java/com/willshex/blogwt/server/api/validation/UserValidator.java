@@ -81,7 +81,7 @@ public class UserValidator extends ApiValidator {
 	public static User lookup (User user, String name)
 			throws InputValidationException {
 		if (user == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
+			throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + ": " + name);
 
 		boolean isIdLookup = false, isNameLookup = false;
@@ -93,7 +93,7 @@ public class UserValidator extends ApiValidator {
 		}
 
 		if (!(isIdLookup || isNameLookup))
-			ApiValidator.throwServiceError(InputValidationException.class,
+			throwServiceError(InputValidationException.class,
 					ApiError.DataTypeNoLookup, type + ": " + name);
 
 		User lookupUser = null;
@@ -105,7 +105,7 @@ public class UserValidator extends ApiValidator {
 		}
 
 		if (lookupUser == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
+			throwServiceError(InputValidationException.class,
 					ApiError.DataTypeNotFound, type + ": " + name);
 
 		return lookupUser;
