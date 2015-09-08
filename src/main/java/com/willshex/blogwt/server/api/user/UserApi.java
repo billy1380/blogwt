@@ -94,8 +94,8 @@ public final class UserApi extends ActionHandler {
 
 			if (user == null)
 				ApiValidator.throwServiceError(InputValidationException.class,
-						ApiError.DataTypeNotFound, User.class.getSimpleName()
-								+ ": " + "input.actionCode");
+						ApiError.DataTypeNotFound, "String: "
+								+ "input.actionCode");
 
 			user.verified = Boolean.TRUE;
 			user.actionCode = null;
@@ -142,6 +142,25 @@ public final class UserApi extends ActionHandler {
 		try {
 			ApiValidator.notNull(input, ResetPasswordRequest.class, "input");
 			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+			if (input.session != null) {
+				try {
+					output.session = input.session = SessionValidator
+							.lookupAndExtend(input.session, "input.session");
+				} catch (InputValidationException ex) {
+					output.session = input.session = null;
+				}
+			}
+
+			ApiValidator.notNull(input.email, String.class, "input.email");
+
+			User user = UserServiceProvider.provide().getEmailUser(input.email);
+
+			if (user == null)
+				ApiValidator.throwServiceError(InputValidationException.class,
+						ApiError.DataTypeNotFound, "String: input.email");
+
+			UserServiceProvider.provide().resetPassword(user);
 
 			if (output.session != null) {
 				UserHelper.stripPassword(output.session.user);
@@ -459,8 +478,17 @@ public final class UserApi extends ActionHandler {
 			ApiValidator.notNull(input, ChangePasswordRequest.class, "input");
 			ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-			output.session = input.session = SessionValidator.lookupAndExtend(
-					input.session, "input.session");
+			ApiValidator.notNull(input.changedPassword, String.class,
+					"input.changedPassword");
+
+			if (input.session != null) {
+				try {
+					output.session = input.session = SessionValidator
+							.lookupAndExtend(input.session, "input.session");
+				} catch (InputValidationException ex) {
+					output.session = input.session = null;
+				}
+			}
 
 			//			// if not the logged in user
 			//			if (input.user.id.longValue() != input.session.userKey.getId()) {
@@ -476,20 +504,58 @@ public final class UserApi extends ActionHandler {
 			//						permissions, "input.session.user");
 			//			}
 
-			User user = UserServiceProvider.provide().getUser(
-					Long.valueOf(input.session.userKey.getId()));
+			boolean isExistingPassword = false, isActionCode = false;
 
-			if (UserServiceProvider.provide().verifyPassword(user,
-					input.password)) {
-				user.password = UserServiceProvider.provide().generatePassword(
-						input.changedPassword);
-				UserServiceProvider.provide().updateUser(user);
-			} else ApiValidator.throwServiceError(
-					InputValidationException.class,
-					ApiError.AuthenticationFailedBadPassword,
-					"String: input.password");
+			if (input.resetCode != null && input.resetCode.length() > 0) {
+				isActionCode = true;
+			}
 
-			UserHelper.stripPassword(output.session.user);
+			if (input.password != null && input.password.length() > 0) {
+				isExistingPassword = true;
+			}
+
+			if (!(isActionCode || isExistingPassword))
+				ApiValidator.throwServiceError(InputValidationException.class,
+						ApiError.InvalidValueNull,
+						"String: input.password or input.resetCode");
+
+			User user = null;
+
+			if (isActionCode) {
+				input.resetCode = UserValidator.validateToken(input.resetCode,
+						"input.resetCode");
+				user = UserServiceProvider.provide().getActionCodeUser(
+						input.resetCode);
+
+				if (user == null)
+					ApiValidator.throwServiceError(
+							InputValidationException.class,
+							ApiError.DataTypeNotFound,
+							"String: input.resetToken");
+
+				user.actionCode = null;
+			}
+
+			if (isExistingPassword && !isActionCode) {
+				user = UserServiceProvider.provide().getUser(
+						Long.valueOf(input.session.userKey.getId()));
+
+				if (!UserServiceProvider.provide().verifyPassword(user,
+						input.password))
+					ApiValidator.throwServiceError(
+							InputValidationException.class,
+							ApiError.AuthenticationFailedBadPassword,
+							"String: input.password");
+			}
+
+			user.password = UserServiceProvider.provide().generatePassword(
+					input.changedPassword);
+			UserServiceProvider.provide().updateUser(user);
+
+			if (output.session != null) {
+				UserHelper.stripPassword(output.session.user);
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
