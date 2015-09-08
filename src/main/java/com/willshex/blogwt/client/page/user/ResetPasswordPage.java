@@ -27,6 +27,7 @@ import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
@@ -128,7 +129,16 @@ public class ResetPasswordPage extends Page implements
 	@Override
 	public void resetPasswordSuccess (ResetPasswordRequest input,
 			ResetPasswordResponse output) {
-		// probably show a message about expecting an email 
+		// probably show a message about expecting an email
+		if (output.status == StatusType.StatusTypeSuccess) {
+			reset();
+		} else {
+			GWT.log("Could not reset password with error ["
+					+ (output.error == null ? "none" : output.error.toString())
+					+ "]");
+		}
+
+		ready();
 	}
 
 	/* (non-Javadoc)
@@ -142,5 +152,14 @@ public class ResetPasswordPage extends Page implements
 	public void resetPasswordFailure (ResetPasswordRequest input,
 			Throwable caught) {
 		GWT.log("resetPasswordFailure", caught);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#reset() */
+	@Override
+	protected void reset () {
+		frmReset.reset();
+		super.reset();
 	}
 }
