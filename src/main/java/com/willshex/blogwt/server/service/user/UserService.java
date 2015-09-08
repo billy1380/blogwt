@@ -416,10 +416,26 @@ final class UserService implements IUserService {
 
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.user.IUserService#getActionCodeUser
+	 * (java.lang.String) */
 	@Override
 	public User getActionCodeUser (String actionCode) {
 		return addAvatar(ofy().load().type(User.class)
 				.filter("actionCode", actionCode).first().now());
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.user.IUserService#getEmailUser(java
+	 * .lang.String) */
+	@Override
+	public User getEmailUser (String email) {
+		return addAvatar(ofy().load().type(User.class).filter("email", email)
+				.first().now());
 	}
 
 }
