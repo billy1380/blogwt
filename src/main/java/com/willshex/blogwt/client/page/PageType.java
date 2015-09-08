@@ -52,7 +52,7 @@ public enum PageType {
 	PostsPageType("blog", false),
 	PostDetailPageType("post", false),
 	ChangeDetailsPageType("user", true),
-	ChangePasswordPageType("changepassword", true),
+	ChangePasswordPageType("changepassword", false),
 	ResetPasswordPageType("resetpassword", false),
 	RegisterPageType("register", false),
 	LoginPageType("login", false),
