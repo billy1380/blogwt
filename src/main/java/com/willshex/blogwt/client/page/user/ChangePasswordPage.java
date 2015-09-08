@@ -8,7 +8,9 @@
 package com.willshex.blogwt.client.page.user;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -57,8 +59,11 @@ public class ChangePasswordPage extends Page implements
 	@UiField HTMLPanel pnlNewPasswordNote;
 
 	@UiField Button btnChange;
+	@UiField Element elReset;
+	@UiField Element elActionCode;
 
 	private Long userId;
+	private String actionCode;
 
 	public ChangePasswordPage () {
 		super(PageType.ChangePasswordPageType);
@@ -68,6 +73,8 @@ public class ChangePasswordPage extends Page implements
 		UiHelper.autoFocus(txtPassword);
 		UiHelper.addPlaceholder(txtNewPassword, "New password");
 		UiHelper.addPlaceholder(txtConfirmPassword, "Confirm new password");
+
+		elReset.removeFromParent();
 	}
 
 	/* (non-Javadoc)
@@ -91,8 +98,13 @@ public class ChangePasswordPage extends Page implements
 		if (isValid()) {
 			loading();
 
-			UserController.get().changeUserPassword(userId,
-					txtPassword.getText(), txtNewPassword.getText());
+			if (actionCode == null) {
+				UserController.get().changeUserPassword(userId,
+						txtPassword.getText(), txtNewPassword.getText());
+			} else {
+				UserController.get().changeUserPassword(actionCode,
+						txtNewPassword.getText());
+			}
 		} else {
 			showErrors();
 		}
@@ -133,10 +145,15 @@ public class ChangePasswordPage extends Page implements
 					+ (output.error == null ? "none" : output.error.toString())
 					+ "]");
 		} else {
-			if (userId == null) {
-				PageType.ChangeDetailsPageType.show();
+			if (actionCode == null) {
+				if (userId == null) {
+					PageType.ChangeDetailsPageType.show();
+				} else {
+					PageType.ChangeDetailsPageType
+							.show("id", userId.toString());
+				}
 			} else {
-				PageType.ChangeDetailsPageType.show("id", userId.toString());
+				PageType.LoginPageType.show();
 			}
 		}
 
@@ -183,11 +200,27 @@ public class ChangePasswordPage extends Page implements
 	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
-		if ("id".equals(current.getAction())) {
+		reset();
+
+		boolean reset = false;
+		if ("id".equals(current.getAction())
+				|| (reset = "reset".equals(current.getAction()))) {
 			if (current.getParameterCount() > 0) {
-				userId = Long.valueOf(current.getParameter(0));
+				String value = current.getParameter(0);
+
+				if (reset) {
+					actionCode = value;
+					pnlPassword.setVisible(false);
+					elActionCode.setInnerText(actionCode);
+					pnlPassword.getElement().getParentElement()
+							.insertBefore(elReset, pnlPassword.getElement());
+				} else {
+					userId = Long.valueOf(value);
+				}
 			}
 		}
+
+		ready();
 	}
 
 	/* (non-Javadoc)
@@ -197,6 +230,10 @@ public class ChangePasswordPage extends Page implements
 	protected void reset () {
 		frmPasswords.reset();
 		userId = null;
+		actionCode = null;
+		elActionCode.setInnerSafeHtml(SafeHtmlUtils.EMPTY_SAFE_HTML);
+		elReset.removeFromParent();
+		pnlPassword.setVisible(true);
 		super.reset();
 	}
 }
