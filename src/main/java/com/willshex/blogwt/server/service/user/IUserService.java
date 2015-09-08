@@ -128,4 +128,10 @@ public interface IUserService extends IService {
 	 * @return
 	 */
 	public User getActionCodeUser (String actionCode);
+
+	/**
+	 * @param email
+	 * @return
+	 */
+	public User getEmailUser (String email);
 }
