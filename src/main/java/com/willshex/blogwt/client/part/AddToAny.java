@@ -52,7 +52,7 @@ public class AddToAny extends Composite {
 			for (String service : shareWith) {
 				anchor = doc.createAnchorElement();
 				anchor.setClassName("a2a_button_" + service);
-				elAddToAny.appendChild(anchor);
+				elAddToAny.insertBefore(anchor, lnkAddToAny);
 			}
 		}
 	}
