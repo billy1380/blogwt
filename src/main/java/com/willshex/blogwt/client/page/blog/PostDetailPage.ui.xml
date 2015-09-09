@@ -5,7 +5,7 @@
 	<ui:import field="com.willshex.blogwt.client.page.PageType.EditPostPageType" />
 	<ui:style gss="true">
 	.bottom-margin {
-		margin-bottom: 10px;
+		margin-bottom: 20px;
 	}
 	
 	.tags {
@@ -43,7 +43,7 @@
 
 				<c:CellList ui:field="clTags" styleName="{style.tags}" />
 
-				<p:AddToAny ui:field="ataShare" styleName="{style.bottom-margin}" />
+				<p:AddToAny ui:field="ataShare" styleName="{style.bottom-margin} pull-right" />
 
 				<p:DisqusComments ui:field="dsqComments" />
 
