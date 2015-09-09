@@ -29,6 +29,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -101,6 +102,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiField Element elUserName;
 	@UiField ImageElement imgAvatar;
 	@UiField Image imgLogo;
+	@UiField CollapseButton btnNavExpand;
+	@UiField HTMLPanel pnlNav;
 
 	private Map<String, Element> items;
 
@@ -131,6 +134,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 			imgLogo.setAltText(title);
 		}
 
+		btnNavExpand.setTarget(pnlNav);
 		setupNavBarPages();
 	}
 
@@ -213,9 +217,6 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 			}
 		}
 	}
-
-	@UiHandler("btnExpand")
-	void onBtnExpandClicked (ClickEvent event) {}
 
 	/* (non-Javadoc)
 	 * 
@@ -415,6 +416,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		}
 
 		activateItem(current.getPage(), true);
+
+		btnNavExpand.hide();
 	}
 
 	@UiHandler("btnAdmin")
