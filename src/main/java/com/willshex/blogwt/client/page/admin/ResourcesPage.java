@@ -12,6 +12,7 @@ import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -21,6 +22,7 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.cell.PrettyButtonCell;
@@ -51,6 +53,16 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 
 	interface ResourcesPageUiBinder extends UiBinder<Widget, ResourcesPage> {}
 
+	interface Templates extends SafeHtmlTemplates {
+		public static final Templates INSTANCE = GWT.create(Templates.class);
+
+		@Template("<a target=\"_blank\" href=\"/upload?blob-key={0}\" alt=\"{1}\" title=\"{3}\"><span class=\"glyphicon glyphicon-download\"></span> {2}</a>")
+		SafeHtml url (String key, String title, String text, String fullText);
+
+		@Template("<img class=\"img-rounded\" src=\"/upload?blob-key={0}\" height=\"20px\" alt=\"{1}\" title=\"{1}\">")
+		SafeHtml image (String key, String title);
+	}
+
 	@UiField(provided = true) CellTable<Resource> tblResources = new CellTable<Resource>(
 			PagerHelper.DEFAULT_COUNT.intValue(),
 			BootstrapGwtCellTable.INSTANCE);
@@ -74,6 +86,18 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 
 	private void createColumns () {
 
+		Column<Resource, SafeHtml> preview = new Column<Resource, SafeHtml>(
+				safeHtmlPrototype) {
+
+			@Override
+			public SafeHtml getValue (Resource object) {
+				return Templates.INSTANCE.image(object.data.substring(5),
+						object.name);
+			}
+		};
+
+		preview.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+
 		TextColumn<Resource> name = new TextColumn<Resource>() {
 
 			@Override
@@ -87,15 +111,23 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 
 			@Override
 			public SafeHtml getValue (Resource object) {
-				String data = object.data;
+				SafeHtml safeHtml = null;
 
-				if (data == null) {
-					data = "none";
-				} else if (data.length() > 10) {
-					data = data.substring(0, 10);
-					data += "...";
+				if (object.data == null) {
+					safeHtml = SafeHtmlUtils.fromSafeConstant("none");
+				} else {
+					String text = object.data;
+
+					if (text.length() > 10) {
+						text = object.data.substring(0, 10);
+						text += "...";
+					}
+
+					safeHtml = Templates.INSTANCE.url(object.data.substring(5),
+							object.name, text, object.data);
 				}
-				return SafeHtmlUtils.fromString(data);
+
+				return safeHtml;
 			}
 		};
 
@@ -150,6 +182,7 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 			}
 		});
 
+		tblResources.addColumn(preview);
 		tblResources.addColumn(name, "Name");
 		tblResources.addColumn(data, "Data");
 		tblResources.addColumn(description, "Description");
