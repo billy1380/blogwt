@@ -296,7 +296,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	}
 
 	private void addAdminNav (boolean login) {
-		boolean addAdmin = false;
+		boolean addAdmin = false, isAdmin = false;
 
 		if (login) {
 			Permission managePages = PermissionHelper
@@ -306,39 +306,40 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 			Permission manageRoles = PermissionHelper
 					.create(PermissionHelper.MANAGE_ROLES);
 			Permission manageUsers = PermissionHelper
-					.create(PermissionHelper.MANAGE_POSTS);
+					.create(PermissionHelper.MANAGE_USERS);
 			Permission manageResources = PermissionHelper
 					.create(PermissionHelper.MANAGE_RESOURCES);
 
 			if (SessionController.get().isAdmin()) {
 				addAdmin = true;
+				isAdmin = true;
 				elAdminDropdown.appendChild(elProperties);
 			} else {
 				elAdminDropdown.removeAllChildren();
 			}
 
-			if (addAdmin || SessionController.get().isAuthorised(managePages)) {
+			if (isAdmin || SessionController.get().isAuthorised(managePages)) {
 				addAdmin = true;
 				elAdminDropdown.appendChild(elPages);
 			} else {
 				elPages.removeFromParent();
 			}
 
-			if (addAdmin || SessionController.get().isAuthorised(manageUsers)) {
+			if (isAdmin || SessionController.get().isAuthorised(manageUsers)) {
 				addAdmin = true;
 				elAdminDropdown.appendChild(elUsers);
 			} else {
 				elUsers.removeFromParent();
 			}
 
-			if (addAdmin || SessionController.get().isAuthorised(manageRoles)) {
+			if (isAdmin || SessionController.get().isAuthorised(manageRoles)) {
 				addAdmin = true;
 				elAdminDropdown.appendChild(elRoles);
 			} else {
 				elRoles.removeFromParent();
 			}
 
-			if (addAdmin
+			if (isAdmin
 					|| SessionController.get().isAuthorised(managePermissions)) {
 				addAdmin = true;
 				elAdminDropdown.appendChild(elPermissions);
@@ -346,7 +347,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				elPermissions.removeFromParent();
 			}
 
-			if (addAdmin
+			if (isAdmin
 					|| SessionController.get().isAuthorised(manageResources)) {
 				addAdmin = true;
 				elAdminDropdown.appendChild(elResources);
