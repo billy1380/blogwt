@@ -17,7 +17,7 @@
 			personalise content and to analyse traffic. They may also share information
 			about your use of our site with social media, advertising and analytics
 			partners.
-			<div class="{style.buttons} pull-right">
+			<div class="{style.buttons} text-right">
 				<g:InlineHyperlink styleName="btn btn-sm btn-info"
 					ui:field="btnSeeDetails" text="See Details" />
 				<g:Button styleName="btn btn-sm btn-success" ui:field="btnGotIt"
