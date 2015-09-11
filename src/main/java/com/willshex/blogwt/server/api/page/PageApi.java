@@ -58,6 +58,9 @@ public final class PageApi extends ActionHandler {
 					.getCodePermission(PermissionHelper.MANAGE_PAGES);
 			permissions.add(postPermission);
 
+			input.session.user = UserServiceProvider.provide().getUser(
+					Long.valueOf(input.session.userKey.getId()));
+			
 			UserValidator.authorisation(input.session.user, permissions,
 					"input.session.user");
 
