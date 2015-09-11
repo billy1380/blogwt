@@ -42,7 +42,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 		@Template("<span class=\"label label-warning\">Not visible</span>")
 		SafeHtml notVisible ();
 
-		@Template("By <img src=\"{0}\" class=\"img-circle\" /> {1}")
+		@Template("by <img src=\"{0}\" class=\"img-circle\" /> {1}")
 		SafeHtml author (SafeUri avatarUrl, String authorName);
 
 	}
@@ -83,7 +83,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 				PropertyHelper.POST_SHOW_AUTHOR, false)) {
 			author = Templates.INSTANCE.author(
 					UriUtils.fromString(value.author.avatar + "?s="
-							+ UserHelper.AVATAR_SIZE + "&default=retro"),
+							+ UserHelper.AVATAR_HEADER_SIZE + "&default=retro"),
 					UserHelper.handle(value.author));
 		}
 

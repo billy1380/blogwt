@@ -7,19 +7,17 @@
 	<ui:with field="published" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="visible" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:style gss="true">
-	
 	.bottom-margin {
-	   margin-bottom: 10px;
+		margin-bottom: 10px;
 	}
-	
 	</ui:style>
 	<div>
 		<a href="{link}">
 			<ui:safehtml from="{title}" />
 		</a>
 		<div class="{style.bottom-margin}">
-			<ui:safehtml from="{author}" />
 			<ui:safehtml from="{published}" />
+			<ui:safehtml from="{author}" />
 			<ui:safehtml from="{visible}" />
 		</div>
 		<div>

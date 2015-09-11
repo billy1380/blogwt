@@ -1,15 +1,25 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
+	<ui:style type="com.willshex.blogwt.client.part.CookieNoticePart.Style">
 	.alert {
 		padding: 15px;
+		border-radius: 0;
+		border-width: 0 0 1px 0;
+		margin-bottom: 0;
+	}
+	
+	.fixed {
+		z-index: 2500;
+		left: 0;
+		right: 0;
+		position: fixed;
 	}
 	
 	.buttons {
 		padding-top: 10px;
 	}
 	</ui:style>
-	<g:HTMLPanel stylePrimaryName="alert-info {style.alert}">
+	<g:HTMLPanel stylePrimaryName="alert {style.alert} alert-info">
 		<div class="container text-justify">
 			<span ui:field="elTitle"></span>
 			does not use cookies except for sign in purposes, however we use 3rd party

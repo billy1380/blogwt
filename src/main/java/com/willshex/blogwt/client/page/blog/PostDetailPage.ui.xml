@@ -32,8 +32,8 @@
 			<div class="col-sm-9">
 				<div ui:field="elTitle" />
 				<div class="{style.bottom-margin}">
-					<span ui:field="elAuthor" />
 					<span ui:field="elDate" />
+					<span ui:field="elAuthor" />
 				</div>
 				<g:HTMLPanel styleName="text-center" ui:field="pnlLoading">
 					<g:Image visible="true" resource="{CELL_TABLE_RES.cellTableLoading}" />
