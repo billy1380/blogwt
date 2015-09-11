@@ -1,9 +1,28 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
+	.alert {
+		padding: 15px;
+	}
 	
+	.buttons {
+		padding-top: 10px;
+	}
 	</ui:style>
-	<g:HTMLPanel>
-		
+	<g:HTMLPanel stylePrimaryName="alert-info {style.alert}">
+		<div class="container">
+			<span ui:field="elTitle"></span>
+			does not use cookies except for sign in purposes, however we use 3rd party
+			components for maps and sharing. These components may use cookies to
+			personalise content and to analyse traffic. They may also share information
+			about your use of our site with social media, advertising and analytics
+			partners.
+			<div class="{style.buttons} pull-right">
+				<g:InlineHyperlink styleName="btn btn-sm btn-info"
+					ui:field="btnSeeDetails" text="See Details" />
+				<g:Button styleName="btn btn-sm btn-success" ui:field="btnGotIt"
+					text="Got It" />
+			</div>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 
