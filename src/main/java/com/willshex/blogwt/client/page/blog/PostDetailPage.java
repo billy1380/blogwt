@@ -40,6 +40,7 @@ import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.AddToAny;
 import com.willshex.blogwt.client.part.DisqusComments;
 import com.willshex.blogwt.client.part.InlineBootstrapGwtCellList;
+import com.willshex.blogwt.client.part.RelatedPart;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
@@ -75,6 +76,7 @@ public class PostDetailPage extends Page implements
 	@UiField HTMLPanel pnlContent;
 	@UiField InlineHyperlink lnkEditPost;
 	@UiField Button btnDeletePost;
+	@UiField RelatedPart coRelated;
 
 	@UiField(provided = true) DisqusComments dsqComments = new DisqusComments(
 			PostController.categoryId(), PostController.disqusId());
@@ -146,10 +148,10 @@ public class PostDetailPage extends Page implements
 		SafeHtml author = SafeHtmlUtils.EMPTY_SAFE_HTML;
 		if (PropertyController.get().booleanProperty(
 				PropertyHelper.POST_SHOW_AUTHOR, false)) {
-			author = PostSummaryCell.Templates.INSTANCE.author(
-					UriUtils.fromString(post.author.avatar + "?s="
-							+ UserHelper.AVATAR_SIZE + "&default=retro"),
-					UserHelper.handle(post.author));
+			author = PostSummaryCell.Templates.INSTANCE
+					.author(UriUtils.fromString(post.author.avatar + "?s="
+							+ UserHelper.AVATAR_HEADER_SIZE + "&default=retro"),
+							UserHelper.handle(post.author));
 		}
 
 		elAuthor.setInnerSafeHtml(author);
@@ -166,6 +168,7 @@ public class PostDetailPage extends Page implements
 				.asTargetHistoryToken(post.slug));
 
 		tagList.getList().clear();
+		coRelated.setVisible(Boolean.TRUE.equals(post.listed));
 
 		if (post.tags != null) {
 			for (String tag : post.tags) {
@@ -234,6 +237,7 @@ public class PostDetailPage extends Page implements
 				pnlLoading.setVisible(true);
 				dsqComments.setVisible(false);
 				ataShare.setVisible(false);
+				coRelated.setVisible(false);
 			}
 		}
 
@@ -278,6 +282,5 @@ public class PostDetailPage extends Page implements
 
 		dsqComments.setVisible(false);
 		ataShare.setVisible(false);
-
 	}
 }
