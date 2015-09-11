@@ -12,6 +12,9 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.willshex.blogwt.client.controller.NavigationController;
+import com.willshex.blogwt.client.part.CookieNoticePart;
+import com.willshex.blogwt.client.part.FooterPart;
+import com.willshex.blogwt.client.part.HeaderPart;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -25,19 +28,19 @@ public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
 
 		History.addValueChangeHandler(NavigationController.get());
 
-		createContent();
-
-		content.add(NavigationController.get().getHeader());
-		content.add(NavigationController.get().getPageHolder());
-		content.add(NavigationController.get().getFooter());
+		createContentAndPages();
 
 		History.fireCurrentHistoryState();
 	}
 
-	private void createContent () {
+	private void createContentAndPages () {
 		content = new HTMLPanel("<!-- content -->");
-//		content.getElement().setId("content");
-//		content.getElement().setClassName("container");
 		RootPanel.get().add(content);
+
+		content.add(new CookieNoticePart());
+		content.add(new HeaderPart());
+		content.add(NavigationController.get().setPageHolder(
+				new HTMLPanel("<!-- pages -->")));
+		content.add(new FooterPart());
 	}
 }

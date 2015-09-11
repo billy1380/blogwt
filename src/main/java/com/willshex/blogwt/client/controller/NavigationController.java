@@ -18,13 +18,10 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.page.PageType;
-import com.willshex.blogwt.client.part.FooterPart;
-import com.willshex.blogwt.client.part.HeaderPart;
 
 /**
  * @author billy1380
@@ -47,14 +44,12 @@ public class NavigationController implements ValueChangeHandler<String> {
 	}
 
 	/**
+	 * 
+	 * @param value
 	 * @return
 	 */
-	public Widget getPageHolder () {
-		if (pageHolder == null) {
-			pageHolder = new HTMLPanel("<!-- pages -->");
-		}
-
-		return pageHolder;
+	public HTMLPanel setPageHolder (HTMLPanel value) {
+		return pageHolder = value;
 	}
 
 	public static final String ADD_ACTION_PARAMETER_VALUE = "add";
@@ -63,9 +58,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 	public static final String VIEW_ACTION_PARAMETER_VALUE = "view";
 
 	private Map<String, Composite> pages = new HashMap<String, Composite>();
-
-	private HeaderPart header = null;
-	private FooterPart footer = null;
 
 	private Stack stack;
 
@@ -306,26 +298,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 								NavigationController.this);
 			}
 		});
-	}
-
-	/**
-	 * @return
-	 */
-	public Widget getHeader () {
-		if (header == null) {
-			header = new HeaderPart();
-		}
-		return header;
-	}
-
-	/**
-	 * @return
-	 */
-	public Widget getFooter () {
-		if (footer == null) {
-			footer = new FooterPart();
-		}
-		return footer;
 	}
 
 	public PageType getCurrentPage () {
