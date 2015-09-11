@@ -54,6 +54,8 @@ public class PropertyHelper {
 
 	public static final String OUTGOING_EMAIL = "email.outgoing";
 
+	public static final String COOKIE_DETAILS_PAGE_SLUG = "cookie.details.slug";
+
 	// user properties
 	public static final String ALLOW_USER_REGISTRATION = "user.allow.registration";
 	public static final String NEW_USER_PERMISSIONS = "user.new.permissions";
@@ -96,6 +98,8 @@ public class PropertyHelper {
 	public static final String ALLOW_USER_REGISTRATION_DESCRIPTION = "Allow users to register";
 	public static final String NEW_USER_PERMISSIONS_DESCRIPTION = "New user permissions";
 	public static final String NEW_USER_ROLES_DESCRIPTION = "New user roles";
+
+	public static final String COOKIE_DETAILS_PAGE_SLUG_DESCRIPTION = "Cookie details page slug";
 
 	public static final String NONE_VALUE = "none";
 	public static final String APPLE_VALUE = "apple";
@@ -264,6 +268,12 @@ public class PropertyHelper {
 				.type("string").value(value);
 	}
 
+	public static Property createCookieDetailsPageSlug (String value) {
+		return new Property().name(COOKIE_DETAILS_PAGE_SLUG)
+				.description(COOKIE_DETAILS_PAGE_SLUG_DESCRIPTION)
+				.group("Functional").type("string").value(value);
+	}
+
 	public static boolean isEmpty (Property property) {
 		return property == null || property.value == null
 				|| property.value.length() == 0;
@@ -289,7 +299,8 @@ public class PropertyHelper {
 					createLargeLogoUrl(null), createFooterShowVersion(null),
 					createAllowUserRegistration(null),
 					createNewUserPermissions(null), createNewUserRoles(null),
-					createFaviconUrl(null), createOutgoingEmail(null));
+					createFaviconUrl(null), createOutgoingEmail(null),
+					createCookieDetailsPageSlug(null));
 		}
 
 		return properties;
