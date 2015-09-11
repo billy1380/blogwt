@@ -10,13 +10,13 @@
 	}
 	</ui:style>
 	<g:HTMLPanel stylePrimaryName="alert-info {style.alert}">
-		<div class="container">
+		<div class="container text-justify">
 			<span ui:field="elTitle"></span>
 			does not use cookies except for sign in purposes, however we use 3rd party
-			components for maps and sharing. These components may use cookies to
-			personalise content and to analyse traffic. They may also share information
-			about your use of our site with social media, advertising and analytics
-			partners.
+			components for maps, comments and sharing. These components may use cookies
+			to personalise content and to analyse traffic. They may also share
+			information about your use of the site with social media, advertising and
+			analytics partners.
 			<div class="{style.buttons} text-right">
 				<g:InlineHyperlink styleName="btn btn-sm btn-info"
 					ui:field="btnSeeDetails" text="See Details" />
