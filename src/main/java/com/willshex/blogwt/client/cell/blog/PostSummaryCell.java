@@ -17,6 +17,7 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiRenderer;
 import com.willshex.blogwt.client.controller.PropertyController;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Post;
@@ -58,8 +59,8 @@ public class PostSummaryCell extends AbstractCell<Post> {
 
 	@Override
 	public void render (Context context, Post value, SafeHtmlBuilder builder) {
-		SafeUri link = PageType.PostDetailPageType.asHref(PostHelper
-				.getSlug(value));
+		SafeUri link = PageTypeHelper.asHref(PageType.PostDetailPageType,
+				PostHelper.getSlug(value));
 		SafeHtml published = Templates.INSTANCE.notPublished(DateTimeHelper
 				.ago(value.created));
 
@@ -81,10 +82,10 @@ public class PostSummaryCell extends AbstractCell<Post> {
 
 		if (PropertyController.get().booleanProperty(
 				PropertyHelper.POST_SHOW_AUTHOR, false)) {
-			author = Templates.INSTANCE.author(
-					UriUtils.fromString(value.author.avatar + "?s="
+			author = Templates.INSTANCE
+					.author(UriUtils.fromString(value.author.avatar + "?s="
 							+ UserHelper.AVATAR_HEADER_SIZE + "&default=retro"),
-					UserHelper.handle(value.author));
+							UserHelper.handle(value.author));
 		}
 
 		RENDERER.render(builder, link, SafeHtmlUtils

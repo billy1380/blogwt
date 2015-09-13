@@ -43,6 +43,7 @@ import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -161,11 +162,11 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		}
 
 		if (foundBrandPage) {
-			href = PageType.PostsPageType.asHref();
+			href = PageTypeHelper.asHref(PageType.PostsPageType);
 			addItem(elNavLeft, HeaderTemplates.INSTANCE.item(href, "Blog"),
 					href);
 		} else {
-			btnHome.setHref(PageType.PostsPageType.asHref());
+			btnHome.setHref(PageTypeHelper.asHref(PageType.PostsPageType));
 		}
 
 		ensureItems().put(PageType.PagesPageType.asTargetHistoryToken(),
@@ -279,10 +280,10 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 			elAccount.removeFromParent();
 		}
 
-		removeItem(login ? PageType.LoginPageType.asHref()
-				: PageType.LogoutPageType.asHref());
-		SafeUri href = login ? PageType.LogoutPageType.asHref()
-				: PageType.LoginPageType.asHref();
+		removeItem(PageTypeHelper.asHref(login ? PageType.LoginPageType
+				: PageType.LogoutPageType));
+		SafeUri href = PageTypeHelper.asHref(login ? PageType.LogoutPageType
+				: PageType.LoginPageType);
 
 		if (login
 				|| PropertyController.get().booleanProperty(

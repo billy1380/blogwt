@@ -27,6 +27,7 @@ import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Page;
@@ -116,7 +117,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 		}
 
 		if (slug == null) {
-			PageType.PostsPageType.show();
+			PageTypeHelper.show(PageType.PostsPageType);
 		} else {
 			PageController.get().getPage(new Page().slug(slug), true);
 		}
@@ -145,7 +146,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 	public void deletePageSuccess (DeletePageRequest input,
 			DeletePageResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			PageType.PagesPageType.show();
+			PageTypeHelper.show(PageType.PagesPageType);
 		} else {
 
 		}
@@ -171,7 +172,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 		if (output.status == StatusType.StatusTypeSuccess) {
 			show(page = output.page);
 		} else {
-			PageType.PostsPageType.show();
+			PageTypeHelper.show(PageType.PostsPageType);
 		}
 	}
 

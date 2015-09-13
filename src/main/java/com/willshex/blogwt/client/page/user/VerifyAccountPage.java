@@ -17,8 +17,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
+import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
@@ -44,7 +46,8 @@ public class VerifyAccountPage extends Page implements
 
 		@Override
 		public void run () {
-			PageType.home().show();
+			PageTypeHelper.show(PageController.get()
+					.homePageTargetHistoryToken());
 		}
 
 	};

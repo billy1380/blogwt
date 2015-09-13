@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.controller.PageController;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
@@ -159,8 +160,8 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 
 			@Override
 			public SafeHtml getValue (Page object) {
-				return PagesPageTemplates.INSTANCE
-						.edit(PageType.EditPagePageType.asHref(object.slug));
+				return PagesPageTemplates.INSTANCE.edit(PageTypeHelper.asHref(
+						PageType.EditPagePageType, object.slug));
 			}
 		};
 

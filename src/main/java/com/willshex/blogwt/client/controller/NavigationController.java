@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.PageType;
 
 /**
@@ -229,7 +230,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 		Composite page = null;
 
 		if ((page = pages.get(type.toString())) == null) {
-			pages.put(type.toString(), page = type.create());
+			pages.put(type.toString(), page = PageTypeHelper.createPage(type));
 		}
 
 		if (!page.isAttached()) {
@@ -247,11 +248,12 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 		if (PropertyController.get().blog() == null
 				&& p != PageType.SetupBlogPageType) {
-			PageType.SetupBlogPageType.show();
+			PageTypeHelper.show(PageType.SetupBlogPageType);
 		} else {
 			if (PropertyController.get().blog() != null
 					&& p == PageType.SetupBlogPageType) {
-				PageType.home().show();
+				PageTypeHelper.show(PageController.get()
+						.homePageTargetHistoryToken());
 			} else if (p != null && p.requiresLogin()
 					&& !SessionController.get().isValidSession()) {
 				SessionController.get().logout(PageType.LoginPageType,
@@ -262,7 +264,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 					&& p.getRequiredPermissions().size() > 0
 					&& !SessionController.get().isAuthorised(
 							p.getRequiredPermissions())) {
-				PageType.home().show();
+				PageTypeHelper.show(PageController.get()
+						.homePageTargetHistoryToken());
 			} else {
 				if (intended != null && intended.equals(s.toString())) {
 					intended = null;
@@ -324,7 +327,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	public void showIntendedPage () {
 		if (intended == null) {
-			intended = PageType.home().toString();
+			intended = PageController.get().homePageSlug();
 		}
 
 		addPage(intended);
@@ -336,20 +339,22 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	public void showNext () {
 		if (stack.hasNext()) {
-			PageType.fromString(stack.getNext().getPage()).show(
+			PageTypeHelper.show(PageType.fromString(stack.getNext().getPage()),
 					stack.getNext().toString(1));
 		} else {
-			PageType.home().show();
+			PageTypeHelper.show(PageController.get()
+					.homePageTargetHistoryToken());
 		}
 
 	}
 
 	public void showPrevious () {
 		if (stack.hasPrevious()) {
-			PageType.fromString(stack.getPrevious().getPage()).show(
-					stack.getPrevious().toString(1));
+			PageTypeHelper.show(PageType.fromString(stack.getPrevious()
+					.getPage()), stack.getPrevious().toString(1));
 		} else {
-			PageType.home().show();
+			PageTypeHelper.show(PageController.get()
+					.homePageTargetHistoryToken());
 		}
 	}
 

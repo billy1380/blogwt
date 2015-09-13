@@ -25,6 +25,7 @@ import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
@@ -147,13 +148,13 @@ public class ChangePasswordPage extends Page implements
 		} else {
 			if (actionCode == null) {
 				if (userId == null) {
-					PageType.ChangeDetailsPageType.show();
+					PageTypeHelper.show(PageType.ChangeDetailsPageType);
 				} else {
-					PageType.ChangeDetailsPageType
-							.show("id", userId.toString());
+					PageTypeHelper.show(PageType.ChangeDetailsPageType, "id",
+							userId.toString());
 				}
 			} else {
-				PageType.LoginPageType.show();
+				PageTypeHelper.show(PageType.LoginPageType);
 			}
 		}
 

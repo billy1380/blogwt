@@ -14,6 +14,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.PostHelper;
@@ -56,9 +57,9 @@ public class TagCell extends AbstractSafeHtmlCell<Tag> {
 				builder.appendHtmlConstant("<span class=\"glyphicon glyphicon-tags\" style=\"margin-right:2px;\"></span> ");
 			}
 
-			SafeUri href = PageType.TagPostsPageType
-					.asHref(object.slug == null ? PostHelper
-							.slugify(object.name) : object.slug);
+			SafeUri href = PageTypeHelper.asHref(PageType.TagPostsPageType,
+					object.slug == null ? PostHelper.slugify(object.name)
+							: object.slug);
 
 			if (displayCount) {
 				builder.append(TagTemplate.INSTANCE.tagWithCount(href,

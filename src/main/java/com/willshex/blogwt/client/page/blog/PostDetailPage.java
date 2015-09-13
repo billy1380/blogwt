@@ -34,6 +34,7 @@ import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
@@ -138,7 +139,7 @@ public class PostDetailPage extends Page implements
 		if (output.status == StatusType.StatusTypeSuccess) {
 			show(post = output.post);
 		} else {
-			PageType.PostsPageType.show();
+			PageTypeHelper.show(PageType.PostsPageType);
 		}
 	}
 
@@ -177,7 +178,8 @@ public class PostDetailPage extends Page implements
 		}
 
 		final String url = GWT.getHostPageBaseURL()
-				+ PageType.PostDetailPageType.asHref(post.slug).asString();
+				+ PageTypeHelper.asHref(PageType.PostDetailPageType, post.slug)
+						.asString();
 		final String title = post.title;
 
 		ataShare.setUrl(url);
@@ -252,7 +254,7 @@ public class PostDetailPage extends Page implements
 	public void deletePostSuccess (DeletePostRequest input,
 			DeletePostResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			PageType.PostsPageType.show();
+			PageTypeHelper.show(PageType.PostsPageType);
 		} else {
 
 		}

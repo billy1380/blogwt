@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.cell.StyledImageCell;
 import com.willshex.blogwt.client.controller.UserController;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
@@ -129,7 +130,8 @@ public class UsersPage extends Page {
 			public SafeHtml getValue (User object) {
 				return SafeHtmlUtils
 						.fromSafeConstant("<a class=\"btn btn-default btn-xs\" href=\""
-								+ PageType.ChangeDetailsPageType.asHref("id",
+								+ PageTypeHelper.asHref(
+										PageType.ChangeDetailsPageType, "id",
 										object.id.toString()).asString()
 								+ "\" ><span class=\"glyphicon glyphicon-edit\"></span> edit<a>");
 			}
