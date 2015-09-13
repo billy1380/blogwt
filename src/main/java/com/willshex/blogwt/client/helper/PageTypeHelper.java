@@ -42,6 +42,13 @@ import com.willshex.blogwt.client.page.user.VerifyAccountPage;
 public class PageTypeHelper {
 	private static Page defaultPage = null;
 
+	public static final SafeUri PAGES_PAGE_HREF = asHref(PageType.PagesPageType);
+	public static final SafeUri PROPERTIES_PAGE_HREF = asHref(PageType.PropertiesPageType);
+	public static final SafeUri USERS_PAGE_HREF = asHref(PageType.UsersPageType);
+	public static final SafeUri ROLES_PAGE_HREF = asHref(PageType.RolesPageType);
+	public static final SafeUri PERMISSIONS_PAGE_HREF = asHref(PageType.PermissionsPageType);
+	public static final SafeUri RESOURCES_PAGE_HREF = asHref(PageType.ResourcesPageType);
+
 	/**
 	 * 
 	 * @param pageType
@@ -122,19 +129,18 @@ public class PageTypeHelper {
 	}
 
 	public static void show (final PageType pageType) {
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-			@Override
-			public void execute () {
-				History.newItem(pageType.asTargetHistoryToken());
-			}
-		});
+		show(pageType.asTargetHistoryToken());
 	}
 
 	public static void show (final PageType pageType, final String... params) {
+		show(pageType.asTargetHistoryToken(params));
+	}
+
+	public static void show (final String targetHistoryToken) {
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 			@Override
 			public void execute () {
-				History.newItem(pageType.asTargetHistoryToken(params));
+				History.newItem(targetHistoryToken);
 			}
 		});
 	}
@@ -144,7 +150,6 @@ public class PageTypeHelper {
 	}
 
 	public static SafeUri asHref (PageType pageType, String... params) {
-		return UriUtils
-				.fromString("#!" + pageType.asTargetHistoryToken(params));
+		return UriUtils.fromString("#" + pageType.asTargetHistoryToken(params));
 	}
 }
