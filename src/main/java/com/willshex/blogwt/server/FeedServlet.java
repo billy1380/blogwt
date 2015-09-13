@@ -35,6 +35,7 @@ import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.service.ContextAwareServlet;
 
 /**
@@ -124,7 +125,10 @@ public class FeedServlet extends ContextAwareServlet {
 				for (Post post : posts) {
 					entry = new SyndEntryImpl();
 					entry.setTitle(post.title);
-					entry.setLink(url + "/#!post/" + post.slug);
+					entry.setLink(url
+							+ "/#"
+							+ PageType.PostDetailPageType
+									.asTargetHistoryToken(post.slug));
 					entry.setPublishedDate(post.published);
 					description = new SyndContentImpl();
 					description.setType("text/HTML");
