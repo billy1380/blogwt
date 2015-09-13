@@ -29,7 +29,6 @@ import com.willshex.blogwt.client.cell.StyledImageCell;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.Page;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Role;
@@ -38,6 +37,7 @@ import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
+import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)

@@ -22,7 +22,7 @@ import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
-import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author billy1380

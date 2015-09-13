@@ -23,7 +23,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeUri;
-import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -44,7 +43,6 @@ import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Session;
@@ -61,6 +59,7 @@ import com.willshex.blogwt.shared.api.user.call.event.LogoutEventHandler;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
+import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public class HeaderPart extends Composite implements LoginEventHandler,
@@ -150,10 +149,10 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				if (page.parent != null) continue;
 
 				if (page.priority != null && page.priority.floatValue() == 0.0f) {
-					btnHome.setHref("#!" + page.slug);
+					btnHome.setHref(PageTypeHelper.slugToHref(page.slug));
 					foundBrandPage = true;
 				} else {
-					href = UriUtils.fromString("#!" + page.slug);
+					href = PageTypeHelper.slugToHref(page.slug);
 					addItem(elNavLeft,
 							HeaderTemplates.INSTANCE.item(href, page.title),
 							href);

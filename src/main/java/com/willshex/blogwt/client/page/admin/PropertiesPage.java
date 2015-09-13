@@ -27,7 +27,6 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.page.Page;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.property.AbstractPropertyPart;
 import com.willshex.blogwt.client.part.property.BooleanPropertyPart;
 import com.willshex.blogwt.client.part.property.CommentPropertyPart;
@@ -40,6 +39,7 @@ import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.UpdatePropertiesEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)

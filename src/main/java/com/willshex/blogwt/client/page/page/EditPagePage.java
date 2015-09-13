@@ -16,7 +16,6 @@ import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.page.wizard.WizardDialogPage;
 import com.willshex.blogwt.client.wizard.PagePlan.PagePlanBuilder;
 import com.willshex.blogwt.client.wizard.PagePlanFinishedHandler;
@@ -34,6 +33,7 @@ import com.willshex.blogwt.shared.api.page.call.UpdatePageResponse;
 import com.willshex.blogwt.shared.api.page.call.event.CreatePageEventHandler;
 import com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler;
 import com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler;
+import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**

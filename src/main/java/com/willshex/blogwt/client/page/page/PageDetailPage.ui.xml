@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:import field="com.willshex.blogwt.client.Resources.CELL_TABLE_RES" />
-	<ui:import field="com.willshex.blogwt.client.page.PageType.EditPagePageType" />
+	<ui:import field="com.willshex.blogwt.shared.page.PageType.EditPagePageType" />
 	<ui:style gss="true">
 	.bottom-margin {
 		margin-bottom: 10px;

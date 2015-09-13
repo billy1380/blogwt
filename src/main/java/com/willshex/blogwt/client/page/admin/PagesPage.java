@@ -26,7 +26,6 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Page;
@@ -36,6 +35,7 @@ import com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
+import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -62,8 +62,8 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 		public PagesPageTemplates INSTANCE = GWT
 				.create(PagesPageTemplates.class);
 
-		@Template("<a href=\"#!{0}\">{1}<a>")
-		SafeHtml title (String slug, String title);
+		@Template("<a href=\"{0}\">{1}<a>")
+		SafeHtml title (SafeUri slug, String title);
 
 		@Template("<span class=\"glyphicon glyphicon-ok\"></span>")
 		SafeHtml yes ();
@@ -104,8 +104,8 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 
 			@Override
 			public SafeHtml getValue (Page object) {
-				return PagesPageTemplates.INSTANCE.title(object.slug,
-						object.title);
+				return PagesPageTemplates.INSTANCE.title(
+						PageTypeHelper.slugToHref(object.slug), object.title);
 			}
 		};
 

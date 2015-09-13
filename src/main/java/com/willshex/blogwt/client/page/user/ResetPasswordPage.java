@@ -22,11 +22,11 @@ import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler;
+import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**

@@ -14,7 +14,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.PropertyController;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.page.wizard.WizardDialogPage;
 import com.willshex.blogwt.client.wizard.PagePlan.PagePlanBuilder;
 import com.willshex.blogwt.client.wizard.PagePlanFinishedHandler;
@@ -26,6 +25,7 @@ import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**

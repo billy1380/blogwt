@@ -29,7 +29,6 @@ import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
@@ -39,6 +38,7 @@ import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler;
 import com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**

@@ -5,7 +5,7 @@
 //  Created by William Shakour (billy1380) on 11 May 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
 //
-package com.willshex.blogwt.client.page;
+package com.willshex.blogwt.shared.page;
 
 import java.util.Arrays;
 import java.util.Collection;

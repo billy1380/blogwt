@@ -20,7 +20,6 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.user.UserService;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.Request;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
@@ -35,6 +34,7 @@ import com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler.LoginSuc
 import com.willshex.blogwt.shared.api.user.call.event.LogoutEventHandler;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
+import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.json.service.client.JsonService;
 import com.willshex.gson.json.service.client.JsonServiceCallEventHandler;
 import com.willshex.gson.json.service.shared.Response;
