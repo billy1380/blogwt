@@ -406,7 +406,7 @@ final class UserService implements IUserService {
 
 		values.put("user", user);
 		values.put("link",
-				String.format("%s#!%s/%s", url, action, user.actionCode));
+				String.format("%s#%s/%s", url, action, user.actionCode));
 		values.put("action", actionName);
 		values.put("property", PropertyServiceProvider.provide()
 				.getNamedProperty(PropertyHelper.TITLE));

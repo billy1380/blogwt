@@ -26,6 +26,7 @@ import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.service.ContextAwareServlet;
 
 /**
@@ -72,7 +73,8 @@ public class SiteMapServlet extends ContextAwareServlet {
 	}
 
 	private void printBlog (PrintWriter p, String url) {
-		p.println(String.format(LOC_FORMAT, url, "#!blog"));
+		p.println(String.format(LOC_FORMAT, url,
+				"#" + PageType.PostsPageType.asTargetHistoryToken()));
 	}
 
 	private void printPosts (PrintWriter p, String url) {
@@ -89,8 +91,12 @@ public class SiteMapServlet extends ContextAwareServlet {
 				PagerHelper.moveForward(pager);
 
 				for (Post post : posts) {
-					p.println(String.format(LOC_FORMAT, url, "#!post/"
-							+ post.slug));
+					p.println(String.format(
+							LOC_FORMAT,
+							url,
+							"#"
+									+ PageType.PostsPageType
+											.asTargetHistoryToken(post.slug)));
 				}
 			}
 		} while (posts != null && posts.size() >= pager.count.intValue());
@@ -113,7 +119,12 @@ public class SiteMapServlet extends ContextAwareServlet {
 
 		if (tags.size() >= 0) {
 			for (Tag tag : tags) {
-				p.println(String.format(LOC_FORMAT, url, "#!tag/" + tag.slug));
+				p.println(String.format(
+						LOC_FORMAT,
+						url,
+						"#"
+								+ PageType.TagPostsPageType
+										.asTargetHistoryToken(tag.slug)));
 			}
 		}
 
