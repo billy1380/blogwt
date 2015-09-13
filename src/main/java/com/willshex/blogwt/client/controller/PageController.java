@@ -301,9 +301,17 @@ public class PageController extends AsyncDataProvider<Page> {
 		return home;
 	}
 
+	public String homePageSlug () {
+		return home == null ? PageType.PostsPageType.toString() : home.slug;
+	}
+
 	public SafeUri homePageUri () {
-		return home == null ? PageType.PostsPageType.asHref() : UriUtils
-				.fromString("#!" + home.slug);
+		return UriUtils.fromString("#" + homePageTargetHistoryToken());
+	}
+
+	public String homePageTargetHistoryToken () {
+		return home == null ? PageType.PostsPageType.asTargetHistoryToken()
+				: ("!" + home.slug);
 	}
 
 	public List<Page> getHeaderPages () {
