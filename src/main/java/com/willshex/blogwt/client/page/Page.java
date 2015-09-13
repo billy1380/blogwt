@@ -14,6 +14,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.willshex.blogwt.client.controller.PropertyController;
+import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)

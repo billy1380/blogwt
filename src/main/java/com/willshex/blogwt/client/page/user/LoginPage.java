@@ -27,12 +27,12 @@ import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler;
 import com.willshex.blogwt.shared.api.validation.ApiError;
+import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**

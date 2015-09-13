@@ -31,13 +31,13 @@ import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellList;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)

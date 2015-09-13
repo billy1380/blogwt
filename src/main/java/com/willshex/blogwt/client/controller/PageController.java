@@ -15,14 +15,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.safehtml.shared.SafeUri;
-import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.helper.ApiHelper;
-import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
@@ -46,6 +45,7 @@ import com.willshex.blogwt.shared.api.page.call.event.GetPagesEventHandler.GetPa
 import com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler.UpdatePageFailure;
 import com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler.UpdatePageSuccess;
 import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -306,7 +306,7 @@ public class PageController extends AsyncDataProvider<Page> {
 	}
 
 	public SafeUri homePageUri () {
-		return UriUtils.fromString("#" + homePageTargetHistoryToken());
+		return PageTypeHelper.slugToHref(homePageSlug());
 	}
 
 	public String homePageTargetHistoryToken () {

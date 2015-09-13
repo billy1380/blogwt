@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
-import com.willshex.blogwt.client.page.PageType;
+import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)

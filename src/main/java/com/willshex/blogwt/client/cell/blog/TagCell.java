@@ -15,9 +15,9 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.PostHelper;
+import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)

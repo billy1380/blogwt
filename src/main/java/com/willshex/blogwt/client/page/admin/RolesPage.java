@@ -16,11 +16,11 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.controller.RoleController;
 import com.willshex.blogwt.client.page.Page;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)

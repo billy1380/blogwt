@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:import field="com.willshex.blogwt.client.page.PageType.ResetPasswordPageType" />
+	<ui:import field="com.willshex.blogwt.shared.page.PageType.ResetPasswordPageType" />
 	<ui:style>
 	@external checkbox;
 	

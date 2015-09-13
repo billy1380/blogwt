@@ -13,7 +13,6 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.History;
 import com.willshex.blogwt.client.page.Page;
-import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.page.admin.PagesPage;
 import com.willshex.blogwt.client.page.admin.PermissionsPage;
 import com.willshex.blogwt.client.page.admin.PropertiesPage;
@@ -34,6 +33,7 @@ import com.willshex.blogwt.client.page.user.LoginPage;
 import com.willshex.blogwt.client.page.user.RegisterPage;
 import com.willshex.blogwt.client.page.user.ResetPasswordPage;
 import com.willshex.blogwt.client.page.user.VerifyAccountPage;
+import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)
@@ -151,5 +151,9 @@ public class PageTypeHelper {
 
 	public static SafeUri asHref (PageType pageType, String... params) {
 		return UriUtils.fromString("#" + pageType.asTargetHistoryToken(params));
+	}
+
+	public static SafeUri slugToHref (String slug) {
+		return UriUtils.fromString("#!" + slug);
 	}
 }
