@@ -19,6 +19,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.user.UserService;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.shared.api.Request;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -184,7 +185,7 @@ public class SessionController implements JsonServiceCallEventHandler {
 		session = null;
 		Cookies.removeCookie(COOKIE_KEY_ID);
 		if (pageType != null) {
-			pageType.show(params);
+			PageTypeHelper.show(pageType, params);
 		}
 	}
 

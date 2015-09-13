@@ -51,6 +51,7 @@ import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
@@ -387,8 +388,8 @@ public class EditPostPage extends Page implements
 		if (output.status == StatusType.StatusTypeFailure) {
 
 		} else {
-			PageType.PostDetailPageType.show(PostHelper
-					.slugify(input.post.title));
+			PageTypeHelper.show(PageType.PostDetailPageType,
+					PostHelper.slugify(input.post.title));
 		}
 
 		ready();
@@ -417,8 +418,8 @@ public class EditPostPage extends Page implements
 		if (output.status == StatusType.StatusTypeFailure) {
 
 		} else {
-			PageType.PostDetailPageType.show(PostHelper
-					.slugify(input.post.title));
+			PageTypeHelper.show(PageType.PostDetailPageType,
+					PostHelper.slugify(input.post.title));
 		}
 
 		ready();
@@ -478,7 +479,7 @@ public class EditPostPage extends Page implements
 		if (output.status == StatusType.StatusTypeSuccess) {
 			show(post = output.post);
 		} else {
-			PageType.PostsPageType.show();
+			PageTypeHelper.show(PageType.PostsPageType);
 		}
 	}
 

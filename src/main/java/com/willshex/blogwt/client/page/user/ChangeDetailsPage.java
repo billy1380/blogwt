@@ -30,6 +30,7 @@ import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.PageType;
@@ -424,10 +425,10 @@ public class ChangeDetailsPage extends Page implements
 			RegisterUserResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			if (SessionController.get().isAdmin()) {
-				PageType.ChangeDetailsPageType.show("id",
+				PageTypeHelper.show(PageType.ChangeDetailsPageType, "id",
 						output.user.id.toString());
 			} else {
-				PageType.LoginPageType.show("username="
+				PageTypeHelper.show(PageType.LoginPageType, "username="
 						+ output.user.username.toString());
 			}
 		}

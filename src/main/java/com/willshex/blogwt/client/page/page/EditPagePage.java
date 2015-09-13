@@ -15,6 +15,7 @@ import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.NavigationController.Stack;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.PageType;
 import com.willshex.blogwt.client.page.wizard.WizardDialogPage;
 import com.willshex.blogwt.client.wizard.PagePlan.PagePlanBuilder;
@@ -151,7 +152,7 @@ public class EditPagePage extends WizardDialogPage implements
 	public void createPageSuccess (CreatePageRequest input,
 			CreatePageResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			PageType.PageDetailPageType.show(input.page.slug);
+			PageTypeHelper.show(PageType.PageDetailPageType, input.page.slug);
 		}
 	}
 
@@ -211,7 +212,7 @@ public class EditPagePage extends WizardDialogPage implements
 	public void updatePageSuccess (UpdatePageRequest input,
 			UpdatePageResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			PageType.PageDetailPageType.show(input.page.slug);
+			PageTypeHelper.show(PageType.PageDetailPageType, input.page.slug);
 		}
 	}
 

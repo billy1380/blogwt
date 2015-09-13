@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.PageType;
 
 /**
@@ -39,7 +40,8 @@ public class SearchPart extends Composite {
 	@UiHandler("frmSearch")
 	void onSearchSubmit (SubmitEvent event) {
 		if (isValid()) {
-			PageType.SearchPostsPageType.show(txtQuery.getValue());
+			PageTypeHelper.show(PageType.SearchPostsPageType,
+					txtQuery.getValue());
 			txtQuery.setValue("");
 		} else {
 			showErrors();
