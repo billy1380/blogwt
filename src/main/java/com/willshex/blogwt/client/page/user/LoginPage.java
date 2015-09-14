@@ -14,6 +14,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -58,6 +59,7 @@ public class LoginPage extends Page implements NavigationChangedEventHandler,
 	@UiField CheckBox cbxRememberMe;
 
 	@UiField Button btnSignIn;
+	@UiField FormPanel frmLogin;
 
 	public LoginPage () {
 		super(PageType.LoginPageType);
@@ -189,6 +191,20 @@ public class LoginPage extends Page implements NavigationChangedEventHandler,
 	}
 
 	private void showErrors () {
+
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#reset() */
+	@Override
+	protected void reset () {
+		frmLogin.reset();
+
+		pnlUsername.removeStyleName("has-error");
+		pnlUsernameNote.setVisible(false);
+		pnlPassword.removeStyleName("has-error");
+		pnlPasswordNote.setVisible(false);
 
 	}
 
