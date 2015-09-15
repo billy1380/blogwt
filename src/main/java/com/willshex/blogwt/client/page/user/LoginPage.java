@@ -85,6 +85,7 @@ public class LoginPage extends Page implements NavigationChangedEventHandler,
 		cbxRememberMe.setEnabled(true);
 
 		txtPassword.setValue("");
+		txtUsername.setFocus(true);
 	}
 
 	private void loading () {
