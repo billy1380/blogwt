@@ -13,6 +13,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,7 +23,8 @@ import com.willshex.blogwt.client.helper.UiHelper;
  * @author William Shakour (billy1380)
  *
  */
-public class StringPropertyPart extends AbstractPropertyPart {
+public class StringPropertyPart extends AbstractPropertyPart implements
+		Focusable {
 
 	@UiField Element elDescription;
 	@UiField Element elName;
@@ -93,6 +95,38 @@ public class StringPropertyPart extends AbstractPropertyPart {
 	@Override
 	public void setName (String name) {
 		elName.setInnerText(name);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Focusable#getTabIndex() */
+	@Override
+	public int getTabIndex () {
+		return txtValue.getTabIndex();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Focusable#setAccessKey(char) */
+	@Override
+	public void setAccessKey (char key) {
+		txtValue.setAccessKey(key);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Focusable#setFocus(boolean) */
+	@Override
+	public void setFocus (boolean focused) {
+		txtValue.setFocus(focused);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Focusable#setTabIndex(int) */
+	@Override
+	public void setTabIndex (int index) {
+		txtValue.setTabIndex(index);
 	}
 
 }
