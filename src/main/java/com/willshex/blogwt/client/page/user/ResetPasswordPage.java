@@ -104,6 +104,7 @@ public class ResetPasswordPage extends Page implements
 
 		btnReset.setEnabled(true);
 		txtEmail.setEnabled(true);
+		txtEmail.setFocus(true);
 	}
 
 	private void loading () {

@@ -19,6 +19,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasName;
 import com.google.gwt.user.client.ui.SubmitButton;
@@ -185,9 +186,17 @@ public class PropertiesPage extends Page implements
 				WizardDialog.WizardDialogTemplates.INSTANCE
 						.nextButton("Update"));
 
+		// enable properties
 		btnUpdate.setEnabled(true);
 
-		// enable properties
+		if (propertyWidgets != null) {
+			for (Widget widget : propertyWidgets) {
+				if (widget instanceof Focusable) {
+					((Focusable) widget).setFocus(true);
+					break;
+				}
+			}
+		}
 	}
 
 	private void loading () {
