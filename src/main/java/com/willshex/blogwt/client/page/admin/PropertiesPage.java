@@ -148,6 +148,8 @@ public class PropertiesPage extends Page implements
 			((ImagePropertyPart) propertyWidget).setValidExtensions("ico");
 		} else if (property.type.equals("boolean")) {
 			propertyWidget = new BooleanPropertyPart();
+		} else if (PropertyHelper.SHORT_DESCRIPTION.equals(property.name)) {
+			propertyWidget = new StringPropertyPart(true);
 		} else {
 			propertyWidget = new StringPropertyPart();
 
