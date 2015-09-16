@@ -50,10 +50,9 @@
 			</div>
 
 			<div class="col-sm-3">
+				<p:ShortDescriptionPart ui:field="coShortDescription" />
 				<p:SearchPart ui:field="coSearch" />
-
 				<p:RelatedPart ui:field="coRelated" />
-
 				<p:ArchivePart ui:field="coArchive" />
 			</div>
 		</g:HTMLPanel>
