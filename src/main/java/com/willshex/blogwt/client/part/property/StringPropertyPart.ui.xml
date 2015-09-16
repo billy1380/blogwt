@@ -7,6 +7,8 @@
 		<label class="control-label" ui:field="elDescription" />
 		<label class="small text-muted" ui:field="elName" />
 		<g:TextBox ui:field="txtValue" styleName="form-control" />
+		<g:TextArea ui:field="txtLongValue" styleName="form-control"
+			visibleLines="5" visible="false" />
 		<g:HTMLPanel styleName="control-label small" ui:field="pnlValueNote"
 			visible="false" />
 	</g:HTMLPanel>
