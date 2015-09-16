@@ -15,7 +15,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.helper.UiHelper;
 
@@ -29,6 +31,7 @@ public class StringPropertyPart extends AbstractPropertyPart implements
 	@UiField Element elDescription;
 	@UiField Element elName;
 	@UiField TextBox txtValue;
+	@UiField TextArea txtLongValue;
 	@UiField HTMLPanel pnlValueNote;
 
 	private static StringPropertyPartUiBinder uiBinder = GWT
@@ -41,21 +44,35 @@ public class StringPropertyPart extends AbstractPropertyPart implements
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
+	public StringPropertyPart (boolean isLong) {
+		this();
+		setLong(isLong);
+	}
+
+	public void setLong (boolean value) {
+		txtValue.setVisible(!value);
+		txtLongValue.setVisible(value);
+	}
+
+	private TextBoxBase textBox () {
+		return txtValue.isVisible() ? txtValue : txtLongValue;
+	}
+
 	/**
 	 * @param description
 	 */
 	public void setDescription (String description) {
 		elDescription.setInnerText(description);
-		UiHelper.addPlaceholder(txtValue, description);
+		UiHelper.addPlaceholder(textBox(), description);
 	}
 
 	/**
 	 */
 	public void setAutofocus () {
-		UiHelper.autoFocus(txtValue);
+		UiHelper.autoFocus(textBox());
 	}
 
-	@UiHandler("txtValue")
+	@UiHandler({ "txtValue", "txtLongValue" })
 	void onTextValueChanged (ValueChangeEvent<String> vce) {
 		setValue(vce.getValue(), true);
 	}
@@ -72,7 +89,7 @@ public class StringPropertyPart extends AbstractPropertyPart implements
 
 		String oldValue = getValue();
 
-		txtValue.setValue(value);
+		textBox().setValue(value);
 		this.value = value;
 
 		if (value.equals(oldValue)) { return; }
@@ -102,7 +119,7 @@ public class StringPropertyPart extends AbstractPropertyPart implements
 	 * @see com.google.gwt.user.client.ui.Focusable#getTabIndex() */
 	@Override
 	public int getTabIndex () {
-		return txtValue.getTabIndex();
+		return textBox().getTabIndex();
 	}
 
 	/* (non-Javadoc)
@@ -110,7 +127,7 @@ public class StringPropertyPart extends AbstractPropertyPart implements
 	 * @see com.google.gwt.user.client.ui.Focusable#setAccessKey(char) */
 	@Override
 	public void setAccessKey (char key) {
-		txtValue.setAccessKey(key);
+		textBox().setAccessKey(key);
 	}
 
 	/* (non-Javadoc)
@@ -118,7 +135,7 @@ public class StringPropertyPart extends AbstractPropertyPart implements
 	 * @see com.google.gwt.user.client.ui.Focusable#setFocus(boolean) */
 	@Override
 	public void setFocus (boolean focused) {
-		txtValue.setFocus(focused);
+		textBox().setFocus(focused);
 	}
 
 	/* (non-Javadoc)
@@ -126,7 +143,7 @@ public class StringPropertyPart extends AbstractPropertyPart implements
 	 * @see com.google.gwt.user.client.ui.Focusable#setTabIndex(int) */
 	@Override
 	public void setTabIndex (int index) {
-		txtValue.setTabIndex(index);
+		textBox().setTabIndex(index);
 	}
 
 }
