@@ -63,7 +63,7 @@ public class PropertyHelper {
 
 	// Descriptions
 	public static final String TITLE_DESCRIPTION = "Blog Title";
-	public static final String EXTENDED_TITLE_DESCRIPTION = "Extended Title (Short Description)";
+	public static final String EXTENDED_TITLE_DESCRIPTION = "Extended Title/Sub Title";
 	public static final String COPYRIGHT_HOLDER_DESCRIPTION = "Copyright Holder Name";
 	public static final String COPYRIGHT_URL_DESCRIPTION = "Copyright Url";
 
