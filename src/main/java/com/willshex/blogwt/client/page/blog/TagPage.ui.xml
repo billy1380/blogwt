@@ -12,6 +12,7 @@
 		<g:HTMLPanel styleName="row">
 			<c:CellList ui:field="clPosts" styleName="col-sm-9" />
 			<div class="col-sm-3">
+				<p:ShortDescriptionPart ui:field="coShortDescription" />
 				<p:SearchPart ui:field="coSearch" />
 				<p:TagsPart ui:field="coTags" />
 				<p:ArchivePart ui:field="coArchive" />
