@@ -47,6 +47,7 @@ import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.gson.json.shared.Jsonable;
 import com.willshex.service.ContextAwareServlet;
 
 /**
@@ -170,7 +171,7 @@ public class MainServlet extends ContextAwareServlet {
 				} else {
 					scriptVariables.append(",");
 				}
-				scriptVariables.append(page.toString().replace("'", "\\'"));
+				scriptVariables.append(jsonString(page));
 			}
 		}
 
@@ -197,7 +198,7 @@ public class MainServlet extends ContextAwareServlet {
 					scriptVariables.append(",");
 				}
 
-				scriptVariables.append(tag.toString().replace("'", "\\'"));
+				scriptVariables.append(jsonString(tag));
 			}
 
 			scriptVariables.append("]';");
@@ -225,8 +226,7 @@ public class MainServlet extends ContextAwareServlet {
 					scriptVariables.append(",");
 				}
 
-				scriptVariables.append(archiveEntry.toString().replace("'",
-						"\\'"));
+				scriptVariables.append(jsonString(archiveEntry));
 			}
 
 			scriptVariables.append("]';");
@@ -252,7 +252,7 @@ public class MainServlet extends ContextAwareServlet {
 					scriptVariables.append(",");
 				}
 
-				scriptVariables.append(property.toString().replace("'", "\\'"));
+				scriptVariables.append(jsonString(property));
 			}
 
 			scriptVariables.append("]';");
@@ -301,8 +301,8 @@ public class MainServlet extends ContextAwareServlet {
 		}
 
 		if (userSession != null) {
-			scriptVariables.append("var session='"
-					+ userSession.toString().replace("'", "\\'") + "';");
+			scriptVariables.append("var session='" + jsonString(userSession)
+					+ "';");
 		}
 	}
 
@@ -405,5 +405,9 @@ public class MainServlet extends ContextAwareServlet {
 						page.asXml().replace(
 								"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
 								"")).replaceAll("");
+	}
+
+	private String jsonString (Jsonable j) {
+		return j.toString().replace("'", "\\'").replace("\\n", "\\\\n");
 	}
 }
