@@ -113,7 +113,7 @@ position: relative;
     font-size: smaller;
     font-weight: 400;
     line-height: 1;
-    content: "\e144";
+    content: "\e164";
     margin-left: 3px;
     @mixin fontSmooting();
 }
