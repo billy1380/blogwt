@@ -9,7 +9,7 @@ package com.willshex.blogwt.client.event;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
-import com.willshex.blogwt.client.controller.NavigationController.Stack;
+import com.willshex.blogwt.shared.page.Stack;
 
 /**
  * @author William Shakour (billy1380)

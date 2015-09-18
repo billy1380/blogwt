@@ -12,7 +12,7 @@ import java.util.List;
 
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.NavigationController;
-import com.willshex.blogwt.client.controller.NavigationController.Stack;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
