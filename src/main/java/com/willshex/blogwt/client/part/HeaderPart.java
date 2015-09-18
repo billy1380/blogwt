@@ -279,14 +279,27 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 			elAccount.removeFromParent();
 		}
 
+		SafeUri href;
+
+		if (PropertyController.get().booleanProperty(
+				PropertyHelper.ALLOW_USER_REGISTRATION, false)) {
+			if (login) {
+				removeItem(PageTypeHelper.asHref(PageType.RegisterPageType));
+			} else {
+				href = PageTypeHelper.asHref(PageType.RegisterPageType);
+				addItem(elNavRight, HeaderTemplates.INSTANCE.glyphItem(href,
+						"user", "Sign Up"), href);
+			}
+		}
+
 		removeItem(PageTypeHelper.asHref(login ? PageType.LoginPageType
 				: PageType.LogoutPageType));
-		SafeUri href = PageTypeHelper.asHref(login ? PageType.LogoutPageType
-				: PageType.LoginPageType);
 
 		if (login
 				|| PropertyController.get().booleanProperty(
 						PropertyHelper.SHOW_SIGN_IN, true)) {
+			href = PageTypeHelper.asHref(login ? PageType.LogoutPageType
+					: PageType.LoginPageType);
 			addItem(elNavRight, HeaderTemplates.INSTANCE.glyphItem(href,
 					login ? "log-out" : "log-in", login ? "Sign Out"
 							: "Sign In"), href);
