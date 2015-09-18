@@ -408,6 +408,7 @@ public class MainServlet extends ContextAwareServlet {
 	}
 
 	private String jsonString (Jsonable j) {
-		return j.toString().replace("'", "\\'").replace("\\n", "\\\\n");
+		return j.toString().replace("'", "\\'").replace("\\n", "\\\\n")
+				.replace("\\\"", "\\\\\"");
 	}
 }
