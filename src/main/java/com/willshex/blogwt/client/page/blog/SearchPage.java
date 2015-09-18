@@ -22,7 +22,7 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.cell.blog.ResultSummaryCell;
 import com.willshex.blogwt.client.controller.NavigationController;
-import com.willshex.blogwt.client.controller.NavigationController.Stack;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.blogwt.client.controller.SearchController;
 import com.willshex.blogwt.client.controller.SearchController.SearchResult;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
