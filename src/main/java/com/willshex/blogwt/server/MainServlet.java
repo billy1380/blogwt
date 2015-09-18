@@ -407,8 +407,9 @@ public class MainServlet extends ContextAwareServlet {
 								"")).replaceAll("");
 	}
 
-	private String jsonString (Jsonable j) {
-		return j.toString().replace("'", "\\'").replace("\\n", "\\\\n")
+	private String jsonString (Jsonable jsonable) {
+		return null == jsonable ? null : jsonable.toString()
+				.replace("'", "\\'").replace("\\n", "\\\\n")
 				.replace("\\\"", "\\\\\"");
 	}
 }
