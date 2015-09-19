@@ -47,7 +47,7 @@
 
 		<plugins>
 			<plugin>
-				<!-- Don't deploy gwt-user jar to GAE -->
+				<!-- Don't deploy gwt-dev jar to GAE -->
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>2.3</version>
 				<executions>
@@ -59,7 +59,7 @@
 						</goals>
 					</execution>
 					<execution>
-						<id>remove-gwt-user-jar</id>
+						<id>remove-gwt-dev-jar</id>
 						<phase>package</phase>
 						<goals>
 							<goal>clean</goal>
@@ -70,7 +70,7 @@
 								<fileset>
 									<directory>${project.build.directory}/${project.build.finalName}/WEB-INF/lib</directory>
 									<includes>
-										<include>gwt-user*jar</include>
+										<!-- <include>gwt-user*jar</include> -->
 										<include>gwt-dev*jar</include>
 									</includes>
 								</fileset>
