@@ -10,11 +10,9 @@ package com.willshex.blogwt.server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -22,14 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.SilentCssErrorHandler;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.WebRequest;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.spacehopperstudios.utility.StringUtils;
-import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
+import com.willshex.blogwt.server.page.PageMarkup;
+import com.willshex.blogwt.server.page.PageMarkupFactory;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
@@ -47,6 +40,7 @@ import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.json.shared.Jsonable;
 import com.willshex.service.ContextAwareServlet;
 
@@ -60,10 +54,10 @@ public class MainServlet extends ContextAwareServlet {
 
 	private static String PAGE_FORMAT = null;
 
-	private static final long TIMEOUT_MILLIS = 5000;
-	private static final long JS_TIMEOUT_MILLIS = 2000;
-	private static final long PAGE_WAIT_MILLIS = 100;
-	private static final long MAX_LOOP_CHECKS = 2;
+//	private static final long TIMEOUT_MILLIS = 5000;
+//	private static final long JS_TIMEOUT_MILLIS = 2000;
+//	private static final long PAGE_WAIT_MILLIS = 100;
+//	private static final long MAX_LOOP_CHECKS = 2;
 	private static final String CHAR_ENCODING = "UTF-8";
 
 	private static final String RSS_LINK_FORMAT = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"%s\" href=\"/feed\" />";
@@ -325,87 +319,95 @@ public class MainServlet extends ContextAwareServlet {
 		HttpServletRequest request = REQUEST.get();
 		String fragmentParameter = request.getParameter("_escaped_fragment_");
 
-		String uri = request.getRequestURI();
-		String url = ServletHelper.constructBaseUrl(request) + uri + "#!"
-				+ StringUtils.urldecode(fragmentParameter);
+		//		String uri = request.getRequestURI();
+		//		String url = ServletHelper.constructBaseUrl(request) + uri + "#!"
+		//				+ StringUtils.urldecode(fragmentParameter);
+
+		Stack s = Stack.parse(fragmentParameter);
+		PageMarkup p = PageMarkupFactory.createFromStack(s);
 
 		HttpServletResponse response = RESPONSE.get();
 
 		response.setCharacterEncoding(CHAR_ENCODING);
-		response.setHeader("Content-Type", "text/plain; charset="
+		response.setHeader("Content-Type", "text/html; charset="
 				+ CHAR_ENCODING);
-		response.getOutputStream().print(staticContent(url));
-	}
 
-	/**
-	 * This method as far as I can tell does not work with the gwt version of htmlunit 
-	 * will probably either need to use GWTP crawler service or restructure this project
-	 * to use modules and roll my own again either with GWTP or just the method below
-	 * @return
-	 * @throws IOException 
-	 * @throws FailingHttpStatusCodeException 
-	 */
-	private String staticContent (String url)
-			throws FailingHttpStatusCodeException, IOException {
-		// code based on https://github.com/ArcBees/GWTP/blob/master/gwtp-crawler-service/src/main/java/com/gwtplatform/crawlerservice/server/CrawlServiceServlet.java
-		WebClient webClient = new WebClient();
-
-		webClient.getCache().clear();
-		webClient.getOptions().setCssEnabled(false);
-		webClient.getOptions().setJavaScriptEnabled(true);
-		webClient.getOptions().setThrowExceptionOnScriptError(false);
-		webClient.getOptions().setRedirectEnabled(true);
-		webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-		webClient.setAjaxController(new NicelyResynchronizingAjaxController() {
-			private static final long serialVersionUID = 2875888832992558703L;
-
-			/* (non-Javadoc)
-			 * 
-			 * @see com.gargoylesoftware.htmlunit.
-			 * NicelyResynchronizingAjaxController #processSynchron(com
-			 * .gargoylesoftware.htmlunit.html.HtmlPage,
-			 * com.gargoylesoftware.htmlunit.WebRequest, boolean) */
-			@Override
-			public boolean processSynchron (HtmlPage page, WebRequest settings,
-					boolean async) {
-				return true;
-			}
-		});
-		webClient.setCssErrorHandler(new SilentCssErrorHandler());
-
-		WebRequest webRequest = new WebRequest(new URL(url), "text/html");
-		HtmlPage page = webClient.getPage(webRequest);
-		webClient.getJavaScriptEngine().pumpEventLoop(TIMEOUT_MILLIS);
-
-		int waitForBackgroundJavaScript = webClient
-				.waitForBackgroundJavaScript(JS_TIMEOUT_MILLIS);
-		int loopCount = 0;
-
-		while (waitForBackgroundJavaScript > 0 && loopCount < MAX_LOOP_CHECKS) {
-			++loopCount;
-			waitForBackgroundJavaScript = webClient
-					.waitForBackgroundJavaScript(JS_TIMEOUT_MILLIS);
-
-			if (waitForBackgroundJavaScript == 0) {
-				break;
-			}
-
-			synchronized (page) {
-				try {
-					page.wait(PAGE_WAIT_MILLIS);
-				} catch (InterruptedException e) {}
-			}
+		if (p != null) {
+			response.getOutputStream().print(p.asString());
 		}
 
-		webClient.closeAllWindows();
-
-		return Pattern
-				.compile("<style>.*?</style>", Pattern.DOTALL)
-				.matcher(
-						page.asXml().replace(
-								"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-								"")).replaceAll("");
+		//response.getOutputStream().print(staticContent(url));
 	}
+
+	//	/**
+	//	 * This method as far as I can tell does not work with the gwt version of htmlunit 
+	//	 * will probably either need to use GWTP crawler service or restructure this project
+	//	 * to use modules and roll my own again either with GWTP or just the method below
+	//	 * @return
+	//	 * @throws IOException 
+	//	 * @throws FailingHttpStatusCodeException 
+	//	 */
+	//	private String staticContent (String url)
+	//			throws FailingHttpStatusCodeException, IOException {
+	//		// code based on https://github.com/ArcBees/GWTP/blob/master/gwtp-crawler-service/src/main/java/com/gwtplatform/crawlerservice/server/CrawlServiceServlet.java
+	//		WebClient webClient = new WebClient();
+	//
+	//		webClient.getCache().clear();
+	//		webClient.getOptions().setCssEnabled(false);
+	//		webClient.getOptions().setJavaScriptEnabled(true);
+	//		webClient.getOptions().setThrowExceptionOnScriptError(false);
+	//		webClient.getOptions().setRedirectEnabled(true);
+	//		webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+	//		webClient.setAjaxController(new NicelyResynchronizingAjaxController() {
+	//			private static final long serialVersionUID = 2875888832992558703L;
+	//
+	//			/* (non-Javadoc)
+	//			 * 
+	//			 * @see com.gargoylesoftware.htmlunit.
+	//			 * NicelyResynchronizingAjaxController #processSynchron(com
+	//			 * .gargoylesoftware.htmlunit.html.HtmlPage,
+	//			 * com.gargoylesoftware.htmlunit.WebRequest, boolean) */
+	//			@Override
+	//			public boolean processSynchron (HtmlPage page, WebRequest settings,
+	//					boolean async) {
+	//				return true;
+	//			}
+	//		});
+	//		webClient.setCssErrorHandler(new SilentCssErrorHandler());
+	//
+	//		WebRequest webRequest = new WebRequest(new URL(url), "text/html");
+	//		HtmlPage page = webClient.getPage(webRequest);
+	//		webClient.getJavaScriptEngine().pumpEventLoop(TIMEOUT_MILLIS);
+	//
+	//		int waitForBackgroundJavaScript = webClient
+	//				.waitForBackgroundJavaScript(JS_TIMEOUT_MILLIS);
+	//		int loopCount = 0;
+	//
+	//		while (waitForBackgroundJavaScript > 0 && loopCount < MAX_LOOP_CHECKS) {
+	//			++loopCount;
+	//			waitForBackgroundJavaScript = webClient
+	//					.waitForBackgroundJavaScript(JS_TIMEOUT_MILLIS);
+	//
+	//			if (waitForBackgroundJavaScript == 0) {
+	//				break;
+	//			}
+	//
+	//			synchronized (page) {
+	//				try {
+	//					page.wait(PAGE_WAIT_MILLIS);
+	//				} catch (InterruptedException e) {}
+	//			}
+	//		}
+	//
+	//		webClient.closeAllWindows();
+	//
+	//		return Pattern
+	//				.compile("<style>.*?</style>", Pattern.DOTALL)
+	//				.matcher(
+	//						page.asXml().replace(
+	//								"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+	//								"")).replaceAll("");
+	//	}
 
 	private String jsonString (Jsonable jsonable) {
 		return null == jsonable ? null : jsonable.toString()
