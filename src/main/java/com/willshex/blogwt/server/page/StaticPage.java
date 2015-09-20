@@ -47,7 +47,8 @@ class StaticPage extends StaticTemplate {
 		}
 
 		if (slug == null) {
-			// Ideally here we would like to redirect need to figure out how to do that
+			// show the blog page
+			new StaticPosts(stack).appendPage(markup);
 		} else {
 			PageApi api = new PageApi();
 
