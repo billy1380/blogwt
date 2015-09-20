@@ -232,15 +232,13 @@ public class PostDetailPage extends Page implements
 	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
-		if (current.getAction() != null) {
-			String postParam;
-			if ((postParam = current.getAction()) != null) {
-				PostController.get().getPost(postParam);
-				pnlLoading.setVisible(true);
-				dsqComments.setVisible(false);
-				ataShare.setVisible(false);
-				coRelated.setVisible(false);
-			}
+		String slug;
+		if ((slug = current.getAction()) != null) {
+			PostController.get().getPost(slug);
+			pnlLoading.setVisible(true);
+			dsqComments.setVisible(false);
+			ataShare.setVisible(false);
+			coRelated.setVisible(false);
 		}
 
 		boolean canChange = SessionController.get().isAuthorised(
