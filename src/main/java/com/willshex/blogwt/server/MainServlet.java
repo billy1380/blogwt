@@ -54,10 +54,10 @@ public class MainServlet extends ContextAwareServlet {
 
 	private static String PAGE_FORMAT = null;
 
-//	private static final long TIMEOUT_MILLIS = 5000;
-//	private static final long JS_TIMEOUT_MILLIS = 2000;
-//	private static final long PAGE_WAIT_MILLIS = 100;
-//	private static final long MAX_LOOP_CHECKS = 2;
+	//	private static final long TIMEOUT_MILLIS = 5000;
+	//	private static final long JS_TIMEOUT_MILLIS = 2000;
+	//	private static final long PAGE_WAIT_MILLIS = 100;
+	//	private static final long MAX_LOOP_CHECKS = 2;
 	private static final String CHAR_ENCODING = "UTF-8";
 
 	private static final String RSS_LINK_FORMAT = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"%s\" href=\"/feed\" />";
@@ -333,7 +333,7 @@ public class MainServlet extends ContextAwareServlet {
 				+ CHAR_ENCODING);
 
 		if (p != null) {
-			response.getOutputStream().print(p.asString());
+			response.getWriter().print(p.asString());
 		}
 
 		//response.getOutputStream().print(staticContent(url));
