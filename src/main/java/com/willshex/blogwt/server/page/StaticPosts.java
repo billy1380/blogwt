@@ -7,19 +7,17 @@
 //
 package com.willshex.blogwt.server.page;
 
-import java.io.IOException;
-
 import org.markdown4j.server.IncludePlugin;
 import org.markdown4j.server.MarkdownProcessor;
 
-import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.server.api.blog.BlogApi;
+import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
-import com.willshex.blogwt.shared.helper.UserHelper;
+import com.willshex.blogwt.shared.helper.PostHelper;
 import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -28,7 +26,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author William Shakour (billy1380)
  *
  */
-class StaticPosts extends StaticTemplate implements PageMarkup {
+class StaticPosts extends StaticTemplate {
 
 	public StaticPosts (Stack stack) {
 		super(stack);
@@ -36,13 +34,11 @@ class StaticPosts extends StaticTemplate implements PageMarkup {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.server.page.PageMarkup#asString() */
+	 * @see
+	 * com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
+	 * StringBuffer) */
 	@Override
-	public String asString () {
-		StringBuffer markup = new StringBuffer();
-
-		appendHeader(markup);
-
+	protected void appendPage (StringBuffer markup) {
 		BlogApi api = new BlogApi();
 
 		GetPostsRequest input = input(GetPostsRequest.class).pager(
@@ -70,13 +66,7 @@ class StaticPosts extends StaticTemplate implements PageMarkup {
 				markup.append("<div><a href=\"");
 				markup.append(link);
 				markup.append("\">");
-
-				try {
-					markup.append(processor.process("##" + post.title));
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-
+				markup.append(process("##" + post.title));
 				markup.append("</a><div><span>");
 				markup.append(DateTimeHelper.ago(post.published));
 				markup.append("</span> by <img src=\"");
@@ -87,13 +77,7 @@ class StaticPosts extends StaticTemplate implements PageMarkup {
 				markup.append("\" class=\"img-circle\" /> ");
 				markup.append(UserHelper.handle(post.author));
 				markup.append("</div><div>");
-
-				try {
-					markup.append(processor.process(body));
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-
+				markup.append(process(body));
 				markup.append("</div><a href=\"");
 				markup.append(link);
 				markup.append("\">Read More</a></div>");
@@ -101,9 +85,6 @@ class StaticPosts extends StaticTemplate implements PageMarkup {
 		} else {
 			markup.append(output.error.toString());
 		}
-
-		appendFooter(markup);
-
-		return markup.toString();
 	}
+
 }

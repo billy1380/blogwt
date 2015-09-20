@@ -13,18 +13,20 @@ import com.willshex.blogwt.shared.page.Stack;
  * @author William Shakour (billy1380)
  *
  */
-class StaticPost extends StaticTemplate implements PageMarkup {
+class StaticPost extends StaticTemplate {
 
 	public StaticPost (Stack stack) {
 		super(stack);
 	}
-	
+
 	/* (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.server.page.PageMarkup#asString() */
+	 * @see
+	 * com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
+	 * StringBuffer) */
 	@Override
-	public String asString () {
-		return "";
+	protected void appendPage (StringBuffer markup) {
+
 	}
 
 }
