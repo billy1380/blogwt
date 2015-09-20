@@ -29,9 +29,9 @@ public class DateTimeHelper {
 		double interval;
 
 		if ((interval = Math.floor(seconds / 31536000.0)) > 1) {
-			ago = interval + " years ago";
+			ago = (int) interval + " years ago";
 		} else if ((interval = Math.floor(seconds / 2592000.0)) > 1) {
-			ago = interval + " months ago";
+			ago = (int) interval + " months ago";
 		} else if ((interval = Math.floor(seconds / 86400.0)) > 1) {
 			if (blur) {
 				if (interval < 2) {
@@ -39,28 +39,28 @@ public class DateTimeHelper {
 				} else if (interval > 7 && interval < 14) {
 					ago = "last week";
 				} else {
-					ago = interval + " days ago";
+					ago = (int) interval + " days ago";
 				}
 			} else {
-				ago = interval + " days ago";
+				ago = (int) interval + " days ago";
 			}
 		} else if ((interval = Math.floor(seconds / 3600.0)) > 1) {
 			if (blur) {
 				if (interval > 12) {
 					ago = "earlier today";
 				} else {
-					ago = interval + " hours ago";
+					ago = (int) interval + " hours ago";
 				}
 			} else {
-				ago = interval + " hours ago";
+				ago = (int) interval + " hours ago";
 			}
 		} else if ((interval = Math.floor(seconds / 60.0)) > 1) {
-			ago = interval + " minutes ago";
+			ago = (int) interval + " minutes ago";
 		} else {
 			if (blur) {
 				ago = "less than a minute ago";
 			} else {
-				ago = Math.floor(seconds) + " seconds ago";
+				ago = (int) Math.floor(seconds) + " seconds ago";
 			}
 		}
 
