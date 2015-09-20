@@ -9,6 +9,7 @@ package com.willshex.blogwt.server.page;
 
 import java.io.IOException;
 
+import org.markdown4j.server.IncludePlugin;
 import org.markdown4j.server.MarkdownProcessor;
 
 import com.willshex.blogwt.server.api.page.PageApi;
@@ -65,6 +66,7 @@ class StaticPage extends StaticTemplate implements PageMarkup {
 			if (output.status == StatusType.StatusTypeSuccess
 					&& output.page != null && output.page.posts != null) {
 				MarkdownProcessor processor = new MarkdownProcessor();
+				processor.registerPlugins(new IncludePlugin());
 
 				for (Post post : output.page.posts) {
 					if (post.content != null && post.content.body != null) {
