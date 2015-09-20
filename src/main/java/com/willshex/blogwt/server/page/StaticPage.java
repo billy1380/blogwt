@@ -7,11 +7,6 @@
 //
 package com.willshex.blogwt.server.page;
 
-import java.io.IOException;
-
-import org.markdown4j.server.IncludePlugin;
-import org.markdown4j.server.MarkdownProcessor;
-
 import com.willshex.blogwt.server.api.page.PageApi;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
@@ -25,7 +20,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author William Shakour (billy1380)
  *
  */
-class StaticPage extends StaticTemplate implements PageMarkup {
+class StaticPage extends StaticTemplate {
 
 	public StaticPage (Stack stack) {
 		super(stack);
@@ -33,13 +28,11 @@ class StaticPage extends StaticTemplate implements PageMarkup {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.server.page.PageMarkup#asString() */
+	 * @see
+	 * com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
+	 * StringBuffer) */
 	@Override
-	public String asString () {
-		StringBuffer markup = new StringBuffer();
-
-		appendHeader(markup);
-
+	protected void appendPage (StringBuffer markup) {
 		String slug = null;
 		if (PageType.fromString(stack.getPage()) == PageType.PageDetailPageType) {
 			slug = stack.getAction();
@@ -65,8 +58,6 @@ class StaticPage extends StaticTemplate implements PageMarkup {
 
 			if (output.status == StatusType.StatusTypeSuccess
 					&& output.page != null && output.page.posts != null) {
-				MarkdownProcessor processor = new MarkdownProcessor();
-				processor.registerPlugins(new IncludePlugin());
 
 				for (Post post : output.page.posts) {
 					if (post.content != null && post.content.body != null) {
@@ -75,15 +66,8 @@ class StaticPage extends StaticTemplate implements PageMarkup {
 						markup.append("/");
 						markup.append(post.slug);
 						markup.append("\"></a>");
-
 						markup.append("<section><div>");
-
-						try {
-							markup.append(processor.process(post.content.body));
-						} catch (IOException e) {
-							throw new RuntimeException(e);
-						}
-
+						markup.append(process(post.content.body));
 						markup.append("</div></section>");
 					}
 				}
@@ -91,10 +75,6 @@ class StaticPage extends StaticTemplate implements PageMarkup {
 				markup.append(output.error.toString());
 			}
 		}
-
-		appendFooter(markup);
-
-		return markup.toString();
 	}
 
 }
