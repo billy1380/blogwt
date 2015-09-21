@@ -73,8 +73,7 @@ class StaticPosts extends StaticTemplate {
 				markup.append(post.author.avatar);
 				markup.append("?s=");
 				markup.append(UserHelper.AVATAR_HEADER_SIZE);
-				markup.append("&default=retro");
-				markup.append("\" class=\"img-circle\" /> ");
+				markup.append("&default=retro\" /> ");
 				markup.append(UserHelper.handle(post.author));
 				markup.append("</div><div>");
 				markup.append(process(body));
