@@ -14,8 +14,10 @@ import java.util.List;
 import org.markdown4j.server.IncludePlugin;
 import org.markdown4j.server.MarkdownProcessor;
 
+import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.Request;
 import com.willshex.blogwt.shared.api.datatype.Page;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.page.Stack;
 
 /**
@@ -65,27 +67,43 @@ abstract class StaticTemplate implements PageMarkup {
 	}
 
 	protected void appendHeader (StringBuffer markup) {
+		String title = PropertyServiceProvider.provide().getNamedProperty(
+				PropertyHelper.TITLE).value;
+		String extendedTitle = PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.EXTENDED_TITLE).value;
+
 		markup.append("<html><head><link rel=\"alternate\" type=\"application/rss+xml\" title=\"");
-		markup.append("{title}");
+		markup.append(title);
 		markup.append("(RSS feed)\" href=\"/feed\"><link rel=\"icon\" href=\"");
 		markup.append("{favicon}");
 		markup.append("\" type=\"image/x-icon\"><title>");
-		markup.append("{title}");
+		markup.append(title);
 		markup.append("</title><body>");
 		markup.append("<h1>");
-		markup.append("{title}");
+		markup.append(title);
 		markup.append("</h1>");
+		markup.append("<h2>");
+		markup.append(extendedTitle);
+		markup.append("</h2>");
 	}
 
 	protected void appendFooter (StringBuffer markup) {
+		String copyright = PropertyServiceProvider.provide().getNamedProperty(
+				PropertyHelper.COPYRIGHT_URL).value;
+		String copyrightHolder = PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.COPYRIGHT_HOLDER).value;
+
+		String title = PropertyServiceProvider.provide().getNamedProperty(
+				PropertyHelper.TITLE).value;
+
 		markup.append("<footer class=\"footer\"> <div class=\"container\">Copyright &copy; <a href=\"");
-		markup.append("{copyright}");
+		markup.append(copyright);
 		markup.append("\" target=\"_blank\">");
-		markup.append("{holder}");
+		markup.append(copyrightHolder);
 		markup.append("</a> ");
 		markup.append(Calendar.getInstance().get(Calendar.YEAR));
 		markup.append(". All rights reserved - ");
-		markup.append("{title}");
+		markup.append(title);
 		markup.append(".</div> </footer></div></div></body></html>");
 	}
 
