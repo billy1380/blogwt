@@ -39,6 +39,8 @@ class StaticPosts extends StaticTemplate {
 	 * StringBuffer) */
 	@Override
 	protected void appendPage (StringBuffer markup) {
+		markup.append("<h2>Blog</h2>");
+		
 		BlogApi api = new BlogApi();
 
 		GetPostsRequest input = input(GetPostsRequest.class).pager(
