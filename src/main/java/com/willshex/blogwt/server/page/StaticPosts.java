@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.page;
 
+import java.util.List;
+
 import org.markdown4j.server.IncludePlugin;
 import org.markdown4j.server.MarkdownProcessor;
 
@@ -40,7 +42,7 @@ class StaticPosts extends StaticTemplate {
 	@Override
 	protected void appendPage (StringBuffer markup) {
 		markup.append("<h2>Blog</h2>");
-		
+
 		BlogApi api = new BlogApi();
 
 		GetPostsRequest input = input(GetPostsRequest.class).pager(
@@ -50,41 +52,45 @@ class StaticPosts extends StaticTemplate {
 
 		if (output.status == StatusType.StatusTypeSuccess
 				&& output.posts != null) {
-			MarkdownProcessor processor = new MarkdownProcessor();
-			processor.registerPlugins(new IncludePlugin());
-
-			String link, body;
-			for (Post post : output.posts) {
-				body = "Empty... :imp:";
-
-				if (post.summary != null && post.summary.length() > 0) {
-					body = post.summary;
-				}
-
-				link = "#"
-						+ PageType.PostDetailPageType
-								.asTargetHistoryToken(PostHelper.getSlug(post));
-
-				markup.append("<div><a href=\"");
-				markup.append(link);
-				markup.append("\">");
-				markup.append(process("##" + post.title));
-				markup.append("</a><div><span>");
-				markup.append(DateTimeHelper.ago(post.published));
-				markup.append("</span> by <img src=\"");
-				markup.append(post.author.avatar);
-				markup.append("?s=");
-				markup.append(UserHelper.AVATAR_HEADER_SIZE);
-				markup.append("&default=retro\" /> ");
-				markup.append(UserHelper.handle(post.author));
-				markup.append("</div><div>");
-				markup.append(process(body));
-				markup.append("</div><a href=\"");
-				markup.append(link);
-				markup.append("\">Read More</a></div>");
-			}
+			showPosts(output.posts, markup);
 		} else {
 			markup.append(output.error.toString());
+		}
+	}
+
+	protected void showPosts (List<Post> posts, StringBuffer markup) {
+		MarkdownProcessor processor = new MarkdownProcessor();
+		processor.registerPlugins(new IncludePlugin());
+
+		String link, body;
+		for (Post post : posts) {
+			body = "Empty... :imp:";
+
+			if (post.summary != null && post.summary.length() > 0) {
+				body = post.summary;
+			}
+
+			link = "#"
+					+ PageType.PostDetailPageType
+							.asTargetHistoryToken(PostHelper.getSlug(post));
+
+			markup.append("<div><a href=\"");
+			markup.append(link);
+			markup.append("\">");
+			markup.append(process("##" + post.title));
+			markup.append("</a><div><span>");
+			markup.append(DateTimeHelper.ago(post.published));
+			markup.append("</span> by <img src=\"");
+			markup.append(post.author.avatar);
+			markup.append("?s=");
+			markup.append(UserHelper.AVATAR_HEADER_SIZE);
+			markup.append("&default=retro\" /> ");
+			markup.append(UserHelper.handle(post.author));
+			markup.append("</div><div>");
+			markup.append(process(body));
+			markup.append("</div><a href=\"");
+			markup.append(link);
+			markup.append("\">Read More</a></div>");
 		}
 	}
 
