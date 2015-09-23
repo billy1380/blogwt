@@ -37,7 +37,7 @@ public class SiteMapServlet extends ContextAwareServlet {
 
 	private static final long serialVersionUID = 3133978953838954164L;
 	private static final String MIME_TYPE = "application/xml; charset=UTF-8";
-	private static final String LOC_FORMAT = "    <loc>%s/%s</loc>";
+	private static final String LOC_FORMAT = "    <url><loc>%s/%s</loc></url>";
 
 	/* (non-Javadoc)
 	 * 
@@ -55,14 +55,13 @@ public class SiteMapServlet extends ContextAwareServlet {
 
 		p.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		p.println("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
-		p.println("  <url>");
-
+		
 		printPages(p, url);
 		printBlog(p, url);
 		printPosts(p, url);
 		printTags(p, url);
 
-		p.println("  </url>");
+		
 		p.println("</urlset>");
 
 		p.close();
