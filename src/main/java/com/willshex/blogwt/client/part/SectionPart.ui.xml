@@ -1,0 +1,27 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="com.willshex.blogwt.shared.page.PageType.EditPostPageType" />
+	<ui:style gss="true">
+	.bottom-margin {
+		margin-bottom: 10px;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<div class="container" ui:field="elToolbar">
+			<div class="btn-toolbar {style.bottom-margin}">
+				<div class="btn-group pull-right">
+					<g:InlineHyperlink ui:field="lnkEditPost" styleName="btn btn-default"
+						targetHistoryToken="{EditPostPageType.asTargetHistoryToken}/xxx">
+						<span class="glyphicon glyphicon-edit"></span>
+						Edit
+					</g:InlineHyperlink>
+				</div>
+			</div>
+		</div>
+
+		<a ui:field="elJumpTo" />
+		<section>
+			<div ui:field="elContent" class="container" />
+		</section>
+	</g:HTMLPanel>
+</ui:UiBinder> 
