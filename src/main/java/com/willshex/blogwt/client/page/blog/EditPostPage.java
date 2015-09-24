@@ -15,6 +15,7 @@ import gwtupload.client.MultiUploader;
 import gwtupload.client.PreloadedImage;
 import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -43,9 +45,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
 import com.willshex.blogwt.client.cell.blog.TagCell;
 import com.willshex.blogwt.client.controller.NavigationController;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
@@ -73,9 +75,11 @@ import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.TagHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -264,16 +268,37 @@ public class EditPostPage extends Page implements
 		pnlPreview.getElement().appendChild(title);
 
 		User user = SessionController.get().user();
-		DivElement author = d.createDivElement();
-		author.setInnerHTML("By <img src=\"" + user.avatar + "?s="
-				+ UserHelper.AVATAR_SIZE
-				+ "&default=retro\" class=\"img-circle\" > "
-				+ UserHelper.handle(user));
-		pnlPreview.getElement().appendChild(author);
 
-		DivElement on = d.createDivElement();
-		on.setInnerText(DateTimeHelper.ago(PropertyController.get().started()));
-		pnlPreview.getElement().appendChild(on);
+		DivElement elDate = d.createDivElement();
+		if (post != null) {
+			if (post.published == null) {
+				elDate.setInnerSafeHtml(PostSummaryCell.Templates.INSTANCE
+						.notPublished(DateTimeHelper.ago(post.created)));
+			} else {
+				elDate.setInnerSafeHtml(PostSummaryCell.Templates.INSTANCE
+						.publishedDate(DateTimeHelper.ago(post.published)));
+			}
+		} else {
+			elDate.setInnerSafeHtml(PostSummaryCell.Templates.INSTANCE
+					.notPublished(DateTimeHelper.ago(new Date())));
+		}
+
+		pnlPreview.getElement().appendChild(elDate);
+
+		DivElement elAuthor = d.createDivElement();
+		if (PropertyController.get().booleanProperty(
+				PropertyHelper.POST_SHOW_AUTHOR, false)) {
+			elAuthor.setInnerSafeHtml(PostSummaryCell.Templates.INSTANCE
+					.author(UriUtils
+							.fromString((post != null ? post.author.avatar
+									: user.avatar)
+									+ "?s="
+									+ UserHelper.AVATAR_HEADER_SIZE
+									+ "&default=retro"), UserHelper
+							.handle((post != null ? post.author : user))));
+		}
+
+		pnlPreview.getElement().appendChild(elAuthor);
 
 		tagList.getList().clear();
 		List<String> tags = TagHelper.convertToTagList(txtTags.getValue());
