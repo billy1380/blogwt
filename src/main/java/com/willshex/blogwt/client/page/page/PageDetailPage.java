@@ -10,7 +10,6 @@ package com.willshex.blogwt.client.page.page;
 import java.util.Arrays;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -23,12 +22,12 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.NavigationController;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
+import com.willshex.blogwt.client.part.SectionPart;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
@@ -39,6 +38,7 @@ import com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler;
 import com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.page.PageType;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -185,25 +185,14 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 	public void getPageFailure (GetPageRequest input, Throwable caught) {}
 
 	private void show (Page page) {
-		pnlContent.getElement().removeAllChildren();
+		pnlContent.clear();
 
-		String html;
-		Element a, section, content;
+		SectionPart section;
 		for (Post post : page.posts) {
-			if (post.content != null && post.content.body != null) {
-				html = PostHelper.makeMarkup(post.content.body);
-				a = Document.get().createAnchorElement();
-				a.setAttribute("name", "!" + page.slug + "/" + post.slug);
-				pnlContent.getElement().appendChild(a);
+			section = new SectionPart();
+			section.setContent(page.slug, post);
 
-				section = Document.get().createElement("section");
-				pnlContent.getElement().appendChild(section);
-
-				content = Document.get().createDivElement();
-				content.setClassName("container");
-				content.setInnerHTML(html);
-				section.appendChild(content);
-			}
+			pnlContent.add(section);
 		}
 
 		lnkEditPage.setTargetHistoryToken(PageType.EditPagePageType
@@ -222,7 +211,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 		lnkEditPage.setTargetHistoryToken(PageType.EditPagePageType
 				.asTargetHistoryToken(""));
 
-		pnlContent.getElement().setInnerHTML("");
+		pnlContent.clear();
 		pnlLoading.setVisible(true);
 	}
 
