@@ -242,7 +242,10 @@ public final class UserApi extends ActionHandler {
 
 			output.avatar = UserHelper.emailAvatar(input.email);
 
-			UserHelper.stripPassword(output.session.user);
+			if (output.session != null) {
+				UserHelper.stripPassword(output.session.user);
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
