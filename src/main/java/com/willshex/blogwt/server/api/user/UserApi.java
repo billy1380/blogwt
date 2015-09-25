@@ -273,6 +273,20 @@ public final class UserApi extends ActionHandler {
 
 			input.user = UserValidator.validate(input.user, "input.user");
 
+			User existingUsernameUser = UserServiceProvider.provide()
+					.getUsernameUser(input.user.username);
+
+			if (existingUsernameUser != null)
+				ApiValidator.throwServiceError(InputValidationException.class,
+						ApiError.UsernameInUse, "String: input.user.username");
+
+			User existingEmailUser = UserServiceProvider.provide()
+					.getEmailUser(input.user.email);
+
+			if (existingEmailUser != null)
+				ApiValidator.throwServiceError(InputValidationException.class,
+						ApiError.EmailInUse, "String: input.user.email");
+
 			List<String> codes;
 
 			List<Permission> permissions = null;
