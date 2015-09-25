@@ -323,7 +323,10 @@ public final class UserApi extends ActionHandler {
 
 			UserHelper.stripPassword(output.user);
 
-			UserHelper.stripPassword(output.session.user);
+			if (output.session != null) {
+				UserHelper.stripPassword(output.session.user);
+			}
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
