@@ -69,7 +69,6 @@ public class ChangeDetailsPage extends Page implements
 
 	private static final String UPDATE_ACTION_TEXT = "Update";
 	private static final String CREATE_ACTION_TEXT = "Create";
-	private static final String REGISTER_ACTION_TEXT = "Register";
 
 	@UiField FormPanel frmDetails;
 
@@ -173,8 +172,6 @@ public class ChangeDetailsPage extends Page implements
 
 			if (SessionController.get().isAdmin()) {
 				actionText = CREATE_ACTION_TEXT;
-			} else {
-				actionText = REGISTER_ACTION_TEXT;
 			}
 		}
 
@@ -330,9 +327,6 @@ public class ChangeDetailsPage extends Page implements
 			break;
 		case CREATE_ACTION_TEXT:
 			loadingText = "Creating...";
-			break;
-		case REGISTER_ACTION_TEXT:
-			loadingText = "Registering...";
 			break;
 		}
 
