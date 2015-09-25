@@ -13,7 +13,7 @@ package com.willshex.blogwt.shared.api.validation;
  */
 public enum ApiError {
 
-	JsonParseException(100000, "Invalid Json, could not be parsed"),
+	JsonParseFailed(100000, "Invalid Json, could not be parsed"),
 	InvalidValueNull(100001, "Invalid value null {0}"),
 	TokenNoMatch(100002, "Invalid value does not match scheme for String: {0}"),
 	DataTypeNoLookup(100003,
@@ -24,7 +24,9 @@ public enum ApiError {
 	ExistingSetup(100007, "Setup has already been completed for: {0}"),
 	MissingProperties(100008, "One or more properties were missing in: {0}"),
 	AuthenticationFailedBadPassword(100009,
-			"Authentication failed, password does not match current login user {0}"), ;
+			"Authentication failed, password does not match current login user {0}"),
+	UsernameInUse(100010, "User for useranme already exists {0}"),
+	EmailInUse(100011, "User for email address already exists {0}"), ;
 
 	private static final String PARAM_0 = "\\{0\\}";
 	private static final String PARAM_1 = "\\{1\\}";
