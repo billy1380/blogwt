@@ -108,6 +108,7 @@ public class EditPostPage extends Page implements
 	@UiField TextBox txtTags;
 	@UiField HTMLPanel pnlTagsNote;
 	@UiField CheckBox cbxDirectOnly;
+	@UiField HTMLPanel pnlComments;
 	@UiField CheckBox cbxComments;
 	@UiField CheckBox cbxPublish;
 	@UiField SubmitButton btnSubmit;
@@ -211,6 +212,11 @@ public class EditPostPage extends Page implements
 		tbrContent.setText(txtContent);
 
 		tagList.addDataDisplay(clTags);
+
+		String commentsEnabled = PropertyController.get().stringProperty(
+				PropertyHelper.POST_COMMENTS_ENABLED);
+		pnlComments.setVisible(commentsEnabled != null
+				&& !PropertyHelper.NONE_VALUE.equals(commentsEnabled));
 
 	}
 

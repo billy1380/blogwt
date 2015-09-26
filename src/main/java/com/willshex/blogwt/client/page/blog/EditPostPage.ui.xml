@@ -89,7 +89,7 @@
 							link</g:CheckBox>
 					</g:HTMLPanel>
 
-					<g:HTMLPanel styleName="checkbox">
+					<g:HTMLPanel styleName="checkbox" ui:field="pnlComments">
 						<g:CheckBox ui:field="cbxComments">
 							enable
 							<a href="http://disqus.com" target="_blank">disqus.com</a>
