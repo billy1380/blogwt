@@ -170,7 +170,7 @@
 						<jvmFlag>-XX:MaxPermSize=1024M</jvmFlag>
 						<jvmFlag>-Xmx3G</jvmFlag>
 					</jvmFlags>
-					<version>0v3</version>
+					<version>0v4</version>
 				</configuration>
 			</plugin>
 		</plugins>
