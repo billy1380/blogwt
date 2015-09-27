@@ -6,7 +6,7 @@
 	<groupId>com.willshex</groupId>
 	<artifactId>blogwt</artifactId>
 	<packaging>war</packaging>
-	<version>0v3</version>
+	<version>0v4</version>
 	<name>Blogwt</name>
 	<description>Blog application built with GWT on top of AppEngine</description>
 
