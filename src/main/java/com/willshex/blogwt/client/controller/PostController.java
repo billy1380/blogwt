@@ -18,6 +18,7 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.BlogService;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.shared.api.Pager;
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
@@ -81,12 +82,17 @@ public class PostController extends AsyncDataProvider<Post> {
 	private void fetchPosts () {
 		final GetPostsRequest input = ApiHelper
 				.setAccessCode(new GetPostsRequest());
-		
+
 		input.session = SessionController.get().sessionForApiCall();
 		input.includePostContents = Boolean.FALSE;
-		
 		input.archiveEntry = archiveEntry;
-		
+
+		if (SessionController.get().isValidSession()) {
+			pager.sortBy = PostSortType.PostSortTypeCreated.toString();
+		} else {
+			pager.sortBy = PostSortType.PostSortTypePublished.toString();
+		}
+
 		input.pager = pager;
 		input.tag = tag;
 
@@ -210,8 +216,9 @@ public class PostController extends AsyncDataProvider<Post> {
 	@Override
 	protected void onRangeChanged (HasData<Post> display) {
 		Range range = display.getVisibleRange();
-		pager.start(Integer.valueOf(range.getStart())).count(
-				Integer.valueOf(range.getLength()));
+		pager.start(Integer.valueOf(range.getStart()))
+				.count(Integer.valueOf(range.getLength()))
+				.sortDirection(SortDirectionType.SortDirectionTypeDescending);
 
 		fetchPosts();
 	}
