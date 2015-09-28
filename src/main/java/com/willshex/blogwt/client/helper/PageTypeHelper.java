@@ -30,7 +30,6 @@ import com.willshex.blogwt.client.page.page.PageDetailPage;
 import com.willshex.blogwt.client.page.user.ChangeDetailsPage;
 import com.willshex.blogwt.client.page.user.ChangePasswordPage;
 import com.willshex.blogwt.client.page.user.LoginPage;
-import com.willshex.blogwt.client.page.user.RegisterPage;
 import com.willshex.blogwt.client.page.user.ResetPasswordPage;
 import com.willshex.blogwt.client.page.user.VerifyAccountPage;
 import com.willshex.blogwt.shared.page.PageType;
@@ -64,9 +63,6 @@ public class PageTypeHelper {
 		case LoginPageType:
 			page = new LoginPage();
 			break;
-		case RegisterPageType:
-			page = new RegisterPage();
-			break;
 		case ChangePasswordPageType:
 			page = new ChangePasswordPage();
 			break;
@@ -79,6 +75,7 @@ public class PageTypeHelper {
 		case PermissionsPageType:
 			page = new PermissionsPage();
 			break;
+		case RegisterPageType:
 		case ChangeDetailsPageType:
 			page = new ChangeDetailsPage();
 			break;
