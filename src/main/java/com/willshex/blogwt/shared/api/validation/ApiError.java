@@ -26,7 +26,9 @@ public enum ApiError {
 	AuthenticationFailedBadPassword(100009,
 			"Authentication failed, password does not match current login user {0}"),
 	UsernameInUse(100010, "User for useranme already exists {0}"),
-	EmailInUse(100011, "User for email address already exists {0}"), ;
+	EmailInUse(100011, "User for email address already exists {0}"),
+	PropertyDisallowed(100012,
+			"This call is disallowed by configuration property {0}"), ;
 
 	private static final String PARAM_0 = "\\{0\\}";
 	private static final String PARAM_1 = "\\{1\\}";
