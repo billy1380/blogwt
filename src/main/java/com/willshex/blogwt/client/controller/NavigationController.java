@@ -80,6 +80,9 @@ public class NavigationController implements ValueChangeHandler<String> {
 	 * @param value
 	 */
 	public void addPage (String value) {
+		value = (value == null || value.trim().length() == 0 || value
+				.replace("!", "").trim().length() == 0) ? PageController.get()
+				.homePageTargetHistoryToken() : value;
 		Stack s = Stack.parse(value);
 		PageType p = s == null ? null : PageType.fromString(s.getPage());
 
