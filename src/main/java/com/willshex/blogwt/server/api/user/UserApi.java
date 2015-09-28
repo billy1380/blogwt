@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.exception.AuthenticationException;
+import com.willshex.blogwt.server.api.exception.DisallowedByProprtyException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PermissionValidator;
 import com.willshex.blogwt.server.api.validation.RoleValidator;
@@ -266,9 +267,34 @@ public final class UserApi extends ActionHandler {
 				try {
 					output.session = input.session = SessionValidator
 							.lookupAndExtend(input.session, "input.session");
+
+					input.session.user = UserServiceProvider.provide().getUser(
+							Long.valueOf(output.session.userKey.getId()));
+
+					UserValidator.authorisation(input.session.user, Arrays
+							.asList(PermissionServiceProvider.provide()
+									.getCodePermission(
+											PermissionHelper.MANAGE_USERS)),
+							"input.session.user");
 				} catch (InputValidationException ex) {
 					output.session = input.session = null;
 				}
+			} else {
+				Property allowUserRegistration = PropertyServiceProvider
+						.provide().getNamedProperty(
+								PropertyHelper.ALLOW_USER_REGISTRATION);
+
+				boolean emptyProperty = PropertyHelper
+						.value(allowUserRegistration) == null;
+				if (emptyProperty)
+					throw new DisallowedByProprtyException(
+							PropertyHelper.ALLOW_USER_REGISTRATION);
+
+				if (Boolean.FALSE.equals(Boolean
+						.valueOf(allowUserRegistration.value)))
+					throw new DisallowedByProprtyException(
+							allowUserRegistration);
+
 			}
 
 			input.user = UserValidator.validate(input.user, "input.user");
