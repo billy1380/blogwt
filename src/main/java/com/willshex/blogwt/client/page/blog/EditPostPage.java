@@ -163,7 +163,6 @@ public class EditPostPage extends Page implements
 	};
 
 	public EditPostPage () {
-		super(PageType.EditPostPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		UiHelper.addPlaceholder(txtTitle, "Title");

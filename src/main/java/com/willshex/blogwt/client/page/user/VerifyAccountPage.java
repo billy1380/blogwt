@@ -16,7 +16,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.NavigationController;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
@@ -25,7 +24,7 @@ import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
 import com.willshex.blogwt.shared.api.user.call.VerifyAccountResponse;
 import com.willshex.blogwt.shared.api.user.call.event.VerifyAccountEventHandler;
-import com.willshex.blogwt.shared.page.PageType;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -53,7 +52,6 @@ public class VerifyAccountPage extends Page implements
 	};
 
 	public VerifyAccountPage () {
-		super(PageType.VerifyAccountPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 

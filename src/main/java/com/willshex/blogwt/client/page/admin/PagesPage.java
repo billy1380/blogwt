@@ -88,7 +88,6 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 	}
 
 	public PagesPage () {
-		super(PageType.PagesPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		createColumns();

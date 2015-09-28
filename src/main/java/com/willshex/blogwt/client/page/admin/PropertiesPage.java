@@ -40,7 +40,6 @@ import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.UpdatePropertiesEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
-import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)
@@ -61,7 +60,6 @@ public class PropertiesPage extends Page implements
 	private Map<String, Property> propertyLookup;
 
 	public PropertiesPage () {
-		super(PageType.PropertiesPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 

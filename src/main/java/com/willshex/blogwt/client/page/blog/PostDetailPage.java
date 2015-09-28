@@ -91,7 +91,6 @@ public class PostDetailPage extends Page implements
 	private Post post;
 
 	public PostDetailPage () {
-		super(PageType.PostDetailPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		tagList.addDataDisplay(clTags);

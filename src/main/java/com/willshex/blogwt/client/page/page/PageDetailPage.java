@@ -64,7 +64,6 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 	private Page page;
 
 	public PageDetailPage () {
-		super(PageType.PageDetailPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 

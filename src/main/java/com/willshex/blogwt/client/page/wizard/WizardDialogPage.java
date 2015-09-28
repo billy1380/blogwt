@@ -40,7 +40,6 @@ public abstract class WizardDialogPage extends Page {
 	 * @param pageType
 	 */
 	public WizardDialogPage (PageType pageType) {
-		super(pageType);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 

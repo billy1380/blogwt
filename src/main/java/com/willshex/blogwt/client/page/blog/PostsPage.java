@@ -61,7 +61,6 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 			new PostSummaryCell(), BootstrapGwtCellList.INSTANCE);
 
 	public PostsPage () {
-		super(PageType.PostsPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		elTitle.setInnerText(PropertyController.get().title());
