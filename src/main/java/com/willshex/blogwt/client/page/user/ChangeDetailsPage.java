@@ -12,6 +12,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -67,9 +69,20 @@ public class ChangeDetailsPage extends Page implements
 	interface ChangeDetailsPageUiBinder extends
 			UiBinder<Widget, ChangeDetailsPage> {}
 
+	public interface ChangeDetailsTemplates extends SafeHtmlTemplates {
+		ChangeDetailsTemplates INSTANCE = GWT
+				.create(ChangeDetailsTemplates.class);
+
+		@Template("{0} (<a href=\"https://en.gravatar.com/\" target=\"_blank\">Gravatar</a>)")
+		SafeHtml gravatarComment (String comment);
+	}
+
 	private static final String UPDATE_ACTION_TEXT = "Update";
 	private static final String CREATE_ACTION_TEXT = "Create";
+	private static final String REGISTER_ACTION_TEXT = "Register";
 
+	@UiField Element elHeading;
+	@UiField Element elGravatar;
 	@UiField FormPanel frmDetails;
 
 	@UiField Image imgAvatar;
@@ -149,30 +162,41 @@ public class ChangeDetailsPage extends Page implements
 	public void navigationChanged (Stack previous, Stack current) {
 		reset();
 
-		if (current.getAction() == null) {
-			showUserDetails(user = SessionController.get().user());
-			lnkChangePassword
-					.setTargetHistoryToken(PageType.ChangePasswordPageType
-							.asTargetHistoryToken());
-		} else if ("id".equals(current.getAction())
-				&& current.getParameterCount() > 0) {
-			Long id = Long.valueOf(current.getParameter(0));
-			User user = new User();
-			user.id(id);
+		if (PageType.ChangeDetailsPageType.equals(current.getPage())) {
+			if (current.getAction() == null) {
+				showUserDetails(user = SessionController.get().user());
+				lnkChangePassword
+						.setTargetHistoryToken(PageType.ChangePasswordPageType
+								.asTargetHistoryToken());
+			} else if ("id".equals(current.getAction())
+					&& current.getParameterCount() > 0) {
+				Long id = Long.valueOf(current.getParameter(0));
+				User user = new User();
+				user.id(id);
 
-			UserController.get().getUser(user);
+				UserController.get().getUser(user);
 
-			lnkChangePassword.setVisible(true);
-			pnlPassword.setVisible(false);
-		} else if ("new".equals(current.getAction())) {
-			elDates.setInnerText("Create new user");
+				lnkChangePassword.setVisible(true);
+				pnlPassword.setVisible(false);
+			} else if ("new".equals(current.getAction())) {
+				elDates.setInnerText("Enter user details");
+				lnkChangePassword.setVisible(false);
+				pnlPassword.setVisible(true);
+
+				if (SessionController.get().isAdmin()) {
+					actionText = CREATE_ACTION_TEXT;
+				}
+			}
+		} else if (PageType.RegisterPageType.equals(current.getPage())) {
+			elDates.setInnerText("Enter user details");
 			lnkChangePassword.setVisible(false);
 			pnlPassword.setVisible(true);
 
-			if (SessionController.get().isAdmin()) {
-				actionText = CREATE_ACTION_TEXT;
-			}
+			actionText = REGISTER_ACTION_TEXT;
 		}
+
+		elHeading.setInnerText(getHeadingText());
+		elGravatar.setInnerSafeHtml(getGravatarSafeHtml());
 
 		ready();
 	}
@@ -268,7 +292,7 @@ public class ChangeDetailsPage extends Page implements
 	}
 
 	private boolean isValid () {
-		// do client validation
+		// do client validation - including property check for user registration
 		return true;
 	}
 
@@ -325,11 +349,51 @@ public class ChangeDetailsPage extends Page implements
 			loadingText = "Updating... ";
 			break;
 		case CREATE_ACTION_TEXT:
-			loadingText = "Creating...";
+			loadingText = "Creating... ";
+			break;
+		case REGISTER_ACTION_TEXT:
+			loadingText = "Registering... ";
 			break;
 		}
 
 		return loadingText;
+	}
+
+	private String getHeadingText () {
+		String headingText = null;
+		switch (actionText) {
+		case UPDATE_ACTION_TEXT:
+			headingText = "Account";
+			break;
+		case CREATE_ACTION_TEXT:
+			headingText = "Add User";
+			break;
+		case REGISTER_ACTION_TEXT:
+			headingText = "Sign Up";
+			break;
+		}
+
+		return headingText;
+	}
+
+	private SafeHtml getGravatarSafeHtml () {
+		SafeHtml gravatarSafeHtml = null;
+		switch (actionText) {
+		case UPDATE_ACTION_TEXT:
+			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE
+					.gravatarComment("Changing e-mail address will change your avatar");
+			break;
+		case CREATE_ACTION_TEXT:
+			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE
+					.gravatarComment("E-mail address will determine user's avatar");
+			break;
+		case REGISTER_ACTION_TEXT:
+			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE
+					.gravatarComment("Your e-mail address will determine your avatar");
+			break;
+		}
+
+		return gravatarSafeHtml;
 	}
 
 	/* (non-Javadoc)

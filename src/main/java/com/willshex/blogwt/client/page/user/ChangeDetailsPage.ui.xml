@@ -44,7 +44,7 @@
 		<div class="row">
 			<div class="col-sm-4 col-sm-offset-4">
 				<div class="{style.account}">
-					<h2>Account</h2>
+					<h2 ui:field="elHeading">Account</h2>
 					<div class="{style.parent} img-circle">
 						<g:Image ui:field="imgAvatar" styleName="{style.image}" height="160px" />
 					</div>
@@ -92,11 +92,7 @@
 						<g:HTMLPanel ui:field="pnlEmail" styleName="form-group">
 							<label class="control-label">E-mail</label>
 							<g:TextBox ui:field="txtEmail" styleName="form-control" />
-							<span class="text-muted small">
-								Changing e-mail address will change your avatar (
-								<a href="https://en.gravatar.com/" target="_blank">Gravatar</a>
-								)
-							</span>
+							<span class="text-muted small" ui:field="elGravatar" />
 							<g:HTMLPanel styleName="control-label small" ui:field="pnlEmailNote"
 								visible="false" />
 						</g:HTMLPanel>
