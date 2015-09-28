@@ -89,7 +89,6 @@ public class RegisterPage extends Page implements
 	@UiField Button btnRegister;
 
 	public RegisterPage () {
-		super(PageType.RegisterPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		boolean allowed;

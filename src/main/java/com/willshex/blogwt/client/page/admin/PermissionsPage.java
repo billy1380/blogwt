@@ -20,7 +20,6 @@ import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.helper.PagerHelper;
-import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)
@@ -40,7 +39,6 @@ public class PermissionsPage extends Page {
 	@UiField NoneFoundPanel pnlNoPermissions;
 
 	public PermissionsPage () {
-		super(PageType.PermissionsPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		createColumns();

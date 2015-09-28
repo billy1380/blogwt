@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.NavigationController;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.ApiHelper;
@@ -33,7 +32,7 @@ import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler;
 import com.willshex.blogwt.shared.api.validation.ApiError;
-import com.willshex.blogwt.shared.page.PageType;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -62,7 +61,6 @@ public class LoginPage extends Page implements NavigationChangedEventHandler,
 	@UiField FormPanel frmLogin;
 
 	public LoginPage () {
-		super(PageType.LoginPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		txtUsername = UiHelper.swap(txtUsername, "login-username");

@@ -26,7 +26,6 @@ import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler;
-import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -50,7 +49,6 @@ public class ResetPasswordPage extends Page implements
 	@UiField Button btnReset;
 
 	public ResetPasswordPage () {
-		super(PageType.ResetPasswordPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		UiHelper.addPlaceholder(txtEmail, "E-mail");

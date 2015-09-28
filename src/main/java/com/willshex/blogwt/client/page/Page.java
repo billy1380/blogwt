@@ -14,7 +14,6 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.willshex.blogwt.client.controller.PropertyController;
-import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)
@@ -22,14 +21,6 @@ import com.willshex.blogwt.shared.page.PageType;
  */
 public abstract class Page extends Composite {
 	private List<HandlerRegistration> handlers = new ArrayList<HandlerRegistration>();
-	private PageType pageType = null;
-
-	/**
-	 * 
-	 */
-	public Page (PageType pageType) {
-		this.pageType = pageType;
-	}
 
 	protected void register (HandlerRegistration registration) {
 		handlers.add(registration);
@@ -55,16 +46,12 @@ public abstract class Page extends Composite {
 		for (HandlerRegistration handler : handlers) {
 			handler.removeHandler();
 		}
-		
+
 		reset();
 	}
 
 	public String getTitle () {
 		return PropertyController.get().title();
-	}
-
-	protected PageType getPageType () {
-		return pageType;
 	}
 
 	protected void reset () {}
