@@ -69,7 +69,6 @@ public class UsersPage extends Page {
 	@UiField NoneFoundPanel pnlNoUsers;
 
 	public UsersPage () {
-		super(PageType.UsersPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		imagePrototype.addClassName("img-rounded");

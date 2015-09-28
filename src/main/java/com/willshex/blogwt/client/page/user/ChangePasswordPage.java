@@ -67,7 +67,6 @@ public class ChangePasswordPage extends Page implements
 	private String actionCode;
 
 	public ChangePasswordPage () {
-		super(PageType.ChangePasswordPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		UiHelper.addPlaceholder(txtPassword, "Password");

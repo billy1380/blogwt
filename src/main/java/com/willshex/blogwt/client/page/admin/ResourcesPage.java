@@ -39,7 +39,6 @@ import com.willshex.blogwt.shared.api.blog.call.event.GetResourcesEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
-import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)
@@ -74,7 +73,6 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 	private ButtonCell actionButtonPrototype = new PrettyButtonCell();
 
 	public ResourcesPage () {
-		super(PageType.ResourcesPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		createColumns();

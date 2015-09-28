@@ -20,7 +20,6 @@ import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.helper.PagerHelper;
-import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)
@@ -40,7 +39,6 @@ public class RolesPage extends Page {
 	@UiField NoneFoundPanel pnlNoRoles;
 
 	public RolesPage () {
-		super(PageType.RolesPageType);
 		initWidget(uiBinder.createAndBindUi(this));
 
 		createColumns();
