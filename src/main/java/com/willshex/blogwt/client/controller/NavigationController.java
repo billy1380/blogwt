@@ -66,14 +66,32 @@ public class NavigationController implements ValueChangeHandler<String> {
 	private void attachPage (PageType type) {
 		Composite page = null;
 
-		if ((page = pages.get(type.toString())) == null) {
-			pages.put(type.toString(), page = PageTypeHelper.createPage(type));
+		if ((page = getPageFromCache(type)) == null) {
+			page = cachePage(type);
 		}
 
 		if (!page.isAttached()) {
 			pageHolder.clear();
 			pageHolder.add(page);
 		}
+	}
+
+	private String pageKeyForCache (PageType pageType) {
+		if (PageType.RegisterPageType.equals(pageType)) {
+			pageType = PageType.ChangeDetailsPageType;
+		}
+
+		return pageType.toString();
+	}
+
+	private Composite getPageFromCache (PageType type) {
+		return pages.get(pageKeyForCache(type));
+	}
+
+	private Composite cachePage (PageType type) {
+		Composite page;
+		pages.put(pageKeyForCache(type), page = PageTypeHelper.createPage(type));
+		return page;
 	}
 
 	/**
