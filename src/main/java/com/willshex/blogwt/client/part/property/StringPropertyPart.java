@@ -15,8 +15,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.helper.UiHelper;
@@ -30,8 +28,7 @@ public class StringPropertyPart extends AbstractPropertyPart implements
 
 	@UiField Element elDescription;
 	@UiField Element elName;
-	@UiField TextBox txtValue;
-	@UiField TextArea txtLongValue;
+	@UiField TextBoxBase txtValue;
 	@UiField HTMLPanel pnlValueNote;
 
 	private static StringPropertyPartUiBinder uiBinder = GWT
@@ -40,22 +37,18 @@ public class StringPropertyPart extends AbstractPropertyPart implements
 	interface StringPropertyPartUiBinder extends
 			UiBinder<Widget, StringPropertyPart> {}
 
+	protected StringPropertyPart (boolean init) {
+		if (init) {
+			initWidget(uiBinder.createAndBindUi(this));
+		}
+	}
+
 	public StringPropertyPart () {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	public StringPropertyPart (boolean isLong) {
-		this();
-		setLong(isLong);
-	}
-
-	public void setLong (boolean value) {
-		txtValue.setVisible(!value);
-		txtLongValue.setVisible(value);
-	}
-
 	private TextBoxBase textBox () {
-		return txtValue.isVisible() ? txtValue : txtLongValue;
+		return txtValue;
 	}
 
 	/**
@@ -72,7 +65,7 @@ public class StringPropertyPart extends AbstractPropertyPart implements
 		UiHelper.autoFocus(textBox());
 	}
 
-	@UiHandler({ "txtValue", "txtLongValue" })
+	@UiHandler({ "txtValue" })
 	void onTextValueChanged (ValueChangeEvent<String> vce) {
 		setValue(vce.getValue(), true);
 	}

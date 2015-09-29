@@ -33,6 +33,8 @@ import com.willshex.blogwt.client.part.property.BooleanPropertyPart;
 import com.willshex.blogwt.client.part.property.CommentPropertyPart;
 import com.willshex.blogwt.client.part.property.EmojiPropertyPart;
 import com.willshex.blogwt.client.part.property.ImagePropertyPart;
+import com.willshex.blogwt.client.part.property.LongStringPropertyPart;
+import com.willshex.blogwt.client.part.property.ProtectedStringPropertyPart;
 import com.willshex.blogwt.client.part.property.StringPropertyPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
@@ -134,7 +136,9 @@ public class PropertiesPage extends Page implements
 	private Widget widget (Property property, boolean first) {
 		AbstractPropertyPart propertyWidget = null;
 
-		if (PropertyHelper.POST_COMMENTS_ENABLED.equals(property.name)) {
+		if (PropertyHelper.PASSWORD_HASH_SALT.equals(property.name)) {
+			propertyWidget = new ProtectedStringPropertyPart();
+		} else if (PropertyHelper.POST_COMMENTS_ENABLED.equals(property.name)) {
 			propertyWidget = new CommentPropertyPart();
 		} else if (PropertyHelper.POST_ENABLE_EMOJI.equals(property.name)) {
 			propertyWidget = new EmojiPropertyPart();
@@ -147,7 +151,7 @@ public class PropertiesPage extends Page implements
 		} else if (property.type.equals("boolean")) {
 			propertyWidget = new BooleanPropertyPart();
 		} else if (PropertyHelper.SHORT_DESCRIPTION.equals(property.name)) {
-			propertyWidget = new StringPropertyPart(true);
+			propertyWidget = new LongStringPropertyPart();
 		} else {
 			propertyWidget = new StringPropertyPart();
 
