@@ -31,6 +31,7 @@ import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
@@ -228,7 +229,8 @@ final class UserService implements IUserService {
 	@Override
 	public Boolean verifyPassword (User user, String password) {
 		return Boolean.valueOf(user != null
-				&& StringUtils.sha1Hash(password + SALT).equals(user.password));
+				&& StringUtils.sha1Hash(password + getSalt()).equals(
+						user.password));
 	}
 
 	/* (non-Javadoc)
@@ -238,7 +240,7 @@ final class UserService implements IUserService {
 	 * (java.lang.String) */
 	@Override
 	public String generatePassword (String password) {
-		return StringUtils.sha1Hash(password + SALT);
+		return StringUtils.sha1Hash(password + getSalt());
 	}
 
 	/* (non-Javadoc)
@@ -436,6 +438,17 @@ final class UserService implements IUserService {
 	public User getEmailUser (String email) {
 		return addAvatar(ofy().load().type(User.class).filter("email", email)
 				.first().now());
+	}
+
+	private String getSalt () {
+		String salt = SALT;
+		Property hashSaltProperty;
+		if ((hashSaltProperty = PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.PASSWORD_HASH_SALT)) != null) {
+			salt = hashSaltProperty.value;
+		}
+
+		return salt;
 	}
 
 }
