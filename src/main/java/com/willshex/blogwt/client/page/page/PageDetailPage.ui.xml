@@ -32,6 +32,6 @@
 
 		<g:HTMLPanel ui:field="pnlContent" />
 
-		<p:BackToTop />
+		<p:BackToTop ui:field="btnTop" />
 	</g:HTMLPanel>
 </ui:UiBinder> 

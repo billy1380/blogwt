@@ -81,6 +81,10 @@ public class BackToTop extends Composite {
 
 	@UiHandler("btnBackToTop")
 	void onBtnBackToTopClicked (ClickEvent e) {
+		go();
+	}
+
+	public void go () {
 		new ScrollWindow(0, EasingCurve.easeInOutQuad).run(300);
 	}
 

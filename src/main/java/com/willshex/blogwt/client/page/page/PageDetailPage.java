@@ -27,6 +27,7 @@ import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
+import com.willshex.blogwt.client.part.BackToTop;
 import com.willshex.blogwt.client.part.SectionPart;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
@@ -60,6 +61,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 
 	@UiField InlineHyperlink lnkEditPage;
 	@UiField Button btnDeletePage;
+	@UiField BackToTop btnTop;
 
 	private Page page;
 
@@ -198,6 +200,8 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 				.asTargetHistoryToken(page.slug));
 
 		pnlLoading.setVisible(false);
+		
+		btnTop.go();
 	}
 
 	/* (non-Javadoc)

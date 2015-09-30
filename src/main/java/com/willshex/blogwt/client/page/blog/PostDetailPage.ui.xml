@@ -57,6 +57,6 @@
 			</div>
 		</g:HTMLPanel>
 
-		<p:BackToTop />
+		<p:BackToTop ui:field="btnTop" />
 	</g:HTMLPanel>
 </ui:UiBinder> 
