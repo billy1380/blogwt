@@ -75,6 +75,12 @@ public class ChangeDetailsPage extends Page implements
 
 		@Template("{0} (<a href=\"https://en.gravatar.com/\" target=\"_blank\">Gravatar</a>)")
 		SafeHtml gravatarComment (String comment);
+
+		@Template("{0} <small>(<a href=\"{1}\">access</a>)</small>")
+		SafeHtml rolesAndPermissions (String username, String accessHref);
+
+		@Template("{0} <a href=\"{1}\"><span class=\"glyphicon glyphicon-sunglasses\"></span></a>")
+		SafeHtml adminRolesAndPermissions (String username, String accessHref);
 	}
 
 	private static final String UPDATE_ACTION_TEXT = "Update";
@@ -164,7 +170,7 @@ public class ChangeDetailsPage extends Page implements
 
 		if (PageType.ChangeDetailsPageType.equals(current.getPage())) {
 			if (current.getAction() == null) {
-				showUserDetails(user = SessionController.get().user());
+				show(user = SessionController.get().user());
 				lnkChangePassword
 						.setTargetHistoryToken(PageType.ChangePasswordPageType
 								.asTargetHistoryToken());
@@ -213,15 +219,25 @@ public class ChangeDetailsPage extends Page implements
 		UserController.get().getEmailAvatar(vce.getValue());
 	}
 
-	private void showUserDetails (User user) {
+	private void show (User user) {
 		if (user != null) {
 			String username = "@" + user.username;
 			imgAvatar.setAltText(username);
 			imgAvatar.setUrl(user.avatar + "?s=160&default=retro");
 			h3Username
-					.setInnerHTML(username
-							+ (UserHelper.isAdmin(user) ? " <span class=\"glyphicon glyphicon-sunglasses\"></span>"
-									: ""));
+					.setInnerSafeHtml(UserHelper.isAdmin(user) ? ChangeDetailsTemplates.INSTANCE
+							.adminRolesAndPermissions(
+									username,
+									PageTypeHelper.asHref(
+											PageType.ChangeAccessPageType,
+											user.id.toString()).asString())
+							: ChangeDetailsTemplates.INSTANCE
+									.rolesAndPermissions(
+											username,
+											PageTypeHelper
+													.asHref(PageType.ChangeAccessPageType,
+															user.id.toString())
+													.asString()));
 			elDates.setInnerText("Added "
 					+ DateTimeHelper.ago(user.created)
 					+ " and last seen "
@@ -248,7 +264,7 @@ public class ChangeDetailsPage extends Page implements
 	public void getUserDetailsSuccess (GetUserDetailsRequest input,
 			GetUserDetailsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			showUserDetails(user = output.user);
+			show(user = output.user);
 			lnkChangePassword
 					.setTargetHistoryToken(PageType.ChangePasswordPageType
 							.asTargetHistoryToken("id", user.id.toString()));
@@ -407,7 +423,7 @@ public class ChangeDetailsPage extends Page implements
 	public void changeUserDetailsSuccess (ChangeUserDetailsRequest input,
 			ChangeUserDetailsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			showUserDetails(user = output.user);
+			show(user = output.user);
 		}
 
 		ready();
