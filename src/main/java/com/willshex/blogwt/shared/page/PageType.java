@@ -39,11 +39,11 @@ public enum PageType {
 	EditPagePageType("pageedit", PermissionHelper.MANAGE_PAGES),
 	PageDetailPageType("page", false),
 	PagesPageType("pages", PermissionHelper.MANAGE_PAGES),
-	EditPropertyPageType("propertyedit", RoleHelper.ADMIN),
 	TagPostsPageType("tag", false),
 	ResourcesPageType("resources", PermissionHelper.MANAGE_RESOURCES),
 	SearchPostsPageType("search", false),
-	VerifyAccountPageType("verifyaccount", false), ;
+	VerifyAccountPageType("verifyaccount", false),
+	ChangeAccessPageType("access", true), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;

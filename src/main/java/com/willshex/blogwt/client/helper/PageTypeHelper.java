@@ -27,6 +27,7 @@ import com.willshex.blogwt.client.page.blog.SetupBlogPage;
 import com.willshex.blogwt.client.page.blog.TagPage;
 import com.willshex.blogwt.client.page.page.EditPagePage;
 import com.willshex.blogwt.client.page.page.PageDetailPage;
+import com.willshex.blogwt.client.page.user.ChangeAccessPage;
 import com.willshex.blogwt.client.page.user.ChangeDetailsPage;
 import com.willshex.blogwt.client.page.user.ChangePasswordPage;
 import com.willshex.blogwt.client.page.user.LoginPage;
@@ -112,6 +113,9 @@ public class PageTypeHelper {
 			break;
 		case VerifyAccountPageType:
 			page = new VerifyAccountPage();
+			break;
+		case ChangeAccessPageType:
+			page = new ChangeAccessPage();
 			break;
 		case PageDetailPageType:
 		default:
