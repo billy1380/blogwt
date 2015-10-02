@@ -20,7 +20,7 @@ import com.willshex.blogwt.shared.api.datatype.Role;
 
 public class GetRolesAndPermissionsResponse extends Response {
 	public List<Role> roles;
-	public List<Permission> permission;
+	public List<Permission> permissions;
 
 	@Override
 	public JsonObject toJson () {
@@ -35,16 +35,16 @@ public class GetRolesAndPermissionsResponse extends Response {
 			}
 		}
 		object.add("roles", jsonRoles);
-		JsonElement jsonPermission = JsonNull.INSTANCE;
-		if (permission != null) {
-			jsonPermission = new JsonArray();
-			for (int i = 0; i < permission.size(); i++) {
-				JsonElement jsonPermissionItem = permission.get(i) == null ? JsonNull.INSTANCE
-						: permission.get(i).toJson();
-				((JsonArray) jsonPermission).add(jsonPermissionItem);
+		JsonElement jsonPermissions = JsonNull.INSTANCE;
+		if (permissions != null) {
+			jsonPermissions = new JsonArray();
+			for (int i = 0; i < permissions.size(); i++) {
+				JsonElement jsonPermissionsItem = permissions.get(i) == null ? JsonNull.INSTANCE
+						: permissions.get(i).toJson();
+				((JsonArray) jsonPermissions).add(jsonPermissionsItem);
 			}
 		}
-		object.add("permission", jsonPermission);
+		object.add("permissions", jsonPermissions);
 		return object;
 	}
 
@@ -66,16 +66,16 @@ public class GetRolesAndPermissionsResponse extends Response {
 			}
 		}
 
-		if (jsonObject.has("permission")) {
-			JsonElement jsonPermission = jsonObject.get("permission");
-			if (jsonPermission != null) {
-				permission = new ArrayList<Permission>();
+		if (jsonObject.has("permissions")) {
+			JsonElement jsonPermissions = jsonObject.get("permissions");
+			if (jsonPermissions != null) {
+				permissions = new ArrayList<Permission>();
 				Permission item = null;
-				for (int i = 0; i < jsonPermission.getAsJsonArray().size(); i++) {
-					if (jsonPermission.getAsJsonArray().get(i) != null) {
-						(item = new Permission()).fromJson(jsonPermission
+				for (int i = 0; i < jsonPermissions.getAsJsonArray().size(); i++) {
+					if (jsonPermissions.getAsJsonArray().get(i) != null) {
+						(item = new Permission()).fromJson(jsonPermissions
 								.getAsJsonArray().get(i).getAsJsonObject());
-						permission.add(item);
+						permissions.add(item);
 					}
 				}
 			}
@@ -88,9 +88,9 @@ public class GetRolesAndPermissionsResponse extends Response {
 		return this;
 	}
 
-	public GetRolesAndPermissionsResponse permission (
-			List<Permission> permission) {
-		this.permission = permission;
+	public GetRolesAndPermissionsResponse permissions (
+			List<Permission> permissions) {
+		this.permissions = permissions;
 		return this;
 	}
 }
