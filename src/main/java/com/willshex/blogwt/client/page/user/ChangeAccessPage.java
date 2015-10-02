@@ -11,8 +11,10 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
@@ -56,6 +58,16 @@ public class ChangeAccessPage extends Page implements
 
 		rolesProvider.addDataDisplay(ctRoles);
 		permissionsProvider.addDataDisplay(ctPermissions);
+	}
+
+	@UiHandler("btnAddRole")
+	void onAddRoleClicked (ClickEvent ce) {
+		submitting();
+	}
+
+	@UiHandler("btnAddPermission")
+	void onAddPremissionClicked (ClickEvent ce) {
+		submitting();
 	}
 
 	@Override
@@ -145,6 +157,10 @@ public class ChangeAccessPage extends Page implements
 	}
 
 	private void loading () {
+
+	}
+
+	private void submitting () {
 
 	}
 
