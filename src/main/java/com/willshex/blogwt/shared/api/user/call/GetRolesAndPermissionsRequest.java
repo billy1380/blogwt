@@ -12,9 +12,11 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.willshex.blogwt.shared.api.Request;
+import com.willshex.blogwt.shared.api.datatype.User;
 
 public class GetRolesAndPermissionsRequest extends Request {
 	public Boolean idsOnly;
+	public User user;
 	public Boolean expandRoles;
 	public Boolean rolesOnly;
 	public Boolean permissionOnly;
@@ -25,6 +27,8 @@ public class GetRolesAndPermissionsRequest extends Request {
 		JsonElement jsonIdsOnly = idsOnly == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(idsOnly);
 		object.add("idsOnly", jsonIdsOnly);
+		JsonElement jsonUser = user == null ? JsonNull.INSTANCE : user.toJson();
+		object.add("user", jsonUser);
 		JsonElement jsonExpandRoles = expandRoles == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(expandRoles);
 		object.add("expandRoles", jsonExpandRoles);
@@ -44,6 +48,13 @@ public class GetRolesAndPermissionsRequest extends Request {
 			JsonElement jsonIdsOnly = jsonObject.get("idsOnly");
 			if (jsonIdsOnly != null) {
 				idsOnly = Boolean.valueOf(jsonIdsOnly.getAsBoolean());
+			}
+		}
+		if (jsonObject.has("user")) {
+			JsonElement jsonUser = jsonObject.get("user");
+			if (jsonUser != null) {
+				user = new User();
+				user.fromJson(jsonUser.getAsJsonObject());
 			}
 		}
 		if (jsonObject.has("expandRoles")) {
@@ -69,6 +80,11 @@ public class GetRolesAndPermissionsRequest extends Request {
 
 	public GetRolesAndPermissionsRequest idsOnly (Boolean idsOnly) {
 		this.idsOnly = idsOnly;
+		return this;
+	}
+
+	public GetRolesAndPermissionsRequest user (User user) {
+		this.user = user;
 		return this;
 	}
 
