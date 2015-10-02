@@ -1,9 +1,48 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel>
-		
+	<g:HTMLPanel styleName="container">
+		<div class="row">
+			<div class="col-sm-4 col-sm-offset-4">
+				<h2>Access</h2>
+				<g:FormPanel>
+					<g:HTMLPanel>
+						<h3>Roles</h3>
+						<g:HTMLPanel>
+							<c:CellTable ui:field="ctRoles" />
+
+							<g:HTMLPanel ui:field="pnlRole" styleName="form-group">
+								<label class="control-label">Role</label>
+								<g:SuggestBox ui:field="txtRole" styleName="form-control" />
+								<g:HTMLPanel styleName="control-label small" ui:field="pnlRoleNote"
+									visible="false" />
+							</g:HTMLPanel>
+							<g:SubmitButton ui:field="btnAddRole" styleName="btn btn-primary pull-right"
+								text="Add Role">
+								Add Role
+							</g:SubmitButton>
+						</g:HTMLPanel>
+						<h3>Permissions</h3>
+						<g:HTMLPanel>
+							<c:CellTable ui:field="ctPermissions" />
+
+							<g:HTMLPanel ui:field="pnlPermission" styleName="form-group">
+								<label class="control-label">Permission</label>
+								<g:SuggestBox ui:field="txtPermission" styleName="form-control" />
+								<g:HTMLPanel styleName="control-label small" ui:field="pnlPermissionNote"
+									visible="false" />
+							</g:HTMLPanel>
+							<g:SubmitButton ui:field="btnAddPermission" styleName="btn btn-primary pull-right"
+								text="Add Permission">
+								Add Permission
+							</g:SubmitButton>
+						</g:HTMLPanel>
+					</g:HTMLPanel>
+				</g:FormPanel>
+			</div>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 
