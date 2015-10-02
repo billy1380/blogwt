@@ -23,12 +23,21 @@ public class UserHelper extends com.willshex.blogwt.shared.helper.UserHelper {
 	 * @param user
 	 */
 	public static void populateRolesAndPermissionsFromKeys (User user) {
+		populateRolesFromKeys(user);
+		populatePermissionsFromKeys(user);
+	}
+
+	public static void populateRolesFromKeys (User user) {
 		if (user != null) {
 			if (user.roleKeys != null) {
 				user.roles = RoleServiceProvider.provide().getIdRolesBatch(
 						PersistenceService.keysToIds(user.roleKeys));
 			}
+		}
+	}
 
+	public static void populatePermissionsFromKeys (User user) {
+		if (user != null) {
 			if (user.permissionKeys != null) {
 				user.permissions = PermissionServiceProvider.provide()
 						.getIdPermissionsBatch(
