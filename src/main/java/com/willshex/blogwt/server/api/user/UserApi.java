@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.server.api.exception.AuthenticationException;
 import com.willshex.blogwt.server.api.exception.DisallowedByProprtyException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
@@ -691,6 +692,80 @@ public final class UserApi extends ActionHandler {
 
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
+
+			UserValidator.authorisation(input.session.user, Arrays
+					.asList(PermissionServiceProvider.provide()
+							.getCodePermission(PermissionHelper.MANAGE_USERS)),
+					"input.session.user");
+
+			input.user = UserValidator.lookup(input.user, "input.user");
+
+			boolean idsOnly = Boolean.TRUE.equals(input.idsOnly);
+			if (idsOnly) {
+				input.user.roles = PersistenceService.dataTypeList(Role.class,
+						input.user.roleKeys);
+				input.user.permissions = PersistenceService.dataTypeList(
+						Permission.class, input.user.permissionKeys);
+			} else {
+				if ((input.permissionOnly == null && input.rolesOnly == null)
+						|| (Boolean.FALSE.equals(input.rolesOnly) && Boolean.FALSE
+								.equals(input.permissionOnly))) {
+					UserHelper.populateRolesAndPermissionsFromKeys(input.user);
+
+					output.roles = input.user.roles;
+					output.permissions = input.user.permissions;
+				} else if (Boolean.TRUE.equals(input.permissionOnly)
+						&& Boolean.TRUE.equals(input.rolesOnly)) {
+
+				} else if (Boolean.TRUE.equals(input.permissionOnly)) {
+					UserHelper.populatePermissionsFromKeys(input.user);
+					output.permissions = input.user.permissions;
+				} else if (Boolean.TRUE.equals(input.rolesOnly)) {
+					UserHelper.populateRolesFromKeys(input.user);
+					output.roles = input.user.roles;
+				}
+			}
+
+			if (input.user.roleKeys != null
+					&& !Boolean.TRUE.equals(input.rolesOnly)
+					&& Boolean.TRUE.equals(input.expandRoles)) {
+				List<Permission> expandedPermissions;
+				if (idsOnly) {
+					Role lookupRole;
+					for (Role role : input.user.roles) {
+						lookupRole = RoleServiceProvider.provide().getRole(
+								role.id);
+
+						if (lookupRole != null) {
+							expandedPermissions = PersistenceService
+									.dataTypeList(Permission.class,
+											lookupRole.permissionKeys);
+
+							if (expandedPermissions != null) {
+								if (output.permissions != null) {
+									output.permissions
+											.addAll(expandedPermissions);
+								} else {
+									output.permissions = expandedPermissions;
+								}
+							}
+						}
+					}
+				} else {
+					for (Role role : input.user.roles) {
+						expandedPermissions = PermissionServiceProvider
+								.provide().getRolePermissions(role);
+
+						if (expandedPermissions != null) {
+							if (output.permissions != null) {
+								output.permissions.addAll(expandedPermissions);
+							} else {
+								output.permissions = expandedPermissions;
+							}
+						}
+					}
+				}
+			}
 
 			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
