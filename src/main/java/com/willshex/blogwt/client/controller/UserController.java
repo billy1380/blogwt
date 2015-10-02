@@ -31,6 +31,8 @@ import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersResponse;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse;
+import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsRequest;
+import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
@@ -49,6 +51,8 @@ import com.willshex.blogwt.shared.api.user.call.event.ChangeUserPowersEventHandl
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserPowersEventHandler.ChangeUserPowersSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler.GetEmailAvatarFailure;
 import com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler.GetEmailAvatarSuccess;
+import com.willshex.blogwt.shared.api.user.call.event.GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsFailure;
+import com.willshex.blogwt.shared.api.user.call.event.GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler.GetUserDetailsFailure;
 import com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler.GetUserDetailsSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetUsersEventHandler.GetUsersFailure;
@@ -488,4 +492,40 @@ public class UserController extends AsyncDataProvider<User> {
 				});
 	}
 
+	/**
+	 * @param user
+	 */
+	public void getUserRolesAndPremissions (User user) {
+		final GetRolesAndPermissionsRequest input = ApiHelper
+				.setAccessCode(new GetRolesAndPermissionsRequest());
+
+		input.session = SessionController.get().sessionForApiCall();
+		input.user = user;
+
+		ApiHelper.createUserClient().getRolesAndPermissions(input,
+				new AsyncCallback<GetRolesAndPermissionsResponse>() {
+
+					@Override
+					public void onSuccess (GetRolesAndPermissionsResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {
+
+						}
+
+						DefaultEventBus.get()
+								.fireEventFromSource(
+										new GetRolesAndPermissionsSuccess(
+												input, output),
+										UserController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get()
+								.fireEventFromSource(
+										new GetRolesAndPermissionsFailure(
+												input, caught),
+										UserController.this);
+					}
+				});
+	}
 }
