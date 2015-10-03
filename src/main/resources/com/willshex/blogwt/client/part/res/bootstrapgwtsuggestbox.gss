@@ -1,0 +1,112 @@
+@external suggestPopupMiddleLeftInner, suggestPopupMiddleCenter, suggestPopupBottomCenterInner, suggestPopupBottomLeftInner, suggestPopupMiddleRightInner, suggestPopupMiddleLeft,
+	gwt-SuggestBoxPopup, suggestPopupBottomRight, suggestPopupBottomRightInner, suggestPopupBottomCenter, suggestPopupMiddleRight, item-selected, suggestPopupTopCenter,
+	suggestPopupTopRightInner, suggestPopupBottomLeft, suggestPopupTopLeft, item, suggestPopupTopRight, suggestPopupMiddleCenterInner, gwt-SuggestBox, suggestPopupTopLeftInner,
+	suggestPopupTopCenterInner ; .gwt-SuggestBox {
+	
+}
+
+.gwt-SuggestBoxPopup {
+	border-collapse: separate;
+	cursor: default;
+	min-width: 160px;
+	padding: 4px 4px;
+	margin: 2px 0 0;
+	list-style: none;
+	background-color: #FFF;
+	border: 1px solid #CCC;
+	/* @alternate */
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	background-clip: padding-box;
+	-webkit-background-clip: padding-box;
+	-moz-background-clip: padding;
+}
+
+.gwt-SuggestBoxPopup .item {
+	border: 1px solid transparent;
+	padding: 6px 12px;
+}
+
+.gwt-SuggestBoxPopup .item-selected {
+	padding: 6px 12px;
+	color: #fff;
+	background-color: #337ab7;
+	border: 1px solid #2e6da4;
+}
+
+.gwt-SuggestBoxPopup .suggestPopupTopLeft {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupTopLeftInner {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupTopCenter {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupTopCenterInner {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupTopRight {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupTopRightInner {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupMiddleLeft {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupMiddleLeftInner {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupMiddleCenter {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupMiddleCenterInner {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupMiddleRight {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupMiddleRightInner {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupBottomLeft {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupBottomLeftInner {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupBottomCenter {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupBottomCenterInner {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupBottomRight {
+	
+}
+
+.gwt-SuggestBoxPopup .suggestPopupBottomRightInner {
+	
+}
