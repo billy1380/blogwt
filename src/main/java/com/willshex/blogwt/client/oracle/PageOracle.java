@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.client.oracle;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
 import com.willshex.blogwt.shared.api.datatype.Page;
 
@@ -25,7 +25,7 @@ public class PageOracle extends SuggestOracle<Page> {
 	 * com.google.gwt.user.client.ui.SuggestOracle.Callback) */
 	@Override
 	protected void lookup (Request request, Callback callback) {
-		foundItems(request, callback, new ArrayList<Page>());
+		foundItems(request, callback, Collections.<Page> emptyList());
 	}
 
 	/* (non-Javadoc)
