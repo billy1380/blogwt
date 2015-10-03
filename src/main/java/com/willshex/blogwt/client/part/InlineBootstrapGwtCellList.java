@@ -22,6 +22,6 @@ public interface InlineBootstrapGwtCellList extends CellList.Resources {
 
 	public interface InlineBootstrapGwtCellListStyle extends Style {};
 
-	@Source("res/inlinebootstrapgwtcelllist.gss")
+	@Source("res/inline-bootstrap-gwt-celllist.gss")
 	InlineBootstrapGwtCellListStyle cellListStyle ();
 };

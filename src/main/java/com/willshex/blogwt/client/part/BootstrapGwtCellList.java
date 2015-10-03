@@ -21,6 +21,6 @@ public interface BootstrapGwtCellList extends CellList.Resources {
 
 	public interface BootstrapGwtCellListStyle extends Style {};
 
-	@Source("res/bootstrapgwtcelllist.gss")
+	@Source("res/bootstrap-gwt-celllist.gss")
 	BootstrapGwtCellListStyle cellListStyle();
 };

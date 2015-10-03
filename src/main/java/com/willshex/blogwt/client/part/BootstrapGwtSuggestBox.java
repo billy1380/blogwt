@@ -21,6 +21,6 @@ public interface BootstrapGwtSuggestBox extends ClientBundle {
 
 	public interface BootstrapGwtSuggestBoxStyle extends CssResource {};
 
-	@Source("bootstrapgwtsuggestbox.gss")
+	@Source("res/bootstrap-gwt-suggestbox.gss")
 	BootstrapGwtSuggestBoxStyle styles ();
 }
