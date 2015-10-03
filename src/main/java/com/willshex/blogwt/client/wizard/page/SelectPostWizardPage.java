@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.oracle.PostOracle;
+import com.willshex.blogwt.client.part.BootstrapGwtSuggestBox;
 import com.willshex.blogwt.client.wizard.WizardPage;
 import com.willshex.blogwt.shared.api.datatype.Post;
 
@@ -37,6 +38,8 @@ public class SelectPostWizardPage extends Composite implements WizardPage<Post> 
 
 	public SelectPostWizardPage () {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		BootstrapGwtSuggestBox.INSTANCE.styles().ensureInjected();
 	}
 
 	/* (non-Javadoc)
