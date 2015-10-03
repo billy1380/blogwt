@@ -16,14 +16,18 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.NavigationController;
+import com.willshex.blogwt.client.controller.PermissionController;
+import com.willshex.blogwt.client.controller.RoleController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.page.Page;
+import com.willshex.blogwt.client.part.BootstrapGwtSuggestBox;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
@@ -48,6 +52,10 @@ public class ChangeAccessPage extends Page implements
 
 	@UiField(provided = true) CellTable<Role> ctRoles = new CellTable<Role>();
 	@UiField(provided = true) CellTable<Permission> ctPermissions = new CellTable<Permission>();
+	@UiField(provided = true) SuggestBox txtRole = new SuggestBox(
+			RoleController.get().oracle());
+	@UiField(provided = true) SuggestBox txtPermission = new SuggestBox(
+			PermissionController.get().oracle());
 
 	private ListDataProvider<Role> rolesProvider = new ListDataProvider<Role>();
 	private ListDataProvider<Permission> permissionsProvider = new ListDataProvider<Permission>();
@@ -55,6 +63,8 @@ public class ChangeAccessPage extends Page implements
 
 	public ChangeAccessPage () {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		BootstrapGwtSuggestBox.INSTANCE.styles().ensureInjected();
 
 		rolesProvider.addDataDisplay(ctRoles);
 		permissionsProvider.addDataDisplay(ctPermissions);

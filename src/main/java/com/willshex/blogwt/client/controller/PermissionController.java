@@ -16,6 +16,8 @@ import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.client.oracle.PermissionOracle;
+import com.willshex.blogwt.client.oracle.SuggestOracle;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
@@ -46,6 +48,7 @@ public class PermissionController extends AsyncDataProvider<Permission> {
 			PermissionSortType.PermissionSortTypeCode.toString());
 
 	private Request getPermissionsRequest;
+	private PermissionOracle oracle;
 
 	private void fetchPermissions () {
 		final GetPermissionsRequest input = ApiHelper
@@ -112,6 +115,13 @@ public class PermissionController extends AsyncDataProvider<Permission> {
 				Integer.valueOf(range.getLength()));
 
 		fetchPermissions();
+	}
+
+	public SuggestOracle<Permission> oracle () {
+		if (oracle == null) {
+			oracle = new PermissionOracle();
+		}
+		return oracle;
 	}
 
 }

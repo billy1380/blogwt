@@ -11,11 +11,13 @@ import java.util.Collections;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.client.oracle.RoleOracle;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
 import com.willshex.blogwt.shared.api.datatype.Role;
@@ -31,6 +33,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  *
  */
 public class RoleController extends AsyncDataProvider<Role> {
+
 	private static RoleController one = null;
 
 	public static RoleController get () {
@@ -45,6 +48,7 @@ public class RoleController extends AsyncDataProvider<Role> {
 			PermissionSortType.PermissionSortTypeCode.toString());
 
 	private Request getRolesRequest;
+	private RoleOracle oracle;
 
 	private void fetchRoles () {
 		final GetRolesRequest input = ApiHelper
@@ -110,6 +114,14 @@ public class RoleController extends AsyncDataProvider<Role> {
 				Integer.valueOf(range.getLength()));
 
 		fetchRoles();
+	}
+
+	public SuggestOracle oracle () {
+		if (oracle == null) {
+			oracle = new RoleOracle();
+		}
+
+		return oracle;
 	}
 
 }
