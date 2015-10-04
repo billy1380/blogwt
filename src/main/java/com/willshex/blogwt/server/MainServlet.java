@@ -165,7 +165,7 @@ public class MainServlet extends ContextAwareServlet {
 				} else {
 					scriptVariables.append(",");
 				}
-				scriptVariables.append(jsonString(page));
+				scriptVariables.append(jsonForJsVar(slim(page)));
 			}
 		}
 
@@ -192,7 +192,7 @@ public class MainServlet extends ContextAwareServlet {
 					scriptVariables.append(",");
 				}
 
-				scriptVariables.append(jsonString(tag));
+				scriptVariables.append(jsonForJsVar(slim(tag)));
 			}
 
 			scriptVariables.append("]';");
@@ -220,7 +220,7 @@ public class MainServlet extends ContextAwareServlet {
 					scriptVariables.append(",");
 				}
 
-				scriptVariables.append(jsonString(archiveEntry));
+				scriptVariables.append(jsonForJsVar(slim(archiveEntry)));
 			}
 
 			scriptVariables.append("]';");
@@ -249,7 +249,7 @@ public class MainServlet extends ContextAwareServlet {
 					scriptVariables.append(",");
 				}
 
-				scriptVariables.append(jsonString(property));
+				scriptVariables.append(jsonForJsVar(slim(property)));
 			}
 
 			scriptVariables.append("]';");
@@ -298,8 +298,8 @@ public class MainServlet extends ContextAwareServlet {
 		}
 
 		if (userSession != null) {
-			scriptVariables.append("var session='" + jsonString(userSession)
-					+ "';");
+			scriptVariables.append("var session='"
+					+ jsonForJsVar(slim(userSession)) + "';");
 		}
 	}
 
@@ -322,10 +322,6 @@ public class MainServlet extends ContextAwareServlet {
 		HttpServletRequest request = REQUEST.get();
 		String fragmentParameter = request.getParameter("_escaped_fragment_");
 
-		//		String uri = request.getRequestURI();
-		//		String url = ServletHelper.constructBaseUrl(request) + uri + "#!"
-		//				+ StringUtils.urldecode(fragmentParameter);
-
 		Stack s = Stack.parse(fragmentParameter);
 		PageMarkup p = PageMarkupFactory.createFromStack(s);
 
@@ -338,83 +334,36 @@ public class MainServlet extends ContextAwareServlet {
 		if (p != null) {
 			response.getWriter().print(p.asString());
 		}
-
-		//response.getOutputStream().print(staticContent(url));
 	}
 
-	//	/**
-	//	 * This method as far as I can tell does not work with the gwt version of htmlunit 
-	//	 * will probably either need to use GWTP crawler service or restructure this project
-	//	 * to use modules and roll my own again either with GWTP or just the method below
-	//	 * @return
-	//	 * @throws IOException 
-	//	 * @throws FailingHttpStatusCodeException 
-	//	 */
-	//	private String staticContent (String url)
-	//			throws FailingHttpStatusCodeException, IOException {
-	//		// code based on https://github.com/ArcBees/GWTP/blob/master/gwtp-crawler-service/src/main/java/com/gwtplatform/crawlerservice/server/CrawlServiceServlet.java
-	//		WebClient webClient = new WebClient();
-	//
-	//		webClient.getCache().clear();
-	//		webClient.getOptions().setCssEnabled(false);
-	//		webClient.getOptions().setJavaScriptEnabled(true);
-	//		webClient.getOptions().setThrowExceptionOnScriptError(false);
-	//		webClient.getOptions().setRedirectEnabled(true);
-	//		webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-	//		webClient.setAjaxController(new NicelyResynchronizingAjaxController() {
-	//			private static final long serialVersionUID = 2875888832992558703L;
-	//
-	//			/* (non-Javadoc)
-	//			 * 
-	//			 * @see com.gargoylesoftware.htmlunit.
-	//			 * NicelyResynchronizingAjaxController #processSynchron(com
-	//			 * .gargoylesoftware.htmlunit.html.HtmlPage,
-	//			 * com.gargoylesoftware.htmlunit.WebRequest, boolean) */
-	//			@Override
-	//			public boolean processSynchron (HtmlPage page, WebRequest settings,
-	//					boolean async) {
-	//				return true;
-	//			}
-	//		});
-	//		webClient.setCssErrorHandler(new SilentCssErrorHandler());
-	//
-	//		WebRequest webRequest = new WebRequest(new URL(url), "text/html");
-	//		HtmlPage page = webClient.getPage(webRequest);
-	//		webClient.getJavaScriptEngine().pumpEventLoop(TIMEOUT_MILLIS);
-	//
-	//		int waitForBackgroundJavaScript = webClient
-	//				.waitForBackgroundJavaScript(JS_TIMEOUT_MILLIS);
-	//		int loopCount = 0;
-	//
-	//		while (waitForBackgroundJavaScript > 0 && loopCount < MAX_LOOP_CHECKS) {
-	//			++loopCount;
-	//			waitForBackgroundJavaScript = webClient
-	//					.waitForBackgroundJavaScript(JS_TIMEOUT_MILLIS);
-	//
-	//			if (waitForBackgroundJavaScript == 0) {
-	//				break;
-	//			}
-	//
-	//			synchronized (page) {
-	//				try {
-	//					page.wait(PAGE_WAIT_MILLIS);
-	//				} catch (InterruptedException e) {}
-	//			}
-	//		}
-	//
-	//		webClient.closeAllWindows();
-	//
-	//		return Pattern
-	//				.compile("<style>.*?</style>", Pattern.DOTALL)
-	//				.matcher(
-	//						page.asXml().replace(
-	//								"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-	//								"")).replaceAll("");
-	//	}
-
-	private String jsonString (Jsonable jsonable) {
+	private String jsonForJsVar (Jsonable jsonable) {
 		return null == jsonable ? null : jsonable.toString()
 				.replace("'", "\\'").replace("\\n", "\\\\n")
 				.replace("\\\"", "\\\\\"");
+	}
+
+	private Property slim (Property property) {
+		return (Property) (new Property().name(property.name).value(
+				property.value).created(PropertyHelper.TITLE
+				.equals(property.name) ? property.created : null));
+	}
+
+	private Tag slim (Tag tag) {
+		return new Tag().name(tag.name).slug(tag.slug).posts(tag.posts);
+	}
+
+	private ArchiveEntry slim (ArchiveEntry archiveEntry) {
+		return new ArchiveEntry().month(archiveEntry.month)
+				.year(archiveEntry.year).posts(archiveEntry.posts);
+	}
+
+	private Page slim (Page page) {
+		return new Page().owner(page.owner).hasChildren(page.hasChildren)
+				.parent(page.parent).priority(page.priority).slug(page.slug)
+				.title(page.title);
+	}
+
+	private Session slim (Session session) {
+		return new Session().expires(session.expires).user(session.user);
 	}
 }
