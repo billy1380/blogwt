@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.server.api.exception.AuthenticationException;
 import com.willshex.blogwt.server.api.exception.DisallowedByProprtyException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
@@ -692,6 +691,9 @@ public final class UserApi extends ActionHandler {
 
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
+
+			input.session.user = UserServiceProvider.provide().getUser(
+					Long.valueOf(input.session.userKey.getId()));
 
 			UserValidator.authorisation(input.session.user, Arrays
 					.asList(PermissionServiceProvider.provide()
