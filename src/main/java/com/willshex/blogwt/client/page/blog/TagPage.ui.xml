@@ -20,6 +20,7 @@
 		</g:HTMLPanel>
 
 		<p:NoneFoundPanel subject="posts" ui:field="pnlNoPosts" />
+		<p:LoadingPanel ui:field="pnlLoading" />
 
 		<p:BackToTop />
 	</g:HTMLPanel>

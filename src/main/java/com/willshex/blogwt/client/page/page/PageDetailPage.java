@@ -28,6 +28,7 @@ import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.part.BackToTop;
+import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.SectionPart;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
@@ -55,7 +56,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 
 	interface PageDetailPageUiBinder extends UiBinder<Widget, PageDetailPage> {}
 
-	@UiField HTMLPanel pnlLoading;
+	@UiField LoadingPanel pnlLoading;
 	@UiField HTMLPanel pnlContent;
 	@UiField Element elToolbar;
 
@@ -200,7 +201,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 				.asTargetHistoryToken(page.slug));
 
 		pnlLoading.setVisible(false);
-		
+
 		btnTop.go();
 	}
 

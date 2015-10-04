@@ -11,15 +11,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
-import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.cell.blog.ResultSummaryCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.SearchController;
@@ -28,6 +24,7 @@ import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.BootstrapGwtCellList;
+import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.page.Stack;
 
@@ -53,6 +50,7 @@ public class SearchPage extends Page implements NavigationChangedEventHandler {
 	@UiField(provided = true) CellList<SearchResult> clResults = new CellList<SearchResult>(
 			new ResultSummaryCell(), BootstrapGwtCellList.INSTANCE);
 	@UiField NoneFoundPanel pnlNoResults;
+	@UiField LoadingPanel pnlLoading;
 
 	public SearchPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -60,12 +58,8 @@ public class SearchPage extends Page implements NavigationChangedEventHandler {
 		pnlNoResults.removeFromParent();
 		clResults.setEmptyListWidget(pnlNoResults);
 
-		HTMLPanel loadingWidget = new HTMLPanel(SafeHtmlUtils.EMPTY_SAFE_HTML);
-		loadingWidget.addStyleName("text-center");
-		loadingWidget
-				.add(new Image(Resources.CELL_TABLE_RES.cellTableLoading()));
-
-		clResults.setLoadingIndicator(loadingWidget);
+		pnlLoading.removeFromParent();
+		clResults.setLoadingIndicator(pnlLoading);
 
 		SearchController.get().addDataDisplay(clResults);
 	}

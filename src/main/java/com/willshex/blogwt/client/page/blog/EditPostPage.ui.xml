@@ -2,7 +2,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:p="urn:import:com.willshex.blogwt.client.part" xmlns:gu="urn:import:gwtupload.client"
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
-	<ui:import field="com.willshex.blogwt.client.Resources.CELL_TABLE_RES" />
 	<ui:import field="com.willshex.blogwt.client.helper.ApiHelper.UPLOAD_END_POINT" />
 	<ui:style gss="true">
 	@external checkbox, upld-drop-zone, GWTUpld, row;
@@ -41,10 +40,8 @@
 	</ui:style>
 	<g:HTMLPanel styleName="container-fluid">
 		<g:HTMLPanel styleName="row">
-			<g:HTMLPanel styleName="text-center col-xs-12" ui:field="pnlLoading"
-				visible="false">
-				<g:Image visible="true" resource="{CELL_TABLE_RES.cellTableLoading}" />
-			</g:HTMLPanel>
+			<p:LoadingPanel styleName="text-center col-xs-12" ui:field="pnlLoading"
+				visible="false" />
 			<g:FormPanel ui:field="frmEdit" styleName="col-sm-4">
 				<g:HTMLPanel styleName="{style.form-post}">
 					<h2 ui:field="elHeading">New Post</h2>

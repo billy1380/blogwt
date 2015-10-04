@@ -11,19 +11,15 @@ import java.util.Arrays;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
-import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
 import com.willshex.blogwt.client.controller.NavigationController;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.controller.PropertyController;
@@ -32,12 +28,14 @@ import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.BootstrapGwtCellList;
+import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.page.PageType;
+import com.willshex.blogwt.shared.page.Stack;
 
 /**
  * @author William Shakour (billy1380)
@@ -56,6 +54,8 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 	@UiField Image imgLargeBrand;
 
 	@UiField NoneFoundPanel pnlNoPosts;
+	@UiField LoadingPanel pnlLoading;
+
 	@UiField InlineHyperlink lnkNewPost;
 	@UiField(provided = true) CellList<Post> clPosts = new CellList<Post>(
 			new PostSummaryCell(), BootstrapGwtCellList.INSTANCE);
@@ -78,14 +78,11 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 
 		pnlNoPosts.removeFromParent();
 		clPosts.setEmptyListWidget(pnlNoPosts);
+
 		clPosts.setPageSize(PagerHelper.DEFAULT_COUNT);
 
-		HTMLPanel loadingWidget = new HTMLPanel(SafeHtmlUtils.EMPTY_SAFE_HTML);
-		loadingWidget.addStyleName("text-center");
-		loadingWidget
-				.add(new Image(Resources.CELL_TABLE_RES.cellTableLoading()));
-
-		clPosts.setLoadingIndicator(loadingWidget);
+		pnlLoading.removeFromParent();
+		clPosts.setLoadingIndicator(pnlLoading);
 
 		PostController.get().addDataDisplay(clPosts);
 

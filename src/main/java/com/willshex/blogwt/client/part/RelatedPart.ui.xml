@@ -10,5 +10,6 @@
 		<c:CellList ui:field="clPosts" />
 
 		<p:NoneFoundPanel subject="related posts" ui:field="pnlNoPosts" />
+		<p:LoadingPanel ui:field="pnlLoading" />
 	</g:HTMLPanel>
 </ui:UiBinder> 

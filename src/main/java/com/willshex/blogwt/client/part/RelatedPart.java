@@ -9,16 +9,12 @@ package com.willshex.blogwt.client.part;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
-import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.cell.blog.ResultSummaryCell;
 import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.controller.SearchController;
@@ -44,6 +40,7 @@ public class RelatedPart extends Composite implements GetPostEventHandler {
 	@UiField(provided = true) CellList<SearchResult> clPosts = new CellList<SearchResult>(
 			new ResultSummaryCell(), BootstrapGwtCellList.INSTANCE);
 	@UiField NoneFoundPanel pnlNoPosts;
+	@UiField LoadingPanel pnlLoading;
 
 	public RelatedPart () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -51,12 +48,8 @@ public class RelatedPart extends Composite implements GetPostEventHandler {
 		pnlNoPosts.removeFromParent();
 		clPosts.setEmptyListWidget(pnlNoPosts);
 
-		HTMLPanel loadingWidget = new HTMLPanel(SafeHtmlUtils.EMPTY_SAFE_HTML);
-		loadingWidget.addStyleName("text-center");
-		loadingWidget
-				.add(new Image(Resources.CELL_TABLE_RES.cellTableLoading()));
-
-		clPosts.setLoadingIndicator(loadingWidget);
+		pnlLoading.removeFromParent();
+		clPosts.setLoadingIndicator(pnlLoading);
 
 		SearchController.get().addDataDisplay(clPosts);
 	}

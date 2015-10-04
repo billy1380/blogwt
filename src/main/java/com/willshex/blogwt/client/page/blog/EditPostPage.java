@@ -58,6 +58,7 @@ import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.InlineBootstrapGwtCellList;
+import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.MarkdownToolbar;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
@@ -114,7 +115,7 @@ public class EditPostPage extends Page implements
 	@UiField SubmitButton btnSubmit;
 	@UiField Element elHeading;
 	@UiField HTMLPanel pnlPreview;
-	@UiField HTMLPanel pnlLoading;
+	@UiField LoadingPanel pnlLoading;
 	@UiField FormPanel frmEdit;
 	@UiField MultiUploader uplDragAndDrop;
 	@UiField HTMLPanel pnlImagePreviews;

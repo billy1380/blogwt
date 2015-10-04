@@ -41,6 +41,7 @@ import com.willshex.blogwt.client.part.AddToAny;
 import com.willshex.blogwt.client.part.BackToTop;
 import com.willshex.blogwt.client.part.DisqusComments;
 import com.willshex.blogwt.client.part.InlineBootstrapGwtCellList;
+import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.RelatedPart;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostResponse;
@@ -73,7 +74,7 @@ public class PostDetailPage extends Page implements
 	@UiField Element elTitle;
 	@UiField Element elDate;
 	@UiField Element elAuthor;
-	@UiField HTMLPanel pnlLoading;
+	@UiField LoadingPanel pnlLoading;
 
 	@UiField HTMLPanel pnlContent;
 	@UiField InlineHyperlink lnkEditPost;
