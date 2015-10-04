@@ -1,0 +1,10 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="com.willshex.blogwt.client.Resources.CELL_TABLE_RES" />
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel styleName="text-center">
+		<g:Image visible="true" resource="{CELL_TABLE_RES.cellTableLoading}" />
+	</g:HTMLPanel>
+</ui:UiBinder> 
