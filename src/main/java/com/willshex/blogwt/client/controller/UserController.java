@@ -72,6 +72,34 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class UserController extends AsyncDataProvider<User> {
 
+	private AsyncDataProvider<Role> USER_ROLES_PROVIDER = new AsyncDataProvider<Role>() {
+
+		/* (non-Javadoc)
+		 * 
+		 * @see
+		 * com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com
+		 * .google.gwt.view.client.HasData) */
+		@Override
+		protected void onRangeChanged (HasData<Role> display) {
+
+		}
+
+	};
+
+	private AsyncDataProvider<Permission> USER_PERMISSIONS_PROVIDER = new AsyncDataProvider<Permission>() {
+
+		/* (non-Javadoc)
+		 * 
+		 * @see
+		 * com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com
+		 * .google.gwt.view.client.HasData) */
+		@Override
+		protected void onRangeChanged (HasData<Permission> display) {
+			UserController.this.fetchUserRolesAndPremissions();
+		}
+
+	};
+
 	private static UserController one = null;
 
 	public static UserController get () {
@@ -85,9 +113,12 @@ public class UserController extends AsyncDataProvider<User> {
 	private Pager pager = PagerHelper.createDefaultPager().sortBy(
 			UserSortType.UserSortTypeAdded.toString());
 
+	private User user;
+
 	private Request getUsersRequest;
 	private Request getUserRequest;
 	private Request getEmailAvatarRequest;
+	private Request getRolesAndPermissionsRequest;
 
 	private void fetchUsers () {
 		final GetUsersRequest input = ApiHelper
@@ -495,37 +526,77 @@ public class UserController extends AsyncDataProvider<User> {
 	/**
 	 * @param user
 	 */
-	public void getUserRolesAndPremissions (User user) {
-		final GetRolesAndPermissionsRequest input = ApiHelper
-				.setAccessCode(new GetRolesAndPermissionsRequest());
+	private void fetchUserRolesAndPremissions () {
+		if (user != null) {
+			if (getRolesAndPermissionsRequest != null) {
+				getRolesAndPermissionsRequest.cancel();
+				getRolesAndPermissionsRequest = null;
+			}
 
-		input.session = SessionController.get().sessionForApiCall();
-		input.user = user;
+			final GetRolesAndPermissionsRequest input = ApiHelper
+					.setAccessCode(new GetRolesAndPermissionsRequest());
 
-		ApiHelper.createUserClient().getRolesAndPermissions(input,
-				new AsyncCallback<GetRolesAndPermissionsResponse>() {
+			input.session = SessionController.get().sessionForApiCall();
+			input.user = user;
 
-					@Override
-					public void onSuccess (GetRolesAndPermissionsResponse output) {
-						if (output.status == StatusType.StatusTypeSuccess) {
+			getRolesAndPermissionsRequest = ApiHelper
+					.createUserClient()
+					.getRolesAndPermissions(
+							input,
+							new AsyncCallback<GetRolesAndPermissionsResponse>() {
 
-						}
+								@Override
+								public void onSuccess (
+										GetRolesAndPermissionsResponse output) {
+									getRolesAndPermissionsRequest = null;
 
-						DefaultEventBus.get()
-								.fireEventFromSource(
-										new GetRolesAndPermissionsSuccess(
-												input, output),
-										UserController.this);
-					}
+									if (output.status == StatusType.StatusTypeSuccess) {
+										if (output.roles != null) {
+											USER_ROLES_PROVIDER.updateRowData(
+													0, output.roles);
+										} else {
+											USER_ROLES_PROVIDER.updateRowCount(
+													0, true);
+										}
 
-					@Override
-					public void onFailure (Throwable caught) {
-						DefaultEventBus.get()
-								.fireEventFromSource(
-										new GetRolesAndPermissionsFailure(
-												input, caught),
-										UserController.this);
-					}
-				});
+										if (output.permissions != null) {
+											USER_PERMISSIONS_PROVIDER
+													.updateRowData(0,
+															output.permissions);
+										} else {
+											USER_PERMISSIONS_PROVIDER
+													.updateRowCount(0, true);
+										}
+									}
+
+									DefaultEventBus.get().fireEventFromSource(
+											new GetRolesAndPermissionsSuccess(
+													input, output),
+											UserController.this);
+								}
+
+								@Override
+								public void onFailure (Throwable caught) {
+									getRolesAndPermissionsRequest = null;
+
+									DefaultEventBus.get().fireEventFromSource(
+											new GetRolesAndPermissionsFailure(
+													input, caught),
+											UserController.this);
+								}
+							});
+		}
+	}
+
+	public static AsyncDataProvider<Role> roles () {
+		return UserController.get().USER_ROLES_PROVIDER;
+	}
+
+	public static AsyncDataProvider<Permission> permissions () {
+		return UserController.get().USER_PERMISSIONS_PROVIDER;
+	}
+
+	public void setUser (User value) {
+		user = value;
 	}
 }

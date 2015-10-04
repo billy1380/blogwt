@@ -7,19 +7,24 @@
 //
 package com.willshex.blogwt.client.page.user;
 
-import java.util.Collections;
-import java.util.List;
-
+import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.ListDataProvider;
 import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.PermissionController;
 import com.willshex.blogwt.client.controller.RoleController;
@@ -27,22 +32,28 @@ import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.page.Page;
+import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.BootstrapGwtSuggestBox;
+import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsRequest;
-import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsResponse;
-import com.willshex.blogwt.shared.api.user.call.event.GetRolesAndPermissionsEventHandler;
 import com.willshex.blogwt.shared.page.Stack;
-import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  *
  */
 public class ChangeAccessPage extends Page implements
-		NavigationChangedEventHandler, GetRolesAndPermissionsEventHandler {
+		NavigationChangedEventHandler {
+
+	public interface Templates extends SafeHtmlTemplates {
+		Templates INSTANCE = GWT.create(Templates.class);
+
+		@Template("<span class=\"label label-info\" title=\"{1}\"><strong>{0}</strong></span>")
+		SafeHtml code (String code, String description);
+
+	}
 
 	private static ChangeAccessPageUiBinder uiBinder = GWT
 			.create(ChangeAccessPageUiBinder.class);
@@ -50,34 +61,130 @@ public class ChangeAccessPage extends Page implements
 	interface ChangeAccessPageUiBinder extends
 			UiBinder<Widget, ChangeAccessPage> {}
 
-	@UiField(provided = true) CellTable<Role> ctRoles = new CellTable<Role>();
-	@UiField(provided = true) CellTable<Permission> ctPermissions = new CellTable<Permission>();
+	@UiField(provided = true) CellTable<Role> tblRoles = new CellTable<Role>(
+			Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<Permission> tblPermissions = new CellTable<Permission>(
+			Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SuggestBox txtRole = new SuggestBox(
 			RoleController.get().oracle());
 	@UiField(provided = true) SuggestBox txtPermission = new SuggestBox(
 			PermissionController.get().oracle());
+	@UiField NoneFoundPanel pnlNoRoles;
+	@UiField NoneFoundPanel pnlNoPermissions;
 
-	private ListDataProvider<Role> rolesProvider = new ListDataProvider<Role>();
-	private ListDataProvider<Permission> permissionsProvider = new ListDataProvider<Permission>();
 	private User user;
+	private SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
+	private ButtonCell actionButtonPrototype = new PrettyButtonCell();
 
 	public ChangeAccessPage () {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		BootstrapGwtSuggestBox.INSTANCE.styles().ensureInjected();
 
-		rolesProvider.addDataDisplay(ctRoles);
-		permissionsProvider.addDataDisplay(ctPermissions);
+		UserController.roles().addDataDisplay(tblRoles);
+		UserController.permissions().addDataDisplay(tblPermissions);
+
+		tblRoles.setEmptyTableWidget(pnlNoRoles);
+		createRoleColumns();
+
+		tblPermissions.setEmptyTableWidget(pnlNoPermissions);
+		createPermissionColumns();
+	}
+
+	private void createRoleColumns () {
+		Column<Role, SafeHtml> code = new Column<Role, SafeHtml>(
+				safeHtmlPrototype) {
+
+			@Override
+			public SafeHtml getValue (Role object) {
+				return Templates.INSTANCE.code(object.code, object.description);
+			}
+		};
+
+		TextColumn<Role> name = new TextColumn<Role>() {
+
+			@Override
+			public String getValue (Role object) {
+				return object.name;
+			}
+		};
+
+		Column<Role, String> delete = new Column<Role, String>(
+				actionButtonPrototype) {
+
+			@Override
+			public String getValue (Role object) {
+				return "delete";
+			}
+		};
+		delete.setFieldUpdater(new FieldUpdater<Role, String>() {
+
+			@Override
+			public void update (int index, Role object, String value) {
+				if (Window
+						.confirm("Are you sure you want to remove user role: "
+								+ object.name + "?")) {
+					// remove role
+				}
+			}
+		});
+
+		tblRoles.addColumn(code);
+		tblRoles.addColumn(name);
+		tblRoles.addColumn(delete);
+	}
+
+	private void createPermissionColumns () {
+		Column<Permission, SafeHtml> code = new Column<Permission, SafeHtml>(
+				safeHtmlPrototype) {
+
+			@Override
+			public SafeHtml getValue (Permission object) {
+				return Templates.INSTANCE.code(object.code, object.description);
+			}
+		};
+
+		TextColumn<Permission> name = new TextColumn<Permission>() {
+
+			@Override
+			public String getValue (Permission object) {
+				return object.name;
+			}
+		};
+
+		Column<Permission, String> delete = new Column<Permission, String>(
+				actionButtonPrototype) {
+
+			@Override
+			public String getValue (Permission object) {
+				return "delete";
+			}
+		};
+		delete.setFieldUpdater(new FieldUpdater<Permission, String>() {
+
+			@Override
+			public void update (int index, Permission object, String value) {
+				if (Window
+						.confirm("Are you sure you want to revoke user permission: "
+								+ object.name + "?")) {
+					// revoke permission
+				}
+			}
+		});
+
+		tblPermissions.addColumn(code);
+		tblPermissions.addColumn(name);
+		tblPermissions.addColumn(delete);
 	}
 
 	@UiHandler("btnAddRole")
 	void onAddRoleClicked (ClickEvent ce) {
-		submitting();
+		loading();
 	}
 
 	@UiHandler("btnAddPermission")
 	void onAddPremissionClicked (ClickEvent ce) {
-		submitting();
+		loading();
 	}
 
 	@Override
@@ -91,6 +198,8 @@ public class ChangeAccessPage extends Page implements
 
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
+		ready();
+
 		User loggedIn = SessionController.get().user();
 		if (current.getAction() == null
 				|| (loggedIn != null && loggedIn.id.equals(current.getAction()))) {
@@ -101,76 +210,15 @@ public class ChangeAccessPage extends Page implements
 
 		if (user == null) {
 			(user = new User()).id(Long.valueOf(current.getAction()));
-			UserController.get().getUserRolesAndPremissions(user);
-
-			loading();
-		} else {
-			show(user.roles, user.permissions);
-		}
-	}
-
-	private void show (List<Role> roles, List<Permission> permissions) {
-		if (roles == null) {
-			rolesProvider.setList(Collections.<Role> emptyList());
-		} else {
-			rolesProvider.setList(roles);
 		}
 
-		if (permissions == null) {
-			permissionsProvider.setList(Collections.<Permission> emptyList());
-		} else {
-			permissionsProvider.setList(permissions);
-		}
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.
-	 * GetRolesAndPermissionsEventHandler
-	 * #getRolesAndPermissionsSuccess(com.willshex
-	 * .blogwt.shared.api.user.call.GetRolesAndPermissionsRequest,
-	 * com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsResponse) */
-	@Override
-	public void getRolesAndPermissionsSuccess (
-			GetRolesAndPermissionsRequest input,
-			GetRolesAndPermissionsResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			show(output.roles, output.permissions);
-		} else {
-			GWT.log(output.error.toString());
-		}
-
-		ready();
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.
-	 * GetRolesAndPermissionsEventHandler
-	 * #getRolesAndPermissionsFailure(com.willshex
-	 * .blogwt.shared.api.user.call.GetRolesAndPermissionsRequest,
-	 * java.lang.Throwable) */
-	@Override
-	public void getRolesAndPermissionsFailure (
-			GetRolesAndPermissionsRequest input, Throwable caught) {
-		GWT.log("GetRolesAndPermissions", caught);
-
-		ready();
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
-	@Override
-	protected void reset () {
-		super.reset();
+		UserController.get().setUser(user);
+		tblRoles.setVisibleRangeAndClearData(tblRoles.getVisibleRange(), true);
+		tblPermissions.setVisibleRangeAndClearData(
+				tblPermissions.getVisibleRange(), true);
 	}
 
 	private void loading () {
-
-	}
-
-	private void submitting () {
 
 	}
 
