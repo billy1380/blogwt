@@ -21,6 +21,7 @@ public class GetPostsRequest extends Request {
 	public Boolean includePostContents;
 	public String tag;
 	public ArchiveEntry archiveEntry;
+	public String query;
 
 	@Override
 	public JsonObject toJson () {
@@ -37,6 +38,9 @@ public class GetPostsRequest extends Request {
 		JsonElement jsonArchiveEntry = archiveEntry == null ? JsonNull.INSTANCE
 				: archiveEntry.toJson();
 		object.add("archiveEntry", jsonArchiveEntry);
+		JsonElement jsonQuery = query == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(query);
+		object.add("query", jsonQuery);
 		return object;
 	}
 
@@ -71,6 +75,12 @@ public class GetPostsRequest extends Request {
 				archiveEntry.fromJson(jsonArchiveEntry.getAsJsonObject());
 			}
 		}
+		if (jsonObject.has("query")) {
+			JsonElement jsonQuery = jsonObject.get("query");
+			if (jsonQuery != null) {
+				query = jsonQuery.getAsString();
+			}
+		}
 	}
 
 	public GetPostsRequest pager (Pager pager) {
@@ -90,6 +100,11 @@ public class GetPostsRequest extends Request {
 
 	public GetPostsRequest archiveEntry (ArchiveEntry archiveEntry) {
 		this.archiveEntry = archiveEntry;
+		return this;
+	}
+
+	public GetPostsRequest query (String query) {
+		this.query = query;
 		return this;
 	}
 }

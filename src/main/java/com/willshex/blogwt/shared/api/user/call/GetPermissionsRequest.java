@@ -10,11 +10,13 @@ package com.willshex.blogwt.shared.api.user.call;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.Request;
 
 public class GetPermissionsRequest extends Request {
 	public Pager pager;
+	public String query;
 
 	@Override
 	public JsonObject toJson () {
@@ -22,6 +24,9 @@ public class GetPermissionsRequest extends Request {
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager
 				.toJson();
 		object.add("pager", jsonPager);
+		JsonElement jsonQuery = query == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(query);
+		object.add("query", jsonQuery);
 		return object;
 	}
 
@@ -35,10 +40,21 @@ public class GetPermissionsRequest extends Request {
 				pager.fromJson(jsonPager.getAsJsonObject());
 			}
 		}
+		if (jsonObject.has("query")) {
+			JsonElement jsonQuery = jsonObject.get("query");
+			if (jsonQuery != null) {
+				query = jsonQuery.getAsString();
+			}
+		}
 	}
 
 	public GetPermissionsRequest pager (Pager pager) {
 		this.pager = pager;
+		return this;
+	}
+
+	public GetPermissionsRequest query (String query) {
+		this.query = query;
 		return this;
 	}
 }

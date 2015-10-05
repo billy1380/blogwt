@@ -19,6 +19,7 @@ public class GetPagesRequest extends Request {
 	public Page parent;
 	public Boolean includePosts;
 	public Pager pager;
+	public String query;
 
 	@Override
 	public JsonObject toJson () {
@@ -32,6 +33,9 @@ public class GetPagesRequest extends Request {
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE : pager
 				.toJson();
 		object.add("pager", jsonPager);
+		JsonElement jsonQuery = query == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(query);
+		object.add("query", jsonQuery);
 		return object;
 	}
 
@@ -58,6 +62,12 @@ public class GetPagesRequest extends Request {
 				pager.fromJson(jsonPager.getAsJsonObject());
 			}
 		}
+		if (jsonObject.has("query")) {
+			JsonElement jsonQuery = jsonObject.get("query");
+			if (jsonQuery != null) {
+				query = jsonQuery.getAsString();
+			}
+		}
 	}
 
 	public GetPagesRequest parent (Page parent) {
@@ -72,6 +82,11 @@ public class GetPagesRequest extends Request {
 
 	public GetPagesRequest pager (Pager pager) {
 		this.pager = pager;
+		return this;
+	}
+
+	public GetPagesRequest query (String query) {
+		this.query = query;
 		return this;
 	}
 }
