@@ -60,7 +60,7 @@ public final class PageApi extends ActionHandler {
 
 			input.session.user = UserServiceProvider.provide().getUser(
 					Long.valueOf(input.session.userKey.getId()));
-			
+
 			UserValidator.authorisation(input.session.user, permissions,
 					"input.session.user");
 
@@ -170,10 +170,19 @@ public final class PageApi extends ActionHandler {
 				input.pager = PagerHelper.createDefaultPager();
 			}
 
-			output.pages = PageServiceProvider.provide().getPages(
-					input.includePosts, input.pager.start, input.pager.count,
-					PageSortType.fromString(input.pager.sortBy),
-					input.pager.sortDirection);
+			if (input.query == null || input.query.trim().length() == 0) {
+				output.pages = PageServiceProvider.provide().getPages(
+						input.includePosts, input.pager.start,
+						input.pager.count,
+						PageSortType.fromString(input.pager.sortBy),
+						input.pager.sortDirection);
+			} else {
+				output.pages = PageServiceProvider.provide()
+						.getPartialSlugPages(input.query, input.includePosts,
+								input.pager.start, input.pager.count,
+								PageSortType.fromString(input.pager.sortBy),
+								input.pager.sortDirection);
+			}
 
 			for (Page page : output.pages) {
 				page.owner = UserHelper
