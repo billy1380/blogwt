@@ -19,6 +19,8 @@ public class Pager extends Jsonable {
 	public String sortBy;
 	public SortDirectionType sortDirection;
 	public Integer totalCount;
+	public String next;
+	public String previous;
 
 	@Override
 	public JsonObject toJson () {
@@ -32,12 +34,18 @@ public class Pager extends Jsonable {
 		JsonElement jsonSortBy = sortBy == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(sortBy);
 		object.add("sortBy", jsonSortBy);
-		JsonElement jsonSortDirection = sortBy == null ? JsonNull.INSTANCE
+		JsonElement jsonSortDirection = sortDirection == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(sortDirection.toString());
 		object.add("sortDirection", jsonSortDirection);
 		JsonElement jsonTotalCount = totalCount == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(totalCount);
 		object.add("totalCount", jsonTotalCount);
+		JsonElement jsonNext = next == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(next);
+		object.add("next", jsonNext);
+		JsonElement jsonPrevious = previous == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(previous);
+		object.add("previous", jsonPrevious);
 		return object;
 	}
 
@@ -75,6 +83,18 @@ public class Pager extends Jsonable {
 				totalCount = Integer.valueOf(jsonTotalCount.getAsInt());
 			}
 		}
+		if (jsonObject.has("next")) {
+			JsonElement jsonNext = jsonObject.get("next");
+			if (jsonNext != null) {
+				next = jsonNext.getAsString();
+			}
+		}
+		if (jsonObject.has("previous")) {
+			JsonElement jsonPrevious = jsonObject.get("previous");
+			if (jsonPrevious != null) {
+				previous = jsonPrevious.getAsString();
+			}
+		}
 	}
 
 	public Pager start (Integer start) {
@@ -99,6 +119,16 @@ public class Pager extends Jsonable {
 
 	public Pager totalCount (Integer totalCount) {
 		this.totalCount = totalCount;
+		return this;
+	}
+
+	public Pager next (String next) {
+		this.next = next;
+		return this;
+	}
+
+	public Pager previous (String previous) {
+		this.previous = previous;
 		return this;
 	}
 }
