@@ -68,6 +68,20 @@ public interface IPageService extends IService {
 
 	/**
 	 * 
+	 * @param partialSlug
+	 * @param includePostContents
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
+	 * @return
+	 */
+	public List<Page> getPartialSlugPages (String partialSlug,
+			Boolean includePostContents, Integer start, Integer count,
+			PageSortType sortBy, SortDirectionType sortDirection);
+
+	/**
+	 * 
 	 */
 	public void indexAll ();
 

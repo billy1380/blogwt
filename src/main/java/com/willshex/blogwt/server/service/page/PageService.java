@@ -259,4 +259,53 @@ final class PageService implements IPageService {
 			PagerHelper.moveForward(pager);
 		} while (pages != null && pages.size() >= pager.count.intValue());
 	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.page.IPageService#getPartialSlugPages
+	 * (java.lang.String, java.lang.Boolean, java.lang.Integer,
+	 * java.lang.Integer, com.willshex.blogwt.shared.api.datatype.PageSortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	@Override
+	public List<Page> getPartialSlugPages (String partialSlug,
+			Boolean includePostContents, Integer start, Integer count,
+			PageSortType sortBy, SortDirectionType sortDirection) {
+		Query<Page> query = ofy().load().type(Page.class);
+
+		if (start != null) {
+			query = query.offset(start.intValue());
+		}
+
+		if (count != null) {
+			query = query.limit(count.intValue());
+		}
+
+		if (sortBy != null) {
+			String condition = sortBy.toString();
+
+			if (sortDirection != null) {
+				switch (sortDirection) {
+				case SortDirectionTypeDescending:
+					condition = "-" + condition;
+					break;
+				default:
+					break;
+				}
+			}
+
+			query = query.order(condition);
+		}
+
+		query = query.filter("slug >=", partialSlug).filter("slug <=",
+				partialSlug + '\ufffd');
+
+		List<Page> pages = query.list();
+
+		if (Boolean.TRUE.equals(includePostContents)) {
+			populatePostContents(pages);
+		}
+
+		return pages;
+	}
 }
