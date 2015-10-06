@@ -19,6 +19,7 @@ import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchService;
 import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.search.StatusCode;
+import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Post;
 
@@ -91,5 +92,11 @@ public class SearchHelper {
 	private static Index getIndex () {
 		return ensureSearchService().getIndex(
 				IndexSpec.newBuilder().setName(ALL_INDEX_NAME).build());
+	}
+
+	public static <T> Query<T> addStartsWith (String field, String text,
+			Query<T> query) {
+		return query.filter(field + " >=", text).filter(field + " <=",
+				text + '\ufffd');
 	}
 }

@@ -297,8 +297,7 @@ final class PageService implements IPageService {
 			query = query.order(condition);
 		}
 
-		query = query.filter("slug >=", partialSlug).filter("slug <=",
-				partialSlug + '\ufffd');
+		query = SearchHelper.addStartsWith("slug", partialSlug, query);
 
 		List<Page> pages = query.list();
 
