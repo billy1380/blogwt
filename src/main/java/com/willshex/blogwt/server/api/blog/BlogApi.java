@@ -394,7 +394,7 @@ public final class BlogApi extends ActionHandler {
 				input.includePostContents = Boolean.FALSE;
 			}
 
-			boolean postsForTag = false, postsForArchiveEntry = false;
+			boolean postsForTag = false, postsForArchiveEntry = false, postsForQuery = false;
 			if (input.tag != null && input.tag.length() > 0) {
 				postsForTag = true;
 				Tag tag = TagServiceProvider.provide().getSlugTag(input.tag);
@@ -421,7 +421,35 @@ public final class BlogApi extends ActionHandler {
 				}
 			}
 
-			if (!postsForTag && !postsForArchiveEntry) {
+			if (!postsForTag && !postsForArchiveEntry && input.query != null) {
+				postsForQuery = true;
+				if (input.session != null && input.session.user != null) {
+					output.posts = PostServiceProvider
+							.provide()
+							.getUserViewablePartialSlugPosts(
+									input.query,
+									input.session.user,
+									showAll,
+									input.includePostContents,
+									input.pager.start,
+									input.pager.count,
+									PostSortType.fromString(input.pager.sortBy),
+									input.pager.sortDirection);
+				} else {
+					output.posts = PostServiceProvider
+							.provide()
+							.getPartialSlugPosts(
+									input.query,
+									showAll,
+									input.includePostContents,
+									input.pager.start,
+									input.pager.count,
+									PostSortType.PostSortTypePublished,
+									SortDirectionType.SortDirectionTypeDescending);
+				}
+			}
+
+			if (!postsForTag && !postsForArchiveEntry && !postsForQuery) {
 				if (input.session != null && input.session.user != null) {
 					output.posts = PostServiceProvider
 							.provide()
