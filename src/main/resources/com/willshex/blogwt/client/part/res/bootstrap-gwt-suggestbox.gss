@@ -14,8 +14,7 @@
 	list-style: none;
 	background-color: #FFF;
 	border: 1px solid #CCC;
-	/* @alternate */
-	border: 1px solid rgba(0, 0, 0, 0.2);
+	/* @alternate */ border: 1px solid rgba(0, 0, 0, 0.2);
 	border-radius: 5px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -25,6 +24,7 @@
 	background-clip: padding-box;
 	-webkit-background-clip: padding-box;
 	-moz-background-clip: padding;
+	z-index: 1000;
 }
 
 .gwt-SuggestBoxPopup .item {
@@ -37,6 +37,10 @@
 	color: #fff;
 	background-color: #337ab7;
 	border: 1px solid #2e6da4;
+}
+
+.gwt-SuggestBoxPopup table {
+	width: 100%;
 }
 
 .gwt-SuggestBoxPopup .suggestPopupTopLeft {
