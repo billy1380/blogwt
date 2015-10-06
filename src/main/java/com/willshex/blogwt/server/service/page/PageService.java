@@ -297,7 +297,10 @@ final class PageService implements IPageService {
 			query = query.order(condition);
 		}
 
-		query = SearchHelper.addStartsWith("slug", partialSlug, query);
+		if (partialSlug != null) {
+			query = SearchHelper.addStartsWith("slug",
+					partialSlug.toLowerCase(), query);
+		}
 
 		List<Page> pages = query.list();
 

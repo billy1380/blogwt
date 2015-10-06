@@ -479,7 +479,10 @@ final class PostService implements IPostService {
 			query = query.order(condition);
 		}
 
-		query = SearchHelper.addStartsWith("slug", partialSlug, query);
+		if (partialSlug != null) {
+			query = SearchHelper.addStartsWith("slug",
+					partialSlug.toLowerCase(), query);
+		}
 
 		List<Post> posts = query.list();
 
