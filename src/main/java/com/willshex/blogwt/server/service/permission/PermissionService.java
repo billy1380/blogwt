@@ -17,6 +17,7 @@ import java.util.List;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.shared.api.SortDirectionType;
@@ -140,6 +141,48 @@ final class PermissionService implements IPermissionService {
 
 		return getIdPermissionsBatch(PersistenceService
 				.keysToIds(role.permissionKeys));
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.permission.IPermissionService#
+	 * getPartialNamePermissions(java.lang.String, java.lang.Integer,
+	 * java.lang.Integer,
+	 * com.willshex.blogwt.shared.api.datatype.PermissionSortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	@Override
+	public List<Permission> getPartialNamePermissions (String partialName,
+			Integer start, Integer count, PermissionSortType sortBy,
+			SortDirectionType sortDirection) {
+		Query<Permission> query = ofy().load().type(Permission.class);
+
+		if (start != null) {
+			query = query.offset(start.intValue());
+		}
+
+		if (count != null) {
+			query = query.limit(count.intValue());
+		}
+
+		if (sortBy != null) {
+			String condition = sortBy.toString();
+
+			if (sortDirection != null) {
+				switch (sortDirection) {
+				case SortDirectionTypeDescending:
+					condition = "-" + condition;
+					break;
+				default:
+					break;
+				}
+			}
+
+			query = query.order(condition);
+		}
+
+		query = SearchHelper.addStartsWith("code", partialName, query);
+
+		return query.list();
 	}
 
 }

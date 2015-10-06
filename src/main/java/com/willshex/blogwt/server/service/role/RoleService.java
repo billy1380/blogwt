@@ -17,6 +17,7 @@ import java.util.List;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.RoleSortType;
@@ -115,6 +116,47 @@ final class RoleService implements IRoleService {
 	@Override
 	public Role getCodeRole (String code) {
 		return ofy().load().type(Role.class).filter("code", code).first().now();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.role.IRoleService#getPartialNameRoles
+	 * (java.lang.String, java.lang.Integer, java.lang.Integer,
+	 * com.willshex.blogwt.shared.api.datatype.RoleSortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	@Override
+	public List<Role> getPartialNameRoles (String partialName, Integer start,
+			Integer count, RoleSortType sortBy, SortDirectionType sortDirection) {
+		Query<Role> query = ofy().load().type(Role.class);
+
+		if (start != null) {
+			query = query.offset(start.intValue());
+		}
+
+		if (count != null) {
+			query = query.limit(count.intValue());
+		}
+
+		if (sortBy != null) {
+			String condition = sortBy.toString();
+
+			if (sortDirection != null) {
+				switch (sortDirection) {
+				case SortDirectionTypeDescending:
+					condition = "-" + condition;
+					break;
+				default:
+					break;
+				}
+			}
+
+			query = query.order(condition);
+		}
+
+		query = SearchHelper.addStartsWith("name", partialName, query);
+
+		return query.list();
 	}
 
 }

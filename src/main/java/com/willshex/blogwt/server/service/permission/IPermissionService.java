@@ -61,6 +61,19 @@ public interface IPermissionService extends IService {
 			PermissionSortType sortBy, SortDirectionType sortDirection);
 
 	/**
+	 * 
+	 * @param partialName
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
+	 * @return
+	 */
+	public List<Permission> getPartialNamePermissions (String partialName,
+			Integer start, Integer count, PermissionSortType sortBy,
+			SortDirectionType sortDirection);
+
+	/**
 	 * @return
 	 */
 	public Long getPermissionsCount ();

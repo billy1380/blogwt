@@ -70,4 +70,16 @@ public interface IRoleService extends IService {
 	 */
 	public List<Role> getIdRolesBatch (Collection<Long> roleIds);
 
+	/**
+	 * 
+	 * @param query
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
+	 * @return
+	 */
+	public List<Role> getPartialNameRoles (String partialName, Integer start,
+			Integer count, RoleSortType sortBy, SortDirectionType sortDirection);
+
 }
