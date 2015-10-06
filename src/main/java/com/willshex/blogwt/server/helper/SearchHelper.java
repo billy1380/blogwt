@@ -96,7 +96,7 @@ public class SearchHelper {
 
 	public static <T> Query<T> addStartsWith (String field, String text,
 			Query<T> query) {
-		return query.filter(field + " >=", text).filter(field + " <=",
-				text + '\ufffd');
+		return query.filter(field + " >=", text).filter(field + " <",
+				text + "\ufffd");
 	}
 }
