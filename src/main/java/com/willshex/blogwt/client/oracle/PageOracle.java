@@ -89,6 +89,6 @@ public class PageOracle extends SuggestOracle<Page> {
 	 * (java.lang.Object) */
 	@Override
 	protected String getReplacementString (Page item) {
-		return item.id.toString();
+		return item.slug;
 	}
 }

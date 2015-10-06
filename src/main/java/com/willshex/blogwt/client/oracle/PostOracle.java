@@ -89,7 +89,7 @@ public class PostOracle extends SuggestOracle<Post> {
 	 * (java.lang.Object) */
 	@Override
 	protected String getReplacementString (Post item) {
-		return item.id.toString();
+		return item.slug;
 	}
 
 }
