@@ -84,6 +84,37 @@ public interface IPostService extends IService {
 
 	/**
 	 * 
+	 * @param partialSlug
+	 * @param showAll
+	 * @param includeContents
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
+	 * @return
+	 */
+	public List<Post> getPartialSlugPosts (String partialSlug, Boolean showAll,
+			Boolean includeContents, Integer start, Integer count,
+			PostSortType sortBy, SortDirectionType sortDirection);
+
+	/**
+	 * 
+	 * @param partialSlug
+	 * @param user
+	 * @param showAll
+	 * @param includeContents
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
+	 * @return
+	 */
+	public List<Post> getUserViewablePartialSlugPosts (String partialSlug,
+			User user, Boolean showAll, Boolean includeContents, Integer start,
+			Integer count, PostSortType sortBy, SortDirectionType sortDirection);
+
+	/**
+	 * 
 	 * @param user
 	 * @param showAll
 	 * @return

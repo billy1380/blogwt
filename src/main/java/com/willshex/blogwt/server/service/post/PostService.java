@@ -415,4 +415,91 @@ final class PostService implements IPostService {
 		} while (posts != null && posts.size() >= pager.count.intValue());
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.post.IPostService#getPartialSlugPosts
+	 * (java.lang.String, java.lang.Boolean, java.lang.Boolean,
+	 * java.lang.Integer, java.lang.Integer,
+	 * com.willshex.blogwt.shared.api.datatype.PostSortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	@Override
+	public List<Post> getPartialSlugPosts (String partialSlug, Boolean showAll,
+			Boolean includeContents, Integer start, Integer count,
+			PostSortType sortBy, SortDirectionType sortDirection) {
+		return getUserViewablePartialSlugPosts(partialSlug, null, showAll,
+				includeContents, start, count, sortBy, sortDirection);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.post.IPostService#
+	 * getUserViewablePartialSlugPosts(java.lang.String,
+	 * com.willshex.blogwt.shared.api.datatype.User, java.lang.Boolean,
+	 * java.lang.Boolean, java.lang.Integer, java.lang.Integer,
+	 * com.willshex.blogwt.shared.api.datatype.PostSortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	@Override
+	public List<Post> getUserViewablePartialSlugPosts (String partialSlug,
+			User user, Boolean showAll, Boolean includeContents, Integer start,
+			Integer count, PostSortType sortBy, SortDirectionType sortDirection) {
+		Query<Post> query = ofy().load().type(Post.class);
+
+		if (user != null && user.id != null) {
+			query = query.filter(PostSortType.PostSortTypeAuthor.toString()
+					+ "Key", user);
+		}
+
+		if (showAll == null || !showAll.booleanValue()) {
+			query = query.filter(PostSortType.PostSortTypeListed.toString(),
+					Boolean.TRUE);
+		}
+
+		if (start != null) {
+			query = query.offset(start.intValue());
+		}
+
+		if (count != null) {
+			query = query.limit(count.intValue());
+		}
+
+		if (sortBy != null) {
+			String condition = sortBy.toString();
+
+			if (sortDirection != null) {
+				switch (sortDirection) {
+				case SortDirectionTypeDescending:
+					condition = "-" + condition;
+					break;
+				default:
+					break;
+				}
+			}
+
+			query = query.order(condition);
+		}
+
+		query = SearchHelper.addStartsWith("slug", partialSlug, query);
+
+		List<Post> posts = query.list();
+
+		if (Boolean.TRUE.equals(includeContents)) {
+			List<Long> postContentIds = new ArrayList<Long>();
+
+			for (Post post : posts) {
+				postContentIds.add(Long.valueOf(post.contentKey.getId()));
+			}
+
+			Map<Long, PostContent> contents = ofy().load()
+					.type(PostContent.class).ids(postContentIds);
+
+			for (Post post : posts) {
+				post.content = contents.get(Long.valueOf(post.contentKey
+						.getId()));
+			}
+		}
+
+		return posts;
+	}
+
 }
