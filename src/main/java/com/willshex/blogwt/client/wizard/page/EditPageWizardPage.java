@@ -19,9 +19,9 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.helper.PostHelper;
-import com.willshex.blogwt.client.oracle.PageOracle;
 import com.willshex.blogwt.client.part.BootstrapGwtSuggestBox;
 import com.willshex.blogwt.client.wizard.WizardPage;
 import com.willshex.blogwt.shared.api.datatype.Page;
@@ -42,7 +42,7 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 	@UiField Element elSlug;
 	@UiField CheckBox cbxHasParent;
 	@UiField(provided = true) SuggestBox txtParentPage = new SuggestBox(
-			new PageOracle());
+			PageController.get().oracle());
 	@UiField CheckBox cbxHasPriority;
 	@UiField TextBox txtPriority;
 

@@ -16,12 +16,14 @@ import com.google.gson.JsonParser;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
+import com.willshex.blogwt.client.oracle.PageOracle;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
@@ -64,6 +66,7 @@ public class PageController extends AsyncDataProvider<Page> {
 		return one;
 	}
 
+	private PageOracle oracle;
 	private Pager pager = PagerHelper.createDefaultPager();
 
 	private Request getPagesRequest;
@@ -322,5 +325,13 @@ public class PageController extends AsyncDataProvider<Page> {
 	/*-{
 		return $wnd['pages'];
 	}-*/;
+
+	public SuggestOracle oracle () {
+		if (oracle == null) {
+			oracle = new PageOracle();
+		}
+
+		return oracle;
+	}
 
 }

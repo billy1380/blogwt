@@ -11,12 +11,14 @@ import java.util.Collections;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.BlogService;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.client.oracle.PostOracle;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
@@ -70,6 +72,7 @@ public class PostController extends AsyncDataProvider<Post> {
 		return archiveEntryPostController;
 	}
 
+	private PostOracle oracle;
 	private String tag;
 
 	private Pager pager = PagerHelper.createDefaultPager().sortBy(
@@ -349,6 +352,17 @@ public class PostController extends AsyncDataProvider<Post> {
 		tag = null;
 
 		PagerHelper.reset(pager);
+	}
+
+	/**
+	 * @return
+	 */
+	public SuggestOracle oracle () {
+		if (oracle == null) {
+			oracle = new PostOracle();
+		}
+
+		return oracle;
 	}
 
 }
