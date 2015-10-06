@@ -68,7 +68,7 @@ public abstract class SuggestOracle<T> extends
 	 * com.google.gwt.user.client.ui.SuggestOracle.Callback) */
 	@Override
 	public void requestSuggestions (Request request, Callback callback) {
-		if (request.getQuery().length() > 3) {
+		if (request.getQuery().length() >= getQueryMinLength()) {
 			lookup.cancel();
 			if (this.tracking != null) {
 				this.tracking.cancel();
@@ -106,5 +106,9 @@ public abstract class SuggestOracle<T> extends
 	 * @return
 	 */
 	protected abstract String getReplacementString (T item);
+
+	protected int getQueryMinLength () {
+		return 3;
+	}
 
 }
