@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.PageController;
@@ -73,7 +74,10 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 			imgLargeBrand.getElement().removeAttribute("width");
 			imgLargeBrand.getElement().removeAttribute("height");
 			imgLargeBrand.addStyleName("img-responsive");
+			imgLargeBrand.addStyleName("center-block");
 			imgLargeBrand.setUrl(largeLogo);
+		} else {
+			imgLargeBrand.setResource(Resources.RES.largeBrand());
 		}
 
 		pnlNoPosts.removeFromParent();

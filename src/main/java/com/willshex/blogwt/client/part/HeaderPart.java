@@ -132,6 +132,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 			imgLogo.setTitle(title);
 			imgLogo.setAltText(title);
+		} else {
+			imgLogo.setResource(Resources.RES.brand());
 		}
 
 		btnNavExpand.setTarget(pnlNav);

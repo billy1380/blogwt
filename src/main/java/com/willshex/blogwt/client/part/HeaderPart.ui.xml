@@ -3,7 +3,6 @@
 	xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:import field="com.willshex.blogwt.client.helper.PageTypeHelper.*" />
 	<ui:import field="com.willshex.blogwt.shared.page.PageType.*" />
-	<ui:import field="com.willshex.blogwt.client.Resources.RES" />
 	<ui:style gss="true">
 	.bottom {
 		vertical-align: bottom;
@@ -22,7 +21,7 @@
 					<a class="navbar-brand" ui:field="btnHome">
 						<span>
 							<g:Image altText="Blogwt" title="Blogwt" ui:field="imgLogo"
-								styleName="img-rounded {style.bottom}" resource="{RES.brand}" width="20px"
+								styleName="img-rounded {style.bottom}" width="20px"
 								height="20px" />
 						</span>
 						<span ui:field="elName" class="text-capitalize">Blogwt</span>
