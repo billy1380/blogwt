@@ -25,10 +25,10 @@ import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
-import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersRequest;
-import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersResponse;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse;
 import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsRequest;
@@ -45,10 +45,10 @@ import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
 import com.willshex.blogwt.shared.api.user.call.VerifyAccountResponse;
 import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler.ChangePasswordFailure;
 import com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler.ChangePasswordSuccess;
+import com.willshex.blogwt.shared.api.user.call.event.ChangeUserAccessEventHandler.ChangeUserAccessFailure;
+import com.willshex.blogwt.shared.api.user.call.event.ChangeUserAccessEventHandler.ChangeUserAccessSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsFailure;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler.ChangeUserDetailsSuccess;
-import com.willshex.blogwt.shared.api.user.call.event.ChangeUserPowersEventHandler.ChangeUserPowersFailure;
-import com.willshex.blogwt.shared.api.user.call.event.ChangeUserPowersEventHandler.ChangeUserPowersSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler.GetEmailAvatarFailure;
 import com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler.GetEmailAvatarSuccess;
 import com.willshex.blogwt.shared.api.user.call.event.GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsFailure;
@@ -438,53 +438,68 @@ public class UserController extends AsyncDataProvider<User> {
 	}
 
 	/**
-	 * @param assign
 	 * @param user
 	 * @param roles
 	 */
-	public void changeUserRoles (boolean assign, User user, Role... roles) {
-		changeUserPowers(assign, user, null, Arrays.asList(roles));
+	public void assignUserRoles (User user, Role... roles) {
+		changeUserAccess(false, user, null, Arrays.asList(roles));
 	}
 
 	/**
-	 * @param assign
+	 * 
+	 * @param user
+	 * @param roles
+	 */
+	public void revokeUserRoles (User user, Role... roles) {
+		changeUserAccess(true, user, null, Arrays.asList(roles));
+	}
+
+	/**
 	 * @param user
 	 * @param permissions
 	 */
-	public void changeUserPermissions (boolean assign, User user,
-			Permission... permissions) {
-		changeUserPowers(assign, user, Arrays.asList(permissions), null);
+	public void assignUserPermissions (User user, Permission... permissions) {
+		changeUserAccess(false, user, Arrays.asList(permissions), null);
 	}
 
-	private void changeUserPowers (boolean assign, User user,
+	/**
+	 * 
+	 * @param user
+	 * @param permissions
+	 */
+	public void revokeUserPermissions (User user, Permission... permissions) {
+		changeUserAccess(true, user, Arrays.asList(permissions), null);
+	}
+
+	private void changeUserAccess (boolean revoke, User user,
 			List<Permission> permissions, List<Role> roles) {
-		final ChangeUserPowersRequest input = ApiHelper
-				.setAccessCode(new ChangeUserPowersRequest());
+		final ChangeUserAccessRequest input = ApiHelper
+				.setAccessCode(new ChangeUserAccessRequest());
 
 		input.session = SessionController.get().sessionForApiCall();
 		input.user = user;
-		input.assign = Boolean.valueOf(assign);
+		input.revoke = Boolean.valueOf(revoke);
 		input.roles = roles;
 		input.permissions = permissions;
 
-		ApiHelper.createUserClient().changeUserPowers(input,
-				new AsyncCallback<ChangeUserPowersResponse>() {
+		ApiHelper.createUserClient().changeUserAccess(input,
+				new AsyncCallback<ChangeUserAccessResponse>() {
 
 					@Override
-					public void onSuccess (ChangeUserPowersResponse output) {
+					public void onSuccess (ChangeUserAccessResponse output) {
 						if (output.status == StatusType.StatusTypeSuccess) {
 
 						}
 
 						DefaultEventBus.get().fireEventFromSource(
-								new ChangeUserPowersSuccess(input, output),
+								new ChangeUserAccessSuccess(input, output),
 								UserController.this);
 					}
 
 					@Override
 					public void onFailure (Throwable caught) {
 						DefaultEventBus.get().fireEventFromSource(
-								new ChangeUserPowersFailure(input, caught),
+								new ChangeUserAccessFailure(input, caught),
 								UserController.this);
 					}
 				});

@@ -1,5 +1,5 @@
 //  
-//  ChangeUserPowersResponse.java
+//  ChangeUserAccessResponse.java
 //  xsdwsdl2code
 //
 //  Created by William Shakour on September 2, 2015.
@@ -13,7 +13,7 @@ import com.google.gson.JsonObject;
 import com.willshex.blogwt.shared.api.Response;
 import com.willshex.blogwt.shared.api.datatype.User;
 
-public class ChangeUserPowersResponse extends Response {
+public class ChangeUserAccessResponse extends Response {
 	public User user;
 
 	@Override
@@ -36,7 +36,7 @@ public class ChangeUserPowersResponse extends Response {
 		}
 	}
 
-	public ChangeUserPowersResponse user (User user) {
+	public ChangeUserAccessResponse user (User user) {
 		this.user = user;
 		return this;
 	}

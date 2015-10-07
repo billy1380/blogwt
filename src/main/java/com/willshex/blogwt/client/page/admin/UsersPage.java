@@ -173,8 +173,7 @@ public class UsersPage extends Page {
 			public void update (int index, User object, String value) {
 				if (Window.confirm("Are you sure you want to make "
 						+ object.username + " a " + adminRole.name + "?")) {
-					UserController.get().changeUserRoles(true, object,
-							adminRole);
+					UserController.get().assignUserRoles(object, adminRole);
 				}
 			}
 		});

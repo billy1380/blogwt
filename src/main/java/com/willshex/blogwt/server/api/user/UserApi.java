@@ -40,8 +40,8 @@ import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
-import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersRequest;
-import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersResponse;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameResponse;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
@@ -176,18 +176,20 @@ public final class UserApi extends ActionHandler {
 		return output;
 	}
 
-	public ChangeUserPowersResponse changeUserPowers (
-			ChangeUserPowersRequest input) {
-		LOG.finer("Entering changeUserPowers");
-		ChangeUserPowersResponse output = new ChangeUserPowersResponse();
+	public ChangeUserAccessResponse changeUserAccess (
+			ChangeUserAccessRequest input) {
+		LOG.finer("Entering ChangeUserAccess");
+		ChangeUserAccessResponse output = new ChangeUserAccessResponse();
 		try {
-			ApiValidator.notNull(input, ChangeUserPowersRequest.class, "input");
+			ApiValidator.notNull(input, ChangeUserAccessRequest.class, "input");
 			ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			ApiValidator.notNull(input.assign, Boolean.class, "input.assign");
+			if (input.revoke == null) {
+				input.revoke = Boolean.FALSE;
+			}
 
 			input.user = UserValidator.lookup(input.user, "input.user");
 
@@ -201,7 +203,7 @@ public final class UserApi extends ActionHandler {
 						input.permissions, "input.permissions");
 			}
 
-			if (Boolean.TRUE.equals(input.assign)) {
+			if (Boolean.TRUE.equals(input.revoke)) {
 				output.user = UserServiceProvider.provide()
 						.addUserRolesAndPermissions(input.user, input.roles,
 								input.permissions);
@@ -219,7 +221,7 @@ public final class UserApi extends ActionHandler {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
-		LOG.finer("Exiting changeUserPowers");
+		LOG.finer("Exiting ChangeUserAccess");
 		return output;
 	}
 

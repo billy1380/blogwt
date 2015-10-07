@@ -9,8 +9,8 @@ package com.willshex.blogwt.server.api.user;
 
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
-import com.willshex.blogwt.shared.api.user.call.ChangeUserPowersRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
@@ -33,7 +33,23 @@ public final class UserJsonServlet extends JsonServlet {
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
 		UserApi service = new UserApi();
-		if ("VerifyAccount".equals(action)) {
+		if ("ChangeUserAccess".equals(action)) {
+			ChangeUserAccessRequest input = new ChangeUserAccessRequest();
+			input.fromJson(request);
+			output = service.changeUserAccess(input).toString();
+		} else if ("GetRoles".equals(action)) {
+			GetRolesRequest input = new GetRolesRequest();
+			input.fromJson(request);
+			output = service.getRoles(input).toString();
+		} else if ("GetPermissions".equals(action)) {
+			GetPermissionsRequest input = new GetPermissionsRequest();
+			input.fromJson(request);
+			output = service.getPermissions(input).toString();
+		} else if ("GetRolesAndPermissions".equals(action)) {
+			GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
+			input.fromJson(request);
+			output = service.getRolesAndPermissions(input).toString();
+		} else if ("VerifyAccount".equals(action)) {
 			VerifyAccountRequest input = new VerifyAccountRequest();
 			input.fromJson(request);
 			output = service.verifyAccount(input).toString();
@@ -41,10 +57,6 @@ public final class UserJsonServlet extends JsonServlet {
 			ResetPasswordRequest input = new ResetPasswordRequest();
 			input.fromJson(request);
 			output = service.resetPassword(input).toString();
-		} else if ("ChangeUserPowers".equals(action)) {
-			ChangeUserPowersRequest input = new ChangeUserPowersRequest();
-			input.fromJson(request);
-			output = service.changeUserPowers(input).toString();
 		} else if ("GetEmailAvatar".equals(action)) {
 			GetEmailAvatarRequest input = new GetEmailAvatarRequest();
 			input.fromJson(request);
@@ -53,6 +65,10 @@ public final class UserJsonServlet extends JsonServlet {
 			RegisterUserRequest input = new RegisterUserRequest();
 			input.fromJson(request);
 			output = service.registerUser(input).toString();
+		} else if ("ChangeUserDetails".equals(action)) {
+			ChangeUserDetailsRequest input = new ChangeUserDetailsRequest();
+			input.fromJson(request);
+			output = service.changeUserDetails(input).toString();
 		} else if ("GetUsers".equals(action)) {
 			GetUsersRequest input = new GetUsersRequest();
 			input.fromJson(request);
@@ -69,18 +85,10 @@ public final class UserJsonServlet extends JsonServlet {
 			ChangePasswordRequest input = new ChangePasswordRequest();
 			input.fromJson(request);
 			output = service.changePassword(input).toString();
-		} else if ("ChangeUserDetails".equals(action)) {
-			ChangeUserDetailsRequest input = new ChangeUserDetailsRequest();
-			input.fromJson(request);
-			output = service.changeUserDetails(input).toString();
 		} else if ("CheckUsername".equals(action)) {
 			CheckUsernameRequest input = new CheckUsernameRequest();
 			input.fromJson(request);
 			output = service.checkUsername(input).toString();
-		} else if ("GetRolesAndPermissions".equals(action)) {
-			GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
-			input.fromJson(request);
-			output = service.getRolesAndPermissions(input).toString();
 		} else if ("IsAuthorised".equals(action)) {
 			IsAuthorisedRequest input = new IsAuthorisedRequest();
 			input.fromJson(request);
@@ -93,14 +101,6 @@ public final class UserJsonServlet extends JsonServlet {
 			ForgotPasswordRequest input = new ForgotPasswordRequest();
 			input.fromJson(request);
 			output = service.forgotPassword(input).toString();
-		} else if ("GetPermissions".equals(action)) {
-			GetPermissionsRequest input = new GetPermissionsRequest();
-			input.fromJson(request);
-			output = service.getPermissions(input).toString();
-		} else if ("GetRoles".equals(action)) {
-			GetRolesRequest input = new GetRolesRequest();
-			input.fromJson(request);
-			output = service.getRoles(input).toString();
 		}
 		return output;
 	}
