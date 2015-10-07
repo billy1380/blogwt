@@ -21,6 +21,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
@@ -38,14 +39,18 @@ import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse;
+import com.willshex.blogwt.shared.api.user.call.event.ChangeUserAccessEventHandler;
 import com.willshex.blogwt.shared.page.Stack;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  *
  */
 public class ChangeAccessPage extends Page implements
-		NavigationChangedEventHandler {
+		NavigationChangedEventHandler, ChangeUserAccessEventHandler {
 
 	public interface Templates extends SafeHtmlTemplates {
 		Templates INSTANCE = GWT.create(Templates.class);
@@ -71,6 +76,7 @@ public class ChangeAccessPage extends Page implements
 			PermissionController.get().oracle());
 	@UiField NoneFoundPanel pnlNoRoles;
 	@UiField NoneFoundPanel pnlNoPermissions;
+	@UiField FormPanel frmChangeAccess;
 
 	private User user;
 	private SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
@@ -124,7 +130,7 @@ public class ChangeAccessPage extends Page implements
 				if (Window
 						.confirm("Are you sure you want to remove user role: "
 								+ object.name + "?")) {
-					// remove role
+					UserController.get().revokeUserRoles(user, object);
 				}
 			}
 		});
@@ -167,7 +173,7 @@ public class ChangeAccessPage extends Page implements
 				if (Window
 						.confirm("Are you sure you want to revoke user permission: "
 								+ object.name + "?")) {
-					// revoke permission
+					UserController.get().revokeUserPermissions(user, object);
 				}
 			}
 		});
@@ -180,11 +186,21 @@ public class ChangeAccessPage extends Page implements
 	@UiHandler("btnAddRole")
 	void onAddRoleClicked (ClickEvent ce) {
 		loading();
+
+		if (isValidRole()) {
+			UserController.get().assignUserRoles(user,
+					new Role().code(txtRole.getValue()));
+		}
 	}
 
 	@UiHandler("btnAddPermission")
 	void onAddPremissionClicked (ClickEvent ce) {
 		loading();
+
+		if (isValidPermission()) {
+			UserController.get().assignUserPermissions(user,
+					new Permission().code(txtPermission.getValue()));
+		}
 	}
 
 	@Override
@@ -194,6 +210,8 @@ public class ChangeAccessPage extends Page implements
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				this));
+		register(DefaultEventBus.get().addHandlerToSource(
+				ChangeUserAccessEventHandler.TYPE, UserController.get(), this));
 	}
 
 	@Override
@@ -224,5 +242,67 @@ public class ChangeAccessPage extends Page implements
 
 	private void ready () {
 
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#reset() */
+	@Override
+	protected void reset () {
+		frmChangeAccess.reset();
+		super.reset();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserAccessEventHandler
+	 * #changeUserAccessSuccess(com.willshex.blogwt.shared.api.user.call.
+	 * ChangeUserAccessRequest,
+	 * com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse) */
+	@Override
+	public void changeUserAccessSuccess (ChangeUserAccessRequest input,
+			ChangeUserAccessResponse output) {
+		if (input.user.id != null && user != null
+				&& input.user.id.equals(user.id)) {
+			if (output.status == StatusType.StatusTypeSuccess) {
+				if (input.roles == null) {
+					tblPermissions.setVisibleRangeAndClearData(
+							tblPermissions.getVisibleRange(), true);
+				} else {
+					tblRoles.setVisibleRangeAndClearData(
+							tblPermissions.getVisibleRange(), true);
+				}
+
+				reset();
+			}
+
+			ready();
+		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserAccessEventHandler
+	 * #changeUserAccessFailure(com.willshex.blogwt.shared.api.user.call.
+	 * ChangeUserAccessRequest, java.lang.Throwable) */
+	@Override
+	public void changeUserAccessFailure (ChangeUserAccessRequest input,
+			Throwable caught) {
+		if (input.user.id != null && user != null
+				&& input.user.id.equals(user.id)) {
+			GWT.log("Error changing user access", caught);
+
+			ready();
+		}
+	}
+
+	private boolean isValidRole () {
+		return txtRole.getValue().length() == 3;
+	}
+
+	private boolean isValidPermission () {
+		return txtPermission.getValue().length() == 3;
 	}
 }

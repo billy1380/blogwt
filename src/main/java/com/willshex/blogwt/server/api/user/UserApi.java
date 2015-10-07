@@ -205,11 +205,11 @@ public final class UserApi extends ActionHandler {
 
 			if (Boolean.TRUE.equals(input.revoke)) {
 				output.user = UserServiceProvider.provide()
-						.addUserRolesAndPermissions(input.user, input.roles,
+						.removeUserRolesAndPermissions(input.user, input.roles,
 								input.permissions);
 			} else {
 				output.user = UserServiceProvider.provide()
-						.removeUserRolesAndPermissions(input.user, input.roles,
+						.addUserRolesAndPermissions(input.user, input.roles,
 								input.permissions);
 			}
 

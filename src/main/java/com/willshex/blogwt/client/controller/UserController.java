@@ -81,7 +81,7 @@ public class UserController extends AsyncDataProvider<User> {
 		 * .google.gwt.view.client.HasData) */
 		@Override
 		protected void onRangeChanged (HasData<Role> display) {
-
+			UserController.this.fetchUserRolesAndPremissions();
 		}
 
 	};
