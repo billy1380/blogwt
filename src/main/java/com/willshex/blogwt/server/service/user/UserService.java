@@ -268,9 +268,7 @@ final class UserService implements IUserService {
 				}
 
 				if (permissions != null) {
-					if (current != null) {
-						current.clear();
-					} else {
+					if (current == null) {
 						current = new HashSet<Long>();
 					}
 
@@ -291,9 +289,7 @@ final class UserService implements IUserService {
 				}
 
 				if (roles != null) {
-					if (current != null) {
-						current.clear();
-					} else {
+					if (current == null) {
 						current = new HashSet<Long>();
 					}
 
@@ -353,6 +349,10 @@ final class UserService implements IUserService {
 						current = new HashSet<Long>();
 					}
 
+					for (Key<Role> key : latest.roleKeys) {
+						current.add(Long.valueOf(key.getId()));
+					}
+					
 					if (roles != null) {
 						for (Role role : roles) {
 							current.remove(role.id);
