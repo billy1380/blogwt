@@ -44,7 +44,7 @@ public class AddToAny extends Composite {
 
 		String share = PropertyController.get().stringProperty(
 				PropertyHelper.POST_SHARE_ENABLED);
-		if (!PropertyHelper.NONE_VALUE.equals(share)) {
+		if (share != null && !PropertyHelper.NONE_VALUE.equals(share)) {
 			List<String> shareWith = TagHelper.convertToTagList(share);
 
 			AnchorElement anchor;
