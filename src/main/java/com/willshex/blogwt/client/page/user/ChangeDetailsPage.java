@@ -76,7 +76,7 @@ public class ChangeDetailsPage extends Page implements
 		@Template("{0} (<a href=\"https://en.gravatar.com/\" target=\"_blank\">Gravatar</a>)")
 		SafeHtml gravatarComment (String comment);
 
-		@Template("{0} <small>(<a href=\"{1}\">access</a>)</small>")
+		@Template("{0} <a href=\"{1}\"><span class=\"glyphicon glyphicon-user\"></span></a>")
 		SafeHtml rolesAndPermissions (String username, String accessHref);
 
 		@Template("{0} <a href=\"{1}\"><span class=\"glyphicon glyphicon-sunglasses\"></span></a>")
