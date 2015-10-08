@@ -143,7 +143,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	private void setupNavBarPages () {
 		elName.setInnerText(PropertyController.get().title());
 
-		boolean foundBrandPage = false;
+		boolean foundBrandPage = false, addedBlog = false;
 		List<Page> pages;
 		SafeUri href;
 		if ((pages = PageController.get().getHeaderPages()) != null) {
@@ -154,6 +154,15 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 					btnHome.setHref(PageTypeHelper.slugToHref(page.slug));
 					foundBrandPage = true;
 				} else {
+					if (page.priority != null && page.priority.floatValue() > 2
+							&& foundBrandPage && !addedBlog) {
+						href = PageTypeHelper.asHref(PageType.PostsPageType);
+						addItem(elNavLeft,
+								HeaderTemplates.INSTANCE.item(href, "Blog"),
+								href);
+						addedBlog = true;
+					}
+
 					href = PageTypeHelper.slugToHref(page.slug);
 					addItem(elNavLeft,
 							HeaderTemplates.INSTANCE.item(href, page.title),
@@ -163,9 +172,11 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		}
 
 		if (foundBrandPage) {
-			href = PageTypeHelper.asHref(PageType.PostsPageType);
-			addItem(elNavLeft, HeaderTemplates.INSTANCE.item(href, "Blog"),
-					href);
+			if (!addedBlog) {
+				href = PageTypeHelper.asHref(PageType.PostsPageType);
+				addItem(elNavLeft, HeaderTemplates.INSTANCE.item(href, "Blog"),
+						href);
+			}
 		} else {
 			btnHome.setHref(PageTypeHelper.asHref(PageType.PostsPageType));
 		}
