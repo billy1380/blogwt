@@ -1,4 +1,6 @@
-# blogwt
+# ![Blogwt](https://raw.githubusercontent.com/billy1380/blogwt/master/src/main/resources/com/willshex/blogwt/client/res/brand.png "Blogwt") BloGWT
+
+Looking for a better name! Let me know if you have one :wink:.
 
 ##Intro
 This project is a blog written in GWT on top of app engine. I started this project because I wanted a blog site for my [willshex.com](http://www.willshex.com "willshex.com") domain. The project does not use gwtrpc, I am using a json based API (or 4 - search, user, blog, and page split by functional area).
