@@ -403,6 +403,8 @@ public final class UserApi extends ActionHandler {
 
 			UserHelper.stripPassword(output.users);
 
+			output.pager = PagerHelper.moveForward(input.pager);
+
 			UserHelper.stripPassword(output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
