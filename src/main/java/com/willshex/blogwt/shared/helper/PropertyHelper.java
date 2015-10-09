@@ -56,6 +56,8 @@ public class PropertyHelper {
 
 	public static final String COOKIE_DETAILS_PAGE_SLUG = "cookie.details.slug";
 
+	public static final String TITLE_IN_NAVBAR = "heading.title";
+
 	// user properties
 	public static final String ALLOW_USER_REGISTRATION = "user.allow.registration";
 	public static final String NEW_USER_PERMISSIONS = "user.new.permissions";
@@ -100,6 +102,8 @@ public class PropertyHelper {
 	public static final String NEW_USER_ROLES_DESCRIPTION = "New user roles";
 
 	public static final String COOKIE_DETAILS_PAGE_SLUG_DESCRIPTION = "Cookie details page slug";
+
+	public static final String TITLE_IN_NAVBAR_DESCRIPTION = "Show the site title in the navigation bar with the small logo or the title only or neither";
 
 	public static final String NONE_VALUE = "none";
 	public static final String APPLE_VALUE = "apple";
@@ -279,6 +283,12 @@ public class PropertyHelper {
 				|| property.value.length() == 0;
 	}
 
+	public static Property createTitleInNavBar (String value) {
+		return new Property().name(TITLE_IN_NAVBAR)
+				.description(TITLE_IN_NAVBAR_DESCRIPTION).group("Heading")
+				.type("string").value(value);
+	}
+
 	/**
 	 * @return
 	 */
@@ -288,7 +298,7 @@ public class PropertyHelper {
 					createExtendedTitle(null), createCopyrightHolder(null),
 					createCopyrightUrl(null), createPasswordHashSalt(null),
 					createPostEnableEmoji(null),
-					createPostCommentsEnabled(null),
+					createPostCommentsEnabled(null), createTitleInNavBar(null),
 					createMarkdownMapsApiKey(null), createDisqusId(null),
 					createCategoryId(null), createPostShareEnabled(null),
 					createMarkdownPrefechIncludes(null),
