@@ -8,6 +8,7 @@
 package com.willshex.blogwt.client.page.admin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.property.AbstractPropertyPart;
 import com.willshex.blogwt.client.part.property.BooleanPropertyPart;
+import com.willshex.blogwt.client.part.property.CombinationPropertyPart;
 import com.willshex.blogwt.client.part.property.CommentPropertyPart;
 import com.willshex.blogwt.client.part.property.EmojiPropertyPart;
 import com.willshex.blogwt.client.part.property.ImagePropertyPart;
@@ -152,6 +154,11 @@ public class PropertiesPage extends Page implements
 			propertyWidget = new BooleanPropertyPart();
 		} else if (PropertyHelper.SHORT_DESCRIPTION.equals(property.name)) {
 			propertyWidget = new LongStringPropertyPart();
+		} else if (PropertyHelper.TITLE_IN_NAVBAR.equals(property.name)) {
+			Map<String, String> options = new HashMap<String, String>();
+			options.put(PropertyHelper.TITLE_VALUE, "Show Title");
+			options.put(PropertyHelper.LOGO_VALUE, "Show Logo");
+			propertyWidget = new CombinationPropertyPart(options);
 		} else {
 			propertyWidget = new StringPropertyPart();
 

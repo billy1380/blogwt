@@ -103,12 +103,15 @@ public class PropertyHelper {
 
 	public static final String COOKIE_DETAILS_PAGE_SLUG_DESCRIPTION = "Cookie details page slug";
 
-	public static final String TITLE_IN_NAVBAR_DESCRIPTION = "Show the site title in the navigation bar with the small logo or the title only or neither";
+	public static final String TITLE_IN_NAVBAR_DESCRIPTION = "Show the site title in the navigation bar";
 
 	public static final String NONE_VALUE = "none";
 	public static final String APPLE_VALUE = "apple";
 	public static final String NOTO_VALUE = "noto";
 	public static final String TWITTER_VALUE = "twitter";
+
+	public static final String TITLE_VALUE = "title";
+	public static final String LOGO_VALUE = "logo";
 
 	private static List<Property> properties = null;
 
