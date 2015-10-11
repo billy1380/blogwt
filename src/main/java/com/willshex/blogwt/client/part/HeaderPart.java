@@ -119,21 +119,28 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 	public HeaderPart () {
 		initWidget(uiBinder.createAndBindUi(this));
-
 		Resources.RES.styles().ensureInjected();
 
-		String logoImage;
-		if ((logoImage = PropertyController.get().stringProperty(
-				PropertyHelper.SMALL_LOGO_URL)) != null
-				&& !PropertyHelper.NONE_VALUE.equalsIgnoreCase(logoImage)) {
-			imgLogo.setUrl(logoImage);
+		String titleInNavBar = PropertyController.get().stringProperty(
+				PropertyHelper.TITLE_IN_NAVBAR);
 
+		if (titleInNavBar == null
+				|| titleInNavBar.contains(PropertyHelper.LOGO_VALUE)) {
 			String title = PropertyController.get().title();
+			String logoImage = PropertyController.get().stringProperty(
+					PropertyHelper.SMALL_LOGO_URL);
+
+			if (logoImage != null
+					&& !PropertyHelper.NONE_VALUE.equalsIgnoreCase(logoImage)) {
+				imgLogo.setUrl(logoImage);
+			} else {
+				imgLogo.setResource(Resources.RES.brand());
+			}
 
 			imgLogo.setTitle(title);
 			imgLogo.setAltText(title);
 		} else {
-			imgLogo.setResource(Resources.RES.brand());
+			imgLogo.getElement().getParentElement().removeFromParent();
 		}
 
 		btnNavExpand.setTarget(pnlNav);
@@ -141,7 +148,19 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	}
 
 	private void setupNavBarPages () {
-		elName.setInnerText(PropertyController.get().title());
+		String titleInNavBar = PropertyController.get().stringProperty(
+				PropertyHelper.TITLE_IN_NAVBAR);
+
+		boolean removedHome = false;
+		if (titleInNavBar == null
+				|| titleInNavBar.contains(PropertyHelper.TITLE_VALUE)) {
+			elName.setInnerText(PropertyController.get().title());
+		} else if (titleInNavBar.equals(PropertyHelper.NONE_VALUE)) {
+			btnHome.removeFromParent();
+			removedHome = true;
+		} else {
+			elName.removeFromParent();
+		}
 
 		boolean foundBrandPage = false, addedBlog = false;
 		List<Page> pages;
@@ -150,12 +169,13 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 			for (Page page : pages) {
 				if (page.parent != null) continue;
 
-				if (page.priority != null && page.priority.floatValue() == 0.0f) {
+				if (page.priority != null && page.priority.floatValue() == 0.0f
+						&& !removedHome) {
 					btnHome.setHref(PageTypeHelper.slugToHref(page.slug));
 					foundBrandPage = true;
 				} else {
 					if (page.priority != null && page.priority.floatValue() > 2
-							&& foundBrandPage && !addedBlog) {
+							&& (foundBrandPage || removedHome) && !addedBlog) {
 						href = PageTypeHelper.asHref(PageType.PostsPageType);
 						addItem(elNavLeft,
 								HeaderTemplates.INSTANCE.item(href, "Blog"),
@@ -171,7 +191,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 			}
 		}
 
-		if (foundBrandPage) {
+		if (foundBrandPage || removedHome) {
 			if (!addedBlog) {
 				href = PageTypeHelper.asHref(PageType.PostsPageType);
 				addItem(elNavLeft, HeaderTemplates.INSTANCE.item(href, "Blog"),
