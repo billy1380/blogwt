@@ -174,6 +174,8 @@ public class ChangeDetailsPage extends Page implements
 				lnkChangePassword
 						.setTargetHistoryToken(PageType.ChangePasswordPageType
 								.asTargetHistoryToken());
+				lnkChangePassword.setVisible(true);
+				pnlPassword.setVisible(false);
 			} else if ("id".equals(current.getAction())
 					&& current.getParameterCount() > 0) {
 				Long id = Long.valueOf(current.getParameter(0));
@@ -182,7 +184,7 @@ public class ChangeDetailsPage extends Page implements
 
 				UserController.get().getUser(user);
 
-				lnkChangePassword.setVisible(true);
+				lnkChangePassword.setVisible(false);
 				pnlPassword.setVisible(false);
 			} else if ("new".equals(current.getAction())) {
 				elDates.setInnerText("Enter user details");
@@ -247,9 +249,6 @@ public class ChangeDetailsPage extends Page implements
 			txtForename.setText(user.forename);
 			txtSurname.setText(user.surname);
 			txtEmail.setText(user.email);
-
-			lnkChangePassword.setVisible(true);
-			pnlPassword.setVisible(false);
 		}
 	}
 

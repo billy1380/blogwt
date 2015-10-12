@@ -208,9 +208,10 @@ public class ChangePasswordPage extends Page implements
 			if (current.getParameterCount() > 0) {
 				String value = current.getParameter(0);
 
+				pnlPassword.setVisible(false);
+
 				if (reset) {
 					actionCode = value;
-					pnlPassword.setVisible(false);
 					elActionCode.setInnerText(actionCode);
 					pnlPassword.getElement().getParentElement()
 							.insertBefore(elReset, pnlPassword.getElement());
