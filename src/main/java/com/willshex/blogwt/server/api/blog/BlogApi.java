@@ -363,7 +363,8 @@ public final class BlogApi extends ActionHandler {
 			ApiValidator.notNull(input, GetPostsRequest.class, "input");
 			ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-			Boolean showAll = Boolean.FALSE;
+			Boolean showAll = Boolean.TRUE.equals(input.showAll) ? Boolean.TRUE
+					: Boolean.FALSE;
 			if (input.session != null) {
 				try {
 					output.session = input.session = SessionValidator
@@ -381,9 +382,8 @@ public final class BlogApi extends ActionHandler {
 					try {
 						UserValidator.authorisation(input.session.user,
 								permissions, "input.session.user");
-						showAll = Boolean.TRUE;
 					} catch (AuthorisationException aEx) {
-
+						showAll = Boolean.FALSE;
 					}
 				} catch (InputValidationException ex) {
 					output.session = input.session = null;
@@ -450,24 +450,11 @@ public final class BlogApi extends ActionHandler {
 			}
 
 			if (!postsForTag && !postsForArchiveEntry && !postsForQuery) {
-				if (input.session != null && input.session.user != null) {
-					output.posts = PostServiceProvider
-							.provide()
-							.getUserViewablePosts(
-									input.session.user,
-									showAll,
-									input.includePostContents,
-									input.pager.start,
-									input.pager.count,
-									PostSortType.fromString(input.pager.sortBy),
-									input.pager.sortDirection);
-				} else {
-					output.posts = PostServiceProvider.provide().getPosts(
-							showAll, input.includePostContents,
-							input.pager.start, input.pager.count,
-							PostSortType.PostSortTypePublished,
-							SortDirectionType.SortDirectionTypeDescending);
-				}
+				output.posts = PostServiceProvider.provide().getPosts(showAll,
+						input.includePostContents, input.pager.start,
+						input.pager.count,
+						PostSortType.fromString(input.pager.sortBy),
+						input.pager.sortDirection);
 			}
 
 			if (output.posts != null) {

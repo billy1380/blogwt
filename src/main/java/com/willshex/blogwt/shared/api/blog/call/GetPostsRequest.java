@@ -16,12 +16,12 @@ import com.willshex.blogwt.shared.api.Request;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 
 public class GetPostsRequest extends Request {
-
 	public Pager pager;
 	public Boolean includePostContents;
 	public String tag;
 	public ArchiveEntry archiveEntry;
 	public String query;
+	public Boolean showAll;
 
 	@Override
 	public JsonObject toJson () {
@@ -41,6 +41,9 @@ public class GetPostsRequest extends Request {
 		JsonElement jsonQuery = query == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(query);
 		object.add("query", jsonQuery);
+		JsonElement jsonShowAll = showAll == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(showAll);
+		object.add("showAll", jsonShowAll);
 		return object;
 	}
 
@@ -81,6 +84,12 @@ public class GetPostsRequest extends Request {
 				query = jsonQuery.getAsString();
 			}
 		}
+		if (jsonObject.has("showAll")) {
+			JsonElement jsonShowAll = jsonObject.get("showAll");
+			if (jsonShowAll != null) {
+				showAll = Boolean.valueOf(jsonShowAll.getAsBoolean());
+			}
+		}
 	}
 
 	public GetPostsRequest pager (Pager pager) {
@@ -105,6 +114,11 @@ public class GetPostsRequest extends Request {
 
 	public GetPostsRequest query (String query) {
 		this.query = query;
+		return this;
+	}
+
+	public GetPostsRequest showAll (Boolean showAll) {
+		this.showAll = showAll;
 		return this;
 	}
 }
