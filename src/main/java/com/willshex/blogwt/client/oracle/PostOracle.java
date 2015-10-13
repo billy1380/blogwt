@@ -42,6 +42,7 @@ public class PostOracle extends SuggestOracle<Post> {
 		input.query = request.getQuery();
 		input.pager = PagerHelper.createDefaultPager();
 		input.pager.count = Integer.valueOf(request.getLimit());
+		input.showAll = Boolean.TRUE;
 
 		if (getPostsRequest != null) {
 			getPostsRequest.cancel();
