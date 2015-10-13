@@ -11,16 +11,19 @@ import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.cell.PrettyButtonCell;
@@ -55,6 +58,7 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField SimplePager pgrPages;
 	@UiField NoneFoundPanel pnlNoPages;
+	@UiField Button btnRefresh;
 	private SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
 	private ButtonCell actionButtonPrototype = new PrettyButtonCell();
 
@@ -218,5 +222,10 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 	 * java.lang.Throwable) */
 	@Override
 	public void deletePageFailure (DeletePageRequest input, Throwable caught) {}
+
+	@UiHandler("btnRefresh")
+	void onRefreshClicked (ClickEvent ce) {
+		tblPages.setVisibleRangeAndClearData(tblPages.getVisibleRange(), true);
+	}
 
 }

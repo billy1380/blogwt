@@ -17,6 +17,10 @@
 					New Page
 				</g:InlineHyperlink>
 			</div>
+
+			<g:Button ui:field="btnRefresh" styleName="btn btn-info">
+				<span class="glyphicon glyphicon-refresh"></span>
+			</g:Button>
 		</div>
 
 		<c:CellTable ui:field="tblPages" styleName="col-sm-12 table table-striped" />
