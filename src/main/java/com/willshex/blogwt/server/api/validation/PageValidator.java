@@ -35,7 +35,11 @@ public class PageValidator {
 		}
 
 		page.posts = posts;
-		
+
+		if (page.parent != null) {
+			page.parent = lookup(page.parent, name + ".parent");
+		}
+
 		page.owner = UserValidator.lookup(page.owner, name + ".owner");
 
 		return page;

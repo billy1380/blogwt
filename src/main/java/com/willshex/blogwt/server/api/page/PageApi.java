@@ -16,6 +16,7 @@ import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PageValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
+import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
@@ -221,6 +222,12 @@ public final class PageApi extends ActionHandler {
 
 			output.page = input.page = PageValidator.lookup(input.page,
 					"input.page");
+
+			if (output.page.parentKey != null) {
+				output.page.parent = PageValidator.lookup(PersistenceService
+						.dataType(Page.class, output.page.parentKey),
+						"input.page.parent");
+			}
 
 			if (Boolean.TRUE.equals(input.includePosts)) {
 				output.page = PageServiceProvider.provide().getPage(
