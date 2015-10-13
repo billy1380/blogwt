@@ -66,9 +66,6 @@ public class SetupBlogPage extends WizardDialogPage implements
 			SetupBlogResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			Window.Location.reload();
-		} else {
-			GWT.log("setupBlogFailure - input:" + input.toString()
-					+ " - output:" + output);
 		}
 	}
 
@@ -81,7 +78,7 @@ public class SetupBlogPage extends WizardDialogPage implements
 	 * java.lang.Throwable) */
 	@Override
 	public void setupBlogFailure (SetupBlogRequest input, Throwable caught) {
-		GWT.log("setupBlogFailure - input:" + input.toString(), caught);
+		GWT.log("setupBlogFailure", caught);
 	}
 
 	/* (non-Javadoc)
@@ -109,11 +106,12 @@ public class SetupBlogPage extends WizardDialogPage implements
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onCancelled()
-	 */
+	 * 
+	 * @see
+	 * com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onCancelled() */
 	@Override
 	public void onCancelled () {
-		
+
 	}
 
 }
