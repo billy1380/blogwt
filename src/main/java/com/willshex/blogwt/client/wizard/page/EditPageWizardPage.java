@@ -76,8 +76,7 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 		}
 
 		if (cbxHasParent.getValue().booleanValue()) {
-			(page.parent = new Page())
-					.id(Long.valueOf(txtParentPage.getValue()));
+			(page.parent = new Page()).slug(txtParentPage.getValue());
 		} else {
 			page.parent = null;
 		}
@@ -107,7 +106,7 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 			cbxHasParent.setValue(Boolean.valueOf(b = page.parent != null),
 					true);
 			if (b) {
-				txtParentPage.setValue(Long.toString(page.parent.id));
+				txtParentPage.setValue(page.parent.slug);
 			}
 
 			cbxHasPriority.setValue(Boolean.valueOf(b = page.priority != null),

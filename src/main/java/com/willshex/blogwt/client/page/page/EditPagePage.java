@@ -10,6 +10,7 @@ package com.willshex.blogwt.client.page.page;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.shared.page.Stack;
@@ -164,7 +165,9 @@ public class EditPagePage extends WizardDialogPage implements
 	 * (com.willshex.blogwt.shared.api.page.call.CreatePageRequest,
 	 * java.lang.Throwable) */
 	@Override
-	public void createPageFailure (CreatePageRequest input, Throwable caught) {}
+	public void createPageFailure (CreatePageRequest input, Throwable caught) {
+		GWT.log("createPageFailure", caught);
+	}
 
 	/* (non-Javadoc)
 	 * 
