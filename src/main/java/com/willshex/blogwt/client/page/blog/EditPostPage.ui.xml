@@ -4,7 +4,7 @@
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<ui:import field="com.willshex.blogwt.client.helper.ApiHelper.UPLOAD_END_POINT" />
 	<ui:style gss="true">
-	@external checkbox, upld-drop-zone, GWTUpld, row;
+	@external checkbox, upld-drop-zone, GWTUpld;
 	.checkbox input[type=checkbox] {
 		margin-left: 0px;
 	}
@@ -28,10 +28,6 @@
 	
 	.GWTUpld {
 		width: 100%;
-	}
-	
-	.row {
-		margin-bottom: 15px;
 	}
 	
 	.tags {
