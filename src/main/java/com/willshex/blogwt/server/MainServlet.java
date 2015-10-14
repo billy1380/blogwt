@@ -154,14 +154,6 @@ public class MainServlet extends ContextAwareServlet {
 		List<Page> pages = PageServiceProvider.provide().getPages(
 				Boolean.FALSE, Integer.valueOf(0), null,
 				PageSortType.PageSortTypePriority, null);
-
-		for (Page page : pages) {
-			if (page.parentKey != null) {
-				page.parent = PersistenceService.dataType(Page.class,
-						page.parentKey);
-			}
-		}
-
 		if (pages != null) {
 			scriptVariables.append("var pages='[");
 
@@ -172,6 +164,12 @@ public class MainServlet extends ContextAwareServlet {
 				} else {
 					scriptVariables.append(",");
 				}
+
+				if (page.parentKey != null) {
+					page.parent = PersistenceService.dataType(Page.class,
+							page.parentKey);
+				}
+
 				scriptVariables.append(jsonForJsVar(slim(page)));
 			}
 		}
