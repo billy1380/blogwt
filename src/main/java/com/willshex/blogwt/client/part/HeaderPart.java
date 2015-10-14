@@ -25,7 +25,6 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -36,7 +35,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.NavigationController;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
@@ -60,6 +58,7 @@ import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public class HeaderPart extends Composite implements LoginEventHandler,
@@ -104,7 +103,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiField Image imgLogo;
 	@UiField CollapseButton btnNavExpand;
 	@UiField HTMLPanel pnlNav;
-
+	private Element elOpen;
 	private Map<String, Element> items;
 
 	private Map<String, Element> ensureItems () {
@@ -145,6 +144,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 		btnNavExpand.setTarget(pnlNav);
 		setupNavBarPages();
+		btnAdmin.addClickHandler(this);
 	}
 
 	private void setupNavBarPages () {
@@ -467,30 +467,27 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		btnNavExpand.hide();
 	}
 
-	@UiHandler("btnAdmin")
-	void onAdminClicked (ClickEvent ce) {
-		boolean isOpen = elAdmin.hasClassName("open");
-
-		if (isOpen) {
-			elAdmin.removeClassName("open");
-		} else {
-			elAdmin.addClassName("open");
-		}
-
-		ce.getNativeEvent().stopPropagation();
-	}
-
 	/* (non-Javadoc)
 	 * 
 	 * @see
 	 * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
 	 * .dom.client.ClickEvent) */
 	@Override
-	public void onClick (ClickEvent event) {
-		boolean isOpen = elAdmin.hasClassName("open");
+	public void onClick (ClickEvent ce) {
+		boolean isOpen = (elOpen != null);
+
 		if (isOpen) {
-			elAdmin.removeClassName("open");
+			elOpen.removeClassName("open");
 		}
+
+		if (ce.getSource() != elOpen /* && ce.getSource() in openable */) {
+			elOpen = ((Widget) ce.getSource()).getElement().getParentElement();
+			elOpen.addClassName("open");
+		} else {
+			elOpen = null;
+		}
+
+		ce.getNativeEvent().stopPropagation();
 	}
 
 	private void showUserDetails (User user) {
