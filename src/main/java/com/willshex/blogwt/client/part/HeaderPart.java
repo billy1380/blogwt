@@ -22,6 +22,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -75,17 +76,14 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	interface HeaderTemplates extends SafeHtmlTemplates {
 		HeaderTemplates INSTANCE = GWT.create(HeaderTemplates.class);
 
-		@Template("<a href=\"{0}\">{1}</a>")
-		SafeHtml item (SafeUri href, String title);
-
 		@Template("{0} <span class=\"caret\" />")
 		SafeHtml openableTitle (String title);
 
-		@Template("<a href=\"{0}\"><span class=\"glyphicon glyphicon-{1}\"></span> {2}</a>")
-		SafeHtml glyphItem (SafeUri href, String glyphName, String title);
+		@Template("<span class=\"glyphicon glyphicon-{0}\"></span> {1}")
+		SafeHtml glyphItem (String glyphName, String title);
 
-		@Template("<a href=\"{0}\"><span>{1}</span><img class=\"img-circle\" src=\"{2}\" /></a>")
-		SafeHtml imageItem (SafeUri href, String src, String title);
+		@Template("<span>{0}</span><img class=\"img-circle\" src=\"{1}\" />")
+		SafeHtml imageItem (String src, String title);
 	}
 
 	@UiField Element elName;
@@ -175,26 +173,36 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 							&& (foundBrandPage || removedHome) && !addedBlog) {
 						href = PageTypeHelper.asHref(PageType.PostsPageType);
 						addItem(elNavLeft,
-								HeaderTemplates.INSTANCE.item(href, "Blog"),
-								href);
+								SafeHtmlUtils.fromSafeConstant("Blog"), href);
 						addedBlog = true;
 					}
 
+					Element el;
 					if (page.parent == null) {
 						href = PageTypeHelper.slugToHref(page.slug);
-						addItem(elNavLeft,
-								HeaderTemplates.INSTANCE.item(href, page.title),
-								href);
-						possibleParents.put(page.id, page);
+
+						if (possibleParents.get(page.id) == null) {
+							addItem(elNavLeft,
+									SafeHtmlUtils.fromString(page.title), href);
+							possibleParents.put(page.id, page);
+						} else {
+							possibleParents.put(page.id, page);
+							swapTitle(
+									PageTypeHelper.slugToTargetHistoryToken("pageid_"
+											+ page.id),
+									HeaderTemplates.INSTANCE
+											.openableTitle(page.title), href);
+						}
 					} else {
 						Page parent;
-						Element el;
 						if ((parent = possibleParents.get(page.parent.id)) != null) {
 							el = getOpenable(PageTypeHelper
 									.slugToTargetHistoryToken(parent.slug));
 
 							if (el == null) {
-								el = getOpenable("pageid:" + parent.id);
+								el = getOpenable(PageTypeHelper
+										.slugToTargetHistoryToken("pageid_"
+												+ parent.id));
 							}
 
 							if (el == null) {
@@ -202,8 +210,11 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 										.slugToTargetHistoryToken(parent.slug));
 
 								if (el != null) {
-									el = convertItemToOpenable(PageTypeHelper
-											.slugToTargetHistoryToken(parent.slug));
+									el = convertItemToOpenable(
+											PageTypeHelper
+													.slugToTargetHistoryToken(parent.slug),
+											HeaderTemplates.INSTANCE
+													.openableTitle(parent.title));
 								}
 							}
 						} else {
@@ -219,8 +230,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 							href = PageTypeHelper.slugToHref(page.slug);
 							addItem(el.getFirstChildElement()
 									.getNextSiblingElement(),
-									HeaderTemplates.INSTANCE.item(href,
-											page.title), href);
+									SafeHtmlUtils.fromString(page.title), href);
 						}
 					}
 				}
@@ -230,8 +240,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		if (foundBrandPage || removedHome) {
 			if (!addedBlog) {
 				href = PageTypeHelper.asHref(PageType.PostsPageType);
-				addItem(elNavLeft, HeaderTemplates.INSTANCE.item(href, "Blog"),
-						href);
+				addItem(elNavLeft, SafeHtmlUtils.fromSafeConstant("Blog"), href);
 			}
 		} else {
 			btnHome.setHref(PageTypeHelper.asHref(PageType.PostsPageType));
@@ -254,13 +263,16 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		elAccount.removeFromParent();
 	}
 
-	private void addItem (Element parent, SafeHtml item, SafeUri href) {
+	private void addItem (Element parent, SafeHtml title, SafeUri href) {
 		String key = href.asString().replaceFirst("#", "");
 		Element element = getItem(key);
 
 		if (element == null) {
 			element = Document.get().createLIElement();
-			element.setInnerSafeHtml(item);
+			final AnchorElement a = Document.get().createAnchorElement();
+			a.setHref(href);
+			element.appendChild(a);
+			a.setInnerSafeHtml(title);
 			parent.appendChild(element);
 			ensureItems().put(key, element);
 		}
@@ -287,10 +299,31 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		}
 	}
 
-	private Element convertItemToOpenable (String page) {
-		activateItem(page, false);
+	private Element convertItemToOpenable (String key, SafeHtml title) {
+		activateItem(key, false);
+		Element element = getItem(key);
+		ensureItems().remove(key);
+		element.setClassName("dropdown");
+		final AnchorElement a = AnchorElement
+				.as(element.getFirstChildElement());
+		a.removeAttribute("href");
+		Event.sinkEvents(a, Event.ONCLICK);
+		Event.setEventListener(a, new EventListener() {
 
-		return null;
+			@Override
+			public void onBrowserEvent (Event event) {
+				openableClick(a);
+				event.stopPropagation();
+			}
+		});
+		a.addClassName("dropdown-toggle");
+		a.setInnerSafeHtml(title);
+		Element ul = Document.get().createULElement();
+		ul.addClassName("dropdown-menu");
+		element.appendChild(ul);
+		ensureOpenables().put(key, element);
+
+		return element;
 	}
 
 	private Element addOpenable (Element parent, SafeHtml title, SafeUri href) {
@@ -322,6 +355,14 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		ensureOpenables().put(key, element);
 
 		return element;
+	}
+
+	private void swapTitle (String oldKey, SafeHtml title, SafeUri href) {
+		String key = href.asString().replaceFirst("#", "");
+		Element item = getOpenable(oldKey);
+		ensureOpenables().remove(oldKey);
+		ensureOpenables().put(key, item);
+		item.getFirstChildElement().setInnerSafeHtml(title);
 	}
 
 	/* (non-Javadoc)
@@ -393,8 +434,9 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				removeItem(PageTypeHelper.asHref(PageType.RegisterPageType));
 			} else {
 				href = PageTypeHelper.asHref(PageType.RegisterPageType);
-				addItem(elNavRight, HeaderTemplates.INSTANCE.glyphItem(href,
-						"user", "Sign Up"), href);
+				addItem(elNavRight,
+						HeaderTemplates.INSTANCE.glyphItem("user", "Sign Up"),
+						href);
 			}
 		}
 
@@ -406,7 +448,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 						PropertyHelper.SHOW_SIGN_IN, true)) {
 			href = PageTypeHelper.asHref(login ? PageType.LogoutPageType
 					: PageType.LoginPageType);
-			addItem(elNavRight, HeaderTemplates.INSTANCE.glyphItem(href,
+			addItem(elNavRight, HeaderTemplates.INSTANCE.glyphItem(
 					login ? "log-out" : "log-in", login ? "Sign Out"
 							: "Sign In"), href);
 		}
