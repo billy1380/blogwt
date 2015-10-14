@@ -363,9 +363,10 @@ public class MainServlet extends ContextAwareServlet {
 	}
 
 	private Page slim (Page page) {
-		return new Page().owner(page.owner).hasChildren(page.hasChildren)
-				.parent(page.parent).priority(page.priority).slug(page.slug)
-				.title(page.title);
+		return (Page) (new Page().owner(page.owner)
+				.hasChildren(page.hasChildren).parent(page.parent)
+				.priority(page.priority).slug(page.slug).title(page.title)
+				.id(page.id));
 	}
 
 	private Session slim (Session session) {
