@@ -155,6 +155,10 @@ public class PageTypeHelper {
 	}
 
 	public static SafeUri slugToHref (String slug) {
-		return UriUtils.fromString("#!" + slug);
+		return UriUtils.fromString("#" + slugToTargetHistoryToken(slug));
+	}
+
+	public static String slugToTargetHistoryToken (String slug) {
+		return "!" + slug;
 	}
 }
