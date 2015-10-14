@@ -155,6 +155,13 @@ public class MainServlet extends ContextAwareServlet {
 				Boolean.FALSE, Integer.valueOf(0), null,
 				PageSortType.PageSortTypePriority, null);
 
+		for (Page page : pages) {
+			if (page.parentKey != null) {
+				page.parent = PersistenceService.dataType(Page.class,
+						page.parentKey);
+			}
+		}
+
 		if (pages != null) {
 			scriptVariables.append("var pages='[");
 
