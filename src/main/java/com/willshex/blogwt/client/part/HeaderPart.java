@@ -25,6 +25,8 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -76,6 +78,9 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		@Template("<a href=\"{0}\">{1}</a>")
 		SafeHtml item (SafeUri href, String title);
 
+		@Template("{0} <span class=\"caret\" />")
+		SafeHtml openableTitle (String title);
+
 		@Template("<a href=\"{0}\"><span class=\"glyphicon glyphicon-{1}\"></span> {2}</a>")
 		SafeHtml glyphItem (SafeUri href, String glyphName, String title);
 
@@ -105,14 +110,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiField HTMLPanel pnlNav;
 	private Element elOpen;
 	private Map<String, Element> items;
-
-	private Map<String, Element> ensureItems () {
-		if (items == null) {
-			items = new HashMap<String, Element>();
-		}
-
-		return items;
-	}
+	private Map<String, Element> openables;
 
 	private List<HandlerRegistration> registration;
 
@@ -165,10 +163,9 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		boolean foundBrandPage = false, addedBlog = false;
 		List<Page> pages;
 		SafeUri href;
+		Map<Long, Page> possibleParents = new HashMap<Long, Page>();
 		if ((pages = PageController.get().getHeaderPages()) != null) {
 			for (Page page : pages) {
-				if (page.parent != null) continue;
-
 				if (page.priority != null && page.priority.floatValue() == 0.0f
 						&& !removedHome) {
 					btnHome.setHref(PageTypeHelper.slugToHref(page.slug));
@@ -183,10 +180,49 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 						addedBlog = true;
 					}
 
-					href = PageTypeHelper.slugToHref(page.slug);
-					addItem(elNavLeft,
-							HeaderTemplates.INSTANCE.item(href, page.title),
-							href);
+					if (page.parent == null) {
+						href = PageTypeHelper.slugToHref(page.slug);
+						addItem(elNavLeft,
+								HeaderTemplates.INSTANCE.item(href, page.title),
+								href);
+						possibleParents.put(page.id, page);
+					} else {
+						Page parent;
+						Element el;
+						if ((parent = possibleParents.get(page.parent.id)) != null) {
+							el = getOpenable(PageTypeHelper
+									.slugToTargetHistoryToken(parent.slug));
+
+							if (el == null) {
+								el = getOpenable("pageid:" + parent.id);
+							}
+
+							if (el == null) {
+								el = getItem(PageTypeHelper
+										.slugToTargetHistoryToken(parent.slug));
+
+								if (el != null) {
+									el = convertItemToOpenable(PageTypeHelper
+											.slugToTargetHistoryToken(parent.slug));
+								}
+							}
+						} else {
+							String dummySlug = "pageid_" + page.parent.id;
+							el = addOpenable(elNavLeft,
+									HeaderTemplates.INSTANCE
+											.openableTitle(dummySlug),
+									PageTypeHelper.slugToHref(dummySlug));
+							possibleParents.put(page.parent.id, page.parent);
+						}
+
+						if (el != null) {
+							href = PageTypeHelper.slugToHref(page.slug);
+							addItem(el.getFirstChildElement()
+									.getNextSiblingElement(),
+									HeaderTemplates.INSTANCE.item(href,
+											page.title), href);
+						}
+					}
 				}
 			}
 		}
@@ -220,7 +256,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 	private void addItem (Element parent, SafeHtml item, SafeUri href) {
 		String key = href.asString().replaceFirst("#", "");
-		Element element = ensureItems().get(key);
+		Element element = getItem(key);
 
 		if (element == null) {
 			element = Document.get().createLIElement();
@@ -232,7 +268,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 	private void removeItem (SafeUri href) {
 		String key = href.asString().replaceFirst("#", "");
-		Element element = ensureItems().get(key);
+		Element element = getItem(key);
 		if (element != null) {
 			element.removeFromParent();
 			ensureItems().remove(key);
@@ -240,7 +276,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	}
 
 	private void activateItem (String page, boolean active) {
-		Element element = ensureItems().get(page);
+		Element element = getItem(page);
 
 		if (element != null) {
 			if (active && !element.hasClassName("active")) {
@@ -249,6 +285,43 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				element.removeClassName("active");
 			}
 		}
+	}
+
+	private Element convertItemToOpenable (String page) {
+		activateItem(page, false);
+
+		return null;
+	}
+
+	private Element addOpenable (Element parent, SafeHtml title, SafeUri href) {
+		String key = href.asString().replaceFirst("#", "");
+		final Element got;
+		final Element element = (got = getOpenable(key)) == null ? Document
+				.get().createLIElement() : got;
+
+		element.setClassName("dropdown");
+		parent.appendChild(element);
+
+		final Element a = Document.get().createAnchorElement();
+		element.appendChild(a);
+		Event.sinkEvents(a, Event.ONCLICK);
+		Event.setEventListener(a, new EventListener() {
+
+			@Override
+			public void onBrowserEvent (Event event) {
+				openableClick(a);
+				event.stopPropagation();
+			}
+		});
+
+		a.addClassName("dropdown-toggle");
+		a.setInnerSafeHtml(title);
+		Element ul = Document.get().createULElement();
+		ul.addClassName("dropdown-menu");
+		element.appendChild(ul);
+		ensureOpenables().put(key, element);
+
+		return element;
 	}
 
 	/* (non-Javadoc)
@@ -404,8 +477,12 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 		if (addAdmin) {
 			elNavLeft.appendChild(elAdmin);
+			ensureOpenables().put("blogwt_administration_menu_reserved_slug",
+					elAdmin);
 		} else {
 			elAdmin.removeFromParent();
+			ensureOpenables()
+					.remove("blogwt_administration_menu_reserved_slug");
 		}
 	}
 
@@ -474,20 +551,24 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	 * .dom.client.ClickEvent) */
 	@Override
 	public void onClick (ClickEvent ce) {
+		openableClick(((Widget) ce.getSource()).getElement());
+		ce.getNativeEvent().stopPropagation();
+	}
+
+	private void openableClick (Element source) {
 		boolean isOpen = (elOpen != null);
 
 		if (isOpen) {
 			elOpen.removeClassName("open");
 		}
 
-		if (ce.getSource() != elOpen /* && ce.getSource() in openable */) {
-			elOpen = ((Widget) ce.getSource()).getElement().getParentElement();
+		if (source != elOpen && openables != null
+				&& openables.values().contains(source.getParentElement())) {
+			elOpen = source.getParentElement();
 			elOpen.addClassName("open");
 		} else {
 			elOpen = null;
 		}
-
-		ce.getNativeEvent().stopPropagation();
 	}
 
 	private void showUserDetails (User user) {
@@ -525,4 +606,28 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@Override
 	public void changeUserDetailsFailure (ChangeUserDetailsRequest input,
 			Throwable caught) {}
+
+	private Map<String, Element> ensureItems () {
+		if (items == null) {
+			items = new HashMap<String, Element>();
+		}
+
+		return items;
+	}
+
+	private Element getItem (String key) {
+		return items == null ? null : items.get(key);
+	}
+
+	private Map<String, Element> ensureOpenables () {
+		if (openables == null) {
+			openables = new HashMap<String, Element>();
+		}
+
+		return openables;
+	}
+
+	private Element getOpenable (String key) {
+		return openables == null ? null : openables.get(key);
+	}
 }
