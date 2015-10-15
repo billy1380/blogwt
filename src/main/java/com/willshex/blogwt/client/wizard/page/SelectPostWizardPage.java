@@ -34,7 +34,8 @@ public class SelectPostWizardPage extends Composite implements WizardPage<Post> 
 
 	@UiField(provided = true) SuggestBox txtPost = new SuggestBox(
 			PostController.get().oracle());
-	private Post post;
+
+	//	private Post post;
 
 	public SelectPostWizardPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -55,15 +56,7 @@ public class SelectPostWizardPage extends Composite implements WizardPage<Post> 
 	 * @see com.willshex.blogwt.client.wizard.WizardPage#getData() */
 	@Override
 	public Post getData () {
-		if (post == null) {
-			post = new Post();
-		}
-
-		if (post.id == null) {
-			post.slug = txtPost.getValue();
-		}
-
-		return post;
+		return new Post().slug(txtPost.getValue());
 	}
 
 	/* (non-Javadoc)
@@ -72,9 +65,9 @@ public class SelectPostWizardPage extends Composite implements WizardPage<Post> 
 	 * com.willshex.blogwt.client.wizard.WizardPage#setData(java.lang.Object) */
 	@Override
 	public void setData (Post data) {
-		post = data;
-
-		txtPost.setText(data.slug == null ? data.id.toString() : data.slug);
+		if (data != null) {
+			txtPost.setText(data.slug == null ? data.id.toString() : data.slug);
+		}
 	}
 
 	/* (non-Javadoc)
