@@ -1,9 +1,49 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:with field="preview" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="download" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="name" type="java.lang.String" />
+	<ui:with field="description" type="java.lang.String" />
+	<ui:with field="edit" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="delete" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:style>
+	@external btn-group, btn, btn-toolbar;
+	.top {
+		margin-top: 10px;
+	}
 	
+	.bottom {
+		margin-bottom: 10px;
+	}
+	
+	.toolbar {
+		text-align: center;
+	}
+	
+	.toolbar .btn-group {
+		float: none;
+	}
 	</ui:style>
-	<g:HTMLPanel>
-		This is a preview
-	</g:HTMLPanel>
+	<div class="col-sm-4">
+		<div class="{style.bottom}">
+			<h3>
+				<ui:text from="{name}" />
+			</h3>
+			<div class="text-muted {">
+				<ui:text from="{description}" />
+			</div>
+		</div>
+
+		<ui:safehtml from="{preview}" />
+
+		<div class="btn-toolbar {style.toolbar} {style.top}">
+			<div class="btn-group">
+				<ui:safehtml from="{download}" />
+				<ui:safehtml from="{edit}" />
+			</div>
+			<div class="btn-group">
+				<ui:safehtml from="{delete}" />
+			</div>
+		</div>
+	</div>
 </ui:UiBinder> 
