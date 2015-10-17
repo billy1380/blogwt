@@ -2,12 +2,29 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:style>
-	
+	.space {
+		margin-top: 20px;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">
 		<h2>Resources</h2>
 
-		<c:CellList ui:field="clResources" styleName="col-sm-12" />
+
+		<div class="btn-toolbar">
+			<div class="btn-group">
+				<g:InlineHyperlink ui:field="lnkUploadResource" styleName="btn btn-default"
+					targetHistoryToken="/new">
+					<span class="glyphicon glyphicon-plus"></span>
+					Upload Resource
+				</g:InlineHyperlink>
+			</div>
+
+			<g:Button ui:field="btnRefresh" styleName="btn btn-info">
+				<span class="glyphicon glyphicon-refresh"></span>
+			</g:Button>
+		</div>
+
+		<c:CellList ui:field="clResources" styleName="col-sm-12 {style.space}" />
 		<c:SimplePager ui:field="pgrResources" location="LEFT" />
 
 		<p:NoneFoundPanel subject="resources" ui:field="pnlNoResources" />

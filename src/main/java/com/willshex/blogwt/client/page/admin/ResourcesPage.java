@@ -8,11 +8,14 @@
 package com.willshex.blogwt.client.page.admin;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.SimplePager;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.cell.blog.ResourcePreviewCell;
@@ -42,7 +45,7 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 
 	@UiField(provided = true) CellList<Resource> clResources = new CellList<Resource>(
 			new ResourcePreviewCell(), BootstrapGwtCellList.INSTANCE);
-
+	@UiField Button btnRefresh;
 	@UiField SimplePager pgrResources;
 	@UiField NoneFoundPanel pnlNoResources;
 
@@ -116,6 +119,12 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 	@Override
 	public void getResourcesFailure (GetResourcesRequest input, Throwable caught) {
 
+	}
+
+	@UiHandler("btnRefresh")
+	void onRefreshClicked (ClickEvent ce) {
+		clResources.setVisibleRangeAndClearData(clResources.getVisibleRange(),
+				true);
 	}
 
 }
