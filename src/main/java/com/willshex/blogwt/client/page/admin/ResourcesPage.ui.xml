@@ -7,8 +7,7 @@
 	<g:HTMLPanel styleName="container">
 		<h2>Resources</h2>
 
-		<c:CellTable ui:field="tblResources" styleName="col-sm-12 table table-striped" />
-		<c:CellList ui:field="clResources" styleName="col-sm-12 table table-striped" />
+		<c:CellList ui:field="clResources" styleName="col-sm-12" />
 		<c:SimplePager ui:field="pgrResources" location="LEFT" />
 
 		<p:NoneFoundPanel subject="resources" ui:field="pnlNoResources" />
