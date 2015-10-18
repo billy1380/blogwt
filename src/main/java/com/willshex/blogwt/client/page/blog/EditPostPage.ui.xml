@@ -2,9 +2,9 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:p="urn:import:com.willshex.blogwt.client.part" xmlns:gu="urn:import:gwtupload.client"
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
-	<ui:import field="com.willshex.blogwt.client.helper.ApiHelper.UPLOAD_END_POINT" />
+	<!-- <ui:style gss="true" type="com.willshex.blogwt.client.page.blog.EditPostPage.Style"> -->
 	<ui:style gss="true">
-	@external checkbox, upld-drop-zone, GWTUpld;
+	@external checkbox;
 	.checkbox input[type=checkbox] {
 		margin-left: 0px;
 	}
@@ -13,23 +13,19 @@
 		margin-bottom: 10px;
 	}
 	
-	.upld-drop-zone {
-		color: #ccc;
-		border-style: dashed;
-		border-color: #ccc;
-		line-height: 120px;
-		text-align: center;
-		height: 120px;
-		border-width: 2px;
-		display: block;
-		vertical-align: middle;
-		border-radius: 6px
-	}
-	
-	.GWTUpld {
-		width: 100%;
-	}
-	
+	/* .drop-zone {
+			color: #ccc;
+			border-style: dashed;
+			border-color: #ccc;
+			line-height: 120px;
+			text-align: center;
+			height: 120px;
+			border-width: 2px;
+			display: block;
+			vertical-align: middle;
+			border-radius: 6px;
+			margin-top: 5px;
+		} */
 	.tags {
 		margin: 20px 0 10px 0;
 	}
@@ -52,9 +48,9 @@
 						<label>Images (png or jpg)</label>
 						<g:HTMLPanel ui:field="pnlImagePreviews" styleName="container-fluid">
 						</g:HTMLPanel>
-						<gu:MultiUploader ui:field="uplDragAndDrop" autoSubmit="true"
-							avoidRepeatFiles="true" validExtensions="jpg,jpeg,png" servletPath="{UPLOAD_END_POINT}"
-							type="DROPZONE" />
+						<gu:MultiUploader ui:field="uplDragAndDrop" />
+						<!-- <g:Button ui:field="btnUploadImage"/> -->
+						<!-- <g:Label ui:field="lblDropZone" /> -->
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="pnlSummary" styleName="form-group">

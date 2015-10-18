@@ -8,6 +8,7 @@
 package com.willshex.blogwt.client.page.blog;
 
 import gwtupload.client.BaseUploadStatus;
+import gwtupload.client.IFileInput.FileInputType;
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.IUploader.OnFinishUploaderHandler;
@@ -96,6 +97,11 @@ public class EditPostPage extends Page implements
 
 	interface EditPostPageUiBinder extends UiBinder<Widget, EditPostPage> {}
 
+//	interface Style extends CssResource {
+//		@ClassName("drop-zone")
+//		String dropZone ();
+//	}
+
 	private Post post;
 
 	@UiField HTMLPanel pnlTitle;
@@ -117,10 +123,18 @@ public class EditPostPage extends Page implements
 	@UiField HTMLPanel pnlPreview;
 	@UiField LoadingPanel pnlLoading;
 	@UiField FormPanel frmEdit;
-	@UiField MultiUploader uplDragAndDrop;
+	//	@UiField(provided = true) Label lblDropZone = new Label(
+	//			"Drag and Drop files here.");
+	//	@UiField(provided = true) Button btnUploadImage = new Button(
+	//			"Upload files...");
+	@UiField(provided = true) MultiUploader uplDragAndDrop = new MultiUploader(
+			FileInputType.BROWSER_INPUT
+	//			.with(btnUploadImage).withZone(lblDropZone)
+	);
 	@UiField HTMLPanel pnlImagePreviews;
 	@UiField MarkdownToolbar tbrSummary;
 	@UiField MarkdownToolbar tbrContent;
+//	@UiField Style style;
 
 	@UiField(provided = true) CellList<Tag> clTags = new CellList<Tag>(
 			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
@@ -165,12 +179,18 @@ public class EditPostPage extends Page implements
 
 	public EditPostPage () {
 		initWidget(uiBinder.createAndBindUi(this));
-
+//		lblDropZone.setStyleName(style.dropZone());
+//		btnUploadImage.setStyleName("btn");
+//		btnUploadImage.addStyleName("btn-default");
 		UiHelper.addPlaceholder(txtTitle, "Title");
 		UiHelper.autoFocus(txtTitle);
 		UiHelper.addPlaceholder(txtSummary, "Short Summary");
 		UiHelper.addPlaceholder(txtContent, "Article Content");
 		UiHelper.addPlaceholder(txtTags, "Comma Separated Tags");
+		uplDragAndDrop.setAutoSubmit(true);
+		uplDragAndDrop.setAvoidRepeatFiles(true);
+		uplDragAndDrop.setValidExtensions("jpg", "jpeg", "png");
+		uplDragAndDrop.setServletPath(ApiHelper.UPLOAD_END_POINT);
 
 		uplDragAndDrop.addOnFinishUploadHandler(new OnFinishUploaderHandler() {
 
