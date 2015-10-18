@@ -38,8 +38,8 @@
 
 		<div class="btn-toolbar {style.toolbar} {style.top}">
 			<div class="btn-group">
-				<ui:safehtml from="{download}" />
 				<ui:safehtml from="{edit}" />
+				<ui:safehtml from="{download}" />
 			</div>
 			<div class="btn-group">
 				<ui:safehtml from="{delete}" />

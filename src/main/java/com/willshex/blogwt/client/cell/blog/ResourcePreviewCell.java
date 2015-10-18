@@ -29,7 +29,7 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 	interface Templates extends SafeHtmlTemplates {
 		public static final Templates INSTANCE = GWT.create(Templates.class);
 
-		@Template("<a target=\"_blank\" href=\"/upload?blob-key={0}\" alt=\"{1}\" title=\"{2}\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-download\"></span> download</a>")
+		@Template("<a target=\"_blank\" href=\"/upload?blob-key={0}\" alt=\"{1}\" title=\"{2}\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-download\"></span></a>")
 		SafeHtml download (String key, String title, String fullText);
 
 		@Template("<img class=\"img-rounded img-responsive center-block\" src=\"/upload?blob-key={0}\" alt=\"{1}\" title=\"{1}\">")
