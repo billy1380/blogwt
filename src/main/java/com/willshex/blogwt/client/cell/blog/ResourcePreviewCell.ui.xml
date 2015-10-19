@@ -42,7 +42,9 @@
 				<ui:safehtml from="{download}" />
 			</div>
 			<div class="btn-group">
-				<ui:safehtml from="{delete}" />
+				<a ui:field="btnDelete" class="btn btn-danger">
+					<ui:safehtml from="{delete}" />
+				</a>
 			</div>
 		</div>
 	</div>

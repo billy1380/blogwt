@@ -9,7 +9,6 @@ package com.willshex.blogwt.client.page.admin;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -30,6 +29,7 @@ import com.willshex.blogwt.shared.api.blog.call.GetResourcesResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.DeleteResourceEventHandler;
 import com.willshex.blogwt.shared.api.blog.call.event.GetResourcesEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Resource;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
@@ -56,16 +56,11 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 		ResourceController.get().addDataDisplay(clResources);
 		pgrResources.setDisplay(clResources);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.page.Page#register(com.google.gwt.event.shared
-	 * .HandlerRegistration) */
+	
 	@Override
-	protected void register (HandlerRegistration registration) {
-		super.register(registration);
-
+	protected void onAttach () {
+		super.onAttach();
+		
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetResourcesEventHandler.TYPE, ResourceController.get(), this));
 		register(DefaultEventBus.get()
@@ -82,7 +77,12 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 	 * com.willshex.blogwt.shared.api.blog.call.DeleteResourceResponse) */
 	@Override
 	public void deleteResourceSuccess (DeleteResourceRequest input,
-			DeleteResourceResponse output) {}
+			DeleteResourceResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			clResources.setVisibleRangeAndClearData(
+					clResources.getVisibleRange(), true);
+		}
+	}
 
 	/* (non-Javadoc)
 	 * 
@@ -93,7 +93,7 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 	@Override
 	public void deleteResourceFailure (DeleteResourceRequest input,
 			Throwable caught) {
-
+		GWT.log("Error deleting resource", caught);
 	}
 
 	/* (non-Javadoc)
@@ -105,9 +105,7 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 	 * com.willshex.blogwt.shared.api.blog.call.GetResourcesResponse) */
 	@Override
 	public void getResourcesSuccess (GetResourcesRequest input,
-			GetResourcesResponse output) {
-
-	}
+			GetResourcesResponse output) {}
 
 	/* (non-Javadoc)
 	 * 
@@ -118,7 +116,7 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 	 * java.lang.Throwable) */
 	@Override
 	public void getResourcesFailure (GetResourcesRequest input, Throwable caught) {
-
+		GWT.log("Get resources failed", caught);
 	}
 
 	@UiHandler("btnRefresh")

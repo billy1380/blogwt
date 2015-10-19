@@ -8,11 +8,19 @@
 package com.willshex.blogwt.client.cell.blog;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.BrowserEvents;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiRenderer;
+import com.google.gwt.user.client.Window;
+import com.willshex.blogwt.client.controller.ResourceController;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 
 /**
@@ -21,9 +29,16 @@ import com.willshex.blogwt.shared.api.datatype.Resource;
  */
 public class ResourcePreviewCell extends AbstractCell<Resource> {
 
+	public ResourcePreviewCell () {
+		super(BrowserEvents.CLICK);
+	}
+
 	interface ResourcePreviewCellRenderer extends UiRenderer {
 		void render (SafeHtmlBuilder sb, SafeHtml preview, SafeHtml download,
 				String name, String description, SafeHtml edit, SafeHtml delete);
+
+		void onBrowserEvent (ResourcePreviewCell resourcePreviewCell,
+				NativeEvent event, Element parent, Resource value);
 	}
 
 	interface Templates extends SafeHtmlTemplates {
@@ -38,12 +53,19 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 		@Template("<a class=\"btn btn-default\" href=\"{0}\" ><span class=\"glyphicon glyphicon-edit\"></span> edit</a>")
 		SafeHtml edit (Long id);
 
-		@Template("<a class=\"btn btn-danger\" ><span class=\"glyphicon glyphicon-trash\"></span></a>")
+		@Template("<span class=\"glyphicon glyphicon-trash\"></span>")
 		SafeHtml delete ();
 	}
 
 	private static ResourcePreviewCellRenderer RENDERER = GWT
 			.create(ResourcePreviewCellRenderer.class);
+
+	@Override
+	public void onBrowserEvent (Context context, Element parent,
+			Resource value, NativeEvent event,
+			ValueUpdater<Resource> valueUpdater) {
+		RENDERER.onBrowserEvent(this, event, parent, value);
+	}
 
 	/* (non-Javadoc)
 	 * 
@@ -60,5 +82,13 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 				value.data.substring(5), value.name, value.data), value.name,
 				value.description, Templates.INSTANCE.edit(value.id),
 				Templates.INSTANCE.delete());
+	}
+
+	@UiHandler("btnDelete")
+	void quoteClicked (ClickEvent event, Element parent, Resource value) {
+		if (Window.confirm("Are you sure you want to delete resource "
+				+ value.name + "?")) {
+			ResourceController.get().deleteResource(value);
+		}
 	}
 }
