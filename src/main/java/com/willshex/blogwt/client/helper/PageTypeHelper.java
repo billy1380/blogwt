@@ -13,6 +13,7 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.History;
 import com.willshex.blogwt.client.page.Page;
+import com.willshex.blogwt.client.page.admin.EditResourcePage;
 import com.willshex.blogwt.client.page.admin.PagesPage;
 import com.willshex.blogwt.client.page.admin.PermissionsPage;
 import com.willshex.blogwt.client.page.admin.PropertiesPage;
@@ -116,6 +117,9 @@ public class PageTypeHelper {
 			break;
 		case ChangeAccessPageType:
 			page = new ChangeAccessPage();
+			break;
+		case EditResourcePageType:
+			page = new EditResourcePage();
 			break;
 		case PageDetailPageType:
 		default:

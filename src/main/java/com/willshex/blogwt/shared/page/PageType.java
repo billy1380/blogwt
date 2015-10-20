@@ -43,7 +43,8 @@ public enum PageType {
 	ResourcesPageType("resources", PermissionHelper.MANAGE_RESOURCES),
 	SearchPostsPageType("search", false),
 	VerifyAccountPageType("verifyaccount", false),
-	ChangeAccessPageType("access", true), ;
+	ChangeAccessPageType("access", true),
+	EditResourcePageType("resourceedit", PermissionHelper.MANAGE_RESOURCES), ;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
