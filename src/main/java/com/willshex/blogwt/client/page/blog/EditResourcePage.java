@@ -5,7 +5,7 @@
 //  Created by William Shakour (billy1380) on 18 Oct 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
 //
-package com.willshex.blogwt.client.page.admin;
+package com.willshex.blogwt.client.page.blog;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
