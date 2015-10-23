@@ -40,7 +40,7 @@ public class EditResourcePage extends Page implements
 	@UiField TextBox txtName;
 	@UiField HTMLPanel pnlNameNote;
 	@UiField HTMLPanel pnlData;
-	@UiField HTMLPanel txtData;
+	@UiField TextBox txtData;
 	@UiField HTMLPanel pnlDescription;
 	@UiField TextArea txtDescription;
 	@UiField HTMLPanel pnlDescriptionNote;
