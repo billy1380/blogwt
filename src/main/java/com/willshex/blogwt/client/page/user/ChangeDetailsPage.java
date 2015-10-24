@@ -452,7 +452,7 @@ public class ChangeDetailsPage extends Page implements
 		imgAvatar.setUrl("");
 		elDates.setInnerText("");
 		h3Username.setInnerText("");
-		actionText = "Update";
+		actionText = UPDATE_ACTION_TEXT;
 		user = null;
 
 		super.reset();
