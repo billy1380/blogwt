@@ -17,11 +17,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiRenderer;
 import com.google.gwt.user.client.Window;
 import com.willshex.blogwt.client.controller.ResourceController;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.shared.api.datatype.Resource;
+import com.willshex.blogwt.shared.page.PageType;
 
 /**
  * @author William Shakour (billy1380)
@@ -51,7 +54,7 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 		SafeHtml image (String key, String title);
 
 		@Template("<a class=\"btn btn-default\" href=\"{0}\" ><span class=\"glyphicon glyphicon-edit\"></span> edit</a>")
-		SafeHtml edit (Long id);
+		SafeHtml edit (SafeUri href);
 
 		@Template("<span class=\"glyphicon glyphicon-trash\"></span>")
 		SafeHtml delete ();
@@ -80,8 +83,10 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 		RENDERER.render(sb, Templates.INSTANCE.image(value.data.substring(5),
 				value.name), Templates.INSTANCE.download(
 				value.data.substring(5), value.name, value.data), value.name,
-				value.description, Templates.INSTANCE.edit(value.id),
-				Templates.INSTANCE.delete());
+				value.description, Templates.INSTANCE.edit(PageTypeHelper
+						.asHref(PageType.EditResourcePageType,
+								value.id.toString())), Templates.INSTANCE
+						.delete());
 	}
 
 	@UiHandler("btnDelete")
