@@ -54,6 +54,11 @@
 							<g:HTMLPanel styleName="control-label small" ui:field="pnlPropertiesNote"
 								visible="false" />
 						</g:HTMLPanel>
+
+						<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary pull-right"
+							text="Update">
+							Update
+						</g:SubmitButton>
 					</g:HTMLPanel>
 				</g:FormPanel>
 			</div>
