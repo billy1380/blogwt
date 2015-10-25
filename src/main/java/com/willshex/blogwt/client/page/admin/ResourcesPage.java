@@ -29,6 +29,7 @@ import com.willshex.blogwt.shared.api.blog.call.GetResourcesResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.DeleteResourceEventHandler;
 import com.willshex.blogwt.shared.api.blog.call.event.GetResourcesEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Resource;
+import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -52,15 +53,16 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 	public ResourcesPage () {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		clResources.setPageSize(PagerHelper.DEFAULT_COUNT.intValue());
 		clResources.setEmptyListWidget(pnlNoResources);
 		ResourceController.get().addDataDisplay(clResources);
 		pgrResources.setDisplay(clResources);
 	}
-	
+
 	@Override
 	protected void onAttach () {
 		super.onAttach();
-		
+
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetResourcesEventHandler.TYPE, ResourceController.get(), this));
 		register(DefaultEventBus.get()
