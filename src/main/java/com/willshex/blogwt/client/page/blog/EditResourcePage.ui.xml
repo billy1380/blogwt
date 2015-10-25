@@ -3,65 +3,57 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="container">
 		<div class="row">
-			<div class="col-sm-4 col-sm-offset-4">
-				<div>
-					<h2 ui:field="elHeading">Edit resource</h2>
-				</div>
+			<g:FormPanel ui:field="frmDetails" styleName="col-sm-4 col-sm-offset-4">
+				<g:HTMLPanel>
+					<div>
+						<h2 ui:field="elHeading">Edit resource</h2>
+					</div>
 
-
-				<g:FormPanel ui:field="frmDetails">
-					<g:HTMLPanel>
-						<!-- public String data; -->
-						<!-- public String description; -->
-						<!-- public ResourceTypeType type; -->
-						<!-- public String properties; -->
-
-						<g:HTMLPanel visible="false" ui:field="pnlResource">
-							<!-- add rendered resource here -->
-						</g:HTMLPanel>
-
-						<g:HTMLPanel ui:field="pnlName" styleName="form-group">
-							<label class="control-label">Name</label>
-							<g:TextBox ui:field="txtName" styleName="form-control" />
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlNameNote"
-								visible="false" />
-						</g:HTMLPanel>
-
-						<g:HTMLPanel ui:field="pnlData" styleName="form-group">
-							<label class="control-label">Data</label>
-							<g:TextBox ui:field="txtData" styleName="form-control" enabled="false" />
-						</g:HTMLPanel>
-
-						<g:HTMLPanel ui:field="pnlDescription" styleName="form-group">
-							<label class="control-label">Description</label>
-							<g:TextArea ui:field="txtDescription" styleName="form-control" />
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlDescriptionNote"
-								visible="false" />
-						</g:HTMLPanel>
-
-						<g:HTMLPanel ui:field="pnlType" styleName="form-group">
-							<label class="control-label">Type</label>
-							<g:TextBox ui:field="txtType" styleName="form-control" enabled="false" />
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlTypeNote"
-								visible="false" />
-						</g:HTMLPanel>
-
-						<g:HTMLPanel ui:field="pnlProperties" styleName="form-group">
-							<label class="control-label">Description</label>
-							<g:TextArea ui:field="txtProperties" styleName="form-control" />
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlPropertiesNote"
-								visible="false" />
-						</g:HTMLPanel>
-
-						<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary pull-right"
-							text="Update">
-							Update
-						</g:SubmitButton>
+					<g:HTMLPanel visible="false" ui:field="pnlResource">
+						<!-- add rendered resource here -->
 					</g:HTMLPanel>
-				</g:FormPanel>
-			</div>
+
+					<g:HTMLPanel ui:field="pnlName" styleName="form-group">
+						<label class="control-label">Name</label>
+						<g:TextBox ui:field="txtName" styleName="form-control" />
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlNameNote"
+							visible="false" />
+					</g:HTMLPanel>
+
+					<g:HTMLPanel ui:field="pnlData" styleName="form-group">
+						<label class="control-label">Data</label>
+						<g:TextBox ui:field="txtData" styleName="form-control" enabled="false" />
+					</g:HTMLPanel>
+
+					<g:HTMLPanel ui:field="pnlDescription" styleName="form-group">
+						<label class="control-label">Description</label>
+						<g:TextArea ui:field="txtDescription" styleName="form-control" />
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlDescriptionNote"
+							visible="false" />
+					</g:HTMLPanel>
+
+					<g:HTMLPanel ui:field="pnlType" styleName="form-group">
+						<label class="control-label">Type</label>
+						<g:TextBox ui:field="txtType" styleName="form-control" enabled="false" />
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlTypeNote"
+							visible="false" />
+					</g:HTMLPanel>
+
+					<g:HTMLPanel ui:field="pnlProperties" styleName="form-group">
+						<label class="control-label">Description</label>
+						<g:TextArea ui:field="txtProperties" styleName="form-control" />
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlPropertiesNote"
+							visible="false" />
+					</g:HTMLPanel>
+
+					<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary pull-right"
+						text="Update">
+						Update
+					</g:SubmitButton>
+				</g:HTMLPanel>
+			</g:FormPanel>
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 
