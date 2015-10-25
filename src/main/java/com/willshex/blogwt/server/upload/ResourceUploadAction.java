@@ -36,6 +36,7 @@ public class ResourceUploadAction extends CloudStorageUploadAction {
 	@Override
 	public String executeAction (HttpServletRequest request,
 			List<FileItem> sessionFiles) throws UploadActionException {
+		StringBuffer resourcesJson = new StringBuffer();
 		Resource resource;
 		final Date now = new Date();
 		for (FileItem i : sessionFiles) {
@@ -48,10 +49,17 @@ public class ResourceUploadAction extends CloudStorageUploadAction {
 				resource.name = i.getName();
 				resource.properties = "{\"contentType\":" + i.getContentType()
 						+ "}";
-				ResourceServiceProvider.provide().addResource(resource);
+				resource = ResourceServiceProvider.provide().addResource(
+						resource);
+
+				if (resourcesJson.length() != 0) {
+					resourcesJson.append(" ");
+				}
+
+				resourcesJson.append(resource.id.toString());
 			}
 		}
 
-		return super.executeAction(request, sessionFiles);
+		return resourcesJson.toString();
 	}
 }
