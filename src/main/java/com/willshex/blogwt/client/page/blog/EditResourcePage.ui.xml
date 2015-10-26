@@ -1,5 +1,5 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:gu="urn:import:gwtupload.client">
 	<ui:style>
 	
 	</ui:style>
@@ -11,8 +11,10 @@
 						<h2 ui:field="elHeading">Edit resource</h2>
 					</div>
 
-					<g:HTMLPanel visible="false" ui:field="pnlResource">
-						<!-- add rendered resource here -->
+					<g:HTMLPanel ui:field="pnlResource" styleName="form-group">
+						<label>Resource</label>
+						<g:HTMLPanel ui:field="pnlResourcePreviews" />
+						<gu:SingleUploader ui:field="uplDragAndDrop" />
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="pnlName" styleName="form-group">

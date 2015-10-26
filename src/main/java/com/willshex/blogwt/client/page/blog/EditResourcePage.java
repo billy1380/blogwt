@@ -7,6 +7,15 @@
 //
 package com.willshex.blogwt.client.page.blog;
 
+import gwtupload.client.BaseUploadStatus;
+import gwtupload.client.IFileInput.FileInputType;
+import gwtupload.client.IUploadStatus.Status;
+import gwtupload.client.IUploader;
+import gwtupload.client.IUploader.OnFinishUploaderHandler;
+import gwtupload.client.PreloadedImage;
+import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
+import gwtupload.client.SingleUploader;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -23,10 +32,12 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.datatype.Resource;
+import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
 import com.willshex.blogwt.shared.page.Stack;
 
 /**
@@ -45,6 +56,10 @@ public class EditResourcePage extends Page implements
 	@UiField Element elHeading;
 	@UiField FormPanel frmDetails;
 	@UiField HTMLPanel pnlResource;
+	@UiField HTMLPanel pnlResourcePreviews;
+	// for now this is not drag and drop
+	@UiField(provided = true) SingleUploader uplDragAndDrop = new SingleUploader(
+			FileInputType.BROWSER_INPUT);
 	@UiField HTMLPanel pnlName;
 	@UiField TextBox txtName;
 	@UiField HTMLPanel pnlNameNote;
@@ -68,6 +83,12 @@ public class EditResourcePage extends Page implements
 	private static final String UPDATE_ACTION_TEXT = "Update";
 	private static final String CREATE_ACTION_TEXT = "Create";
 
+	private final OnLoadPreloadedImageHandler PRELOAD_HANDLER = new OnLoadPreloadedImageHandler() {
+
+		@Override
+		public void onLoad (PreloadedImage image) {}
+	};
+
 	public EditResourcePage () {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -76,6 +97,55 @@ public class EditResourcePage extends Page implements
 		UiHelper.addPlaceholder(txtDescription, "Description");
 		UiHelper.addPlaceholder(txtType, "Type");
 		UiHelper.addPlaceholder(txtProperties, "Properties");
+
+		uplDragAndDrop.setAutoSubmit(true);
+		uplDragAndDrop.setAvoidRepeatFiles(true);
+		uplDragAndDrop.setValidExtensions("jpg", "jpeg", "png");
+		uplDragAndDrop.setServletPath(ApiHelper.UPLOAD_END_POINT);
+
+		uplDragAndDrop.addOnFinishUploadHandler(new OnFinishUploaderHandler() {
+
+			@Override
+			public void onFinish (IUploader uploader) {
+				if (uploader.getStatus() == Status.SUCCESS) {
+					String msg = uploader.getServerMessage().getMessage();
+					if (msg != null && msg.startsWith("data:")) {
+						// NOTE: this does not happen
+						new PreloadedImage(msg, PRELOAD_HANDLER);
+					} else {
+						Resource resource = new Resource();
+						resource.type = ResourceTypeType.ResourceTypeTypeBlobStoreImage;
+
+						for (String url : uploader.getServerMessage()
+								.getUploadedFileUrls()) {
+							resource.data = url
+									.replace(ApiHelper.BASE_URL, "/");
+							break;
+						}
+
+						for (String name : uploader.getServerMessage()
+								.getUploadedFileNames()) {
+							resource.name = name;
+							break;
+						}
+
+						if (EditResourcePage.this.resource == null) {
+							EditResourcePage.this.resource = resource;
+						} else {
+							// find out if the page status is new then delete the preciously uploaded resource
+						}
+
+						uploader.getStatusWidget().setVisible(false);
+
+						// TODO: do something different if the resource is not actually an image
+						new PreloadedImage(resource.data, PRELOAD_HANDLER);
+					}
+				} else {
+					// Failed :(
+				}
+			}
+		});
+		uplDragAndDrop.setStatusWidget(new BaseUploadStatus());
 	}
 
 	/* (non-Javadoc)
@@ -97,7 +167,7 @@ public class EditResourcePage extends Page implements
 		// load and show
 
 		elHeading.setInnerText(getHeadingText());
-		
+
 		ready();
 	}
 
