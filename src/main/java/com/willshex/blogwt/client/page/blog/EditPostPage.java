@@ -156,7 +156,7 @@ public class EditPostPage extends Page implements
 
 		@Override
 		public void onLoad (PreloadedImage image) {
-			image.addStyleName("img-circle");
+			image.addStyleName("img-rounded");
 			image.addStyleName("col-xs-" + (int) (12 / IMAGES_PER_ROW));
 
 			if ((resources.size() - 1) % IMAGES_PER_ROW == 0) {
