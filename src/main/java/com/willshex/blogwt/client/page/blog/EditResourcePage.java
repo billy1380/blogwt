@@ -56,7 +56,7 @@ public class EditResourcePage extends Page implements
 	@UiField Element elHeading;
 	@UiField FormPanel frmDetails;
 	@UiField HTMLPanel pnlResource;
-	@UiField HTMLPanel pnlResourcePreviews;
+	@UiField HTMLPanel pnlResourcePreview;
 	// for now this is not drag and drop
 	@UiField(provided = true) SingleUploader uplDragAndDrop = new SingleUploader(
 			FileInputType.BROWSER_INPUT);
@@ -86,7 +86,12 @@ public class EditResourcePage extends Page implements
 	private final OnLoadPreloadedImageHandler PRELOAD_HANDLER = new OnLoadPreloadedImageHandler() {
 
 		@Override
-		public void onLoad (PreloadedImage image) {}
+		public void onLoad (PreloadedImage image) {
+			image.addStyleName("img-rounded");
+			image.addStyleName("img-responsive");
+			image.addStyleName("center-block");
+			pnlResourcePreview.add(image);
+		}
 	};
 
 	public EditResourcePage () {

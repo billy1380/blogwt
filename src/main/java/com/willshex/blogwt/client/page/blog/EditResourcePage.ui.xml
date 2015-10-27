@@ -1,7 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:gu="urn:import:gwtupload.client">
 	<ui:style>
-	
+	.space {
+	   margin-bottom:10px;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">
 		<div class="row">
@@ -13,7 +15,7 @@
 
 					<g:HTMLPanel ui:field="pnlResource" styleName="form-group">
 						<label>Resource</label>
-						<g:HTMLPanel ui:field="pnlResourcePreviews" />
+						<g:HTMLPanel ui:field="pnlResourcePreview" styleName="{style.space}" />
 						<gu:SingleUploader ui:field="uplDragAndDrop" />
 					</g:HTMLPanel>
 
