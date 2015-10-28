@@ -110,6 +110,7 @@ public class EditResourcePage extends Page implements
 
 		uplDragAndDrop.addOnFinishUploadHandler(new OnFinishUploaderHandler() {
 
+			@SuppressWarnings("deprecation")
 			@Override
 			public void onFinish (IUploader uploader) {
 				if (uploader.getStatus() == Status.SUCCESS) {
@@ -119,13 +120,9 @@ public class EditResourcePage extends Page implements
 						new PreloadedImage(msg, PRELOAD_HANDLER);
 					} else {
 						Resource resource = new Resource();
-						resource.type = ResourceTypeType.ResourceTypeTypeBlobStoreImage;
 
-						for (String url : uploader.getServerMessage()
-								.getUploadedFileUrls()) {
-							resource.data = url
-									.replace(ApiHelper.BASE_URL, "/");
-							break;
+						if (uploader.getServerInfo().ctype.startsWith("image")) {
+							resource.type = ResourceTypeType.ResourceTypeTypeGoogleCloudServiceImage;
 						}
 
 						for (String name : uploader.getServerMessage()
@@ -133,6 +130,14 @@ public class EditResourcePage extends Page implements
 							resource.name = name;
 							break;
 						}
+
+						resource.id = Long.valueOf(uploader.getServerInfo().message);
+						resource.description = "New uploaded file "
+								+ resource.name;
+						resource.properties = "{\"contentType\":"
+								+ uploader.getServerInfo().ctype + "}";
+
+						resource.data = "gs://" + uploader.getServerInfo().key;
 
 						if (EditResourcePage.this.resource == null) {
 							EditResourcePage.this.resource = resource;
@@ -142,8 +147,17 @@ public class EditResourcePage extends Page implements
 
 						uploader.getStatusWidget().setVisible(false);
 
-						// TODO: do something different if the resource is not actually an image
-						new PreloadedImage(resource.data, PRELOAD_HANDLER);
+						show(EditResourcePage.this.resource = resource);
+
+						if (resource.type == ResourceTypeType.ResourceTypeTypeGoogleCloudServiceImage) {
+							for (String url : uploader.getServerMessage()
+									.getUploadedFileUrls()) {
+								new PreloadedImage(url.replace(
+										ApiHelper.BASE_URL, "/"),
+										PRELOAD_HANDLER);
+								break;
+							}
+						}
 					}
 				} else {
 					// Failed :(
@@ -151,6 +165,16 @@ public class EditResourcePage extends Page implements
 			}
 		});
 		uplDragAndDrop.setStatusWidget(new BaseUploadStatus());
+	}
+
+	private void show (Resource resource) {
+		if (resource != null) {
+			txtName.setValue(resource.name);
+			txtData.setValue(resource.data);
+			txtDescription.setValue(resource.description);
+			txtProperties.setValue(resource.properties);
+			txtType.setValue(resource.type.toString());
+		}
 	}
 
 	/* (non-Javadoc)
