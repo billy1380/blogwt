@@ -81,7 +81,7 @@ public class EditResourcePage extends Page implements
 	private String actionText;
 
 	private static final String UPDATE_ACTION_TEXT = "Update";
-	private static final String CREATE_ACTION_TEXT = "Create";
+	private static final String ADD_ACTION_TEXT = "Add";
 
 	private final OnLoadPreloadedImageHandler PRELOAD_HANDLER = new OnLoadPreloadedImageHandler() {
 
@@ -159,9 +159,14 @@ public class EditResourcePage extends Page implements
 							}
 						}
 					}
+					
+					actionText = UPDATE_ACTION_TEXT;
+					elHeading.setInnerText(getHeadingText());
 				} else {
 					// Failed :(
 				}
+
+				ready();
 			}
 		});
 		uplDragAndDrop.setStatusWidget(new BaseUploadStatus());
@@ -193,7 +198,17 @@ public class EditResourcePage extends Page implements
 	public void navigationChanged (Stack previous, Stack current) {
 		reset();
 
-		// load and show
+		if ("id".equals(current.getAction()) && current.getParameterCount() > 0) {
+			Long id = Long.valueOf(current.getParameter(0));
+			Resource resource = new Resource();
+			resource.id(id);
+
+			// ResourceController.get().getResource(resource);
+
+			actionText = UPDATE_ACTION_TEXT;
+		} else if ("new".equals(current.getAction())) {
+			actionText = ADD_ACTION_TEXT;
+		}
 
 		elHeading.setInnerText(getHeadingText());
 
@@ -257,8 +272,8 @@ public class EditResourcePage extends Page implements
 		case UPDATE_ACTION_TEXT:
 			loadingText = "Updating... ";
 			break;
-		case CREATE_ACTION_TEXT:
-			loadingText = "Creating... ";
+		case ADD_ACTION_TEXT:
+			loadingText = "Adding... ";
 			break;
 		}
 
@@ -271,7 +286,7 @@ public class EditResourcePage extends Page implements
 		case UPDATE_ACTION_TEXT:
 			headingText = "Edit Resource";
 			break;
-		case CREATE_ACTION_TEXT:
+		case ADD_ACTION_TEXT:
 			headingText = "Add Resource";
 			break;
 		}
