@@ -11,6 +11,8 @@ package com.willshex.blogwt.client.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -52,6 +54,21 @@ public class NavigationController implements ValueChangeHandler<String> {
 		return pageHolder = value;
 	}
 
+	public void createAsyncPage (final PageType pageType) {
+		GWT.runAsync(new RunAsyncCallback() {
+			public void onFailure (Throwable caught) {
+				GWT.log("Could not create page " + pageType, caught);
+			}
+
+			public void onSuccess () {
+				pages.put(pageKeyForCache(pageType),
+						PageTypeHelper.createPage(pageType));
+
+				attachPage(pageType);
+			}
+		});
+	}
+
 	public static final String ADD_ACTION_PARAMETER_VALUE = "add";
 	public static final String EDIT_ACTION_PARAMETER_VALUE = "edit";
 	public static final String DELETE_ACTION_PARAMETER_VALUE = "delete";
@@ -67,10 +84,10 @@ public class NavigationController implements ValueChangeHandler<String> {
 		Composite page = null;
 
 		if ((page = getPageFromCache(type)) == null) {
-			page = cachePage(type);
+			createAsyncPage(type);
 		}
 
-		if (!page.isAttached()) {
+		if (page != null && !page.isAttached()) {
 			pageHolder.clear();
 			pageHolder.add(page);
 		}
@@ -86,12 +103,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	private Composite getPageFromCache (PageType type) {
 		return pages.get(pageKeyForCache(type));
-	}
-
-	private Composite cachePage (PageType type) {
-		Composite page;
-		pages.put(pageKeyForCache(type), page = PageTypeHelper.createPage(type));
-		return page;
 	}
 
 	/**
