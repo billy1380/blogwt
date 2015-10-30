@@ -51,6 +51,8 @@ import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetResourceRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetResourceResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetResourcesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetResourcesResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetTagsRequest;
@@ -61,6 +63,8 @@ import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse;
+import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
+import com.willshex.blogwt.shared.api.blog.call.UpdateResourceResponse;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
@@ -80,6 +84,32 @@ import com.willshex.gson.json.service.shared.StatusType;
 
 public final class BlogApi extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(BlogApi.class.getName());
+
+	public UpdateResourceResponse updateResource (UpdateResourceRequest input) {
+		LOG.finer("Entering updateResource");
+		UpdateResourceResponse output = new UpdateResourceResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting updateResource");
+		return output;
+	}
+
+	public GetResourceResponse getResource (GetResourceRequest input) {
+		LOG.finer("Entering getResource");
+		GetResourceResponse output = new GetResourceResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getResource");
+		return output;
+	}
 
 	public GetArchiveEntriesResponse getArchiveEntries (
 			GetArchiveEntriesRequest input) {

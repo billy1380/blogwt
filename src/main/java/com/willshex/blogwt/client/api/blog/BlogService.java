@@ -27,6 +27,8 @@ import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetResourceRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetResourceResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetResourcesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetResourcesResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetTagsRequest;
@@ -37,10 +39,98 @@ import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse;
+import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
+import com.willshex.blogwt.shared.api.blog.call.UpdateResourceResponse;
 import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class BlogService extends JsonService {
+
+	public static final String BlogMethodUpdateResource = "UpdateResource";
+
+	public Request updateResource (final UpdateResourceRequest input,
+			final AsyncCallback<UpdateResourceResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(BlogMethodUpdateResource, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								UpdateResourceResponse outputParameter = new UpdateResourceResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(BlogService.this,
+										BlogMethodUpdateResource, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(BlogService.this,
+										BlogMethodUpdateResource, input,
+										exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(BlogService.this,
+									BlogMethodUpdateResource, input, exception);
+						}
+					});
+			onCallStart(BlogService.this, BlogMethodUpdateResource, input,
+					handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodUpdateResource, input,
+					exception);
+		}
+		return handle;
+	}
+
+	public static final String BlogMethodGetResource = "GetResource";
+
+	public Request getResource (final GetResourceRequest input,
+			final AsyncCallback<GetResourceResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(BlogMethodGetResource, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								GetResourceResponse outputParameter = new GetResourceResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(BlogService.this,
+										BlogMethodGetResource, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(BlogService.this,
+										BlogMethodGetResource, input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(BlogService.this,
+									BlogMethodGetResource, input, exception);
+						}
+					});
+			onCallStart(BlogService.this, BlogMethodGetResource, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodGetResource, input,
+					exception);
+		}
+		return handle;
+	}
 
 	public static final String BlogMethodGetArchiveEntries = "GetArchiveEntries";
 

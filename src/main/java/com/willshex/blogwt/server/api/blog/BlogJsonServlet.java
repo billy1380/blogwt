@@ -15,11 +15,13 @@ import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetResourceRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetResourcesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetTagsRequest;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
+import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
 import com.willshex.gson.json.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
@@ -28,6 +30,15 @@ public final class BlogJsonServlet extends JsonServlet {
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
 		BlogApi service = new BlogApi();
+		if ("UpdateResource".equals(action)) {
+			UpdateResourceRequest input = new UpdateResourceRequest();
+			input.fromJson(request);
+			output = service.updateResource(input).toString();
+		} else if ("GetResource".equals(action)) {
+			GetResourceRequest input = new GetResourceRequest();
+			input.fromJson(request);
+			output = service.getResource(input).toString();
+		}
 		if ("GetArchiveEntries".equals(action)) {
 			GetArchiveEntriesRequest input = new GetArchiveEntriesRequest();
 			input.fromJson(request);
