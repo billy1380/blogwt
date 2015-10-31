@@ -102,6 +102,17 @@ public final class BlogApi extends ActionHandler {
 		LOG.finer("Entering getResource");
 		GetResourceResponse output = new GetResourceResponse();
 		try {
+			ApiValidator.notNull(input, GetResourceRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			output.resource = input.resource = ResourceValidator.lookup(
+					input.resource, "input.resource");
+
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
+
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
