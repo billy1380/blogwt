@@ -153,10 +153,10 @@ public class ResourceController extends AsyncDataProvider<Resource> {
 				});
 	}
 
-	public void getResource (Long id) {
+	public void getResource (Resource resource) {
 		final GetResourceRequest input = SessionController.get()
 				.setSession(ApiHelper.setAccessCode(new GetResourceRequest()))
-				.resource((Resource) new Resource().id(id));
+				.resource(resource);
 
 		ApiHelper.createBlogClient().getResource(input,
 				new AsyncCallback<GetResourceResponse>() {
