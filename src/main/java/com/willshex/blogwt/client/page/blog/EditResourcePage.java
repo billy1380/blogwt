@@ -25,27 +25,37 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.NavigationController;
+import com.willshex.blogwt.client.controller.ResourceController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.wizard.WizardDialog;
+import com.willshex.blogwt.shared.api.blog.call.GetResourceRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetResourceResponse;
+import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
+import com.willshex.blogwt.shared.api.blog.call.UpdateResourceResponse;
+import com.willshex.blogwt.shared.api.blog.call.event.GetResourceEventHandler;
+import com.willshex.blogwt.shared.api.blog.call.event.UpdateResourceEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
 import com.willshex.blogwt.shared.page.Stack;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  *
  */
 public class EditResourcePage extends Page implements
-		NavigationChangedEventHandler {
+		NavigationChangedEventHandler, GetResourceEventHandler,
+		UpdateResourceEventHandler {
 
 	private static EditResourcePageUiBinder uiBinder = GWT
 			.create(EditResourcePageUiBinder.class);
@@ -159,7 +169,7 @@ public class EditResourcePage extends Page implements
 							}
 						}
 					}
-					
+
 					actionText = UPDATE_ACTION_TEXT;
 					elHeading.setInnerText(getHeadingText());
 				} else {
@@ -178,7 +188,15 @@ public class EditResourcePage extends Page implements
 			txtData.setValue(resource.data);
 			txtDescription.setValue(resource.description);
 			txtProperties.setValue(resource.properties);
-			txtType.setValue(resource.type.toString());
+			txtType.setValue(resource.type == null ? "" : resource.type
+					.toString());
+			uplDragAndDrop.setVisible(false);
+			Image image = new Image("upload?blob-key="
+					+ resource.data.replace("gs://", ""));
+			image.addStyleName("img-rounded");
+			image.addStyleName("img-responsive");
+			image.addStyleName("center-block");
+			pnlResourcePreview.add(image);
 		}
 	}
 
@@ -192,6 +210,11 @@ public class EditResourcePage extends Page implements
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				this));
+		register(DefaultEventBus.get().addHandlerToSource(
+				GetResourceEventHandler.TYPE, ResourceController.get(), this));
+		register(DefaultEventBus.get()
+				.addHandlerToSource(UpdateResourceEventHandler.TYPE,
+						ResourceController.get(), this));
 	}
 
 	@Override
@@ -200,11 +223,8 @@ public class EditResourcePage extends Page implements
 
 		if ("id".equals(current.getAction()) && current.getParameterCount() > 0) {
 			Long id = Long.valueOf(current.getParameter(0));
-			Resource resource = new Resource();
-			resource.id(id);
-
-			// ResourceController.get().getResource(resource);
-
+			ResourceController.get().getResource(
+					ApiHelper.dataType(new Resource(), id));
 			actionText = UPDATE_ACTION_TEXT;
 		} else if ("new".equals(current.getAction())) {
 			actionText = ADD_ACTION_TEXT;
@@ -221,6 +241,7 @@ public class EditResourcePage extends Page implements
 
 		actionText = UPDATE_ACTION_TEXT;
 		resource = null;
+		pnlResourcePreview.clear();
 
 		super.reset();
 	}
@@ -292,6 +313,66 @@ public class EditResourcePage extends Page implements
 		}
 
 		return headingText;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.blog.call.event.UpdateResourceEventHandler
+	 * #updateResourceSuccess(com.willshex.blogwt.shared.api.blog.call.
+	 * UpdateResourceRequest,
+	 * com.willshex.blogwt.shared.api.blog.call.UpdateResourceResponse) */
+	@Override
+	public void updateResourceSuccess (UpdateResourceRequest input,
+			UpdateResourceResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			show(output.resource);
+		}
+
+		ready();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.blog.call.event.UpdateResourceEventHandler
+	 * #updateResourceFailure(com.willshex.blogwt.shared.api.blog.call.
+	 * UpdateResourceRequest, java.lang.Throwable) */
+	@Override
+	public void updateResourceFailure (UpdateResourceRequest input,
+			Throwable caught) {
+		GWT.log("updateResourceFailure", caught);
+		ready();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.blog.call.event.GetResourceEventHandler
+	 * #getResourceSuccess
+	 * (com.willshex.blogwt.shared.api.blog.call.GetResourceRequest,
+	 * com.willshex.blogwt.shared.api.blog.call.GetResourceResponse) */
+	@Override
+	public void getResourceSuccess (GetResourceRequest input,
+			GetResourceResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			show(output.resource);
+		}
+
+		ready();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.blog.call.event.GetResourceEventHandler
+	 * #getResourceFailure
+	 * (com.willshex.blogwt.shared.api.blog.call.GetResourceRequest,
+	 * java.lang.Throwable) */
+	@Override
+	public void getResourceFailure (GetResourceRequest input, Throwable caught) {
+		GWT.log("getResourceFailure", caught);
+		ready();
 	}
 
 }
