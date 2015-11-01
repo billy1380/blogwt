@@ -15,6 +15,7 @@ import com.willshex.blogwt.client.api.page.PageService;
 import com.willshex.blogwt.client.api.user.UserService;
 import com.willshex.blogwt.client.api.user.search.SearchService;
 import com.willshex.blogwt.shared.api.Request;
+import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.json.service.shared.Error;
 
@@ -59,7 +60,7 @@ public class ApiHelper {
 		service.setBus(DefaultEventBus.get());
 		return service;
 	}
-	
+
 	public static <T extends Request> T setAccessCode (T input) {
 		input.accessCode = ACCESS_CODE;
 		return input;
@@ -73,6 +74,11 @@ public class ApiHelper {
 	public static boolean isError (Error error, ApiError apiError) {
 		return error != null && error.code != null
 				&& error.code.intValue() == apiError.getCode();
+	}
+
+	public static <T extends DataType> T fromId (T instance, Long id) {
+		instance.id(id);
+		return instance;
 	}
 
 }
