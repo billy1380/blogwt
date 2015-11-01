@@ -84,7 +84,7 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 				value.name), Templates.INSTANCE.download(
 				value.data.substring(5), value.name, value.data), value.name,
 				value.description, Templates.INSTANCE.edit(PageTypeHelper
-						.asHref(PageType.EditResourcePageType,
+						.asHref(PageType.EditResourcePageType, "id",
 								value.id.toString())), Templates.INSTANCE
 						.delete());
 	}
