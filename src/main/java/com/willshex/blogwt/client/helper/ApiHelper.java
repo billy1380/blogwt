@@ -76,7 +76,7 @@ public class ApiHelper {
 				&& error.code.intValue() == apiError.getCode();
 	}
 
-	public static <T extends DataType> T fromId (T instance, Long id) {
+	public static <T extends DataType> T dataType (T instance, Long id) {
 		instance.id(id);
 		return instance;
 	}
