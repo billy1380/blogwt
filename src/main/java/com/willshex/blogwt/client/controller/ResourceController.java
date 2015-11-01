@@ -19,12 +19,20 @@ import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetResourceRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetResourceResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetResourcesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetResourcesResponse;
+import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
+import com.willshex.blogwt.shared.api.blog.call.UpdateResourceResponse;
 import com.willshex.blogwt.shared.api.blog.call.event.DeleteResourceEventHandler.DeleteResourceFailure;
 import com.willshex.blogwt.shared.api.blog.call.event.DeleteResourceEventHandler.DeleteResourceSuccess;
+import com.willshex.blogwt.shared.api.blog.call.event.GetResourceEventHandler.GetResourceFailure;
+import com.willshex.blogwt.shared.api.blog.call.event.GetResourceEventHandler.GetResourceSuccess;
 import com.willshex.blogwt.shared.api.blog.call.event.GetResourcesEventHandler.GetResourcesFailure;
 import com.willshex.blogwt.shared.api.blog.call.event.GetResourcesEventHandler.GetResourcesSuccess;
+import com.willshex.blogwt.shared.api.blog.call.event.UpdateResourceEventHandler.UpdateResourceFailure;
+import com.willshex.blogwt.shared.api.blog.call.event.UpdateResourceEventHandler.UpdateResourceSuccess;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -140,6 +148,66 @@ public class ResourceController extends AsyncDataProvider<Resource> {
 					public void onFailure (Throwable caught) {
 						DefaultEventBus.get().fireEventFromSource(
 								new DeleteResourceFailure(input, caught),
+								ResourceController.this);
+					}
+				});
+	}
+
+	public void getResource (Long id) {
+		final GetResourceRequest input = SessionController.get()
+				.setSession(ApiHelper.setAccessCode(new GetResourceRequest()))
+				.resource((Resource) new Resource().id(id));
+
+		ApiHelper.createBlogClient().getResource(input,
+				new AsyncCallback<GetResourceResponse>() {
+
+					@Override
+					public void onSuccess (GetResourceResponse output) {
+
+						if (output.status == StatusType.StatusTypeSuccess) {
+							if (input.resource != null) {}
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new GetResourceSuccess(input, output),
+								ResourceController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+
+						DefaultEventBus.get().fireEventFromSource(
+								new GetResourceFailure(input, caught),
+								ResourceController.this);
+					}
+				});
+	}
+
+	public void updateResource (Resource resource) {
+		final UpdateResourceRequest input = SessionController
+				.get()
+				.setSession(
+						ApiHelper.setAccessCode(new UpdateResourceRequest()))
+				.resource(resource);
+
+		ApiHelper.createBlogClient().updateResource(input,
+				new AsyncCallback<UpdateResourceResponse>() {
+
+					@Override
+					public void onSuccess (UpdateResourceResponse output) {
+						if (output.status == StatusType.StatusTypeSuccess) {
+							if (input.resource != null) {}
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new UpdateResourceSuccess(input, output),
+								ResourceController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						DefaultEventBus.get().fireEventFromSource(
+								new UpdateResourceFailure(input, caught),
 								ResourceController.this);
 					}
 				});
