@@ -260,6 +260,10 @@ public class EditResourcePage extends Page implements
 		if (isValid()) {
 			loading();
 
+			resource.name(txtName.getValue()).description(
+					txtDescription.getValue());
+
+			ResourceController.get().updateResource(resource);
 		} else {
 			showErrors();
 		}
@@ -335,7 +339,7 @@ public class EditResourcePage extends Page implements
 	public void updateResourceSuccess (UpdateResourceRequest input,
 			UpdateResourceResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			show(output.resource, false);
+			show(EditResourcePage.this.resource = output.resource, false);
 		}
 
 		ready();
@@ -365,7 +369,7 @@ public class EditResourcePage extends Page implements
 	public void getResourceSuccess (GetResourceRequest input,
 			GetResourceResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			show(output.resource, true);
+			show(EditResourcePage.this.resource = output.resource, true);
 		}
 
 		ready();
