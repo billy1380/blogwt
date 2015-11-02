@@ -20,6 +20,15 @@ public class ResourceValidator {
 
 	private static final String type = Resource.class.getSimpleName();
 
+	public static Resource validate (Resource resource, String name)
+			throws InputValidationException {
+		if (resource == null)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, type + ": " + name);
+
+		return resource;
+	}
+
 	public static Resource lookup (Resource resource, String name)
 			throws InputValidationException {
 		if (resource == null)
