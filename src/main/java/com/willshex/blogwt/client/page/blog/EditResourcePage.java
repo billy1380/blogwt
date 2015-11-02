@@ -183,6 +183,10 @@ public class EditResourcePage extends Page implements
 	}
 
 	private void show (Resource resource) {
+		show(resource, false);
+	}
+
+	private void show (Resource resource, boolean withImage) {
 		if (resource != null) {
 			txtName.setValue(resource.name);
 			txtData.setValue(resource.data);
@@ -191,12 +195,15 @@ public class EditResourcePage extends Page implements
 			txtType.setValue(resource.type == null ? "" : resource.type
 					.toString());
 			uplDragAndDrop.setVisible(false);
-			Image image = new Image("upload?blob-key="
-					+ resource.data.replace("gs://", ""));
-			image.addStyleName("img-rounded");
-			image.addStyleName("img-responsive");
-			image.addStyleName("center-block");
-			pnlResourcePreview.add(image);
+
+			if (withImage) {
+				Image image = new Image("upload?blob-key="
+						+ resource.data.replace("gs://", ""));
+				image.addStyleName("img-rounded");
+				image.addStyleName("img-responsive");
+				image.addStyleName("center-block");
+				pnlResourcePreview.add(image);
+			}
 		}
 	}
 
@@ -242,6 +249,8 @@ public class EditResourcePage extends Page implements
 		actionText = UPDATE_ACTION_TEXT;
 		resource = null;
 		pnlResourcePreview.clear();
+
+		uplDragAndDrop.setVisible(true);
 
 		super.reset();
 	}
@@ -326,7 +335,7 @@ public class EditResourcePage extends Page implements
 	public void updateResourceSuccess (UpdateResourceRequest input,
 			UpdateResourceResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			show(output.resource);
+			show(output.resource, false);
 		}
 
 		ready();
@@ -356,7 +365,7 @@ public class EditResourcePage extends Page implements
 	public void getResourceSuccess (GetResourceRequest input,
 			GetResourceResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			show(output.resource);
+			show(output.resource, true);
 		}
 
 		ready();
