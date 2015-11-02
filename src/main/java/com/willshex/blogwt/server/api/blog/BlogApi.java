@@ -69,6 +69,7 @@ import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Property;
+import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
@@ -89,6 +90,35 @@ public final class BlogApi extends ActionHandler {
 		LOG.finer("Entering updateResource");
 		UpdateResourceResponse output = new UpdateResourceResponse();
 		try {
+			ApiValidator.notNull(input, UpdateResourceRequest.class, "input");
+			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+			output.session = input.session = SessionValidator.lookupAndExtend(
+					input.session, "input.session");
+
+			input.session.user = UserServiceProvider.provide().getUser(
+					Long.valueOf(input.session.userKey.getId()));
+			
+			UserValidator.authorisation(input.session.user, Arrays
+					.asList(PermissionServiceProvider.provide()
+							.getCodePermission(
+									PermissionHelper.MANAGE_RESOURCES)),
+					"input.session.user");
+
+			Resource updatedResource = input.resource;
+
+			input.resource = ResourceValidator.lookup(input.resource,
+					"input.resource");
+			updatedResource = ResourceValidator.validate(updatedResource,
+					"input.resource");
+
+			input.resource.name = updatedResource.name;
+			input.resource.description = updatedResource.description;
+
+			output.resource = ResourceServiceProvider.provide().updateResource(
+					input.resource);
+
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
