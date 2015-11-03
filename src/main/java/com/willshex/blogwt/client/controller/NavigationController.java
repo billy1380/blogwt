@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.event.NavigationChangedEventHandler.NavigationChangedEvent;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.blogwt.shared.page.Stack;
@@ -54,7 +55,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 		return pageHolder = value;
 	}
 
-	public void createAsyncPage (final PageType pageType) {
+	public void createAsyncPage (final PageType pageType,
+			final NavigationChangedEvent event) {
 		GWT.runAsync(new RunAsyncCallback() {
 			public void onFailure (Throwable caught) {
 				GWT.log("Could not create page " + pageType, caught);
@@ -64,7 +66,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 				pages.put(pageKeyForCache(pageType),
 						PageTypeHelper.createPage(pageType));
 
-				attachPage(pageType);
+				attachPage(pageType, event);
 			}
 		});
 	}
@@ -80,16 +82,26 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	private String intended = null;
 
-	private void attachPage (PageType type) {
+	private void attachPage (PageType type, final NavigationChangedEvent event) {
 		Composite page = null;
 
 		if ((page = getPageFromCache(type)) == null) {
-			createAsyncPage(type);
+			createAsyncPage(type, event);
 		}
 
-		if (page != null && !page.isAttached()) {
-			pageHolder.clear();
-			pageHolder.add(page);
+		if (page != null) {
+			if (!page.isAttached()) {
+				pageHolder.clear();
+				pageHolder.add(page);
+			}
+
+			Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+				@Override
+				public void execute () {
+					DefaultEventBus.get().fireEventFromSource(event,
+							NavigationController.this);
+				}
+			});
 		}
 	}
 
@@ -157,19 +169,9 @@ public class NavigationController implements ValueChangeHandler<String> {
 		final Stack previous = stack;
 		stack = value;
 
-		attachPage(stackPage);
-
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-			@Override
-			public void execute () {
-				DefaultEventBus
-						.get()
-						.fireEventFromSource(
-								new NavigationChangedEventHandler.NavigationChangedEvent(
-										previous, stack),
-								NavigationController.this);
-			}
-		});
+		attachPage(stackPage,
+				new NavigationChangedEventHandler.NavigationChangedEvent(
+						previous, stack));
 	}
 
 	public PageType getCurrentPage () {
