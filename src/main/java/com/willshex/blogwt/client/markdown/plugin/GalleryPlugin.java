@@ -29,7 +29,7 @@ public class GalleryPlugin extends Plugin {
 	@Override
 	public void emit (StringBuilder out, List<String> lines,
 			Map<String, String> params) {
-
+		out.append("Gallery goes here!");
 	}
 
 }
