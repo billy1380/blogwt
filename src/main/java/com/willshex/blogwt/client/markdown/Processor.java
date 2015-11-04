@@ -20,6 +20,7 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.markdown.plugin.CachedIncludePlugin;
+import com.willshex.blogwt.client.markdown.plugin.FormPlugin;
 import com.willshex.blogwt.client.markdown.plugin.GalleryPlugin;
 import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
 import com.willshex.blogwt.client.markdown.plugin.YoutubePlugin;
@@ -111,7 +112,8 @@ public class Processor extends MarkdownProcessor {
 
 		registerPlugins(new WebSequencePlugin(ensureManager()), includePlugin,
 				new GalleryPlugin(), mapsApiKey == null ? null : new MapPlugin(
-						mapsApiKey, ensureManager()), new YoutubePlugin());
+						mapsApiKey, ensureManager()), new YoutubePlugin(),
+				new FormPlugin());
 	}
 
 	public Processor () {
