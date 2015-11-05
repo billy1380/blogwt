@@ -18,8 +18,11 @@ import org.markdown4j.client.event.PluginContentReadyEventHandler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Composite;
 import com.willshex.blogwt.client.markdown.Processor;
+import com.willshex.blogwt.client.markdown.plugin.FormPlugin;
 import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
+import com.willshex.blogwt.client.markdown.plugin.part.FormPart;
 
 /**
  * @author William Shakour (billy1380)
@@ -34,17 +37,22 @@ public class PostHelper extends com.willshex.blogwt.shared.helper.PostHelper {
 		public void ready (PluginContentReadyEvent event, Plugin plugin,
 				List<String> lines, Map<String, String> params, String id,
 				String content) {
-			if (plugin instanceof IncludePlugin) {
-				Element el = Document.get().getElementById(id);
+			Element el = Document.get().getElementById(id);
 
+			if (plugin instanceof IncludePlugin) {
 				if (el != null && content != null) {
 					el.setInnerHTML(content);
 				}
 			} else if (plugin instanceof MapPlugin) {
-				Element el = Document.get().getElementById(id);
 
 				if (el != null) {
 					MapHelper.showMap(el, lines, params);
+				}
+			} else if (plugin instanceof FormPlugin) {
+				if (el != null && content != null) {
+					Composite form = new FormPart();
+					el.removeAllChildren();
+					el.appendChild(form.getElement());
 				}
 			}
 		}
