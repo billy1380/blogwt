@@ -1,19 +1,25 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
-	
+	.form {
+		margin-bottom: 20px;
+	}
 	</ui:style>
 	<g:HTMLPanel>
 
-		<g:FormPanel ui:field="frmForm">
+		<g:FormPanel ui:field="frmForm" styleName="{style.form}">
 			<g:HTMLPanel>
+				<g:HTMLPanel ui:field="pnlInstrucations">
+
+				</g:HTMLPanel>
+
 				<g:HTMLPanel ui:field="pnlFields">
 
 				</g:HTMLPanel>
 
 				<g:HTMLPanel ui:field="pnlButtons">
-					<g:ResetButton ui:field="btnReset" text="Reset" />
-					<g:SubmitButton ui:field="btnSubmit" text="Send" />
+					<g:ResetButton ui:field="btnReset" text="Reset" styleName="btn btn-default" />
+					<g:SubmitButton ui:field="btnSubmit" text="Send" styleName="btn btn-primary" />
 				</g:HTMLPanel>
 
 			</g:HTMLPanel>

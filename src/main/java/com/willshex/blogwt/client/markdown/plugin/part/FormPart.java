@@ -14,6 +14,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ResetButton;
 import com.google.gwt.user.client.ui.SubmitButton;
@@ -34,14 +35,17 @@ public class FormPart extends Composite {
 	@UiField SubmitButton btnSubmit;
 	@UiField FormPanel frmForm;
 	@UiField HTMLPanel pnlFields;
+	@UiField HTMLPanel pnlInstrucations;
 
 	public FormPart () {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
 	@UiHandler("btnSubmit")
-	void onSubmitClicked (ClickEvent ce) {
+	void onSubmitClicked (SubmitEvent se) {
+		// Call api with fields
 
+		se.cancel();
 	}
 
 	@UiHandler("btnReset")
