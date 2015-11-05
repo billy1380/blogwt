@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.willshex.blogwt.client.markdown.Processor;
 import com.willshex.blogwt.client.markdown.plugin.FormPlugin;
 import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
@@ -50,8 +51,10 @@ public class PostHelper extends com.willshex.blogwt.shared.helper.PostHelper {
 				}
 			} else if (plugin instanceof FormPlugin) {
 				if (el != null && content != null) {
-					Composite form = new FormPart();
 					el.removeAllChildren();
+
+					Composite form = new FormPart();
+					RootPanel.get().add(form);
 					el.appendChild(form.getElement());
 				}
 			}
