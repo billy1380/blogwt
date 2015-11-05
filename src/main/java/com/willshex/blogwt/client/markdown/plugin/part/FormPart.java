@@ -41,9 +41,13 @@ public class FormPart extends Composite {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	@UiHandler("btnSubmit")
-	void onSubmitClicked (SubmitEvent se) {
-		// Call api with fields
+	@UiHandler("frmForm")
+	void onFormSubmit (SubmitEvent se) {
+		if (isValid()) {
+			// Call api with fields
+		} else {
+			showErrors();
+		}
 
 		se.cancel();
 	}
@@ -51,6 +55,14 @@ public class FormPart extends Composite {
 	@UiHandler("btnReset")
 	void onResetClicked (ClickEvent ce) {
 		frmForm.reset();
+	}
+
+	private boolean isValid () {
+		return true;
+	}
+
+	private void showErrors () {
+
 	}
 
 }
