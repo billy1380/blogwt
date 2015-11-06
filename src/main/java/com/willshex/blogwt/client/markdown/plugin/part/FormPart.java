@@ -65,4 +65,41 @@ public class FormPart extends Composite {
 
 	}
 
+	/**
+	 * @param line
+	 */
+	public void addFieldWithLine (String line) {
+		if (line.length() > 0) {
+		
+			
+			
+		}
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setHeading (String string) {}
+
+	/**
+	 * @param string
+	 */
+	public void setSubHeading (String string) {
+
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setPreText (String string) {
+
+	}
+
+	/**
+	 * @param string
+	 */
+	public void setPostText (String string) {
+
+	}
+
 }

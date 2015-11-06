@@ -17,12 +17,19 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.markdown.plugin.part.FormPart;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
 public class FormPlugin extends AbstractAsyncPlugin {
+
+	public final static String HEADING_PARAM_KEY = "heading";
+	public final static String SUBHEADING_PARAM_KEY = "subheading";
+	private static final Object PRETEXT_PARAM_KEY = "pretext";
+	private static final Object POSTTEXT_PARAM_KEY = "posttext";
 
 	public FormPlugin (HandlerManager manager) {
 		super("form", manager);
@@ -51,6 +58,24 @@ public class FormPlugin extends AbstractAsyncPlugin {
 				}
 			}
 		});
+	}
+
+	public Widget createWidget (List<String> lines,
+			final Map<String, String> params) {
+		FormPart form = new FormPart();
+
+		form.setHeading(params.get(HEADING_PARAM_KEY));
+		form.setSubHeading(params.get(SUBHEADING_PARAM_KEY));
+		form.setPreText(params.get(PRETEXT_PARAM_KEY));
+		form.setPostText(params.get(POSTTEXT_PARAM_KEY));
+
+		for (String line : lines) {
+			if (line.length() > 0) {
+				form.addFieldWithLine(line);
+			}
+		}
+
+		return form;
 	}
 
 }

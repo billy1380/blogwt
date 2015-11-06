@@ -18,12 +18,11 @@ import org.markdown4j.client.event.PluginContentReadyEventHandler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.markdown.Processor;
 import com.willshex.blogwt.client.markdown.plugin.FormPlugin;
 import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
-import com.willshex.blogwt.client.markdown.plugin.part.FormPart;
 
 /**
  * @author William Shakour (billy1380)
@@ -53,7 +52,8 @@ public class PostHelper extends com.willshex.blogwt.shared.helper.PostHelper {
 				if (el != null && content != null) {
 					el.removeAllChildren();
 
-					Composite form = new FormPart();
+					Widget form = ((FormPlugin) plugin).createWidget(lines,
+							params);
 					RootPanel.get().add(form);
 					el.appendChild(form.getElement());
 				}
