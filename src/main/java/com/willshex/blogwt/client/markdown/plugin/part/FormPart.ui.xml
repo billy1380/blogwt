@@ -9,10 +9,6 @@
 
 		<g:FormPanel ui:field="frmForm" styleName="{style.form}">
 			<g:HTMLPanel>
-				<g:HTMLPanel ui:field="pnlInstrucations">
-
-				</g:HTMLPanel>
-
 				<g:HTMLPanel ui:field="pnlFields">
 
 				</g:HTMLPanel>

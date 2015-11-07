@@ -26,11 +26,6 @@ import com.willshex.blogwt.client.markdown.plugin.part.FormPart;
  */
 public class FormPlugin extends AbstractAsyncPlugin {
 
-	public final static String HEADING_PARAM_KEY = "heading";
-	public final static String SUBHEADING_PARAM_KEY = "subheading";
-	private static final Object PRETEXT_PARAM_KEY = "pretext";
-	private static final Object POSTTEXT_PARAM_KEY = "posttext";
-
 	public FormPlugin (HandlerManager manager) {
 		super("form", manager);
 	}
@@ -63,11 +58,6 @@ public class FormPlugin extends AbstractAsyncPlugin {
 	public Widget createWidget (List<String> lines,
 			final Map<String, String> params) {
 		FormPart form = new FormPart();
-
-		form.setHeading(params.get(HEADING_PARAM_KEY));
-		form.setSubHeading(params.get(SUBHEADING_PARAM_KEY));
-		form.setPreText(params.get(PRETEXT_PARAM_KEY));
-		form.setPostText(params.get(POSTTEXT_PARAM_KEY));
 
 		for (String line : lines) {
 			if (line.length() > 0) {
