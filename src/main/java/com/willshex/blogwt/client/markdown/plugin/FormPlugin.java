@@ -59,6 +59,8 @@ public class FormPlugin extends AbstractAsyncPlugin {
 			final Map<String, String> params) {
 		FormPart form = new FormPart();
 
+		form.setParams(params);
+
 		for (String line : lines) {
 			if (line.length() > 0) {
 				form.addFieldWithLine(line);
@@ -67,5 +69,4 @@ public class FormPlugin extends AbstractAsyncPlugin {
 
 		return form;
 	}
-
 }

@@ -9,6 +9,7 @@ package com.willshex.blogwt.client.markdown.plugin.part;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -30,6 +31,11 @@ import com.willshex.blogwt.client.part.form.TextBoxPart;
  *
  */
 public class FormPart extends Composite {
+
+	private static final String FORM_CLASS_PARAM_KEY = "formclass";
+	private static final String BODY_PANEL_CLASS_PARAM_KEY = "bodyclass";
+	private static final String FIELD_PANEL_CLASS_PARAM_KEY = "fieldclass";
+	private static final String BUTTON_BAR_CLASS_PARAM_KEY = "buttonclass";
 
 	private static final String TYPE = "type";
 	private static final String NAME = "name";
@@ -60,6 +66,8 @@ public class FormPart extends Composite {
 	@UiField SubmitButton btnSubmit;
 	@UiField FormPanel frmForm;
 	@UiField HTMLPanel pnlFields;
+	@UiField HTMLPanel pnlButtons;
+	@UiField HTMLPanel pnlBody;
 
 	public FormPart () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -140,5 +148,39 @@ public class FormPart extends Composite {
 		}
 
 		return config;
+	}
+
+	/**
+	 * @param params
+	 */
+	public void setParams (Map<String, String> params) {
+		String[] splitParam;
+		if (params.containsKey(FORM_CLASS_PARAM_KEY)) {
+			splitParam = params.get(FORM_CLASS_PARAM_KEY).split(";");
+			for (String token : splitParam) {
+				this.addStyleName(token);
+			}
+		}
+
+		if (params.containsKey(BODY_PANEL_CLASS_PARAM_KEY)) {
+			splitParam = params.get(BODY_PANEL_CLASS_PARAM_KEY).split(";");
+			for (String token : splitParam) {
+				pnlBody.addStyleName(token);
+			}
+		}
+
+		if (params.containsKey(FIELD_PANEL_CLASS_PARAM_KEY)) {
+			splitParam = params.get(FIELD_PANEL_CLASS_PARAM_KEY).split(";");
+			for (String token : splitParam) {
+				pnlFields.addStyleName(token);
+			}
+		}
+
+		if (params.containsKey(BUTTON_BAR_CLASS_PARAM_KEY)) {
+			splitParam = params.get(BUTTON_BAR_CLASS_PARAM_KEY).split(";");
+			for (String token : splitParam) {
+				pnlButtons.addStyleName(token);
+			}
+		}
 	}
 }
