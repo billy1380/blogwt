@@ -97,10 +97,10 @@ public class EditPostPage extends Page implements
 
 	interface EditPostPageUiBinder extends UiBinder<Widget, EditPostPage> {}
 
-//	interface Style extends CssResource {
-//		@ClassName("drop-zone")
-//		String dropZone ();
-//	}
+	//	interface Style extends CssResource {
+	//		@ClassName("drop-zone")
+	//		String dropZone ();
+	//	}
 
 	private Post post;
 
@@ -134,7 +134,7 @@ public class EditPostPage extends Page implements
 	@UiField HTMLPanel pnlImagePreviews;
 	@UiField MarkdownToolbar tbrSummary;
 	@UiField MarkdownToolbar tbrContent;
-//	@UiField Style style;
+	//	@UiField Style style;
 
 	@UiField(provided = true) CellList<Tag> clTags = new CellList<Tag>(
 			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
@@ -179,9 +179,9 @@ public class EditPostPage extends Page implements
 
 	public EditPostPage () {
 		initWidget(uiBinder.createAndBindUi(this));
-//		lblDropZone.setStyleName(style.dropZone());
-//		btnUploadImage.setStyleName("btn");
-//		btnUploadImage.addStyleName("btn-default");
+		//		lblDropZone.setStyleName(style.dropZone());
+		//		btnUploadImage.setStyleName("btn");
+		//		btnUploadImage.addStyleName("btn-default");
 		UiHelper.addPlaceholder(txtTitle, "Title");
 		UiHelper.autoFocus(txtTitle);
 		UiHelper.addPlaceholder(txtSummary, "Short Summary");
@@ -574,8 +574,6 @@ public class EditPostPage extends Page implements
 		}
 
 		tagList.getList().clear();
-
-		// TODO: hide error messages etc
 
 		updatePreview();
 	}

@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.ResetButton;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.helper.UiHelper;
+import com.willshex.blogwt.client.part.form.TextAreaPart;
 import com.willshex.blogwt.client.part.form.TextBoxPart;
 
 /**
@@ -41,6 +42,11 @@ public class FormPart extends Composite {
 	private static final String NAME = "name";
 	private static final String DEFAULT_VALUE = "defaultValue";
 	private static final String ALLOWED_VALUES = "allowedValues";
+
+	private static final String TEXT_TYPE = "text";
+	private static final String ONE_OPTION_TYPE = "oneOption";
+	private static final String LONG_TEXT_TYPE = "longText";
+	private static final String CAPTCHA_TYPE = "captcha";
 
 	private static class ConfigLine {
 		public String type;
@@ -105,14 +111,20 @@ public class FormPart extends Composite {
 			ConfigLine config = parseConfigLine(line);
 
 			switch (config.type) {
-			case "text":
+			case TEXT_TYPE:
 				TextBoxPart textBox = new TextBoxPart();
 				textBox.elName.setInnerHTML(config.name);
 				UiHelper.addPlaceholder(textBox.txtValue, config.name);
 				textBox.txtValue.setValue(config.defaultValue);
 				pnlFields.add(textBox);
 				break;
-			case "textarea":
+			case LONG_TEXT_TYPE:
+				TextAreaPart longText = new TextAreaPart();
+				longText.elName.setInnerHTML(config.name);
+				UiHelper.addPlaceholder(longText.txtValue, config.name);
+				longText.txtValue.setValue(config.defaultValue);
+				longText.txtValue.setVisibleLines(4);
+				pnlFields.add(longText);
 				break;
 			}
 		}
