@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.ResetButton;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.helper.UiHelper;
+import com.willshex.blogwt.client.part.form.ListBoxPart;
 import com.willshex.blogwt.client.part.form.TextAreaPart;
 import com.willshex.blogwt.client.part.form.TextBoxPart;
 
@@ -110,6 +111,8 @@ public class FormPart extends Composite {
 		if (line.length() > 0) {
 			ConfigLine config = parseConfigLine(line);
 
+			boolean autofocus = pnlFields.getWidgetCount() == 0;
+
 			switch (config.type) {
 			case TEXT_TYPE:
 				TextBoxPart textBox = new TextBoxPart();
@@ -117,6 +120,9 @@ public class FormPart extends Composite {
 				UiHelper.addPlaceholder(textBox.txtValue, config.name);
 				textBox.txtValue.setValue(config.defaultValue);
 				pnlFields.add(textBox);
+				if (autofocus) {
+					UiHelper.autoFocus(textBox.txtValue);
+				}
 				break;
 			case LONG_TEXT_TYPE:
 				TextAreaPart longText = new TextAreaPart();
@@ -125,6 +131,32 @@ public class FormPart extends Composite {
 				longText.txtValue.setValue(config.defaultValue);
 				longText.txtValue.setVisibleLines(4);
 				pnlFields.add(longText);
+				if (autofocus) {
+					UiHelper.autoFocus(longText.txtValue);
+				}
+				break;
+			case ONE_OPTION_TYPE:
+				ListBoxPart listBox = new ListBoxPart();
+				listBox.elName.setInnerHTML(config.name);
+				UiHelper.addPlaceholder(listBox.lbxValue, config.name);
+
+				if (config.allowedValues != null) {
+					int size = config.allowedValues.size();
+					String value;
+					for (int i = 0; i < size; i++) {
+						value = config.allowedValues.get(i);
+						listBox.lbxValue.addItem(value, value);
+						if (value.equals(config.defaultValue)) {
+							listBox.lbxValue.setSelectedIndex(i);
+						}
+					}
+				}
+				pnlFields.add(listBox);
+				if (autofocus) {
+					UiHelper.autoFocus(listBox.lbxValue);
+				}
+				break;
+			case CAPTCHA_TYPE:
 				break;
 			}
 		}
