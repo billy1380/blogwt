@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dev.util.collect.HashMap;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -25,6 +26,7 @@ import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.part.form.ListBoxPart;
+import com.willshex.blogwt.client.part.form.ReCaptchaPart;
 import com.willshex.blogwt.client.part.form.TextAreaPart;
 import com.willshex.blogwt.client.part.form.TextBoxPart;
 
@@ -44,6 +46,8 @@ public class FormPart extends Composite {
 	private static final String DEFAULT_VALUE = "defaultValue";
 	private static final String ALLOWED_VALUES = "allowedValues";
 
+	private static final String RECAPTCH_API_KEY = "recaptchaApiKey";
+
 	private static final String TEXT_TYPE = "text";
 	private static final String ONE_OPTION_TYPE = "oneOption";
 	private static final String LONG_TEXT_TYPE = "longText";
@@ -54,6 +58,7 @@ public class FormPart extends Composite {
 		public String name;
 		public String defaultValue;
 		public List<String> allowedValues;
+		public Map<String, String> parameters;
 
 		public void addAllowedValue (String value) {
 			if (allowedValues == null) {
@@ -157,6 +162,9 @@ public class FormPart extends Composite {
 				}
 				break;
 			case CAPTCHA_TYPE:
+				ReCaptchaPart recaptch = new ReCaptchaPart();
+				recaptch.setApiKey(config.parameters.get(RECAPTCH_API_KEY));
+				pnlFields.add(recaptch);
 				break;
 			}
 		}
@@ -167,10 +175,13 @@ public class FormPart extends Composite {
 		ConfigLine config = new ConfigLine();
 
 		String[] splitParam, allowedValues;
+		Map<String, String> parameters = new HashMap<String, String>();
 		for (String param : params) {
 			splitParam = param.split("=");
 
 			if (splitParam.length == 2) {
+				parameters.put(splitParam[0], splitParam[1]);
+
 				switch (splitParam[0]) {
 				case TYPE:
 					config.type = splitParam[1];
@@ -190,6 +201,8 @@ public class FormPart extends Composite {
 				}
 			}
 		}
+
+		config.parameters = parameters;
 
 		return config;
 	}
