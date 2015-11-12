@@ -31,6 +31,8 @@ import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPagesResponse;
+import com.willshex.blogwt.shared.api.page.call.SubmitFormRequest;
+import com.willshex.blogwt.shared.api.page.call.SubmitFormResponse;
 import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.UpdatePageResponse;
 import com.willshex.blogwt.shared.helper.PagerHelper;
@@ -43,6 +45,21 @@ import com.willshex.gson.json.service.shared.StatusType;
 
 public final class PageApi extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(Page.class.getName());
+
+	public SubmitFormResponse submitForm (SubmitFormRequest input) {
+		LOG.finer("Entering submitForm");
+		SubmitFormResponse output = new SubmitFormResponse();
+		try {
+			// send an email with the submitted fields
+			
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting submitForm");
+		return output;
+	}
 
 	public UpdatePageResponse updatePage (UpdatePageRequest input) {
 		LOG.finer("Entering updatePage");

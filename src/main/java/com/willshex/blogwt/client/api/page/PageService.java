@@ -21,12 +21,56 @@ import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPagesResponse;
+import com.willshex.blogwt.shared.api.page.call.SubmitFormRequest;
+import com.willshex.blogwt.shared.api.page.call.SubmitFormResponse;
 import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.UpdatePageResponse;
 import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class PageService extends JsonService {
+	public static final String PageMethodSubmitForm = "SubmitForm";
+
+	public Request submitForm (final SubmitFormRequest input,
+			final AsyncCallback<SubmitFormResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(PageMethodSubmitForm, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								SubmitFormResponse outputParameter = new SubmitFormResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(PageService.this,
+										PageMethodSubmitForm, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(PageService.this,
+										PageMethodSubmitForm, input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(PageService.this,
+									PageMethodSubmitForm, input, exception);
+						}
+					});
+			onCallStart(PageService.this, PageMethodSubmitForm, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(PageService.this, PageMethodSubmitForm, input,
+					exception);
+		}
+		return handle;
+	}
+
 	public static final String PageMethodUpdatePage = "UpdatePage";
 
 	public Request updatePage (final UpdatePageRequest input,
