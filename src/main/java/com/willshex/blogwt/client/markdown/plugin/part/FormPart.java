@@ -8,12 +8,13 @@
 package com.willshex.blogwt.client.markdown.plugin.part;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dev.util.collect.HashMap;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -24,17 +25,26 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ResetButton;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.controller.FormController;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.part.form.ListBoxPart;
 import com.willshex.blogwt.client.part.form.ReCaptchaPart;
 import com.willshex.blogwt.client.part.form.TextAreaPart;
 import com.willshex.blogwt.client.part.form.TextBoxPart;
+import com.willshex.blogwt.client.wizard.WizardDialog;
+import com.willshex.blogwt.shared.api.datatype.Form;
+import com.willshex.blogwt.shared.api.page.call.SubmitFormRequest;
+import com.willshex.blogwt.shared.api.page.call.SubmitFormResponse;
+import com.willshex.blogwt.shared.api.page.call.event.SubmitFormEventHandler;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class FormPart extends Composite {
+public class FormPart extends Composite implements SubmitFormEventHandler {
 
 	private static final String FORM_CLASS_PARAM_KEY = "formclass";
 	private static final String BODY_PANEL_CLASS_PARAM_KEY = "bodyclass";
@@ -80,15 +90,25 @@ public class FormPart extends Composite {
 	@UiField HTMLPanel pnlFields;
 	@UiField HTMLPanel pnlButtons;
 	@UiField HTMLPanel pnlBody;
+	private HandlerRegistration registration;
 
 	public FormPart () {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		btnSubmit.getElement().setInnerSafeHtml(
+				WizardDialog.WizardDialogTemplates.INSTANCE.nextButton("Send"));
 	}
 
 	@UiHandler("frmForm")
 	void onFormSubmit (SubmitEvent se) {
 		if (isValid()) {
-			// Call api with fields
+			loading();
+
+			Form form = new Form();
+
+			// add fields to form
+
+			FormController.get().submitForm(form);
 		} else {
 			showErrors();
 		}
@@ -238,6 +258,76 @@ public class FormPart extends Composite {
 			for (String token : splitParam) {
 				pnlButtons.addStyleName(token);
 			}
+		}
+	}
+
+	private void loading () {
+		btnSubmit.getElement().setInnerSafeHtml(
+				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
+						"Sending... ", Resources.RES.primaryLoader()
+								.getSafeUri()));
+	}
+
+	private void ready () {
+		btnSubmit.getElement().setInnerSafeHtml(
+				WizardDialog.WizardDialogTemplates.INSTANCE.nextButton("Send"));
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.page.call.event.SubmitFormEventHandler
+	 * #submitFormSuccess
+	 * (com.willshex.blogwt.shared.api.page.call.SubmitFormRequest,
+	 * com.willshex.blogwt.shared.api.page.call.SubmitFormResponse) */
+	@Override
+	public void submitFormSuccess (SubmitFormRequest input,
+			SubmitFormResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			// show submission success message
+
+			reset();
+		}
+
+		ready();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.shared.api.page.call.event.SubmitFormEventHandler
+	 * #submitFormFailure
+	 * (com.willshex.blogwt.shared.api.page.call.SubmitFormRequest,
+	 * java.lang.Throwable) */
+	@Override
+	public void submitFormFailure (SubmitFormRequest input, Throwable caught) {
+		ready();
+	}
+
+	private void reset () {
+		frmForm.reset();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
+	@Override
+	protected void onAttach () {
+		super.onAttach();
+
+		registration = DefaultEventBus.get().addHandlerToSource(
+				SubmitFormEventHandler.TYPE, FormController.get(), this);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
+	@Override
+	protected void onDetach () {
+		super.onDetach();
+
+		if (registration != null) {
+			registration.removeHandler();
 		}
 	}
 }
