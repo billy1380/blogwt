@@ -34,6 +34,7 @@ import com.willshex.blogwt.client.part.form.ReCaptchaPart;
 import com.willshex.blogwt.client.part.form.TextAreaPart;
 import com.willshex.blogwt.client.part.form.TextBoxPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
+import com.willshex.blogwt.shared.api.datatype.Field;
 import com.willshex.blogwt.shared.api.datatype.Form;
 import com.willshex.blogwt.shared.api.page.call.SubmitFormRequest;
 import com.willshex.blogwt.shared.api.page.call.SubmitFormResponse;
@@ -107,6 +108,38 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 			Form form = new Form();
 
 			// add fields to form
+			final int count = pnlFields.getWidgetCount();
+			Widget current;
+			Field field;
+			for (int i = 0; i < count; i++) {
+				current = pnlFields.getWidget(i);
+				field = null;
+
+				if (current instanceof TextBoxPart) {
+					field = new Field().name(
+							((TextBoxPart) current).elName.getInnerText())
+							.value(((TextBoxPart) current).txtValue.getValue());
+				} else if (current instanceof TextAreaPart) {
+					field = new Field()
+							.name(((TextAreaPart) current).elName
+									.getInnerText()).value(
+									((TextAreaPart) current).txtValue
+											.getValue());
+				} else if (current instanceof ListBoxPart) {
+					field = new Field().name(
+							((ListBoxPart) current).elName.getInnerText())
+							.value(((ListBoxPart) current).lbxValue
+									.getSelectedValue());
+				}
+
+				if (field != null) {
+					if (form.fields == null) {
+						form.fields = new ArrayList<Field>();
+					}
+
+					form.fields.add(field);
+				}
+			}
 
 			FormController.get().submitForm(form);
 		} else {
