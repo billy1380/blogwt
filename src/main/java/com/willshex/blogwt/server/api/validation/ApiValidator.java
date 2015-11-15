@@ -24,7 +24,7 @@ public class ApiValidator {
 			throws InputValidationException {
 		accessCode = validateToken(accessCode, name);
 
-		// FIXME: if all is good look it up
+		// TODO: if all is good look it up
 
 		return accessCode;
 	}
