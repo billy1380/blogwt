@@ -28,7 +28,8 @@ public enum ApiError {
 	UsernameInUse(100010, "User for useranme already exists {0}"),
 	EmailInUse(100011, "User for email address already exists {0}"),
 	PropertyDisallowed(100012,
-			"This call is disallowed by configuration property {0}"), ;
+			"This call is disallowed by configuration property {0}"),
+	FailedToSendEmail(100013, "Failed to send email {0}"), ;
 
 	private static final String PARAM_0 = "\\{0\\}";
 	private static final String PARAM_1 = "\\{1\\}";
