@@ -30,7 +30,7 @@ public class ReCaptchaPart extends Composite {
 	}
 
 	public void setApiKey (String value) {
-		this.getWidget().getElement().setPropertyString("data-sitekey", value);
+		this.getWidget().getElement().setAttribute("data-sitekey", value);
 	}
 
 	@Override
