@@ -3,5 +3,5 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel styleName="g-recaptcha" />
+	<g:HTMLPanel styleName="g-recaptcha form-group" />
 </ui:UiBinder> 
