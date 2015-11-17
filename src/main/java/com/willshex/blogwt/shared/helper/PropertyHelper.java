@@ -30,6 +30,7 @@ public class PropertyHelper {
 	// functional properties
 	public static final String MARKDOWN_MAPS_API_KEY = "markdown.maps.api.key";
 	public static final String MARKDOWN_PREFETCH_INCLUDES = "markdown.include.prefectch";
+	public static final String RECAPTCHA_API_KEY = "recaptcha.api.key";
 
 	public static final String POST_COMMENTS_ENABLED = "post.comments.enabled";
 	public static final String POST_DISQUS_ID = "post.comments.disqus.id";
@@ -73,6 +74,7 @@ public class PropertyHelper {
 
 	public static final String MARKDOWN_MAPS_API_KEY_DESCRIPTION = "Google Maps API Key";
 	public static final String MARKDOWN_PREFETCH_INCLUDES_DESCIPTION = "Fetch markdown includes on the server before returning mardkown content";
+	public static final String RECAPTCHA_API_KEY_DESCRIPTION = "Server API key (secret)";
 
 	public static final String POST_COMMENTS_ENABLED_DESCRIPTION = "Enable Comments";
 	public static final String POST_DISQUS_ID_DESCRIPTION = "Disqus Identifier";
@@ -174,6 +176,12 @@ public class PropertyHelper {
 		return new Property().name(MARKDOWN_MAPS_API_KEY)
 				.description(MARKDOWN_MAPS_API_KEY_DESCRIPTION)
 				.group("Functional").type("string").value(value);
+	}
+
+	public static Property createRecaptchaApiKey (String value) {
+		return new Property().name(RECAPTCHA_API_KEY)
+				.description(RECAPTCHA_API_KEY_DESCRIPTION).value(value)
+				.group("Setup").type("string");
 	}
 
 	public static Property createDisqusId (String value) {
@@ -303,7 +311,8 @@ public class PropertyHelper {
 					createPostEnableEmoji(null),
 					createPostCommentsEnabled(null), createTitleInNavBar(null),
 					createMarkdownMapsApiKey(null), createDisqusId(null),
-					createCategoryId(null), createPostShareEnabled(null),
+					createRecaptchaApiKey(null), createCategoryId(null),
+					createPostShareEnabled(null),
 					createMarkdownPrefechIncludes(null),
 					createPostShowAuthor(null),
 					createPostShowAuthorSummary(null),
