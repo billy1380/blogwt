@@ -245,8 +245,9 @@ public class MainServlet extends ContextAwareServlet {
 
 			boolean first = true;
 			for (Property property : properties) {
-				if (PropertyHelper.PASSWORD_HASH_SALT.equals(property.name))
-					continue;
+				if (PropertyHelper.PASSWORD_HASH_SALT.equals(property.name)
+						|| PropertyHelper.RECAPTCHA_API_KEY
+								.equals(property.name)) continue;
 
 				if (first) {
 					first = false;
