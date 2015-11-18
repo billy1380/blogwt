@@ -15,6 +15,7 @@ import com.google.gson.JsonPrimitive;
 public class Field extends DataType {
 	public String name;
 	public String value;
+	public FieldTypeType type;
 
 	@Override
 	public JsonObject toJson () {
@@ -25,6 +26,9 @@ public class Field extends DataType {
 		JsonElement jsonValue = value == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(value);
 		object.add("value", jsonValue);
+		JsonElement jsonType = type == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(type.toString());
+		object.add("type", jsonType);
 		return object;
 	}
 
@@ -43,6 +47,12 @@ public class Field extends DataType {
 				value = jsonValue.getAsString();
 			}
 		}
+		if (jsonObject.has("type")) {
+			JsonElement jsonType = jsonObject.get("type");
+			if (jsonType != null) {
+				type = FieldTypeType.fromString(jsonType.getAsString());
+			}
+		}
 	}
 
 	public Field name (String name) {
@@ -52,6 +62,11 @@ public class Field extends DataType {
 
 	public Field value (String value) {
 		this.value = value;
+		return this;
+	}
+
+	public Field type (FieldTypeType type) {
+		this.type = type;
 		return this;
 	}
 }
