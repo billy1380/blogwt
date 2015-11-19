@@ -35,6 +35,7 @@ import com.willshex.blogwt.client.part.form.TextAreaPart;
 import com.willshex.blogwt.client.part.form.TextBoxPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.datatype.Field;
+import com.willshex.blogwt.shared.api.datatype.FieldTypeType;
 import com.willshex.blogwt.shared.api.datatype.Form;
 import com.willshex.blogwt.shared.api.page.call.SubmitFormRequest;
 import com.willshex.blogwt.shared.api.page.call.SubmitFormResponse;
@@ -58,11 +59,6 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 	private static final String ALLOWED_VALUES = "allowedValues";
 
 	private static final String RECAPTCH_API_KEY = "recaptchaApiKey";
-
-	private static final String TEXT_TYPE = "text";
-	private static final String ONE_OPTION_TYPE = "oneOption";
-	private static final String LONG_TEXT_TYPE = "longText";
-	private static final String CAPTCHA_TYPE = "captcha";
 
 	private static class ConfigLine {
 		public String type;
@@ -171,8 +167,8 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 
 			boolean autofocus = pnlFields.getWidgetCount() == 0;
 
-			switch (config.type) {
-			case TEXT_TYPE:
+			switch (FieldTypeType.fromString(config.type)) {
+			case FieldTypeTypeText:
 				TextBoxPart textBox = new TextBoxPart();
 				textBox.elName.setInnerHTML(config.name);
 				UiHelper.addPlaceholder(textBox.txtValue, config.name);
@@ -182,7 +178,7 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 					UiHelper.autoFocus(textBox.txtValue);
 				}
 				break;
-			case LONG_TEXT_TYPE:
+			case FieldTypeTypeLongText:
 				TextAreaPart longText = new TextAreaPart();
 				longText.elName.setInnerHTML(config.name);
 				UiHelper.addPlaceholder(longText.txtValue, config.name);
@@ -193,7 +189,7 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 					UiHelper.autoFocus(longText.txtValue);
 				}
 				break;
-			case ONE_OPTION_TYPE:
+			case FieldTypeTypeSingleOption:
 				ListBoxPart listBox = new ListBoxPart();
 				listBox.elName.setInnerHTML(config.name);
 				UiHelper.addPlaceholder(listBox.lbxValue, config.name);
@@ -214,7 +210,7 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 					UiHelper.autoFocus(listBox.lbxValue);
 				}
 				break;
-			case CAPTCHA_TYPE:
+			case FieldTypeTypeCaptcha:
 				ReCaptchaPart recaptch = new ReCaptchaPart();
 				recaptch.setApiKey(config.parameters.get(RECAPTCH_API_KEY));
 				pnlFields.add(recaptch);
