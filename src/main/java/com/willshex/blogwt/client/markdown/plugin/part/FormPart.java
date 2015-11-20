@@ -112,20 +112,26 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 				field = null;
 
 				if (current instanceof TextBoxPart) {
-					field = new Field().name(
-							((TextBoxPart) current).elName.getInnerText())
-							.value(((TextBoxPart) current).txtValue.getValue());
+					field = new Field()
+							.name(((TextBoxPart) current).elName.getInnerText())
+							.value(((TextBoxPart) current).txtValue.getValue())
+							.type(FieldTypeType.FieldTypeTypeText);
 				} else if (current instanceof TextAreaPart) {
 					field = new Field()
 							.name(((TextAreaPart) current).elName
-									.getInnerText()).value(
-									((TextAreaPart) current).txtValue
-											.getValue());
+									.getInnerText())
+							.value(((TextAreaPart) current).txtValue.getValue())
+							.type(FieldTypeType.FieldTypeTypeLongText);
 				} else if (current instanceof ListBoxPart) {
-					field = new Field().name(
-							((ListBoxPart) current).elName.getInnerText())
+					field = new Field()
+							.name(((ListBoxPart) current).elName.getInnerText())
 							.value(((ListBoxPart) current).lbxValue
-									.getSelectedValue());
+									.getSelectedValue())
+							.type(FieldTypeType.FieldTypeTypeSingleOption);
+				} else if (current instanceof ReCaptchaPart) {
+					field = new Field()
+							.type(FieldTypeType.FieldTypeTypeCaptcha).value(
+									((ReCaptchaPart) current).getValue());
 				}
 
 				if (field != null) {
