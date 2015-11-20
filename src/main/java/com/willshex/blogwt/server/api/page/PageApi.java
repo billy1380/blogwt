@@ -18,12 +18,14 @@ import com.willshex.blogwt.server.api.validation.PageValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.helper.EmailHelper;
+import com.willshex.blogwt.server.helper.RecaptchaHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Field;
+import com.willshex.blogwt.shared.api.datatype.FieldTypeType;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -62,8 +64,10 @@ public final class PageApi extends ActionHandler {
 			ApiValidator.notNull(input, UpdatePageRequest.class, "input");
 			ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-			output.session = input.session = SessionValidator.lookupAndExtend(
-					input.session, "input.session");
+			if (input.session != null) {
+				output.session = input.session = SessionValidator
+						.lookupAndExtend(input.session, "input.session");
+			}
 
 			input.form = FormValidator.validate(input.form, "input.form");
 
@@ -75,17 +79,32 @@ public final class PageApi extends ActionHandler {
 
 			StringBuffer body = new StringBuffer();
 
+			boolean isHuman = false;
+			Field captchaField = null;
 			for (Field field : input.form.fields) {
-				body.append(field.name);
-				body.append(":");
-				body.append(field.value);
-				body.append("\n\n");
+				if (field.type == FieldTypeType.FieldTypeTypeCaptcha) {
+					captchaField = field;
+				} else {
+					body.append(field.name);
+					body.append(":");
+					body.append(field.value);
+					body.append("\n\n");
+				}
 			}
 
-			if (!EmailHelper.sendEmail(email.value, title.value, "Submit form",
-					body.toString(), false))
-				ApiValidator.throwServiceError(ServiceException.class,
-						ApiError.FailedToSendEmail, "input.form");
+			if (captchaField != null) {
+				Property reCaptchaKey = PropertyServiceProvider.provide()
+						.getNamedProperty(PropertyHelper.RECAPTCHA_API_KEY);
+				
+				isHuman = RecaptchaHelper.isHuman(captchaField.value, reCaptchaKey.value);
+			}
+
+			if (captchaField == null || isHuman) {
+				if (!EmailHelper.sendEmail(email.value, title.value,
+						"Submit form", body.toString(), false))
+					ApiValidator.throwServiceError(ServiceException.class,
+							ApiError.FailedToSendEmail, "input.form");
+			}
 
 			UserHelper.stripPassword(output.session == null ? null
 					: output.session.user);
