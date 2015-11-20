@@ -10,6 +10,8 @@ package com.willshex.blogwt.client.part.form;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
@@ -47,5 +49,10 @@ public class ReCaptchaPart extends Composite {
 					@Override
 					public void onFailure (Exception reason) {}
 				}).inject();
+	}
+
+	public String getValue () {
+		return ((TextAreaElement) Document.get().getElementById(
+				"g-recaptcha-response")).getValue();
 	}
 }
