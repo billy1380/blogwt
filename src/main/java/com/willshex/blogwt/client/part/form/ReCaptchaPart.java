@@ -7,13 +7,14 @@
 //
 package com.willshex.blogwt.client.part.form;
 
-import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -27,32 +28,55 @@ public class ReCaptchaPart extends Composite {
 
 	interface ReCaptchaPartUiBinder extends UiBinder<Widget, ReCaptchaPart> {}
 
+	private static ScriptElement SCRIPT = null;
+	private String key;
+	private String id;
+
 	public ReCaptchaPart () {
 		initWidget(uiBinder.createAndBindUi(this));
+		getWidget().getElement().setId(HTMLPanel.createUniqueId());
 	}
 
 	public void setApiKey (String value) {
-		this.getWidget().getElement().setAttribute("data-sitekey", value);
+		key = value;
 	}
 
 	@Override
 	protected void onLoad () {
 		super.onLoad();
-
-		ScriptInjector.fromUrl("https://www.google.com/recaptcha/api.js")
-				.setWindow(ScriptInjector.TOP_WINDOW)
-				.setCallback(new Callback<Void, Exception>() {
-
-					@Override
-					public void onSuccess (Void result) {}
-
-					@Override
-					public void onFailure (Exception reason) {}
-				}).inject();
+		if (SCRIPT == null) {
+			exposeMethod(this);
+			SCRIPT = ScriptInjector
+					.fromUrl(
+							"https://www.google.com/recaptcha/api.js?onload=call_65fd7992_9064_11e5_aeca_fbe3616fc7e4&render=explicit")
+					.setWindow(ScriptInjector.TOP_WINDOW).inject().cast();
+		}
 	}
+
+	private native void exposeMethod (ReCaptchaPart widget) /*-{
+																	$wnd.call_65fd7992_9064_11e5_aeca_fbe3616fc7e4 = function() {
+																	widget.@com.willshex.blogwt.client.part.form.ReCaptchaPart::render()();
+																	};
+																	}-*/;
 
 	public String getValue () {
 		return ((TextAreaElement) Document.get().getElementById(
 				"g-recaptcha-response")).getValue();
 	}
+
+	private void render () {
+		id = render(getWidget().getElement(), key);
+	}
+
+	private native String render (Object element, String key) /*-{
+																return $wnd.grecaptcha.render(element, {'sitekey' : key}) ;
+																}-*/;
+
+	public void reset () {
+		reset(id);
+	}
+
+	public native void reset (String id) /*-{
+																				$wnd.grecaptcha.reset(id);
+																				}-*/;
 }
