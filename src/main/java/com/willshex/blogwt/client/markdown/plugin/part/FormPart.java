@@ -48,6 +48,11 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class FormPart extends Composite implements SubmitFormEventHandler {
 
+	private static FormPartUiBinder uiBinder = GWT
+			.create(FormPartUiBinder.class);
+
+	interface FormPartUiBinder extends UiBinder<Widget, FormPart> {}
+
 	private static final String FORM_CLASS_PARAM_KEY = "formclass";
 	private static final String BODY_PANEL_CLASS_PARAM_KEY = "bodyclass";
 	private static final String FIELD_PANEL_CLASS_PARAM_KEY = "fieldclass";
@@ -76,11 +81,6 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 		}
 	}
 
-	private static FormPartUiBinder uiBinder = GWT
-			.create(FormPartUiBinder.class);
-
-	interface FormPartUiBinder extends UiBinder<Widget, FormPart> {}
-
 	@UiField ResetButton btnReset;
 	@UiField SubmitButton btnSubmit;
 	@UiField FormPanel frmForm;
@@ -88,6 +88,7 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 	@UiField HTMLPanel pnlButtons;
 	@UiField HTMLPanel pnlBody;
 	private HandlerRegistration registration;
+	ReCaptchaPart reCaptcha;
 
 	public FormPart () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -153,7 +154,7 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 
 	@UiHandler("btnReset")
 	void onResetClicked (ClickEvent ce) {
-		frmForm.reset();
+		reset();
 	}
 
 	private boolean isValid () {
@@ -217,9 +218,17 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 				}
 				break;
 			case FieldTypeTypeCaptcha:
-				ReCaptchaPart recaptch = new ReCaptchaPart();
-				recaptch.setApiKey(config.parameters.get(RECAPTCH_API_KEY));
-				pnlFields.add(recaptch);
+				if (reCaptcha == null) {
+					reCaptcha = new ReCaptchaPart();
+					reCaptcha
+							.setApiKey(config.parameters.get(RECAPTCH_API_KEY));
+				} else {
+					reCaptcha.removeFromParent();
+					reCaptcha.reset();
+				}
+
+				pnlFields.add(reCaptcha);
+
 				break;
 			}
 		}
@@ -341,6 +350,10 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 
 	private void reset () {
 		frmForm.reset();
+
+		if (reCaptcha != null) {
+			reCaptcha.reset();
+		}
 	}
 
 	/* (non-Javadoc)
