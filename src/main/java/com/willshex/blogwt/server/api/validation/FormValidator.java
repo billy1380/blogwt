@@ -7,9 +7,6 @@
 //
 package com.willshex.blogwt.server.api.validation;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.willshex.blogwt.shared.api.datatype.Field;
 import com.willshex.blogwt.shared.api.datatype.Form;
 import com.willshex.blogwt.shared.api.validation.ApiError;
@@ -28,13 +25,23 @@ public class FormValidator {
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + ": " + name);
 
-		Map<String, Field> fields = new HashMap<String, Field>();
+		if (form.fields == null)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, type + ": " + name + ".fields");
+
+		if (form.fields.size() == 0)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.EmptyForm, type + ": " + name + ".fields");
+
 		for (Field field : form.fields) {
-			// create lookup
-			fields.put(field.name, field);
+			FieldValidator.validate(field, name + ".field[n]");
 		}
 
-		// verify captch
+		if (form.name != null
+				&& (form.name.length() == 0 || form.name.length() > 512))
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.BadLength, Integer.toString(1),
+					Integer.toString(512));
 
 		return form;
 	}
