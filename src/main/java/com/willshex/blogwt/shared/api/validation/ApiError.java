@@ -29,7 +29,9 @@ public enum ApiError {
 	EmailInUse(100011, "User for email address already exists {0}"),
 	PropertyDisallowed(100012,
 			"This call is disallowed by configuration property {0}"),
-	FailedToSendEmail(100013, "Failed to send email {0}"), ;
+	FailedToSendEmail(100013, "Failed to send email {0}"),
+	EmptyForm(100014, "Empty form, submitted with no fields {0}"),
+	BadLength(100015, "Invalid value too long or too short ({0}-{1}): {2}"), ;
 
 	private static final String PARAM_0 = "\\{0\\}";
 	private static final String PARAM_1 = "\\{1\\}";
