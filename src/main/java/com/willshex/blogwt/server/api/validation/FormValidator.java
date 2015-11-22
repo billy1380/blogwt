@@ -41,7 +41,7 @@ public class FormValidator {
 				&& (form.name.length() == 0 || form.name.length() > 512))
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.BadLength, Integer.toString(1),
-					Integer.toString(512));
+					Integer.toString(512), type + ": " + name + ".name");
 
 		return form;
 	}
