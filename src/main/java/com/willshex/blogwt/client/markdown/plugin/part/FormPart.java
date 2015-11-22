@@ -53,6 +53,7 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 
 	interface FormPartUiBinder extends UiBinder<Widget, FormPart> {}
 
+	private static final String NAME_PARAM_KEY = "name";
 	private static final String FORM_CLASS_PARAM_KEY = "formclass";
 	private static final String BODY_PANEL_CLASS_PARAM_KEY = "bodyclass";
 	private static final String FIELD_PANEL_CLASS_PARAM_KEY = "fieldclass";
@@ -88,7 +89,8 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 	@UiField HTMLPanel pnlButtons;
 	@UiField HTMLPanel pnlBody;
 	private HandlerRegistration registration;
-	ReCaptchaPart reCaptcha;
+	private ReCaptchaPart reCaptcha;
+	private String name;
 
 	public FormPart () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -103,6 +105,7 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 			loading();
 
 			Form form = new Form();
+			form.name = name;
 
 			// add fields to form
 			final int count = pnlFields.getWidgetCount();
@@ -302,6 +305,10 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 			for (String token : splitParam) {
 				pnlButtons.addStyleName(token);
 			}
+		}
+
+		if (params.containsKey(NAME_PARAM_KEY)) {
+			name = params.get(NAME_PARAM_KEY);
 		}
 	}
 
