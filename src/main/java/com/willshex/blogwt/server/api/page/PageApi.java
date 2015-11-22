@@ -18,7 +18,6 @@ import com.willshex.blogwt.server.api.validation.PageValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.helper.EmailHelper;
-import com.willshex.blogwt.server.helper.RecaptchaHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
@@ -78,13 +77,8 @@ public final class PageApi extends ActionHandler {
 					.getNamedProperty(PropertyHelper.TITLE);
 
 			StringBuffer body = new StringBuffer();
-
-			boolean isHuman = false;
-			Field captchaField = null;
 			for (Field field : input.form.fields) {
-				if (field.type == FieldTypeType.FieldTypeTypeCaptcha) {
-					captchaField = field;
-				} else {
+				if (field.type != FieldTypeType.FieldTypeTypeCaptcha) {
 					body.append(field.name);
 					body.append(":");
 					body.append(field.value);
@@ -92,19 +86,10 @@ public final class PageApi extends ActionHandler {
 				}
 			}
 
-			if (captchaField != null) {
-				Property reCaptchaKey = PropertyServiceProvider.provide()
-						.getNamedProperty(PropertyHelper.RECAPTCHA_API_KEY);
-				
-				isHuman = RecaptchaHelper.isHuman(captchaField.value, reCaptchaKey.value);
-			}
-
-			if (captchaField == null || isHuman) {
-				if (!EmailHelper.sendEmail(email.value, title.value,
-						"Submit form", body.toString(), false))
-					ApiValidator.throwServiceError(ServiceException.class,
-							ApiError.FailedToSendEmail, "input.form");
-			}
+			if (!EmailHelper.sendEmail(email.value, title.value, "Submit form",
+					body.toString(), false))
+				ApiValidator.throwServiceError(ServiceException.class,
+						ApiError.FailedToSendEmail, "input.form");
 
 			UserHelper.stripPassword(output.session == null ? null
 					: output.session.user);
