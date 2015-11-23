@@ -29,6 +29,21 @@ public class ApiValidator {
 		return accessCode;
 	}
 
+	/**
+	 * @param value
+	 * @param min
+	 * @param max
+	 * @param field
+	 * @throws InputValidationException 
+	 */
+	public static void validateLength (String value, int min, int max,
+			String field) throws InputValidationException {
+		if (value.length() < min || value.length() > max)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.BadLength, Integer.valueOf(min),
+					Integer.valueOf(max), field);
+	}
+
 	public static String validateToken (String token, String name)
 			throws InputValidationException {
 		if (token == null)
@@ -72,8 +87,9 @@ public class ApiValidator {
 				message = error.getMessage((String) params[0]);
 				break;
 			case 3:
-				message = error.getMessage((String) params[0].toString(),
-						(int) params[1], (int) params[2]);
+				message = error.getMessage((String) params[2],
+						((Integer) params[0]).intValue(),
+						((Integer) params[1]).intValue());
 			default:
 				break;
 			}

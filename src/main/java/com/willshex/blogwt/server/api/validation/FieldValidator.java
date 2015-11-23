@@ -48,40 +48,35 @@ public class FieldValidator {
 						ApiError.InvalidValueNull, type + ": " + name);
 			break;
 		case FieldTypeTypeText:
-			if (field.type == null)
+			if (field.value == null)
 				ApiValidator.throwServiceError(InputValidationException.class,
 						ApiError.InvalidValueNull, type + ": " + name + "["
 								+ field.name + "].value");
 
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.BadLength, Integer.toString(1),
-					Integer.toString(512), type + ": " + name + "["
-							+ field.name + "].value");
+			ApiValidator.validateLength(field.value, 1, 512, type + ": " + name + "["
+					+ field.name + "].value");
 			break;
 		case FieldTypeTypeLongText:
-			if (field.type == null)
+			if (field.value == null)
 				ApiValidator.throwServiceError(InputValidationException.class,
 						ApiError.InvalidValueNull, type + ": " + name + "["
 								+ field.name + "].value");
 
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.BadLength, Integer.toString(1),
-					Integer.toString(2048), type + ": " + name + "["
-							+ field.name + "].value");
+			ApiValidator.validateLength(field.value, 1, 2048, type + ": "
+					+ name + "[" + field.name + "].value");
 			break;
 		case FieldTypeTypeSingleOption:
-			if (field.type == null)
+			if (field.value == null)
 				ApiValidator.throwServiceError(InputValidationException.class,
 						ApiError.InvalidValueNull, type + ": " + name + "["
 								+ field.name + "].value");
 
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.BadLength, Integer.toString(1),
-					Integer.toString(512), type + ": " + name + "["
-							+ field.name + "].value");
+			ApiValidator.validateLength(field.value, 1, 512, type + ": " + name
+					+ "[" + field.name + "].value");
 			break;
 		}
 
 		return field;
 	}
+
 }

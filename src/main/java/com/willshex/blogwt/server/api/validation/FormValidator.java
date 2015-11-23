@@ -37,11 +37,10 @@ public class FormValidator {
 			FieldValidator.validate(field, name + ".field[n]");
 		}
 
-		if (form.name != null
-				&& (form.name.length() == 0 || form.name.length() > 512))
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.BadLength, Integer.toString(1),
-					Integer.toString(512), type + ": " + name + ".name");
+		if (form.name != null) {
+			ApiValidator.validateLength(form.name, 1, 512, type + ": " + name
+					+ ".name");
+		}
 
 		return form;
 	}
