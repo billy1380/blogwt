@@ -50,6 +50,8 @@ public class ReCaptchaPart extends Composite {
 					.fromUrl(
 							"https://www.google.com/recaptcha/api.js?onload=call_65fd7992_9064_11e5_aeca_fbe3616fc7e4&render=explicit")
 					.setWindow(ScriptInjector.TOP_WINDOW).inject().cast();
+		} else {
+			render();
 		}
 	}
 
