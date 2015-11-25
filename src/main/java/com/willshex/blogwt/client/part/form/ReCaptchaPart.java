@@ -9,7 +9,6 @@ package com.willshex.blogwt.client.part.form;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.ScriptInjector;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -62,8 +61,9 @@ public class ReCaptchaPart extends Composite {
 																	}-*/;
 
 	public String getValue () {
-		return ((TextAreaElement) Document.get().getElementById(
-				"g-recaptcha-response")).getValue();
+		TextAreaElement valueHolder = getWidget().getElement().getFirstChild()
+				.getFirstChild().getNextSibling().<TextAreaElement> cast();
+		return valueHolder.getValue();
 	}
 
 	private void render () {
@@ -77,6 +77,14 @@ public class ReCaptchaPart extends Composite {
 	public void reset () {
 		reset(id);
 	}
+
+	private void remove () {
+		remove(id);
+	}
+
+	private native void remove (String id) /*-{
+											$wnd.grecaptcha.remove(id);
+											}-*/;
 
 	public native void reset (String id) /*-{
 																				$wnd.grecaptcha.reset(id);
