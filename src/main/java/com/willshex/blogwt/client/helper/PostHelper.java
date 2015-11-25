@@ -52,6 +52,8 @@ public class PostHelper extends com.willshex.blogwt.shared.helper.PostHelper {
 				if (el != null && content != null) {
 					el.removeAllChildren();
 
+					// FIXME: we are probably leaking this
+					// on unload never seems to get called
 					Widget form = ((FormPlugin) plugin).createWidget(lines,
 							params);
 					RootPanel.get().add(form);
