@@ -19,6 +19,7 @@ import com.willshex.blogwt.client.page.admin.PropertiesPage;
 import com.willshex.blogwt.client.page.admin.ResourcesPage;
 import com.willshex.blogwt.client.page.admin.RolesPage;
 import com.willshex.blogwt.client.page.admin.UsersPage;
+import com.willshex.blogwt.client.page.admin.WidgetTestPage;
 import com.willshex.blogwt.client.page.blog.EditPostPage;
 import com.willshex.blogwt.client.page.blog.EditResourcePage;
 import com.willshex.blogwt.client.page.blog.PostDetailPage;
@@ -120,6 +121,9 @@ public class PageTypeHelper {
 			break;
 		case EditResourcePageType:
 			page = new EditResourcePage();
+			break;
+		case WidgetTestPageType:
+			page = new WidgetTestPage();
 			break;
 		case PageDetailPageType:
 		default:
