@@ -1,13 +1,14 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
-
+	
 	</ui:style>
 	<g:HTMLPanel styleName="alert">
-		<g:Button ui:field="btnClose">
-			<span ui:field="elText"></span>
-			<span ui:field="elDetail"></span>
+		<g:Button ui:field="btnClose" styleName="close" visible="false">
+			<span aria-hidden="true">&times;</span>
 		</g:Button>
 		<g:Image ui:field="imgSpinner" visible="false" />
+		<span ui:field="elText" />
+		<span ui:field="elDetail" />
 	</g:HTMLPanel>
 </ui:UiBinder> 
