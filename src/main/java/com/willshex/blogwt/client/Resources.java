@@ -23,6 +23,14 @@ public interface Resources extends ClientBundle {
 
 		String defaultLoader ();
 
+		String successLoader ();
+
+		String infoLoader ();
+
+		String warningLoader ();
+
+		String dangerLoader ();
+
 		String image ();
 
 		String emoji ();
@@ -51,6 +59,18 @@ public interface Resources extends ClientBundle {
 
 	@Source("res/default-loader.gif")
 	ImageResource defaultLoader ();
+
+	@Source("res/success-loader.gif")
+	ImageResource successLoader ();
+
+	@Source("res/info-loader.gif")
+	ImageResource infoLoader ();
+
+	@Source("res/warning-loader.gif")
+	ImageResource warningLoader ();
+
+	@Source("res/danger-loader.gif")
+	ImageResource dangerLoader ();
 
 	@Source("res/brand.png")
 	ImageResource brand ();

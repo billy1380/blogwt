@@ -52,6 +52,22 @@ body {
     gwt-sprite: "defaultLoader";
 }
 
+.successLoader {
+	gwt-sprite: "successLoader";
+}
+
+.infoLoader {
+    gwt-sprite: "infoLoader";
+}
+
+.warningLoader {
+    gwt-sprite: "warningLoader";
+}
+
+.dangerLoader {
+    gwt-sprite: "dangerLoader";
+}
+
 .brand {
     gwt-sprite: "brand";
 }
