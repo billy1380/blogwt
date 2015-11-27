@@ -1,13 +1,38 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:p="urn:import:com.willshex.blogwt.client.part">
+	<ui:import field="com.willshex.blogwt.client.Resources.RES" />
+	<ui:import field="com.willshex.blogwt.client.part.AlertBox.AlertBoxType.*" />
 	<ui:style>
 	
 	</ui:style>
 	<g:HTMLPanel styleName="container">
+		<h2>Widget test page</h2>
+		<h2>Spinners</h2>
+		default =
+		<g:Image resource="{RES.defaultLoader}" />
+		&nbsp;
+		primary =
+		<g:Image resource="{RES.primaryLoader}" />
+		&nbsp;
+		success =
+		<g:Image resource="{RES.successLoader}" />
+		info =
+		<g:Image resource="{RES.infoLoader}" />
+		warning =
+		<g:Image resource="{RES.warningLoader}" />
+		danger =
+		<g:Image resource="{RES.dangerLoader}" />
 
 		<h2>Alert</h2>
-		<p:AlertBox />
+		<p:AlertBox type="{SuccessAlertBoxType}" loading="true" text="Success"
+			detail="Some success detail" />
+		<p:AlertBox type="{InfoAlertBoxType}" loading="true" text="Info"
+			detail="Some information detail" />
+		<p:AlertBox type="{WarningAlertBoxType}" loading="true" text="Warning"
+			detail="Some warning detail" />
+		<p:AlertBox type="{DangerAlertBoxType}" loading="true" canDismiss="true"
+			text="Danger" detail="Some danger detail" />
 
 	</g:HTMLPanel>
 </ui:UiBinder> 
