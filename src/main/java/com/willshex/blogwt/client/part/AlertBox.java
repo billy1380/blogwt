@@ -17,6 +17,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
@@ -46,8 +47,8 @@ public class AlertBox extends Composite implements HasCloseHandlers<AlertBox> {
 	@UiField SpanElement elText;
 	@UiField SpanElement elDetail;
 	@UiField Button btnClose;
-
 	@UiField Image imgSpinner;
+	private Timer timer;
 
 	public AlertBox () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -70,19 +71,21 @@ public class AlertBox extends Composite implements HasCloseHandlers<AlertBox> {
 	}
 
 	public void setType (AlertBoxType type) {
-		switch (type) {
-		case DangerAlertBoxType:
-			getWidget().removeStyleName("alert-danger");
-			break;
-		case InfoAlertBoxType:
-			getWidget().removeStyleName("alert-info");
-			break;
-		case SuccessAlertBoxType:
-			getWidget().removeStyleName("alert-success");
-			break;
-		case WarningAlertBoxType:
-			getWidget().removeStyleName("alert-warning");
-			break;
+		if (this.type != null) {
+			switch (this.type) {
+			case DangerAlertBoxType:
+				getWidget().removeStyleName("alert-danger");
+				break;
+			case InfoAlertBoxType:
+				getWidget().removeStyleName("alert-info");
+				break;
+			case SuccessAlertBoxType:
+				getWidget().removeStyleName("alert-success");
+				break;
+			case WarningAlertBoxType:
+				getWidget().removeStyleName("alert-warning");
+				break;
+			}
 		}
 
 		this.type = type;
@@ -156,6 +159,40 @@ public class AlertBox extends Composite implements HasCloseHandlers<AlertBox> {
 	@Override
 	public HandlerRegistration addCloseHandler (CloseHandler<AlertBox> handler) {
 		return this.addHandler(handler, CloseEvent.getType());
+	}
+
+	public void startAutoRemoveTimer () {
+		startAutoRemoveTimer(2000);
+	}
+
+	public void startAutoRemoveTimer (int delay) {
+		if (timer == null) {
+			timer = new Timer() {
+
+				@Override
+				public void run () {
+					dismiss();
+				}
+			};
+		} else {
+			timer.cancel();
+		}
+
+		timer.schedule(delay);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.UIObject#setVisible(boolean) */
+	@Override
+	public void setVisible (boolean visible) {
+		super.setVisible(visible);
+
+		if (visible) {
+			removeStyleName("hidden");
+		} else {
+			addStyleName("hidden");
+		}
 	}
 
 }
