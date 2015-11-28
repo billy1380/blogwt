@@ -1,5 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:style>
 	.form {
 		margin-bottom: 20px;
@@ -9,6 +10,8 @@
 
 		<g:FormPanel ui:field="frmForm" styleName="{style.form}">
 			<g:HTMLPanel ui:field="pnlBody">
+				<p:AlertBox ui:field="alertBox" visible="false"/>
+
 				<g:HTMLPanel ui:field="pnlFields">
 
 				</g:HTMLPanel>

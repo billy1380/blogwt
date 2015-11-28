@@ -29,6 +29,8 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.FormController;
 import com.willshex.blogwt.client.helper.UiHelper;
+import com.willshex.blogwt.client.part.AlertBox;
+import com.willshex.blogwt.client.part.AlertBox.AlertBoxType;
 import com.willshex.blogwt.client.part.form.ListBoxPart;
 import com.willshex.blogwt.client.part.form.ReCaptchaPart;
 import com.willshex.blogwt.client.part.form.TextAreaPart;
@@ -88,6 +90,8 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 	@UiField HTMLPanel pnlFields;
 	@UiField HTMLPanel pnlButtons;
 	@UiField HTMLPanel pnlBody;
+	@UiField AlertBox alertBox;
+
 	private HandlerRegistration registration;
 	private ReCaptchaPart reCaptcha;
 	private String name;
@@ -335,10 +339,20 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 	public void submitFormSuccess (SubmitFormRequest input,
 			SubmitFormResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			// show submission success message
+			alertBox.setCanDismiss(true);
+			alertBox.setType(AlertBoxType.SuccessAlertBoxType);
+			alertBox.setText("Successfully sent");
 
 			reset();
+		} else {
+			alertBox.setCanDismiss(false);
+			alertBox.setType(AlertBoxType.DangerAlertBoxType);
+			alertBox.setText("Error with submission");
+
 		}
+
+		alertBox.setVisible(true);
+		alertBox.startAutoRemoveTimer();
 
 		ready();
 	}
