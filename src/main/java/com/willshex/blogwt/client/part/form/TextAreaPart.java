@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author William Shakour (billy1380)
  *
  */
-public class TextAreaPart extends Composite {
+public class TextAreaPart extends Composite implements FormField {
 
 	private static TextAreaPartUiBinder uiBinder = GWT
 			.create(TextAreaPartUiBinder.class);
@@ -30,9 +30,27 @@ public class TextAreaPart extends Composite {
 	public @UiField Element elName;
 	public @UiField TextArea txtValue;
 	public @UiField HTMLPanel pnlValidationNote;
-	
+
 	public TextAreaPart () {
 		initWidget(uiBinder.createAndBindUi(this));
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.part.form.FormField#isValid() */
+	@Override
+	public boolean isValid () {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.part.form.FormField#showError() */
+	@Override
+	public void showError () {
+		// TODO Auto-generated method stub
+
 	}
 
 }

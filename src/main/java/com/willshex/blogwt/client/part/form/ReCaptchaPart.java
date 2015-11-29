@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author billy1380
  *
  */
-public class ReCaptchaPart extends Composite {
+public class ReCaptchaPart extends Composite implements FormField {
 
 	private static ReCaptchaPartUiBinder uiBinder = GWT
 			.create(ReCaptchaPartUiBinder.class);
@@ -89,4 +89,22 @@ public class ReCaptchaPart extends Composite {
 	public native void reset (String id) /*-{
 																				$wnd.grecaptcha.reset(id);
 																				}-*/;
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.part.form.FormField#isValid() */
+	@Override
+	public boolean isValid () {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.part.form.FormField#showError() */
+	@Override
+	public void showError () {
+		// TODO Auto-generated method stub
+
+	}
 }
