@@ -31,6 +31,7 @@ import com.willshex.blogwt.client.controller.FormController;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.part.AlertBox;
 import com.willshex.blogwt.client.part.AlertBox.AlertBoxType;
+import com.willshex.blogwt.client.part.form.FormField;
 import com.willshex.blogwt.client.part.form.ListBoxPart;
 import com.willshex.blogwt.client.part.form.ReCaptchaPart;
 import com.willshex.blogwt.client.part.form.TextAreaPart;
@@ -152,8 +153,6 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 			}
 
 			FormController.get().submitForm(form);
-		} else {
-			showErrors();
 		}
 
 		se.cancel();
@@ -165,11 +164,22 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 	}
 
 	private boolean isValid () {
-		return true;
-	}
+		boolean isValid = true;
 
-	private void showErrors () {
+		final int count = pnlFields.getWidgetCount();
+		Widget current;
+		for (int i = 0; i < count; i++) {
+			current = pnlFields.getWidget(i);
 
+			if (current instanceof FormField) {
+				if (!((FormField) current).isValid()) {
+					isValid = false;
+					((FormField) current).showError();
+				}
+			}
+		}
+
+		return isValid;
 	}
 
 	/**
