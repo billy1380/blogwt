@@ -165,6 +165,8 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 				if (!((FormField) current).isValid()) {
 					isValid = false;
 					((FormField) current).showError();
+				} else {
+					((FormField) current).hideError();
 				}
 			}
 		}
