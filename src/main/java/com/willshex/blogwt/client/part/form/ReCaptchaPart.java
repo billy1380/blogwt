@@ -30,6 +30,7 @@ public class ReCaptchaPart extends Composite implements FormField {
 	private static ScriptElement SCRIPT = null;
 	private String key;
 	private String id;
+	private String error;
 
 	public ReCaptchaPart () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -60,12 +61,6 @@ public class ReCaptchaPart extends Composite implements FormField {
 																	};
 																	}-*/;
 
-	public String getValue () {
-		TextAreaElement valueHolder = getWidget().getElement().getFirstChild()
-				.getFirstChild().getNextSibling().<TextAreaElement> cast();
-		return valueHolder.getValue();
-	}
-
 	private void render () {
 		id = render(getWidget().getElement(), key);
 	}
@@ -95,16 +90,44 @@ public class ReCaptchaPart extends Composite implements FormField {
 	 * @see com.willshex.blogwt.client.part.form.FormField#isValid() */
 	@Override
 	public boolean isValid () {
-		// TODO Auto-generated method stub
-		return false;
+		boolean valid = true;
+		if (value().length() < 1) {
+			error = "Please verify that you are not a robot";
+			valid = false;
+		}
+
+		return valid;
 	}
 
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.client.part.form.FormField#showError() */
 	@Override
-	public void showError () {
-		// TODO Auto-generated method stub
+	public void showError () {}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.part.form.FormField#hideError() */
+	@Override
+	public void hideError () {
+		error = null;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.part.form.FormField#value() */
+	@Override
+	public String value () {
+		TextAreaElement valueHolder = getWidget().getElement().getFirstChild()
+				.getFirstChild().getNextSibling().<TextAreaElement> cast();
+		return valueHolder.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.part.form.FormField#name() */
+	@Override
+	public String name () {
+		return null;
 	}
 }
