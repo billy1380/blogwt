@@ -121,7 +121,7 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 				current = pnlFields.getWidget(i);
 				field = null;
 
-				if (field instanceof FormField) {
+				if (current instanceof FormField) {
 					field = new Field().name(((FormField) current).name())
 							.value(((FormField) current).value());
 					if (form.fields == null) {
@@ -129,16 +129,16 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 					}
 
 					form.fields.add(field);
-				}
 
-				if (current instanceof TextBoxPart) {
-					field.type(FieldTypeType.FieldTypeTypeText);
-				} else if (current instanceof TextAreaPart) {
-					field.type(FieldTypeType.FieldTypeTypeLongText);
-				} else if (current instanceof ListBoxPart) {
-					field.type(FieldTypeType.FieldTypeTypeSingleOption);
-				} else if (current instanceof ReCaptchaPart) {
-					field.type(FieldTypeType.FieldTypeTypeCaptcha);
+					if (current instanceof TextBoxPart) {
+						field.type(FieldTypeType.FieldTypeTypeText);
+					} else if (current instanceof TextAreaPart) {
+						field.type(FieldTypeType.FieldTypeTypeLongText);
+					} else if (current instanceof ListBoxPart) {
+						field.type(FieldTypeType.FieldTypeTypeSingleOption);
+					} else if (current instanceof ReCaptchaPart) {
+						field.type(FieldTypeType.FieldTypeTypeCaptcha);
+					}
 				}
 			}
 
