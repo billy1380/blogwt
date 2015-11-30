@@ -17,4 +17,10 @@ public interface FormField {
 
 	void showError ();
 
+	void hideError ();
+
+	String value ();
+
+	String name ();
+
 }
