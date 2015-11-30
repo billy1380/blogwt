@@ -30,27 +30,67 @@ public class TextBoxPart extends Composite implements FormField {
 	public @UiField Element elName;
 	public @UiField TextBox txtValue;
 	public @UiField HTMLPanel pnlValidationNote;
+	private String error;
 
 	public TextBoxPart () {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.part.form.FormField#isValid()
-	 */
+	 * 
+	 * @see com.willshex.blogwt.client.part.form.FormField#isValid() */
 	@Override
 	public boolean isValid () {
-		// TODO Auto-generated method stub
-		return false;
+		boolean valid = true;
+		String value = value();
+
+		if (value.length() < 1) {
+			error = name() + " cannot be blank (1 - 500)";
+			valid = false;
+		} else if (value.length() > 512) {
+			error = name() + " is too long (1 - 500)";
+			valid = false;
+		}
+
+		return valid;
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.part.form.FormField#showError()
-	 */
+	 * 
+	 * @see com.willshex.blogwt.client.part.form.FormField#showError() */
 	@Override
 	public void showError () {
-		// TODO Auto-generated method stub
-		
+		if (error != null) {
+			pnlValidationNote.getElement().setInnerText(error);
+			pnlValidationNote.setVisible(true);
+			addStyleName("has-error");
+		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.part.form.FormField#hideError() */
+	@Override
+	public void hideError () {
+		error = null;
+		pnlValidationNote.setVisible(false);
+		removeStyleName("has-error");
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.part.form.FormField#value() */
+	@Override
+	public String value () {
+		return txtValue.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.part.form.FormField#name() */
+	@Override
+	public String name () {
+		return elName.getInnerText();
 	}
 
 }
