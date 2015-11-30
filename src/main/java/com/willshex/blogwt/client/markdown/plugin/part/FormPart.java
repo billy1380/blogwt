@@ -116,39 +116,29 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 			final int count = pnlFields.getWidgetCount();
 			Widget current;
 			Field field;
+
 			for (int i = 0; i < count; i++) {
 				current = pnlFields.getWidget(i);
 				field = null;
 
-				if (current instanceof TextBoxPart) {
-					field = new Field()
-							.name(((TextBoxPart) current).elName.getInnerText())
-							.value(((TextBoxPart) current).txtValue.getValue())
-							.type(FieldTypeType.FieldTypeTypeText);
-				} else if (current instanceof TextAreaPart) {
-					field = new Field()
-							.name(((TextAreaPart) current).elName
-									.getInnerText())
-							.value(((TextAreaPart) current).txtValue.getValue())
-							.type(FieldTypeType.FieldTypeTypeLongText);
-				} else if (current instanceof ListBoxPart) {
-					field = new Field()
-							.name(((ListBoxPart) current).elName.getInnerText())
-							.value(((ListBoxPart) current).lbxValue
-									.getSelectedValue())
-							.type(FieldTypeType.FieldTypeTypeSingleOption);
-				} else if (current instanceof ReCaptchaPart) {
-					field = new Field()
-							.type(FieldTypeType.FieldTypeTypeCaptcha).value(
-									((ReCaptchaPart) current).getValue());
-				}
-
-				if (field != null) {
+				if (field instanceof FormField) {
+					field = new Field().name(((FormField) current).name())
+							.value(((FormField) current).value());
 					if (form.fields == null) {
 						form.fields = new ArrayList<Field>();
 					}
 
 					form.fields.add(field);
+				}
+
+				if (current instanceof TextBoxPart) {
+					field.type(FieldTypeType.FieldTypeTypeText);
+				} else if (current instanceof TextAreaPart) {
+					field.type(FieldTypeType.FieldTypeTypeLongText);
+				} else if (current instanceof ListBoxPart) {
+					field.type(FieldTypeType.FieldTypeTypeSingleOption);
+				} else if (current instanceof ReCaptchaPart) {
+					field.type(FieldTypeType.FieldTypeTypeCaptcha);
 				}
 			}
 
