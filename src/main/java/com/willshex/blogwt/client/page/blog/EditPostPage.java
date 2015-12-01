@@ -35,12 +35,14 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
@@ -136,6 +138,9 @@ public class EditPostPage extends Page implements
 	@UiField MarkdownToolbar tbrContent;
 	//	@UiField Style style;
 
+	@UiField ToggleButton btnLiveUpdate;
+	@UiField Button btnRefresh;
+
 	@UiField(provided = true) CellList<Tag> clTags = new CellList<Tag>(
 			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
 
@@ -143,6 +148,7 @@ public class EditPostPage extends Page implements
 
 	private Map<String, Resource> resources;
 	private HTMLPanel currentResourceRow;
+	private boolean stop;
 
 	private static final int IMAGES_PER_ROW = 4;
 	private static final String CARET_BEFORE = " \\_\\:\\_this\\_is\\_the\\_tracking\\_cursor\\_\\:\\_ ";
@@ -270,8 +276,10 @@ public class EditPostPage extends Page implements
 	 * 
 	 */
 	private void deferRefresh () {
-		updateTimer.cancel();
-		updateTimer.schedule(250);
+		if (!stop) {
+			updateTimer.cancel();
+			updateTimer.schedule(250);
+		}
 	}
 
 	@UiHandler({ "txtTitle", "txtSummary", "txtContent", "txtTags" })
@@ -282,6 +290,24 @@ public class EditPostPage extends Page implements
 	@UiHandler({ "txtSummary", "txtContent" })
 	void onClick (ClickEvent e) {
 		deferRefresh();
+	}
+
+	@UiHandler({ "btnLiveUpdate" })
+	void onLiveUpdateClicked (ClickEvent ce) {
+		stop = btnLiveUpdate.isDown();
+
+		btnRefresh.setVisible(stop);
+
+		if (stop) {
+			updateTimer.cancel();
+		} else {
+			updatePreview();
+		}
+	}
+
+	@UiHandler({ "btnRefresh" })
+	void onRefreshClicked (ClickEvent ce) {
+		updatePreview();
 	}
 
 	private void updatePreview () {

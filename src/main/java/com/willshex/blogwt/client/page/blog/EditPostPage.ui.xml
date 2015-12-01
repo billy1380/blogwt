@@ -4,31 +4,33 @@
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<!-- <ui:style gss="true" type="com.willshex.blogwt.client.page.blog.EditPostPage.Style"> -->
 	<ui:style gss="true">
-	@external checkbox;
-	.checkbox input[type=checkbox] {
+		@external checkbox;
+		.checkbox input[type=checkbox] {
 		margin-left: 0px;
-	}
-	
-	.form-post .btn {
+		}
+
+		.form-post .btn {
 		margin-bottom: 10px;
-	}
-	
-	/* .drop-zone {
-			color: #ccc;
-			border-style: dashed;
-			border-color: #ccc;
-			line-height: 120px;
-			text-align: center;
-			height: 120px;
-			border-width: 2px;
-			display: block;
-			vertical-align: middle;
-			border-radius: 6px;
-			margin-top: 5px;
+		}
+
+		/* .drop-zone {
+		color:
+		#ccc;
+		border-style: dashed;
+		border-color: #ccc;
+		line-height: 120px;
+		text-align:
+		center;
+		height: 120px;
+		border-width: 2px;
+		display: block;
+		vertical-align: middle;
+		border-radius: 6px;
+		margin-top: 5px;
 		} */
-	.tags {
+		.tags {
 		margin: 20px 0 10px 0;
-	}
+		}
 	</ui:style>
 	<g:HTMLPanel styleName="container-fluid">
 		<g:HTMLPanel styleName="row">
@@ -97,6 +99,22 @@
 				</g:HTMLPanel>
 			</g:FormPanel>
 			<div class="col-sm-8">
+
+				<div class="btn-toolbar">
+					<g:ToggleButton ui:field="btnLiveUpdate" styleName="btn btn-default">
+						<g:upFace>
+							<span class="glyphicon glyphicon-stop" />
+						</g:upFace>
+						<g:downFace>
+							<span class="glyphicon glyphicon-play" />
+						</g:downFace>
+					</g:ToggleButton>
+
+					<g:Button ui:field="btnRefresh" styleName="btn btn-info" visible="false">
+						<span class="glyphicon glyphicon-refresh"></span>
+					</g:Button>
+				</div>
+
 				<g:HTMLPanel ui:field="pnlPreview" />
 				<c:CellList ui:field="clTags" styleName="{style.tags}" />
 			</div>
