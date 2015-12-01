@@ -47,7 +47,8 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 	@UiField(provided = true) CellList<Resource> clResources = new CellList<Resource>(
 			new ResourcePreviewCell(), BootstrapGwtCellList.INSTANCE);
 	@UiField Button btnRefresh;
-	@UiField SimplePager pgrResources;
+	@UiField SimplePager pgrTop;
+	@UiField SimplePager pgrBottom;
 	@UiField NoneFoundPanel pnlNoResources;
 
 	public ResourcesPage () {
@@ -56,7 +57,8 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 		clResources.setPageSize(PagerHelper.DEFAULT_COUNT.intValue());
 		clResources.setEmptyListWidget(pnlNoResources);
 		ResourceController.get().addDataDisplay(clResources);
-		pgrResources.setDisplay(clResources);
+		pgrTop.setDisplay(clResources);
+		pgrBottom.setDisplay(clResources);
 	}
 
 	@Override

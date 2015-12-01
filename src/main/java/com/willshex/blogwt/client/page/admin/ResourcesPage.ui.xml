@@ -25,8 +25,11 @@
 			</g:Button>
 		</div>
 
+		<c:SimplePager ui:field="pgrTop" location="RIGHT" />
+		
 		<c:CellList ui:field="clResources" styleName="row {style.space}" />
-		<c:SimplePager ui:field="pgrResources" location="LEFT" />
+		
+		<c:SimplePager ui:field="pgrBottom" location="LEFT" />
 
 		<p:NoneFoundPanel subject="resources" ui:field="pnlNoResources" />
 	</g:HTMLPanel>
