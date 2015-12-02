@@ -96,6 +96,13 @@
 							<g:HTMLPanel styleName="control-label small" ui:field="pnlEmailNote"
 								visible="false" />
 						</g:HTMLPanel>
+						
+						  <g:HTMLPanel ui:field="pnlSummary" styleName="form-group">
+                            <label class="control-label">Summary</label>
+                            <g:TextArea ui:field="txtSummary" styleName="form-control" visibleLines="4" />
+                            <g:HTMLPanel styleName="control-label small" ui:field="pnlSummaryNote"
+                                visible="false" />
+                        </g:HTMLPanel>
 
 						<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary pull-right"
 							text="Update">

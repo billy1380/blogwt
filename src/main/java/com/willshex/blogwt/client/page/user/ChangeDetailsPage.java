@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
@@ -119,6 +120,10 @@ public class ChangeDetailsPage extends Page implements
 	@UiField Button btnUpdate;
 	@UiField Hyperlink lnkChangePassword;
 
+	@UiField HTMLPanel pnlSummary;
+	@UiField TextArea txtSummary;
+	@UiField HTMLPanel pnlSummaryNote;
+
 	private User user;
 	private String actionText;
 
@@ -134,6 +139,8 @@ public class ChangeDetailsPage extends Page implements
 		UiHelper.addPlaceholder(txtForename, "Forename");
 		UiHelper.addPlaceholder(txtSurname, "Surname");
 		UiHelper.addPlaceholder(txtEmail, "Email");
+
+		UiHelper.addPlaceholder(txtSummary, "Summary");
 
 		actionText = UPDATE_ACTION_TEXT;
 	}
