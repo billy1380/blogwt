@@ -256,6 +256,7 @@ public class ChangeDetailsPage extends Page implements
 			txtForename.setText(user.forename);
 			txtSurname.setText(user.surname);
 			txtEmail.setText(user.email);
+			txtSummary.setText(user.summary);
 		}
 	}
 
@@ -299,7 +300,8 @@ public class ChangeDetailsPage extends Page implements
 			loading();
 			User user = new User().username(txtUsername.getText())
 					.forename(txtForename.getText())
-					.surname(txtSurname.getText()).email(txtEmail.getText());
+					.surname(txtSurname.getText()).email(txtEmail.getText())
+					.summary(txtSummary.getValue());
 
 			if (this.user == null) {
 				user.password(txtPassword.getText());

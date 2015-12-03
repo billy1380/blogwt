@@ -649,6 +649,7 @@ public final class UserApi extends ActionHandler {
 			input.user.forename = updatedUser.forename;
 			input.user.surname = updatedUser.surname;
 			input.user.email = updatedUser.email;
+			input.user.summary = updatedUser.summary;
 
 			output.user = UserServiceProvider.provide().updateUser(input.user);
 
