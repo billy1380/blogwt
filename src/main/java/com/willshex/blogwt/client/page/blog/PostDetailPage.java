@@ -43,6 +43,7 @@ import com.willshex.blogwt.client.part.DisqusComments;
 import com.willshex.blogwt.client.part.InlineBootstrapGwtCellList;
 import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.RelatedPart;
+import com.willshex.blogwt.client.part.UserSummaryPart;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
@@ -89,6 +90,8 @@ public class PostDetailPage extends Page implements
 	@UiField(provided = true) CellList<Tag> clTags = new CellList<Tag>(
 			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
 	@UiField BackToTop btnTop;
+
+	@UiField UserSummaryPart pnlUserSummary;
 
 	private ListDataProvider<Tag> tagList = new ListDataProvider<Tag>();
 	private Post post;
@@ -155,6 +158,9 @@ public class PostDetailPage extends Page implements
 					.author(UriUtils.fromString(post.author.avatar + "?s="
 							+ UserHelper.AVATAR_HEADER_SIZE + "&default=retro"),
 							UserHelper.handle(post.author));
+
+			pnlUserSummary.setUser(post.author);
+			pnlUserSummary.setVisible(true);
 		}
 
 		elAuthor.setInnerSafeHtml(author);
@@ -216,7 +222,7 @@ public class PostDetailPage extends Page implements
 		}
 
 		pnlLoading.setVisible(false);
-		
+
 		btnTop.go();
 	}
 
