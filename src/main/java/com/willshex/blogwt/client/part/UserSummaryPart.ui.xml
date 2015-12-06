@@ -5,7 +5,7 @@
 	</ui:style>
 	<g:HTMLPanel>
 
-		<div class="well">
+		<div class="row well">
 			<div class="col-sm-4">
 				<g:Image ui:field="imgAvatar" styleName="img-circle img-responsive center-block" />
 				<h4 ui:field="elName" class="text-center" />
