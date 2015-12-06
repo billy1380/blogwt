@@ -158,7 +158,10 @@ public class PostDetailPage extends Page implements
 					.author(UriUtils.fromString(post.author.avatar + "?s="
 							+ UserHelper.AVATAR_HEADER_SIZE + "&default=retro"),
 							UserHelper.handle(post.author));
+		}
 
+		if (PropertyController.get().booleanProperty(
+				PropertyHelper.POST_SHOW_AUTHOR_SUMMARY, false)) {
 			pnlUserSummary.setUser(post.author);
 			pnlUserSummary.setVisible(true);
 		}
@@ -292,5 +295,7 @@ public class PostDetailPage extends Page implements
 
 		dsqComments.setVisible(false);
 		ataShare.setVisible(false);
+
+		pnlUserSummary.setVisible(false);
 	}
 }
