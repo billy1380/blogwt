@@ -31,7 +31,8 @@ public enum ApiError {
 			"This call is disallowed by configuration property {0}"),
 	FailedToSendEmail(100013, "Failed to send email {0}"),
 	EmptyForm(100014, "Empty form, submitted with no fields {0}"),
-	BadLength(100015, "Invalid value too long or too short ({1}-{2}) {0}"), ;
+	BadLength(100015, "Invalid value too long or too short ({1}-{2}) {0}"),
+	UnpublishedPost(100016, "Unpublished post {0}"), ;
 
 	private static final String PARAM_0 = "\\{0\\}";
 	private static final String PARAM_1 = "\\{1\\}";

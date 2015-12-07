@@ -97,7 +97,7 @@ public final class BlogApi extends ActionHandler {
 
 			input.session.user = UserServiceProvider.provide().getUser(
 					Long.valueOf(input.session.userKey.getId()));
-			
+
 			UserValidator.authorisation(input.session.user, Arrays
 					.asList(PermissionServiceProvider.provide()
 							.getCodePermission(
@@ -245,24 +245,27 @@ public final class BlogApi extends ActionHandler {
 				try {
 					output.session = input.session = SessionValidator
 							.lookupAndExtend(input.session, "input.session");
+
+					UserHelper.stripPassword(output.session == null ? null
+							: output.session.user);
 				} catch (InputValidationException ex) {
 					output.session = input.session = null;
 				}
 			}
 
-			output.post = PostValidator.lookup(input.post, "input.post");
+			Post post = PostValidator.lookup(input.post, "input.post");
 
-			if (output.post != null) {
+			if (post != null) {
+				output.post = PostValidator.viewable(post, output.session,
+						"input.post");
+
 				output.post.author = UserServiceProvider.provide().getUser(
 						Long.valueOf(output.post.authorKey.getId()));
 				UserHelper.stripPassword(output.post.author);
+
+				output.post.content = PostServiceProvider.provide()
+						.getPostContent(output.post);
 			}
-
-			output.post.content = PostServiceProvider.provide().getPostContent(
-					output.post);
-
-			UserHelper.stripPassword(output.session == null ? null
-					: output.session.user);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

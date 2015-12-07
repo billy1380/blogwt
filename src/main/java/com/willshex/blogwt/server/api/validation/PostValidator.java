@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Post;
+import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.json.service.server.InputValidationException;
 
@@ -81,6 +82,15 @@ public class PostValidator {
 		}
 
 		return lookupPosts;
+	}
+
+	public static Post viewable (Post post, Session session, String name)
+			throws InputValidationException {
+		if (post.published == null && session == null)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.UnpublishedPost, type + ": " + name);
+
+		return post;
 	}
 
 }
