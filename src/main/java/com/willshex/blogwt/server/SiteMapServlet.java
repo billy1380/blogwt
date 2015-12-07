@@ -55,13 +55,12 @@ public class SiteMapServlet extends ContextAwareServlet {
 
 		p.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		p.println("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
-		
+
 		printPages(p, url);
 		printBlog(p, url);
 		printPosts(p, url);
 		printTags(p, url);
 
-		
 		p.println("</urlset>");
 
 		p.close();
@@ -94,7 +93,7 @@ public class SiteMapServlet extends ContextAwareServlet {
 							LOC_FORMAT,
 							url,
 							"#"
-									+ PageType.PostsPageType
+									+ PageType.PostDetailPageType
 											.asTargetHistoryToken(post.slug)));
 				}
 			}
