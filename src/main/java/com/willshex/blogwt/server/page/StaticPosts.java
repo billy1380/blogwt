@@ -17,6 +17,7 @@ import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
 import com.willshex.blogwt.shared.api.datatype.Post;
+import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PostHelper;
@@ -46,7 +47,8 @@ class StaticPosts extends StaticTemplate {
 		BlogApi api = new BlogApi();
 
 		GetPostsRequest input = input(GetPostsRequest.class).pager(
-				PagerHelper.createDefaultPager());
+				PagerHelper.createDefaultPager().sortBy(
+						PostSortType.PostSortTypePublished.toString()));
 
 		GetPostsResponse output = api.getPosts(input);
 
