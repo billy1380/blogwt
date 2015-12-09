@@ -14,9 +14,11 @@ import java.util.List;
 import org.markdown4j.server.IncludePlugin;
 import org.markdown4j.server.MarkdownProcessor;
 
+import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.Request;
 import com.willshex.blogwt.shared.api.datatype.Page;
+import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.page.Stack;
 
@@ -85,6 +87,28 @@ abstract class StaticTemplate implements PageMarkup {
 		markup.append("<h2>");
 		markup.append(extendedTitle);
 		markup.append("</h2>");
+
+		appendNavigationLinks(markup);
+	}
+
+	private void appendNavigationLinks (StringBuffer markup) {
+		List<Page> pages = PageServiceProvider.provide().getPages(
+				Boolean.FALSE, Integer.valueOf(0), null,
+				PageSortType.PageSortTypePriority, null);
+
+		if (pages != null) {
+			markup.append("<ul>");
+
+			for (Page page : pages) {
+				if (page.priority != null) {
+					markup.append("<li><a href=\"/#!").append(page.slug)
+							.append("\" >").append(page.title)
+							.append("</a></li>");
+				}
+			}
+
+			markup.append("</ul>");
+		}
 	}
 
 	protected void appendFooter (StringBuffer markup) {
