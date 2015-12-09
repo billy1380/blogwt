@@ -100,11 +100,8 @@ abstract class StaticTemplate implements PageMarkup {
 			markup.append("<ul>");
 
 			for (Page page : pages) {
-				if (page.priority != null) {
-					markup.append("<li><a href=\"/#!").append(page.slug)
-							.append("\" >").append(page.title)
-							.append("</a></li>");
-				}
+				markup.append("<li><a href=\"/#!").append(page.slug)
+						.append("\" >").append(page.title).append("</a></li>");
 			}
 
 			markup.append("</ul>");
