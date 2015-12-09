@@ -21,7 +21,6 @@ import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Page;
-import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Tag;
@@ -56,7 +55,7 @@ public class SiteMapServlet extends ContextAwareServlet {
 		p.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		p.println("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
 
-		printRoot(p, url);
+		//printRoot(p, url);
 		printPages(p, url);
 		printBlog(p, url);
 		printPosts(p, url);
@@ -71,9 +70,9 @@ public class SiteMapServlet extends ContextAwareServlet {
 		doGet();
 	}
 
-	private void printRoot (PrintWriter p, String url) {
-		p.println(String.format(LOC_FORMAT, url, ""));
-	}
+//	private void printRoot (PrintWriter p, String url) {
+//		p.println(String.format(LOC_FORMAT, url, ""));
+//	}
 
 	private void printBlog (PrintWriter p, String url) {
 		p.println(String.format(LOC_FORMAT, url,
@@ -107,8 +106,7 @@ public class SiteMapServlet extends ContextAwareServlet {
 
 	private void printPages (PrintWriter p, String url) {
 		List<Page> pages = PageServiceProvider.provide().getPages(
-				Boolean.FALSE, Integer.valueOf(0), null,
-				PageSortType.PageSortTypePriority, null);
+				Boolean.FALSE, Integer.valueOf(0), null, null, null);
 
 		if (pages != null) {
 			for (Page page : pages) {
