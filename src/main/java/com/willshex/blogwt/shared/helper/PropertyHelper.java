@@ -42,6 +42,8 @@ public class PropertyHelper {
 	public static final String POST_SHOW_AUTHOR = "post.show.author";
 	public static final String POST_SHOW_AUTHOR_SUMMARY = "post.show.author.summary";
 
+	public static final String BLOG_HIDE_EMPTY_SIDE_PANELS = "post.hide.empty.side.panels";
+
 	public static final String SHOW_SIGN_IN = "header.show.signin";
 
 	public static final String GENERATE_RSS_FEED = "content.rss.generate";
@@ -85,6 +87,8 @@ public class PropertyHelper {
 	public static final String POST_ENABLE_EMOJI_DESCRIPTION = "Enable emoji in posts and on pages";
 	public static final String POST_SHOW_AUTHOR_DESCRIPTION = "Show the authors on the post and post summaries";
 	public static final String POST_SHOW_AUTHOR_SUMMARY_DESCRIPTION = "Shows the author summary on post details";
+
+	public static final String BLOG_HIDE_EMPTY_SIDE_PANELS_DESCRIPTION = "Hide side panels when empty (e.g. archive, tags etc.)";
 
 	public static final String SHORT_DESCRIPTION_DESCRIPTION = "A short description of the blog";
 
@@ -228,6 +232,13 @@ public class PropertyHelper {
 				.type("boolean").value(value == null ? null : value.toString());
 	}
 
+	public static Property createBlogHideEmptySidePanels (Boolean value) {
+		return new Property().name(BLOG_HIDE_EMPTY_SIDE_PANELS)
+				.description(BLOG_HIDE_EMPTY_SIDE_PANELS_DESCRIPTION)
+				.group("Functional").type("boolean")
+				.value(value == null ? null : value.toString());
+	}
+
 	public static Property createGenerateRssFeed (Boolean value) {
 		return new Property().name(GENERATE_RSS_FEED)
 				.description(GENERATE_RSS_FEED_DESCRIPTION).group("Functional")
@@ -316,6 +327,7 @@ public class PropertyHelper {
 					createMarkdownPrefechIncludes(null),
 					createPostShowAuthor(null),
 					createPostShowAuthorSummary(null),
+					createBlogHideEmptySidePanels(null),
 					createShortDescription(null), createShowSignIn(null),
 					createGenerateRssFeed(null), createSmallLogoUrl(null),
 					createLargeLogoUrl(null), createFooterShowVersion(null),
