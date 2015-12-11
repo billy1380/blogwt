@@ -127,7 +127,8 @@ public final class UserApi extends ActionHandler {
 				output.session.user = user;
 			}
 
-			UserHelper.stripPassword(output.session.user);
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -163,10 +164,8 @@ public final class UserApi extends ActionHandler {
 
 			UserServiceProvider.provide().resetPassword(user);
 
-			if (output.session != null) {
-				UserHelper.stripPassword(output.session.user);
-			}
-
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -245,10 +244,8 @@ public final class UserApi extends ActionHandler {
 
 			output.avatar = UserHelper.emailAvatar(input.email);
 
-			if (output.session != null) {
-				UserHelper.stripPassword(output.session.user);
-			}
-
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -365,10 +362,8 @@ public final class UserApi extends ActionHandler {
 
 			UserHelper.stripPassword(output.user);
 
-			if (output.session != null) {
-				UserHelper.stripPassword(output.session.user);
-			}
-
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -405,7 +400,8 @@ public final class UserApi extends ActionHandler {
 
 			output.pager = PagerHelper.moveForward(input.pager);
 
-			UserHelper.stripPassword(output.session.user);
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -490,7 +486,8 @@ public final class UserApi extends ActionHandler {
 										.keysToIds(output.session.user.permissionKeys));
 			}
 
-			UserHelper.stripPassword(output.session.user);
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -658,9 +655,6 @@ public final class UserApi extends ActionHandler {
 			UserHelper.stripPassword(output.session == null ? null
 					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
-
-			UserHelper.stripPassword(output.session.user);
-			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
@@ -794,7 +788,8 @@ public final class UserApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			UserHelper.stripPassword(output.session.user);
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -817,17 +812,25 @@ public final class UserApi extends ActionHandler {
 			input.session.user = UserServiceProvider.provide().getUser(
 					Long.valueOf(input.session.userKey.getId()));
 
-			UserValidator.authorisation(input.session.user, Arrays
-					.asList(PermissionServiceProvider.provide()
-							.getCodePermission(PermissionHelper.MANAGE_USERS)),
-					"input.session.user");
+			// if the not logged in user
+			if (input.user.id.longValue() != input.session.userKey.getId()) {
+				input.session.user = UserServiceProvider.provide().getUser(
+						Long.valueOf(input.session.userKey.getId()));
+
+				UserValidator.authorisation(input.session.user, Arrays
+						.asList(PermissionServiceProvider.provide()
+								.getCodePermission(
+										PermissionHelper.MANAGE_USERS)),
+						"input.session.user");
+			}
 
 			output.user = input.user = UserValidator.lookup(input.user,
 					"input.user");
 			UserHelper.stripPassword(output.user);
 			UserHelper.populateRolesAndPermissionsFromKeys(output.user);
 
-			UserHelper.stripPassword(output.session.user);
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
@@ -847,7 +850,8 @@ public final class UserApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			UserHelper.stripPassword(output.session.user);
+			UserHelper.stripPassword(output.session == null ? null
+					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;

@@ -261,7 +261,7 @@ public final class BlogApi extends ActionHandler {
 
 				output.post.author = UserServiceProvider.provide().getUser(
 						Long.valueOf(output.post.authorKey.getId()));
-				UserHelper.stripPassword(output.post.author);
+				UserHelper.stripSensitive(output.post.author);
 
 				output.post.content = PostServiceProvider.provide()
 						.getPostContent(output.post);
@@ -380,10 +380,9 @@ public final class BlogApi extends ActionHandler {
 			if (output.post != null) {
 				output.post.author = UserServiceProvider.provide().getUser(
 						output.post.author.id);
-				UserHelper.stripPassword(output.post.author);
+				UserHelper.stripSensitive(output.post.author);
 			}
 
-			UserHelper.stripPassword(output.post.author);
 			UserHelper.stripPassword(output.session == null ? null
 					: output.session.user);
 			output.status = StatusType.StatusTypeSuccess;

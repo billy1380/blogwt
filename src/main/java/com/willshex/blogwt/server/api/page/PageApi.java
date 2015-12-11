@@ -136,7 +136,7 @@ public final class PageApi extends ActionHandler {
 			input.page.title = updatedPage.title;
 			input.page.slug = PostHelper.slugify(input.page.title);
 
-			PageServiceProvider.provide().updatePage(input.page);
+			output.page = PageServiceProvider.provide().updatePage(input.page);
 
 			UserHelper.stripPassword(output.session == null ? null
 					: output.session.user);
@@ -246,7 +246,7 @@ public final class PageApi extends ActionHandler {
 
 			for (Page page : output.pages) {
 				page.owner = UserHelper
-						.stripPassword(UserServiceProvider.provide().getUser(
+						.stripSensitive(UserServiceProvider.provide().getUser(
 								Long.valueOf(page.ownerKey.getId())));
 			}
 
@@ -293,7 +293,7 @@ public final class PageApi extends ActionHandler {
 						input.page.id, input.includePosts);
 			}
 
-			output.page.owner = UserHelper.stripPassword(UserServiceProvider
+			output.page.owner = UserHelper.stripSensitive(UserServiceProvider
 					.provide().getUser(
 							Long.valueOf(output.page.ownerKey.getId())));
 
