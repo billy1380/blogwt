@@ -44,14 +44,24 @@ public class UserHelper {
 		return user == null ? null : user.password(null);
 	}
 
-	public static User stripSensitive (User user) {
-		return user == null ? null : user.password(null).email(null);
-	}
-
 	public static List<User> stripPassword (List<User> users) {
 		if (users != null) {
 			for (User user : users) {
 				stripPassword(user);
+			}
+		}
+
+		return users;
+	}
+
+	public static User stripSensitive (User user) {
+		return user == null ? null : user.password(null).email(null);
+	}
+
+	public static List<User> stripSensitive (List<User> users) {
+		if (users != null) {
+			for (User user : users) {
+				stripSensitive(user);
 			}
 		}
 
