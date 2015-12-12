@@ -46,6 +46,9 @@ public class Post extends DataType {
 	@Index(value = IfTrue.class) public Boolean listed;
 	public Boolean commentsEnabled;
 
+	public String previousSlug;
+	public String nextSlug;
+
 	@Override
 	public JsonObject toJson () {
 		JsonObject object = super.toJson();
@@ -71,18 +74,24 @@ public class Post extends DataType {
 		JsonElement jsonSlug = slug == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(slug);
 		object.add("slug", jsonSlug);
-		JsonElement jsonSummary = summary == null ? JsonNull.INSTANCE
-				: new JsonPrimitive(summary);
-		object.add("summary", jsonSummary);
 		JsonElement jsonContent = content == null ? JsonNull.INSTANCE : content
 				.toJson();
 		object.add("content", jsonContent);
+		JsonElement jsonSummary = summary == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(summary);
+		object.add("summary", jsonSummary);
 		JsonElement jsonListed = listed == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(listed);
 		object.add("listed", jsonListed);
 		JsonElement jsonCommentsEnabled = commentsEnabled == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(commentsEnabled);
 		object.add("commentsEnabled", jsonCommentsEnabled);
+		JsonElement jsonPreviousSlug = previousSlug == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(previousSlug);
+		object.add("previousSlug", jsonPreviousSlug);
+		JsonElement jsonNextSlug = nextSlug == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(nextSlug);
+		object.add("nextSlug", jsonNextSlug);
 		return object;
 	}
 
@@ -128,17 +137,17 @@ public class Post extends DataType {
 				slug = jsonSlug.getAsString();
 			}
 		}
-		if (jsonObject.has("summary")) {
-			JsonElement jsonSummary = jsonObject.get("summary");
-			if (jsonSummary != null) {
-				summary = jsonSummary.getAsString();
-			}
-		}
 		if (jsonObject.has("content")) {
 			JsonElement jsonContent = jsonObject.get("content");
 			if (jsonContent != null) {
 				content = new PostContent();
 				content.fromJson(jsonContent.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("summary")) {
+			JsonElement jsonSummary = jsonObject.get("summary");
+			if (jsonSummary != null) {
+				summary = jsonSummary.getAsString();
 			}
 		}
 		if (jsonObject.has("listed")) {
@@ -152,6 +161,18 @@ public class Post extends DataType {
 			if (jsonCommentsEnabled != null) {
 				commentsEnabled = Boolean.valueOf(jsonCommentsEnabled
 						.getAsBoolean());
+			}
+		}
+		if (jsonObject.has("previousSlug")) {
+			JsonElement jsonPreviousSlug = jsonObject.get("previousSlug");
+			if (jsonPreviousSlug != null) {
+				previousSlug = jsonPreviousSlug.getAsString();
+			}
+		}
+		if (jsonObject.has("nextSlug")) {
+			JsonElement jsonNextSlug = jsonObject.get("nextSlug");
+			if (jsonNextSlug != null) {
+				nextSlug = jsonNextSlug.getAsString();
 			}
 		}
 	}
@@ -181,13 +202,13 @@ public class Post extends DataType {
 		return this;
 	}
 
-	public Post summary (String summary) {
-		this.summary = summary;
+	public Post content (PostContent content) {
+		this.content = content;
 		return this;
 	}
 
-	public Post content (PostContent content) {
-		this.content = content;
+	public Post summary (String summary) {
+		this.summary = summary;
 		return this;
 	}
 
@@ -198,6 +219,16 @@ public class Post extends DataType {
 
 	public Post commentsEnabled (Boolean commentsEnabled) {
 		this.commentsEnabled = commentsEnabled;
+		return this;
+	}
+
+	public Post previousSlug (String previousSlug) {
+		this.previousSlug = previousSlug;
+		return this;
+	}
+
+	public Post nextSlug (String nextSlug) {
+		this.nextSlug = nextSlug;
 		return this;
 	}
 }
