@@ -151,4 +151,10 @@ public interface IPostService extends IService {
 	 */
 	public void indexAll ();
 
+	/**
+	 * Get last published post
+	 * @return
+	 */
+	public Post getLastPublishedPost ();
+
 }

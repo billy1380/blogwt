@@ -505,4 +505,25 @@ final class PostService implements IPostService {
 		return posts;
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.post.IPostService#getLastPublishedPost
+	 * () */
+	@Override
+	public Post getLastPublishedPost () {
+		Post last = null;
+
+		List<Post> posts = getPosts(Boolean.FALSE, Boolean.FALSE,
+				Integer.valueOf(0), Integer.valueOf(1),
+				PostSortType.PostSortTypePublished,
+				SortDirectionType.SortDirectionTypeDescending);
+
+		if (posts != null && posts.size() != 0) {
+			last = posts.get(0);
+		}
+
+		return last;
+	}
+
 }
