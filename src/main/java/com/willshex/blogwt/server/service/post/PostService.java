@@ -178,7 +178,9 @@ final class PostService implements IPostService {
 
 		updateTags(post);
 
-		deleteFromTags(post, removedTags);
+		if (removedTags != null) {
+			deleteFromTags(post, removedTags);
+		}
 
 		ArchiveEntryServiceProvider.provide().archivePost(post);
 
@@ -526,4 +528,44 @@ final class PostService implements IPostService {
 		return last;
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.post.IPostService#linkAll() */
+	@Override
+	public void linkAll () {
+		Pager pager = PagerHelper.createDefaultPager();
+
+		List<Post> posts = null;
+		Post last = null;
+		do {
+			posts = getPosts(Boolean.FALSE, Boolean.FALSE, pager.start,
+					pager.count, PostSortType.PostSortTypePublished,
+					SortDirectionType.SortDirectionTypeDescending);
+
+			if (posts != null && posts.size() > 0) {
+				for (int i = 0, previous = -1, next = 1; i < posts.size(); i++, previous++, next++) {
+					if (i == 0 && last != null) {
+						posts.get(i).previousSlug = last.slug;
+						last.nextSlug = posts.get(i).slug;
+						last = null;
+					}
+
+					if (previous >= 0) {
+						posts.get(i).previousSlug = posts.get(previous).slug;
+					}
+
+					if (next < posts.size()) {
+						posts.get(i).nextSlug = posts.get(next).slug;
+					} else if (next == posts.size()) {
+						last = posts.get(i);
+					}
+
+					// last will get updated twice for all but last page 
+					updatePost(posts.get(i), null);
+				}
+			}
+
+			PagerHelper.moveForward(pager);
+		} while (posts != null && posts.size() >= pager.count.intValue());
+	}
 }

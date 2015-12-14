@@ -157,4 +157,9 @@ public interface IPostService extends IService {
 	 */
 	public Post getLastPublishedPost ();
 
+	/**
+	 * Ling all
+	 */
+	public void linkAll ();
+
 }
