@@ -1,5 +1,5 @@
 //
-//  PostNav.java
+//  PostNavPart.java
 //  blogwt
 //
 //  Created by William Shakour (billy1380) on 15 Dec 2015.
@@ -16,13 +16,14 @@ import com.google.gwt.user.client.ui.Widget;
  * @author William Shakour (billy1380)
  *
  */
-public class PostNav extends Composite {
+public class PostNavPart extends Composite {
 
-	private static PostNavUiBinder uiBinder = GWT.create(PostNavUiBinder.class);
+	private static PostNavPartUiBinder uiBinder = GWT
+			.create(PostNavPartUiBinder.class);
 
-	interface PostNavUiBinder extends UiBinder<Widget, PostNav> {}
+	interface PostNavPartUiBinder extends UiBinder<Widget, PostNavPart> {}
 
-	public PostNav () {
+	public PostNavPart () {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
