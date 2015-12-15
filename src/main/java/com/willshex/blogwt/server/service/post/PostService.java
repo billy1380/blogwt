@@ -540,7 +540,7 @@ final class PostService implements IPostService {
 		do {
 			posts = getPosts(Boolean.FALSE, Boolean.FALSE, pager.start,
 					pager.count, PostSortType.PostSortTypePublished,
-					SortDirectionType.SortDirectionTypeDescending);
+					SortDirectionType.SortDirectionTypeAscending);
 
 			if (posts != null && posts.size() > 0) {
 				for (int i = 0, previous = -1, next = 1; i < posts.size(); i++, previous++, next++) {
@@ -559,6 +559,8 @@ final class PostService implements IPostService {
 					} else if (next == posts.size()) {
 						last = posts.get(i);
 					}
+					//					posts.get(i).previousSlug = null;
+					//					posts.get(i).nextSlug = null;
 
 					// last will get updated twice for all but last page 
 					updatePost(posts.get(i), null);
