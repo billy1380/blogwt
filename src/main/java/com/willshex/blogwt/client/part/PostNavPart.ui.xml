@@ -1,15 +1,22 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
+	
 	</ui:style>
 	<g:HTMLPanel>
-		<nav ui:field="elNav" class="col-xs-12">
+		<nav>
 			<ul class="pager">
-				<li>
-					<a ui:field="btnPrevious">Previous</a>
+				<li ui:field="elPrevious">
+					<a ui:field="btnPrevious">
+						<span class="glyphicon glyphicon-arrow-left" />
+						Previous
+					</a>
 				</li>
-				<li>
-					<a ui:field="btnNext">Next</a>
+				<li ui:field="elNext">
+					<a ui:field="btnNext">
+						<span class="glyphicon glyphicon-arrow-right" />
+						Next
+					</a>
 				</li>
 			</ul>
 		</nav>
