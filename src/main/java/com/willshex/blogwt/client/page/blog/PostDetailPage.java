@@ -29,7 +29,6 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.cell.blog.PostSummaryCell;
 import com.willshex.blogwt.client.cell.blog.TagCell;
 import com.willshex.blogwt.client.controller.NavigationController;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
@@ -42,6 +41,7 @@ import com.willshex.blogwt.client.part.BackToTop;
 import com.willshex.blogwt.client.part.DisqusComments;
 import com.willshex.blogwt.client.part.InlineBootstrapGwtCellList;
 import com.willshex.blogwt.client.part.LoadingPanel;
+import com.willshex.blogwt.client.part.PostNavPart;
 import com.willshex.blogwt.client.part.RelatedPart;
 import com.willshex.blogwt.client.part.UserSummaryPart;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
@@ -57,6 +57,7 @@ import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -92,6 +93,7 @@ public class PostDetailPage extends Page implements
 	@UiField BackToTop btnTop;
 
 	@UiField UserSummaryPart pnlUserSummary;
+	@UiField PostNavPart pnlPostNav;
 
 	private ListDataProvider<Tag> tagList = new ListDataProvider<Tag>();
 	private Post post;
@@ -223,6 +225,8 @@ public class PostDetailPage extends Page implements
 				dsqComments.setVisible(false);
 			}
 		}
+
+		pnlPostNav.setSlugs(post.previousSlug, post.nextSlug);
 
 		pnlLoading.setVisible(false);
 
