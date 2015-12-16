@@ -81,6 +81,17 @@ final class PostService implements IPostService {
 
 		post.contentKey = ofy().save().entity(post.content).now();
 
+		Post previousPost = null;
+		// just been published
+		if (post.published != null && post.previousSlug == null) {
+			previousPost = getLastPublishedPost();
+
+			if (previousPost != null) {
+				post.previousSlug = previousPost.slug;
+				previousPost.nextSlug = post.slug;
+			}
+		}
+		
 		Key<Post> postKey = ofy().save().entity(post).now();
 		post.id = Long.valueOf(postKey.getId());
 
@@ -93,6 +104,10 @@ final class PostService implements IPostService {
 
 		SearchHelper.indexDocument(toDocument(post));
 
+		if (previousPost != null) {
+			updatePost(previousPost, null);
+		}
+		
 		return post;
 	}
 
@@ -174,6 +189,17 @@ final class PostService implements IPostService {
 			ofy().save().entity(post.content).now();
 		}
 
+		Post previousPost = null;
+		// just been published
+		if (post.published != null && post.previousSlug == null) {
+			previousPost = getLastPublishedPost();
+
+			if (previousPost != null) {
+				post.previousSlug = previousPost.slug;
+				previousPost.nextSlug = post.slug;
+			}
+		}
+
 		ofy().save().entity(post).now();
 
 		updateTags(post);
@@ -185,6 +211,10 @@ final class PostService implements IPostService {
 		ArchiveEntryServiceProvider.provide().archivePost(post);
 
 		SearchHelper.indexDocument(toDocument(post));
+
+		if (previousPost != null) {
+			updatePost(previousPost, null);
+		}
 
 		return post;
 	}
@@ -200,11 +230,38 @@ final class PostService implements IPostService {
 
 		deleteFromArchive(post);
 
+		String previousSlug = null, nextSlug = null;
+		Post previousPost = null, nextPost = null;
+		
+		if (post.published != null) {
+			previousSlug = post.previousSlug;
+			nextSlug = post.nextSlug;
+		}
+
 		ofy().delete().entity(post).now();
 
 		ofy().delete().key(post.contentKey).now();
 
 		SearchHelper.deleteSearch(getName() + post.id.toString());
+
+		if (previousSlug != null && nextSlug != null) {
+			previousPost = getSlugPost(previousSlug);
+			nextPost = getSlugPost(nextSlug);
+
+			previousPost.nextSlug = nextPost.slug;
+			nextPost.previousSlug = previousPost.slug;
+
+			updatePost(previousPost, null);
+			updatePost(nextPost, null);
+		} else if (previousSlug != null) {
+			previousPost = getSlugPost(previousSlug);
+			previousPost.nextSlug = null;
+			updatePost(previousPost, null);
+		} else if (nextSlug != null) {
+			nextPost = getSlugPost(nextSlug);
+			nextPost.previousSlug = null;
+			updatePost(nextPost, null);
+		}
 	}
 
 	/**
