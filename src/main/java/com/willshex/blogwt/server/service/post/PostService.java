@@ -91,7 +91,7 @@ final class PostService implements IPostService {
 				previousPost.nextSlug = post.slug;
 			}
 		}
-		
+
 		Key<Post> postKey = ofy().save().entity(post).now();
 		post.id = Long.valueOf(postKey.getId());
 
@@ -107,7 +107,7 @@ final class PostService implements IPostService {
 		if (previousPost != null) {
 			updatePost(previousPost, null);
 		}
-		
+
 		return post;
 	}
 
@@ -232,7 +232,7 @@ final class PostService implements IPostService {
 
 		String previousSlug = null, nextSlug = null;
 		Post previousPost = null, nextPost = null;
-		
+
 		if (post.published != null) {
 			previousSlug = post.previousSlug;
 			nextSlug = post.nextSlug;
@@ -622,6 +622,32 @@ final class PostService implements IPostService {
 					// last will get updated twice for all but last page 
 					updatePost(posts.get(i), null);
 				}
+			}
+
+			PagerHelper.moveForward(pager);
+		} while (posts != null && posts.size() >= pager.count.intValue());
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.post.IPostService#clearLinks() */
+	@Override
+	public void clearLinks () {
+		Pager pager = PagerHelper.createDefaultPager();
+
+		List<Post> posts = null;
+		do {
+			posts = getPosts(Boolean.FALSE, Boolean.FALSE, pager.start,
+					pager.count, PostSortType.PostSortTypePublished,
+					SortDirectionType.SortDirectionTypeDescending);
+
+			if (posts != null) {
+				for (Post post : posts) {
+					post.nextSlug = null;
+					post.previousSlug = null;
+				}
+
+				ofy().save().entities(posts).now();
 			}
 
 			PagerHelper.moveForward(pager);

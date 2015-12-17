@@ -162,4 +162,9 @@ public interface IPostService extends IService {
 	 */
 	public void linkAll ();
 
+	/**
+	 * Clear links
+	 */
+	public void clearLinks ();
+
 }

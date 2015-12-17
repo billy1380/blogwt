@@ -50,6 +50,8 @@ public class DevServlet extends ContextAwareServlet {
 			PostServiceProvider.provide().indexAll();
 		} else if ("linkall".equals(action)) {
 			PostServiceProvider.provide().linkAll();
+		} else if ("clearlinks".equals(action)) {
+			PostServiceProvider.provide().clearLinks();
 		} else if ("archiveall".equals(action)) {
 			ArchiveEntryServiceProvider.provide().generateArchive();
 		} else if ("fixroles".equals(action)) {
