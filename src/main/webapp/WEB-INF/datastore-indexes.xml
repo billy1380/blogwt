@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datastore-indexes>
+	<datastore-index kind="Post" ancestor="false" source="auto">
+		<property name="listed" direction="asc" />
+		<property name="published" direction="desc" />
+	</datastore-index>
+
+	<datastore-index kind="Post" ancestor="false" source="manual">
+		<property name="authorKey" direction="asc" />
+		<property name="created" direction="desc" />
+	</datastore-index>
+
+	<datastore-index kind="Post" ancestor="false" source="manual">
+		<property name="listed" direction="asc" />
+		<property name="created" direction="desc" />
+	</datastore-index>
+
+	<datastore-index kind="Post" ancestor="false" source="manual">
+		<property name="authorKey" direction="asc" />
+		<property name="listed" direction="asc" />
+		<property name="slug" direction="asc" />
+	</datastore-index>
+
+	<datastore-index kind="Post" ancestor="false" source="manual">
+		<property name="authorKey" direction="asc" />
+		<property name="slug" direction="asc" />
+	</datastore-index>
+
+	<datastore-index kind="Post" ancestor="false" source="manual">
+		<property name="listed" direction="asc" />
+		<property name="published" direction="asc" />
+	</datastore-index>
+</datastore-indexes>
