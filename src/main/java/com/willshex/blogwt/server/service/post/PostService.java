@@ -191,7 +191,8 @@ final class PostService implements IPostService {
 
 		Post previousPost = null;
 		// just been published
-		if (post.published != null && post.previousSlug == null) {
+		if (post.published != null && post.previousSlug == null
+				&& post.nextSlug == null) {
 			previousPost = getLastPublishedPost();
 
 			if (previousPost != null) {
@@ -597,27 +598,28 @@ final class PostService implements IPostService {
 		do {
 			posts = getPosts(Boolean.FALSE, Boolean.FALSE, pager.start,
 					pager.count, PostSortType.PostSortTypePublished,
-					SortDirectionType.SortDirectionTypeAscending);
+					SortDirectionType.SortDirectionTypeDescending);
 
 			if (posts != null && posts.size() > 0) {
-				for (int i = 0, previous = -1, next = 1; i < posts.size(); i++, previous++, next++) {
+				for (int i = 0, next = -1, previous = 1; i < posts.size(); i++, previous++, next++) {
 					if (i == 0 && last != null) {
-						posts.get(i).previousSlug = last.slug;
-						last.nextSlug = posts.get(i).slug;
+						posts.get(i).nextSlug = last.slug;
+						last.previousSlug = posts.get(i).slug;
+
+						updatePost(last, null);
+
 						last = null;
 					}
 
-					if (previous >= 0) {
-						posts.get(i).previousSlug = posts.get(previous).slug;
+					if (next >= 0) {
+						posts.get(i).nextSlug = posts.get(next).slug;
 					}
 
-					if (next < posts.size()) {
-						posts.get(i).nextSlug = posts.get(next).slug;
-					} else if (next == posts.size()) {
+					if (previous < posts.size()) {
+						posts.get(i).previousSlug = posts.get(previous).slug;
+					} else if (previous == posts.size()) {
 						last = posts.get(i);
 					}
-					//					posts.get(i).previousSlug = null;
-					//					posts.get(i).nextSlug = null;
 
 					// last will get updated twice for all but last page 
 					updatePost(posts.get(i), null);

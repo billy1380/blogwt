@@ -26,8 +26,4 @@
 		<property name="slug" direction="asc" />
 	</datastore-index>
 
-	<datastore-index kind="Post" ancestor="false" source="manual">
-		<property name="listed" direction="asc" />
-		<property name="published" direction="asc" />
-	</datastore-index>
 </datastore-indexes>
