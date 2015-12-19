@@ -45,7 +45,8 @@
 				<p:UserSummaryPart ui:field="pnlUserSummary" styleName="col-sm-8 col-sm-offset-2"
 					visible="false" />
 
-				<p:PostNavPart ui:field="pnlPostNav" styleName="col-xs-12" />
+				<p:PostNavPart ui:field="pnlPostNav" styleName="col-xs-12"
+					visible="false" />
 
 				<p:DisqusComments ui:field="dsqComments" />
 

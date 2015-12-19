@@ -299,6 +299,7 @@ public class PostDetailPage extends Page implements
 
 		dsqComments.setVisible(false);
 		ataShare.setVisible(false);
+		pnlPostNav.setVisible(false);
 
 		pnlUserSummary.setVisible(false);
 	}
