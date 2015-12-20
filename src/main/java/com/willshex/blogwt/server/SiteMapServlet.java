@@ -55,7 +55,7 @@ public class SiteMapServlet extends ContextAwareServlet {
 		p.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		p.println("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
 
-		//printRoot(p, url);
+		printRoot(p, url);
 		printPages(p, url);
 		printBlog(p, url);
 		printPosts(p, url);
@@ -70,9 +70,9 @@ public class SiteMapServlet extends ContextAwareServlet {
 		doGet();
 	}
 
-//	private void printRoot (PrintWriter p, String url) {
-//		p.println(String.format(LOC_FORMAT, url, ""));
-//	}
+	private void printRoot (PrintWriter p, String url) {
+		p.println(String.format(LOC_FORMAT, url, "#!"));
+	}
 
 	private void printBlog (PrintWriter p, String url) {
 		p.println(String.format(LOC_FORMAT, url,
