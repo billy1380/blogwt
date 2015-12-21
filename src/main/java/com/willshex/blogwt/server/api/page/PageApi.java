@@ -9,7 +9,9 @@ package com.willshex.blogwt.server.api.page;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.validation.ApiValidator;
@@ -29,6 +31,7 @@ import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Property;
+import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
@@ -244,10 +247,18 @@ public final class PageApi extends ActionHandler {
 								input.pager.sortDirection);
 			}
 
+			Map<Long, User> owners = new HashMap<Long, User>();
+			Long id;
 			for (Page page : output.pages) {
-				page.owner = UserHelper
-						.stripSensitive(UserServiceProvider.provide().getUser(
-								Long.valueOf(page.ownerKey.getId())));
+				id = Long.valueOf(page.ownerKey.getId());
+				page.owner = owners.get(id);
+				if (page.owner == null) {
+					owners.put(
+							id,
+							page.owner = UserHelper
+									.stripSensitive(UserServiceProvider
+											.provide().getUser(id)));
+				}
 			}
 
 			output.pager = PagerHelper.moveForward(input.pager);
