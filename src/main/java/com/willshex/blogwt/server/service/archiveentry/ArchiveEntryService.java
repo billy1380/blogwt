@@ -271,7 +271,25 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	}
 
 	@Override
-	public void deleteArchiveEntryPost (ArchiveEntry archiveEntry, Post post) {
+	public void deleteArchiveEntryPost (final ArchiveEntry archiveEntry,
+			final Post post) {
+		ofy().transact(new Work<ArchiveEntry>() {
+
+			@Override
+			public ArchiveEntry run () {
+				ArchiveEntry latest = getArchiveEntry(archiveEntry.id);
+
+				latest.postKeys.remove(Key.create(post));
+
+				if (latest.postKeys.size() == 0) {
+					ofy().delete().entities(latest).now();
+				} else {
+					ofy().save().entities(latest).now();
+				}
+
+				return latest;
+			}
+		});
 
 	}
 
