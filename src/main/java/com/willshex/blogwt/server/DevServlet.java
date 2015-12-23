@@ -87,8 +87,9 @@ public class DevServlet extends ContextAwareServlet {
 			RESPONSE.get()
 					.getOutputStream()
 					.print(JsonUtils.beautifyJson(new BlogApi().getPosts(
-							(GetPostsRequest) new GetPostsRequest().pager(
-									PagerHelper.createDefaultPager())
+							(GetPostsRequest) new GetPostsRequest()
+									.showAll(Boolean.TRUE)
+									.pager(PagerHelper.createDefaultPager())
 									.accessCode(DEV_ACCESS_CODE)).toString()));
 		}
 	}

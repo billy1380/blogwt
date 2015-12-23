@@ -460,7 +460,15 @@ public final class BlogApi extends ActionHandler {
 					}
 				} catch (InputValidationException ex) {
 					output.session = input.session = null;
+					showAll = Boolean.FALSE;
 				}
+			} else {
+				showAll = Boolean.FALSE;
+			}
+
+			if (!showAll) {
+				input.pager.sortBy = PostSortType.PostSortTypePublished
+						.toString();
 			}
 
 			if (input.includePostContents == null) {
