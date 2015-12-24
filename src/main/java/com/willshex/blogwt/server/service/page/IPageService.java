@@ -81,7 +81,7 @@ public interface IPageService extends IService {
 			PageSortType sortBy, SortDirectionType sortDirection);
 
 	/**
-	 * 
+	 * Index all
 	 */
 	public void indexAll ();
 

@@ -15,10 +15,12 @@ import javax.servlet.ServletException;
 import com.spacehopperstudios.utility.JsonUtils;
 import com.willshex.blogwt.server.api.blog.BlogApi;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
+import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
+import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
@@ -51,8 +53,12 @@ public class DevServlet extends ContextAwareServlet {
 
 		if ("gentags".equals(action)) {
 			TagServiceProvider.provide().generateTags();
-		} else if ("indexall".equals(action)) {
+		} else if ("indexposts".equals(action)) {
 			PostServiceProvider.provide().indexAll();
+		} else if ("indexpages".equals(action)) {
+			PageServiceProvider.provide().indexAll();
+		} else if ("indexusers".equals(action)) {
+			UserServiceProvider.provide().indexAll();
 		} else if ("linkall".equals(action)) {
 			PostServiceProvider.provide().linkAll();
 		} else if ("clearlinks".equals(action)) {

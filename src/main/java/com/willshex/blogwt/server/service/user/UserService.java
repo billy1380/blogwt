@@ -19,22 +19,26 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.google.appengine.api.search.Document;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.server.helper.EmailHelper;
 import com.willshex.blogwt.server.helper.InflatorHelper;
+import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
+import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
+import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.service.ContextAwareServlet;
 
@@ -352,7 +356,7 @@ final class UserService implements IUserService {
 					for (Key<Role> key : latest.roleKeys) {
 						current.add(Long.valueOf(key.getId()));
 					}
-					
+
 					if (roles != null) {
 						for (Role role : roles) {
 							current.remove(role.id);
@@ -449,6 +453,74 @@ final class UserService implements IUserService {
 		}
 
 		return salt;
+	}
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	private Document toDocument (User user) {
+		Document document = null;
+
+		//		if (user.published != null && Boolean.TRUE.equals(user.listed)) {
+		//			Document.Builder documentBuilder = Document.newBuilder();
+		//			documentBuilder
+		//					.setId(getName() + user.id.toString())
+		//					.addField(
+		//							Field.newBuilder().setName("author")
+		//									.setAtom(user.author.username))
+		//					.addField(
+		//							Field.newBuilder().setName("author")
+		//									.setText(UserHelper.name(user.author)))
+		//					.addField(
+		//							Field.newBuilder().setName("body")
+		//									.setText(user.content.body))
+		//					.addField(
+		//							Field.newBuilder().setName("created")
+		//									.setDate(user.created))
+		//					.addField(
+		//							Field.newBuilder().setName("published")
+		//									.setDate(user.published))
+		//					.addField(
+		//							Field.newBuilder().setName("slug")
+		//									.setAtom(user.slug))
+		//					.addField(
+		//							Field.newBuilder().setName("summary")
+		//									.setText(user.summary))
+		//					.addField(
+		//							Field.newBuilder().setName("title")
+		//									.setText(user.title));
+		//
+		//			if (user.tags != null) {
+		//				for (String tag : user.tags) {
+		//					documentBuilder.addField(Field.newBuilder().setName("tag")
+		//							.setText(tag));
+		//				}
+		//			}
+		//
+		//			document = documentBuilder.build();
+		//		}
+
+		return document;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.user.IUserService#indexAll() */
+	@Override
+	public void indexAll () {
+		Pager pager = PagerHelper.createDefaultPager();
+
+		List<User> users = null;
+		do {
+			users = getUsers(pager.start, pager.count, null, null);
+
+			for (User user : users) {
+				SearchHelper.indexDocument(toDocument(user));
+			}
+
+			PagerHelper.moveForward(pager);
+		} while (users != null && users.size() >= pager.count.intValue());
 	}
 
 }
