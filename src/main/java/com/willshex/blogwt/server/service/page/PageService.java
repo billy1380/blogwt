@@ -17,9 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Field;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.SearchHelper;
+import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
@@ -69,44 +71,37 @@ final class PageService implements IPageService {
 	private Document toDocument (Page page) {
 		Document document = null;
 
-		//		if (page.published != null && Boolean.TRUE.equals(page.listed)) {
-		//			Document.Builder documentBuilder = Document.newBuilder();
-		//			documentBuilder
-		//					.setId(getName() + page.id.toString())
-		//					.addField(
-		//							Field.newBuilder().setName("author")
-		//									.setAtom(page.author.username))
-		//					.addField(
-		//							Field.newBuilder().setName("author")
-		//									.setText(UserHelper.name(page.author)))
-		//					.addField(
-		//							Field.newBuilder().setName("body")
-		//									.setText(page.content.body))
-		//					.addField(
-		//							Field.newBuilder().setName("created")
-		//									.setDate(page.created))
-		//					.addField(
-		//							Field.newBuilder().setName("published")
-		//									.setDate(page.published))
-		//					.addField(
-		//							Field.newBuilder().setName("slug")
-		//									.setAtom(page.slug))
-		//					.addField(
-		//							Field.newBuilder().setName("summary")
-		//									.setText(page.summary))
-		//					.addField(
-		//							Field.newBuilder().setName("title")
-		//									.setText(page.title));
-		//
-		//			if (page.tags != null) {
-		//				for (String tag : page.tags) {
-		//					documentBuilder.addField(Field.newBuilder().setName("tag")
-		//							.setText(tag));
-		//				}
-		//			}
-		//
-		//			document = documentBuilder.build();
-		//		}
+		if (page != null) {
+			Document.Builder documentBuilder = Document.newBuilder();
+
+			documentBuilder
+					.setId(getName() + page.id.toString())
+					.addField(
+							Field.newBuilder().setName("owner")
+									.setAtom(page.owner.username))
+					.addField(
+							Field.newBuilder().setName("owner")
+									.setText(UserHelper.name(page.owner)))
+
+					.addField(
+							Field.newBuilder().setName("created")
+									.setDate(page.created))
+					.addField(
+							Field.newBuilder().setName("title")
+									.setText(page.title));
+
+			if (page.posts != null) {
+				StringBuilder body = new StringBuilder();
+				for (Post post : page.posts) {
+					body.append(post).append("\n\n");
+				}
+
+				documentBuilder.addField(Field.newBuilder().setName("body")
+						.setText(body.toString()));
+			}
+			
+			document = documentBuilder.build();
+		}
 
 		return document;
 	}
