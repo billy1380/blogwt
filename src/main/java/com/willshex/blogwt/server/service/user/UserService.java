@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Field;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
@@ -30,7 +31,9 @@ import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
+import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
+import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -462,44 +465,63 @@ final class UserService implements IUserService {
 	private Document toDocument (User user) {
 		Document document = null;
 
-		//		if (user.published != null && Boolean.TRUE.equals(user.listed)) {
-		//			Document.Builder documentBuilder = Document.newBuilder();
-		//			documentBuilder
-		//					.setId(getName() + user.id.toString())
-		//					.addField(
-		//							Field.newBuilder().setName("author")
-		//									.setAtom(user.author.username))
-		//					.addField(
-		//							Field.newBuilder().setName("author")
-		//									.setText(UserHelper.name(user.author)))
-		//					.addField(
-		//							Field.newBuilder().setName("body")
-		//									.setText(user.content.body))
-		//					.addField(
-		//							Field.newBuilder().setName("created")
-		//									.setDate(user.created))
-		//					.addField(
-		//							Field.newBuilder().setName("published")
-		//									.setDate(user.published))
-		//					.addField(
-		//							Field.newBuilder().setName("slug")
-		//									.setAtom(user.slug))
-		//					.addField(
-		//							Field.newBuilder().setName("summary")
-		//									.setText(user.summary))
-		//					.addField(
-		//							Field.newBuilder().setName("title")
-		//									.setText(user.title));
-		//
-		//			if (user.tags != null) {
-		//				for (String tag : user.tags) {
-		//					documentBuilder.addField(Field.newBuilder().setName("tag")
-		//							.setText(tag));
-		//				}
-		//			}
-		//
-		//			document = documentBuilder.build();
-		//		}
+		if (user != null) {
+			Document.Builder documentBuilder = Document.newBuilder();
+			documentBuilder
+					.setId(getName() + user.id.toString())
+					.addField(
+							Field.newBuilder().setName("username")
+									.setAtom(user.username))
+					.addField(
+							Field.newBuilder().setName("name")
+									.setText(UserHelper.name(user)))
+					.addField(
+							Field.newBuilder().setName("forename")
+									.setText(user.forename))
+					.addField(
+							Field.newBuilder().setName("surname")
+									.setText(user.surname))
+					.addField(
+							Field.newBuilder().setName("email")
+									.setText(user.email))
+					.addField(
+							Field.newBuilder().setName("created")
+									.setDate(user.created))
+					.addField(
+							Field.newBuilder().setName("group")
+									.setText(user.group))
+					.addField(
+							Field.newBuilder().setName("summary")
+									.setText(user.summary));
+
+			if (user.roleKeys != null) {
+				if (user.roles == null) {
+					user.roles = RoleServiceProvider.provide().getIdRolesBatch(
+							PersistenceService.keysToIds(user.roleKeys));
+				}
+
+				for (Role role : user.roles) {
+					documentBuilder.addField(Field.newBuilder().setName("role")
+							.setText(role.name));
+				}
+			}
+
+			if (user.permissionKeys != null) {
+				if (user.permissions == null) {
+					user.permissions = PermissionServiceProvider.provide()
+							.getIdPermissionsBatch(
+									PersistenceService
+											.keysToIds(user.permissionKeys));
+				}
+
+				for (Permission permission : user.permissions) {
+					documentBuilder.addField(Field.newBuilder()
+							.setName("permission").setText(permission.name));
+				}
+			}
+
+			document = documentBuilder.build();
+		}
 
 		return document;
 	}
