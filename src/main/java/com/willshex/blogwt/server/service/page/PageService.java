@@ -24,6 +24,7 @@ import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
+import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Page;
@@ -74,32 +75,27 @@ final class PageService implements IPageService {
 		if (page != null) {
 			Document.Builder documentBuilder = Document.newBuilder();
 
-			documentBuilder
-					.setId(getName() + page.id.toString())
-					.addField(
-							Field.newBuilder().setName("owner")
-									.setAtom(page.owner.username))
-					.addField(
-							Field.newBuilder().setName("owner")
-									.setText(UserHelper.name(page.owner)))
+			documentBuilder.setId(getName() + page.id.toString())
+					.addField(Field.newBuilder().setName("owner")
+							.setAtom(page.owner.username))
+					.addField(Field.newBuilder().setName("owner")
+							.setText(UserHelper.name(page.owner)))
 
-					.addField(
-							Field.newBuilder().setName("created")
-									.setDate(page.created))
-					.addField(
-							Field.newBuilder().setName("title")
-									.setText(page.title));
+					.addField(Field.newBuilder().setName("created")
+							.setDate(page.created))
+					.addField(Field.newBuilder().setName("title")
+							.setText(page.title));
 
 			if (page.posts != null) {
 				StringBuilder body = new StringBuilder();
 				for (Post post : page.posts) {
-					body.append(post).append("\n\n");
+					body.append(post.content.body).append("\n\n");
 				}
 
 				documentBuilder.addField(Field.newBuilder().setName("body")
 						.setText(body.toString()));
 			}
-			
+
 			document = documentBuilder.build();
 		}
 
@@ -155,7 +151,8 @@ final class PageService implements IPageService {
 	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
 	public List<Page> getPages (Boolean includePostContents, Integer start,
-			Integer count, PageSortType sortBy, SortDirectionType sortDirection) {
+			Integer count, PageSortType sortBy,
+			SortDirectionType sortDirection) {
 		Query<Page> query = ofy().load().type(Page.class);
 
 		if (start != null) {
@@ -195,8 +192,8 @@ final class PageService implements IPageService {
 		List<Post> posts = new ArrayList<Post>();
 
 		for (Page page : pages) {
-			posts.addAll(PostServiceProvider.provide().getPostBatch(
-					PersistenceService.keysToIds(page.postKeys)));
+			posts.addAll(PostServiceProvider.provide()
+					.getPostBatch(PersistenceService.keysToIds(page.postKeys)));
 		}
 
 		for (Post post : posts) {
@@ -245,9 +242,12 @@ final class PageService implements IPageService {
 
 		List<Page> pages = null;
 		do {
-			pages = getPages(Boolean.TRUE, pager.start, pager.count, null, null);
+			pages = getPages(Boolean.TRUE, pager.start, pager.count, null,
+					null);
 
 			for (Page page : pages) {
+				page.owner = UserServiceProvider.provide()
+						.getUser(Long.valueOf(page.ownerKey.getId()));
 				SearchHelper.indexDocument(toDocument(page));
 			}
 
