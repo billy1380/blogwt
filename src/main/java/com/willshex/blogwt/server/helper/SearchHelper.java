@@ -20,8 +20,12 @@ import com.google.appengine.api.search.SearchService;
 import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.search.StatusCode;
 import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
+import com.willshex.blogwt.server.service.user.UserServiceProvider;
+import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
+import com.willshex.blogwt.shared.api.datatype.User;
 
 /**
  * @author William Shakour (billy1380)
@@ -43,8 +47,8 @@ public class SearchHelper {
 		try {
 			getIndex().put(document);
 		} catch (PutException e) {
-			if (StatusCode.TRANSIENT_ERROR.equals(e.getOperationResult()
-					.getCode())) {
+			if (StatusCode.TRANSIENT_ERROR
+					.equals(e.getOperationResult().getCode())) {
 				if (count < 2) {
 					indexDocument(document, count++);
 				}
@@ -72,8 +76,8 @@ public class SearchHelper {
 			}
 
 			if ((id = scoredDocument.getId()).startsWith(postName)) {
-				post = PostServiceProvider.provide().getPost(
-						Long.valueOf(id.replace(postName, "")));
+				post = PostServiceProvider.provide()
+						.getPost(Long.valueOf(id.replace(postName, "")));
 				if (post != null) {
 					posts.add(post);
 				}
@@ -83,6 +87,58 @@ public class SearchHelper {
 		}
 
 		return posts;
+	}
+
+	public static List<Page> searchPages (String query) {
+		Results<ScoredDocument> matches = getIndex().search(query);
+		List<Page> pages = new ArrayList<Page>();
+		String id;
+		Page page;
+		int limit = SEARCH_LIMIT;
+		final String pageName = PageServiceProvider.provide().getName();
+		for (ScoredDocument scoredDocument : matches) {
+			if (limit == 0) {
+				break;
+			}
+
+			if ((id = scoredDocument.getId()).startsWith(pageName)) {
+				page = PageServiceProvider.provide()
+						.getPage(Long.valueOf(id.replace(pageName, "")));
+				if (page != null) {
+					pages.add(page);
+				}
+			}
+
+			limit--;
+		}
+
+		return pages;
+	}
+
+	public static List<User> searchUsers (String query) {
+		Results<ScoredDocument> matches = getIndex().search(query);
+		List<User> users = new ArrayList<User>();
+		String id;
+		User user;
+		int limit = SEARCH_LIMIT;
+		final String userName = PostServiceProvider.provide().getName();
+		for (ScoredDocument scoredDocument : matches) {
+			if (limit == 0) {
+				break;
+			}
+
+			if ((id = scoredDocument.getId()).startsWith(userName)) {
+				user = UserServiceProvider.provide()
+						.getUser(Long.valueOf(id.replace(userName, "")));
+				if (user != null) {
+					users.add(user);
+				}
+			}
+
+			limit--;
+		}
+
+		return users;
 	}
 
 	public static void deleteSearch (String documentId) {
