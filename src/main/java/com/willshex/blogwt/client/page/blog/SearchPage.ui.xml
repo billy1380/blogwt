@@ -8,22 +8,11 @@
 
 	<g:HTMLPanel styleName="container">
 		<h2 ui:field="elHeading">
-			Top matches for
+			Matches for
 		</h2>
 
 		<g:HTMLPanel styleName="row">
-			<div ui:field="elPosts">
-				<h2 ui:field="elPostsHeading">Posts</h2>
-				<c:CellList ui:field="clPostResults" styleName="col-sm-9" />
-			</div>
-			<div ui:field="elPages">
-				<h2 ui:field="elPagesHeading">Pages</h2>
-				<c:CellList ui:field="clPageResults" styleName="col-sm-9" />
-			</div>
-			<div ui:field="elUsers">
-				<h2 ui:field="elUsersHeading">Users</h2>
-				<c:CellList ui:field="clUserResults" styleName="col-sm-9" />
-			</div>
+			<c:CellList ui:field="clResults" styleName="col-sm-9" />
 			<div class="col-sm-3">
 				<p:ShortDescriptionPart ui:field="coShortDescription" />
 				<p:SearchPart ui:field="coSearch" />
@@ -32,15 +21,8 @@
 			</div>
 		</g:HTMLPanel>
 
-
-		<p:NoneFoundPanel subject="posts" ui:field="pnlNoPostResults" />
-		<p:LoadingPanel ui:field="pnlPostsLoading" />
-
-		<p:NoneFoundPanel subject="pages" ui:field="pnlNoPageResults" />
-		<p:LoadingPanel ui:field="pnlPagesLoading" />
-
-		<p:NoneFoundPanel subject="results" ui:field="pnlNoUserResults" />
-		<p:LoadingPanel ui:field="pnlUsersLoading" />
+		<p:NoneFoundPanel subject="results" ui:field="pnlNoResults" />
+		<p:LoadingPanel ui:field="pnlLoading" />
 
 		<p:BackToTop />
 	</g:HTMLPanel>
