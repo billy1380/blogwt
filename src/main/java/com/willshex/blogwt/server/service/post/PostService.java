@@ -119,46 +119,39 @@ final class PostService implements IPostService {
 	private Document toDocument (Post post) {
 		Document document = null;
 
-		if (Boolean.TRUE.equals(post.listed) && post.published != null
-				&& post.content != null) {
+		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
 
 			if (post.author == null) {
-				post.author = UserServiceProvider.provide().getUser(
-						Long.valueOf(post.authorKey.getId()));
+				post.author = UserServiceProvider.provide()
+						.getUser(Long.valueOf(post.authorKey.getId()));
 			}
 
 			Document.Builder documentBuilder = Document.newBuilder();
-			documentBuilder
-					.setId(getName() + post.id.toString())
-					.addField(
-							Field.newBuilder().setName("author")
-									.setAtom(post.author.username))
-					.addField(
-							Field.newBuilder().setName("author")
-									.setText(UserHelper.name(post.author)))
-					.addField(
-							Field.newBuilder().setName("body")
-									.setText(post.content.body))
-					.addField(
-							Field.newBuilder().setName("created")
-									.setDate(post.created))
-					.addField(
-							Field.newBuilder().setName("published")
-									.setDate(post.published))
-					.addField(
-							Field.newBuilder().setName("slug")
-									.setAtom(post.slug))
-					.addField(
-							Field.newBuilder().setName("summary")
-									.setText(post.summary))
-					.addField(
-							Field.newBuilder().setName("title")
-									.setText(post.title));
+			documentBuilder.setId(getName() + post.id.toString())
+					.addField(Field.newBuilder().setName("author")
+							.setAtom(post.author.username))
+					.addField(Field.newBuilder().setName("author")
+							.setText(UserHelper.name(post.author)))
+					.addField(Field.newBuilder().setName("created")
+							.setDate(post.created))
+					.addField(Field.newBuilder().setName("published")
+							.setDate(post.published))
+					.addField(Field.newBuilder().setName("slug")
+							.setAtom(post.slug))
+					.addField(Field.newBuilder().setName("summary")
+							.setText(post.summary))
+					.addField(Field.newBuilder().setName("title")
+							.setText(post.title));
+
+			if (post.content != null) {
+				documentBuilder.addField(Field.newBuilder().setName("body")
+						.setText(post.content.body));
+			}
 
 			if (post.tags != null) {
 				for (String tag : post.tags) {
-					documentBuilder.addField(Field.newBuilder().setName("tag")
-							.setText(tag));
+					documentBuilder.addField(
+							Field.newBuilder().setName("tag").setText(tag));
 				}
 			}
 
@@ -170,8 +163,7 @@ final class PostService implements IPostService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#updatePost(com.
+	 * @see com.willshex.blogwt.server.service.post.IPostService#updatePost(com.
 	 * willshex.blogwt.shared.api.datatype.Post, java.util.Collection) */
 	@Override
 	public Post updatePost (Post post, Collection<String> removedTags) {
@@ -222,8 +214,7 @@ final class PostService implements IPostService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#deletePost(com.
+	 * @see com.willshex.blogwt.server.service.post.IPostService#deletePost(com.
 	 * willshex.blogwt.shared.api.datatype.Post) */
 	@Override
 	public void deletePost (Post post) {
@@ -270,9 +261,10 @@ final class PostService implements IPostService {
 	 */
 	private void deleteFromArchive (Post post) {
 		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
-			ArchiveEntryServiceProvider.provide().deleteArchiveEntryPost(
-					ArchiveEntryServiceProvider.provide().getDateArchiveEntry(
-							post.published), post);
+			ArchiveEntryServiceProvider.provide()
+					.deleteArchiveEntryPost(ArchiveEntryServiceProvider
+							.provide().getDateArchiveEntry(post.published),
+					post);
 		}
 	}
 
@@ -292,8 +284,8 @@ final class PostService implements IPostService {
 		Query<Post> query = ofy().load().type(Post.class);
 
 		if (user != null && user.id != null) {
-			query = query.filter(PostSortType.PostSortTypeAuthor.toString()
-					+ "Key", user);
+			query = query.filter(
+					PostSortType.PostSortTypeAuthor.toString() + "Key", user);
 		}
 
 		if (showAll == null || !showAll.booleanValue()) {
@@ -338,8 +330,8 @@ final class PostService implements IPostService {
 					.type(PostContent.class).ids(postContentIds);
 
 			for (Post post : posts) {
-				post.content = contents.get(Long.valueOf(post.contentKey
-						.getId()));
+				post.content = contents
+						.get(Long.valueOf(post.contentKey.getId()));
 			}
 		}
 
@@ -395,8 +387,7 @@ final class PostService implements IPostService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#getPostContent(
+	 * @see com.willshex.blogwt.server.service.post.IPostService#getPostContent(
 	 * com.willshex.blogwt.shared.api.datatype.Post) */
 	@Override
 	public PostContent getPostContent (Post post) {
@@ -411,8 +402,8 @@ final class PostService implements IPostService {
 	 * .util.Collection) */
 	@Override
 	public List<Post> getPostBatch (Collection<Long> ids) {
-		return new ArrayList<Post>(ofy().load().type(Post.class).ids(ids)
-				.values());
+		return new ArrayList<Post>(
+				ofy().load().type(Post.class).ids(ids).values());
 	}
 
 	/**
@@ -423,8 +414,8 @@ final class PostService implements IPostService {
 				&& post.tags != null) {
 			Tag tag;
 			for (String name : post.tags) {
-				tag = TagServiceProvider.provide().getSlugTag(
-						PostHelper.slugify(name));
+				tag = TagServiceProvider.provide()
+						.getSlugTag(PostHelper.slugify(name));
 
 				if (tag == null) {
 					tag = TagServiceProvider.provide().addTag(
@@ -443,8 +434,8 @@ final class PostService implements IPostService {
 	private void deleteFromTags (Post post, Collection<String> tags) {
 		Tag tag;
 		for (String name : tags) {
-			tag = TagServiceProvider.provide().getSlugTag(
-					PostHelper.slugify(name));
+			tag = TagServiceProvider.provide()
+					.getSlugTag(PostHelper.slugify(name));
 
 			if (tag != null) {
 				TagServiceProvider.provide().removeTagPost(tag, post);
@@ -465,8 +456,8 @@ final class PostService implements IPostService {
 					pager.count, null, null);
 
 			for (Post post : posts) {
-				post.author = UserServiceProvider.provide().getUser(
-						Long.valueOf(post.authorKey.getId()));
+				post.author = UserServiceProvider.provide()
+						.getUser(Long.valueOf(post.authorKey.getId()));
 
 				SearchHelper.indexDocument(toDocument(post));
 			}
@@ -502,12 +493,13 @@ final class PostService implements IPostService {
 	@Override
 	public List<Post> getUserViewablePartialSlugPosts (String partialSlug,
 			User user, Boolean showAll, Boolean includeContents, Integer start,
-			Integer count, PostSortType sortBy, SortDirectionType sortDirection) {
+			Integer count, PostSortType sortBy,
+			SortDirectionType sortDirection) {
 		Query<Post> query = ofy().load().type(Post.class);
 
 		if (user != null && user.id != null) {
-			query = query.filter(PostSortType.PostSortTypeAuthor.toString()
-					+ "Key", user);
+			query = query.filter(
+					PostSortType.PostSortTypeAuthor.toString() + "Key", user);
 		}
 
 		if (showAll == null || !showAll.booleanValue()) {
@@ -557,8 +549,8 @@ final class PostService implements IPostService {
 					.type(PostContent.class).ids(postContentIds);
 
 			for (Post post : posts) {
-				post.content = contents.get(Long.valueOf(post.contentKey
-						.getId()));
+				post.content = contents
+						.get(Long.valueOf(post.contentKey.getId()));
 			}
 		}
 
@@ -601,7 +593,8 @@ final class PostService implements IPostService {
 					SortDirectionType.SortDirectionTypeDescending);
 
 			if (posts != null && posts.size() > 0) {
-				for (int i = 0, next = -1, previous = 1; i < posts.size(); i++, previous++, next++) {
+				for (int i = 0, next = -1, previous = 1; i < posts
+						.size(); i++, previous++, next++) {
 					if (i == 0 && last != null) {
 						posts.get(i).nextSlug = last.slug;
 						last.previousSlug = posts.get(i).slug;
@@ -654,5 +647,23 @@ final class PostService implements IPostService {
 
 			PagerHelper.moveForward(pager);
 		} while (posts != null && posts.size() >= pager.count.intValue());
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.post.IPostService#indexPost(java.lang.
+	 * Long) */
+	@Override
+	public void indexPost (Long id) {
+		Post post = getPost(id);
+
+		if (post.contentKey != null) {
+			post.content = ofy().load().type(PostContent.class)
+					.id(Long.valueOf(post.contentKey.getId())).now();
+		}
+
+		SearchHelper.indexDocument(toDocument(post));
+
 	}
 }

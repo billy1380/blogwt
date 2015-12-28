@@ -111,7 +111,8 @@ public interface IPostService extends IService {
 	 */
 	public List<Post> getUserViewablePartialSlugPosts (String partialSlug,
 			User user, Boolean showAll, Boolean includeContents, Integer start,
-			Integer count, PostSortType sortBy, SortDirectionType sortDirection);
+			Integer count, PostSortType sortBy,
+			SortDirectionType sortDirection);
 
 	/**
 	 * 
@@ -150,6 +151,12 @@ public interface IPostService extends IService {
 	 * Index all
 	 */
 	public void indexAll ();
+
+	/**
+	 * Index post
+	 * @param id
+	 */
+	public void indexPost (Long id);
 
 	/**
 	 * Get last published post
