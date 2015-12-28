@@ -88,6 +88,8 @@ final class UserService implements IUserService {
 		Key<User> key = ofy().save().entity(user).now();
 		user.id = Long.valueOf(key.getId());
 
+		// index
+		
 		return user;
 	}
 
@@ -98,6 +100,9 @@ final class UserService implements IUserService {
 	@Override
 	public User updateUser (User user) {
 		ofy().save().entity(user).now();
+		
+		// index
+		
 		return addAvatar(user);
 	}
 
@@ -108,6 +113,8 @@ final class UserService implements IUserService {
 	@Override
 	public void deleteUser (User user) {
 		ofy().delete().entity(user);
+		
+		SearchHelper.deleteSearch(getName() + user.id.toString());
 	}
 
 	/* (non-Javadoc)

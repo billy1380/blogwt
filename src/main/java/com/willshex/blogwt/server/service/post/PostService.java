@@ -102,7 +102,7 @@ final class PostService implements IPostService {
 
 		ArchiveEntryServiceProvider.provide().archivePost(post);
 
-		SearchHelper.indexDocument(toDocument(post));
+		// index
 
 		if (previousPost != null) {
 			updatePost(previousPost, null);
@@ -211,7 +211,7 @@ final class PostService implements IPostService {
 
 		ArchiveEntryServiceProvider.provide().archivePost(post);
 
-		SearchHelper.indexDocument(toDocument(post));
+		// index
 
 		if (previousPost != null) {
 			updatePost(previousPost, null);

@@ -61,6 +61,8 @@ final class PageService implements IPageService {
 
 		Key<Page> pageKey = ofy().save().entity(page).now();
 		page.id = Long.valueOf(pageKey.getId());
+		
+		// index
 
 		return page;
 	}
@@ -116,12 +118,17 @@ final class PageService implements IPageService {
 		}
 
 		ofy().save().entity(page).now();
+		
+		// index
+		
 		return page;
 	}
 
 	@Override
 	public void deletePage (Page page) {
 		ofy().delete().entity(page).now();
+
+		SearchHelper.deleteSearch(getName() + page.id.toString());
 	}
 
 	/* (non-Javadoc)

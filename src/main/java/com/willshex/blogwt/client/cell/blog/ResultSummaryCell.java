@@ -31,6 +31,10 @@ public class ResultSummaryCell extends AbstractCell<SearchResult> {
 
 		if (value.isPost()) {
 			POST_CELL.render(context, value.getPost(), sb);
+		} else if (value.isPage()) {
+			// render page with - value.getPage();
+		} else if (value.isUser()) {
+			// render user with  - value.getUser();
 		}
 
 	}
