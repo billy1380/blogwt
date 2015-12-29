@@ -155,4 +155,12 @@ public class SearchHelper {
 		return query.filter(field + " >=", text).filter(field + " <",
 				text + "\ufffd");
 	}
+
+	/**
+	 * @param name
+	 * @param id
+	 */
+	public static void queueToIndex (String name, Long id) {
+		
+	}
 }
