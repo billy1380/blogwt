@@ -55,7 +55,8 @@ final class UserService implements IUserService {
 	}
 
 	public User getUser (Long id) {
-		return addAvatar(ofy().load().type(User.class).id(id.longValue()).now());
+		return addAvatar(
+				ofy().load().type(User.class).id(id.longValue()).now());
 	}
 
 	/* (non-Javadoc)
@@ -88,8 +89,8 @@ final class UserService implements IUserService {
 		Key<User> key = ofy().save().entity(user).now();
 		user.id = Long.valueOf(key.getId());
 
-		// index
-		
+		SearchHelper.queueToIndex(getName(), user.id);
+
 		return user;
 	}
 
@@ -100,9 +101,9 @@ final class UserService implements IUserService {
 	@Override
 	public User updateUser (User user) {
 		ofy().save().entity(user).now();
-		
-		// index
-		
+
+		SearchHelper.queueToIndex(getName(), user.id);
+
 		return addAvatar(user);
 	}
 
@@ -113,7 +114,7 @@ final class UserService implements IUserService {
 	@Override
 	public void deleteUser (User user) {
 		ofy().delete().entity(user);
-		
+
 		SearchHelper.deleteSearch(getName() + user.id.toString());
 	}
 
@@ -192,8 +193,8 @@ final class UserService implements IUserService {
 	}
 
 	private User addAvatar (User user) {
-		return user == null ? null : user.avatar(UserHelper
-				.emailAvatar(user.email));
+		return user == null ? null
+				: user.avatar(UserHelper.emailAvatar(user.email));
 	}
 
 	@Override
@@ -226,8 +227,7 @@ final class UserService implements IUserService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.user.IUserService#getUsernameUser
+	 * @see com.willshex.blogwt.server.service.user.IUserService#getUsernameUser
 	 * (java.lang.String) */
 	@Override
 	public User getUsernameUser (String username) {
@@ -237,14 +237,12 @@ final class UserService implements IUserService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.user.IUserService#verifyPassword(
+	 * @see com.willshex.blogwt.server.service.user.IUserService#verifyPassword(
 	 * com.willshex.blogwt.shared.api.datatype.User, java.lang.String) */
 	@Override
 	public Boolean verifyPassword (User user, String password) {
-		return Boolean.valueOf(user != null
-				&& StringUtils.sha1Hash(password + getSalt()).equals(
-						user.password));
+		return Boolean.valueOf(user != null && StringUtils
+				.sha1Hash(password + getSalt()).equals(user.password));
 	}
 
 	/* (non-Javadoc)
@@ -290,8 +288,8 @@ final class UserService implements IUserService {
 						current.add(permission.id);
 					}
 
-					latest.permissionKeys = PersistenceService.idsToKeys(
-							Permission.class, current);
+					latest.permissionKeys = PersistenceService
+							.idsToKeys(Permission.class, current);
 				}
 
 				if (latest.roleKeys != null) {
@@ -352,8 +350,8 @@ final class UserService implements IUserService {
 						}
 					}
 
-					latest.permissionKeys = PersistenceService.idsToKeys(
-							Permission.class, current);
+					latest.permissionKeys = PersistenceService
+							.idsToKeys(Permission.class, current);
 				}
 
 				if (latest.roleKeys != null) {
@@ -417,8 +415,8 @@ final class UserService implements IUserService {
 
 		Map<String, Object> values = new HashMap<String, Object>();
 
-		String url = ServletHelper.constructBaseUrl(ContextAwareServlet.REQUEST
-				.get());
+		String url = ServletHelper
+				.constructBaseUrl(ContextAwareServlet.REQUEST.get());
 
 		values.put("user", user);
 		values.put("link",
@@ -474,53 +472,32 @@ final class UserService implements IUserService {
 
 		if (user != null) {
 			Document.Builder documentBuilder = Document.newBuilder();
-			documentBuilder
-					.setId(getName() + user.id.toString())
-					.addField(
-							Field.newBuilder().setName("username")
-									.setAtom(user.username))
-					.addField(
-							Field.newBuilder().setName("name")
-									.setText(UserHelper.name(user)))
-					.addField(
-							Field.newBuilder().setName("forename")
-									.setText(user.forename))
-					.addField(
-							Field.newBuilder().setName("surname")
-									.setText(user.surname))
-					.addField(
-							Field.newBuilder().setName("email")
-									.setText(user.email))
-					.addField(
-							Field.newBuilder().setName("created")
-									.setDate(user.created))
-					.addField(
-							Field.newBuilder().setName("group")
-									.setText(user.group))
-					.addField(
-							Field.newBuilder().setName("summary")
-									.setText(user.summary));
+			documentBuilder.setId(getName() + user.id.toString())
+					.addField(Field.newBuilder().setName("username")
+							.setAtom(user.username))
+					.addField(Field.newBuilder().setName("name")
+							.setText(UserHelper.name(user)))
+					.addField(Field.newBuilder().setName("forename")
+							.setText(user.forename))
+					.addField(Field.newBuilder().setName("surname")
+							.setText(user.surname))
+					.addField(Field.newBuilder().setName("email")
+							.setText(user.email))
+					.addField(Field.newBuilder().setName("created")
+							.setDate(user.created))
+					.addField(Field.newBuilder().setName("group")
+							.setText(user.group))
+					.addField(Field.newBuilder().setName("summary")
+							.setText(user.summary));
 
-			if (user.roleKeys != null) {
-				if (user.roles == null) {
-					user.roles = RoleServiceProvider.provide().getIdRolesBatch(
-							PersistenceService.keysToIds(user.roleKeys));
-				}
-
+			if (user.roles != null) {
 				for (Role role : user.roles) {
 					documentBuilder.addField(Field.newBuilder().setName("role")
 							.setText(role.name));
 				}
 			}
 
-			if (user.permissionKeys != null) {
-				if (user.permissions == null) {
-					user.permissions = PermissionServiceProvider.provide()
-							.getIdPermissionsBatch(
-									PersistenceService
-											.keysToIds(user.permissionKeys));
-				}
-
+			if (user.permissions == null) {
 				for (Permission permission : user.permissions) {
 					documentBuilder.addField(Field.newBuilder()
 							.setName("permission").setText(permission.name));
@@ -545,11 +522,34 @@ final class UserService implements IUserService {
 			users = getUsers(pager.start, pager.count, null, null);
 
 			for (User user : users) {
-				SearchHelper.indexDocument(toDocument(user));
+				SearchHelper.queueToIndex(getName(), user.id);
 			}
 
 			PagerHelper.moveForward(pager);
 		} while (users != null && users.size() >= pager.count.intValue());
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.user.IUserService#indexUser(java.lang.
+	 * Long) */
+	@Override
+	public void indexUser (Long id) {
+		User user = getUser(id);
+
+		if (user.roleKeys != null) {
+			user.roles = RoleServiceProvider.provide().getIdRolesBatch(
+					PersistenceService.keysToIds(user.roleKeys));
+		}
+
+		if (user.permissionKeys != null) {
+			user.permissions = PermissionServiceProvider.provide()
+					.getIdPermissionsBatch(
+							PersistenceService.keysToIds(user.permissionKeys));
+		}
+
+		SearchHelper.indexDocument(toDocument(user));
 	}
 
 }

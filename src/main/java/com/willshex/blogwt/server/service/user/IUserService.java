@@ -134,9 +134,15 @@ public interface IUserService extends IService {
 	 * @return
 	 */
 	public User getEmailUser (String email);
-	
+
 	/**
 	 * Index all
 	 */
-	public void indexAll();
+	public void indexAll ();
+
+	/**
+	 * Index user
+	 * @param id
+	 */
+	public void indexUser (Long id);
 }
