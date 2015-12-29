@@ -102,7 +102,7 @@ final class PostService implements IPostService {
 
 		ArchiveEntryServiceProvider.provide().archivePost(post);
 
-		// index
+		SearchHelper.queueToIndex(getName(), post.id);
 
 		if (previousPost != null) {
 			updatePost(previousPost, null);
@@ -203,7 +203,7 @@ final class PostService implements IPostService {
 
 		ArchiveEntryServiceProvider.provide().archivePost(post);
 
-		// index
+		SearchHelper.queueToIndex(getName(), post.id);
 
 		if (previousPost != null) {
 			updatePost(previousPost, null);
@@ -456,10 +456,7 @@ final class PostService implements IPostService {
 					pager.count, null, null);
 
 			for (Post post : posts) {
-				post.author = UserServiceProvider.provide()
-						.getUser(Long.valueOf(post.authorKey.getId()));
-
-				SearchHelper.indexDocument(toDocument(post));
+				SearchHelper.queueToIndex(getName(), post.id);
 			}
 
 			PagerHelper.moveForward(pager);
@@ -657,6 +654,11 @@ final class PostService implements IPostService {
 	@Override
 	public void indexPost (Long id) {
 		Post post = getPost(id);
+
+		if (post.authorKey != null) {
+			post.author = UserServiceProvider.provide()
+					.getUser(Long.valueOf(post.authorKey.getId()));
+		}
 
 		if (post.contentKey != null) {
 			post.content = ofy().load().type(PostContent.class)
