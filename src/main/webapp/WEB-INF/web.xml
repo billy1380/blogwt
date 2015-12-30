@@ -59,6 +59,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-class>com.willshex.blogwt.server.api.search.SearchJsonServlet</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>Search Indexer</servlet-name>
+		<servlet-class>com.willshex.blogwt.server.SearchIndexServlet</servlet-class>
+	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>Blog API</servlet-name>
 		<url-pattern>/blog</url-pattern>
@@ -97,6 +102,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet-mapping>
 		<servlet-name>Feed</servlet-name>
 		<url-pattern>/feed</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Search Indexer</servlet-name>
+		<url-pattern>/searchindexer</url-pattern>
 	</servlet-mapping>
 
 	<!-- Objectify -->
