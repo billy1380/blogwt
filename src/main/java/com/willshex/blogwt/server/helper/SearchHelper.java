@@ -19,6 +19,11 @@ import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchService;
 import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.search.StatusCode;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
@@ -35,6 +40,9 @@ public class SearchHelper {
 
 	private final static String ALL_INDEX_NAME = "all";
 	private static final int SEARCH_LIMIT = 3;
+	private static final String INDEX_SEARCH_URL = "searchindexer";
+	private static final String ENTITY_NAME_ID = "id";
+	private static final String ENTITY_ID_KEY = "name";
 	private static SearchService searchService;
 
 	public static void indexDocument (Document document) {
@@ -161,6 +169,21 @@ public class SearchHelper {
 	 * @param id
 	 */
 	public static void queueToIndex (String name, Long id) {
-		
+		Queue queue = QueueFactory.getDefaultQueue();
+
+		TaskOptions options = TaskOptions.Builder.withMethod(Method.POST)
+				.url(INDEX_SEARCH_URL).param(ENTITY_NAME_ID, name)
+				.param(ENTITY_ID_KEY, id.toString());
+
+		try {
+			queue.add(options);
+		} catch (TransientFailureException ex) {
+			// retry once
+			try {
+				queue.add(options);
+			} catch (TransientFailureException reEx) {
+				// failed :( what can you do
+			}
+		}
 	}
 }
