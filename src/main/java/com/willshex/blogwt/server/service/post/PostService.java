@@ -666,6 +666,5 @@ final class PostService implements IPostService {
 		}
 
 		SearchHelper.indexDocument(toDocument(post));
-
 	}
 }

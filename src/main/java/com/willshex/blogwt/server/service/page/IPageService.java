@@ -64,7 +64,8 @@ public interface IPageService extends IService {
 	 * @return
 	 */
 	public List<Page> getPages (Boolean includePostContents, Integer start,
-			Integer count, PageSortType sortBy, SortDirectionType sortDirection);
+			Integer count, PageSortType sortBy,
+			SortDirectionType sortDirection);
 
 	/**
 	 * 
@@ -84,5 +85,11 @@ public interface IPageService extends IService {
 	 * Index all
 	 */
 	public void indexAll ();
+
+	/**
+	 * Index page
+	 * @param id
+	 */
+	public void indexPage (Long id);
 
 }

@@ -61,7 +61,7 @@ final class PageService implements IPageService {
 
 		Key<Page> pageKey = ofy().save().entity(page).now();
 		page.id = Long.valueOf(pageKey.getId());
-		
+
 		// index
 
 		return page;
@@ -118,9 +118,9 @@ final class PageService implements IPageService {
 		}
 
 		ofy().save().entity(page).now();
-		
+
 		// index
-		
+
 		return page;
 	}
 
@@ -311,5 +311,22 @@ final class PageService implements IPageService {
 		}
 
 		return pages;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.page.IPageService#indexPage(java.lang.
+	 * Long) */
+	@Override
+	public void indexPage (Long id) {
+		Page page = getPage(id);
+
+		page.owner = UserServiceProvider.provide()
+				.getUser(Long.valueOf(page.ownerKey.getId()));
+
+		populatePostContents(Arrays.asList(page));
+
+		SearchHelper.indexDocument(toDocument(page));
 	}
 }
