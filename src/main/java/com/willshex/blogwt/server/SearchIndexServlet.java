@@ -8,6 +8,8 @@
 package com.willshex.blogwt.server;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
@@ -26,6 +28,8 @@ import com.willshex.service.ContextAwareServlet;
 public class SearchIndexServlet extends ContextAwareServlet {
 
 	private static final long serialVersionUID = 7829996840917475240L;
+	private static final Logger LOG = Logger
+			.getLogger(SearchIndexServlet.class.getName());
 
 	/* (non-Javadoc)
 	 * 
@@ -33,6 +37,30 @@ public class SearchIndexServlet extends ContextAwareServlet {
 	@Override
 	protected void doGet () throws ServletException, IOException {
 		super.doGet();
+
+		String appEngineQueue = REQUEST.get()
+				.getHeader("X-AppEngine-QueueName");
+
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.log(Level.FINE,
+					String.format("appEngineQueue is [%s]", appEngineQueue));
+		}
+
+		boolean isQueue = appEngineQueue != null
+				&& "default".toLowerCase().equals(appEngineQueue.toLowerCase());
+
+		if (!isQueue) {
+			RESPONSE.get().setStatus(401);
+			RESPONSE.get().getOutputStream().print("failure");
+			LOG.log(Level.WARNING,
+					"Attempt to run script directly, this is not permitted");
+			return;
+		}
+
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.log(Level.FINE, String.format(
+					"Call from [%s] allowed to proceed", appEngineQueue));
+		}
 
 		String nameParam = REQUEST.get().getParameter("name");
 		String idParam = REQUEST.get().getParameter("id");
