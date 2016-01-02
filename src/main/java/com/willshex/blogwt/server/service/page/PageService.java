@@ -62,7 +62,7 @@ final class PageService implements IPageService {
 		Key<Page> pageKey = ofy().save().entity(page).now();
 		page.id = Long.valueOf(pageKey.getId());
 
-		// index
+		SearchHelper.queueToIndex(getName(), page.id);
 
 		return page;
 	}
@@ -119,7 +119,7 @@ final class PageService implements IPageService {
 
 		ofy().save().entity(page).now();
 
-		// index
+		SearchHelper.queueToIndex(getName(), page.id);
 
 		return page;
 	}
