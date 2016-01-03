@@ -452,7 +452,7 @@ final class PostService implements IPostService {
 
 		List<Post> posts = null;
 		do {
-			posts = getPosts(Boolean.FALSE, Boolean.TRUE, pager.start,
+			posts = getPosts(Boolean.FALSE, Boolean.FALSE, pager.start,
 					pager.count, null, null);
 
 			for (Post post : posts) {
