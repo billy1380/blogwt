@@ -38,11 +38,12 @@ import com.willshex.blogwt.shared.api.datatype.User;
  */
 public class SearchHelper {
 
+	public static final String ENTITY_NAME_KEY = "name";
+	public static final String ENTITY_ID_KEY = "id";
+	
 	private final static String ALL_INDEX_NAME = "all";
 	private static final int SEARCH_LIMIT = 3;
-	private static final String INDEX_SEARCH_URL = "searchindexer";
-	private static final String ENTITY_NAME_ID = "id";
-	private static final String ENTITY_ID_KEY = "name";
+	private static final String INDEX_SEARCH_URL = "/searchindexer";
 	private static SearchService searchService;
 
 	public static void indexDocument (Document document) {
@@ -172,7 +173,7 @@ public class SearchHelper {
 		Queue queue = QueueFactory.getDefaultQueue();
 
 		TaskOptions options = TaskOptions.Builder.withMethod(Method.POST)
-				.url(INDEX_SEARCH_URL).param(ENTITY_NAME_ID, name)
+				.url(INDEX_SEARCH_URL).param(ENTITY_NAME_KEY, name)
 				.param(ENTITY_ID_KEY, id.toString());
 
 		try {
