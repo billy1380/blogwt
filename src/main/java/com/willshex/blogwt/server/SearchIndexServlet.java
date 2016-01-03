@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
+import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.page.IPageService;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.post.IPostService;
@@ -62,8 +63,9 @@ public class SearchIndexServlet extends ContextAwareServlet {
 					"Call from [%s] allowed to proceed", appEngineQueue));
 		}
 
-		String nameParam = REQUEST.get().getParameter("name");
-		String idParam = REQUEST.get().getParameter("id");
+		String nameParam = REQUEST.get()
+				.getParameter(SearchHelper.ENTITY_NAME_KEY);
+		String idParam = REQUEST.get().getParameter(SearchHelper.ENTITY_ID_KEY);
 
 		if (nameParam != null && idParam != null) {
 			Long id = Long.valueOf(idParam);
