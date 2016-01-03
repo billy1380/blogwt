@@ -249,13 +249,11 @@ final class PageService implements IPageService {
 
 		List<Page> pages = null;
 		do {
-			pages = getPages(Boolean.TRUE, pager.start, pager.count, null,
+			pages = getPages(Boolean.FALSE, pager.start, pager.count, null,
 					null);
 
 			for (Page page : pages) {
-				page.owner = UserServiceProvider.provide()
-						.getUser(Long.valueOf(page.ownerKey.getId()));
-				SearchHelper.indexDocument(toDocument(page));
+				SearchHelper.queueToIndex(getName(), page.id);
 			}
 
 			PagerHelper.moveForward(pager);
