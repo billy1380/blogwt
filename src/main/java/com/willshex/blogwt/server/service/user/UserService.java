@@ -497,7 +497,7 @@ final class UserService implements IUserService {
 				}
 			}
 
-			if (user.permissions == null) {
+			if (user.permissions != null) {
 				for (Permission permission : user.permissions) {
 					documentBuilder.addField(Field.newBuilder()
 							.setName("permission").setText(permission.name));
