@@ -17,6 +17,7 @@ import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
+import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.search.call.SearchAllRequest;
@@ -28,8 +29,8 @@ import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public final class SearchApi extends ActionHandler {
-	private static final Logger LOG = Logger.getLogger(SearchApi.class
-			.getName());
+	private static final Logger LOG = Logger
+			.getLogger(SearchApi.class.getName());
 
 	public SearchAllResponse searchAll (SearchAllRequest input) {
 		LOG.finer("Entering searchAll");
@@ -50,21 +51,34 @@ public final class SearchApi extends ActionHandler {
 
 			output.posts = SearchHelper.searchPosts(input.query);
 
+			Map<Key<User>, User> users = new HashMap<Key<User>, User>();
 			if (output.posts != null) {
-				Map<Key<User>, User> users = new HashMap<Key<User>, User>();
-
 				for (Post post : output.posts) {
 					if (users.get(post.authorKey) == null) {
-						users.put(post.authorKey, UserHelper
-								.stripSensitive(UserServiceProvider.provide()
-										.getUser(
-												Long.valueOf(post.authorKey
-														.getId()))));
+						users.put(post.authorKey, UserHelper.stripSensitive(
+								UserServiceProvider.provide().getUser(
+										Long.valueOf(post.authorKey.getId()))));
 					}
 
 					post.author = users.get(post.authorKey);
 				}
 			}
+
+			output.pages = SearchHelper.searchPages(input.query);
+
+			if (output.pages != null) {
+				for (Page page : output.pages) {
+					if (users.get(page.ownerKey) == null) {
+						users.put(page.ownerKey, UserHelper.stripSensitive(
+								UserServiceProvider.provide().getUser(
+										Long.valueOf(page.ownerKey.getId()))));
+					}
+
+					page.owner = users.get(page.ownerKey);
+				}
+			}
+
+			output.users = SearchHelper.searchUsers(input.query);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
