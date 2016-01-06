@@ -71,7 +71,7 @@ class StaticPosts extends StaticTemplate {
 				body = post.summary;
 			}
 
-			link = "#" + PageType.PostDetailPageType
+			link = "/#" + PageType.PostDetailPageType
 					.asTargetHistoryToken(PostHelper.getSlug(post));
 
 			markup.append("<div><a href=\"");
