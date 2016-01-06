@@ -26,8 +26,7 @@ class StaticTag extends StaticPosts {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
+	 * @see com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
 	 * StringBuffer) */
 	@Override
 	protected void appendPage (StringBuffer markup) {
@@ -38,8 +37,8 @@ class StaticTag extends StaticPosts {
 
 			BlogApi api = new BlogApi();
 
-			GetPostsRequest input = input(GetPostsRequest.class).pager(
-					PagerHelper.createDefaultPager()).tag(tag);
+			GetPostsRequest input = input(GetPostsRequest.class)
+					.pager(PagerHelper.createDefaultPager()).tag(tag);
 
 			GetPostsResponse output = api.getPosts(input);
 
@@ -50,6 +49,23 @@ class StaticTag extends StaticPosts {
 				markup.append(output.error.toString());
 			}
 		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.page.StaticTemplate#title() */
+	@Override
+	protected String title () {
+		return "Tag '" + stack.getAction() + "'";
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.page.StaticPosts#canCreate() */
+	@Override
+	public boolean canCreate () {
+		return stack != null && stack.hasAction()
+				&& stack.getAction().length() != 0;
 	}
 
 }

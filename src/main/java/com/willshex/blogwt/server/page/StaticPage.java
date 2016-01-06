@@ -14,7 +14,6 @@ import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.blogwt.shared.page.Stack;
-import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
@@ -22,19 +21,72 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 class StaticPage extends StaticTemplate {
 
+	private String slug = null;
+	private GetPageResponse output;
+
 	public StaticPage (Stack stack) {
 		super(stack);
 	}
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
+	 * @see com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
 	 * StringBuffer) */
 	@Override
 	protected void appendPage (StringBuffer markup) {
-		String slug = null;
-		if (PageType.fromString(stack.getPage()) == PageType.PageDetailPageType) {
+		Page page = ensurePage();
+
+		if (page != null && page.posts != null) {
+			for (Post post : page.posts) {
+				if (post.content != null && post.content.body != null) {
+					markup.append("<a name=\"!");
+					markup.append(page.slug);
+					markup.append("/");
+					markup.append(post.slug);
+					markup.append("\"></a>");
+					markup.append("<section><div>");
+					markup.append(process(post.content.body));
+					markup.append("</div></section>");
+				}
+			}
+		} else {
+			markup.append("Page not found.");
+		}
+	}
+
+	private Page ensurePage () {
+		if (output == null) {
+			lookupPage();
+		}
+
+		return output.page;
+	}
+
+	private void lookupPage () {
+		PageApi api = new PageApi();
+
+		GetPageRequest input = input(GetPageRequest.class)
+				.includePosts(Boolean.TRUE).page(new Page().slug(slug));
+
+		output = api.getPage(input);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.page.StaticTemplate#title() */
+	@Override
+	protected String title () {
+		Page page = ensurePage();
+		return page == null ? "Error" : page.title;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.page.StaticTemplate#isValidStack() */
+	@Override
+	public boolean canCreate () {
+		if (PageType
+				.fromString(stack.getPage()) == PageType.PageDetailPageType) {
 			slug = stack.getAction();
 		} else {
 			slug = stack.getPageSlug();
@@ -46,36 +98,7 @@ class StaticPage extends StaticTemplate {
 			}
 		}
 
-		if (slug == null) {
-			// show the blog page
-			new StaticPosts(stack).appendPage(markup);
-		} else {
-			PageApi api = new PageApi();
-
-			GetPageRequest input = input(GetPageRequest.class).includePosts(
-					Boolean.TRUE).page(new Page().slug(slug));
-
-			GetPageResponse output = api.getPage(input);
-
-			if (output.status == StatusType.StatusTypeSuccess
-					&& output.page != null && output.page.posts != null) {
-
-				for (Post post : output.page.posts) {
-					if (post.content != null && post.content.body != null) {
-						markup.append("<a name=\"!");
-						markup.append(output.page.slug);
-						markup.append("/");
-						markup.append(post.slug);
-						markup.append("\"></a>");
-						markup.append("<section><div>");
-						markup.append(process(post.content.body));
-						markup.append("</div></section>");
-					}
-				}
-			} else {
-				markup.append(output.error.toString());
-			}
-		}
+		return slug != null;
 	}
 
 }

@@ -69,17 +69,19 @@ abstract class StaticTemplate implements PageMarkup {
 	}
 
 	protected void appendHeader (StringBuffer markup) {
-		String title = PropertyServiceProvider.provide().getNamedProperty(
-				PropertyHelper.TITLE).value;
+		String title = PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.TITLE).value;
 		String extendedTitle = PropertyServiceProvider.provide()
 				.getNamedProperty(PropertyHelper.EXTENDED_TITLE).value;
 
-		markup.append("<html><head><link rel=\"alternate\" type=\"application/rss+xml\" title=\"");
+		markup.append(
+				"<html><head><link rel=\"alternate\" type=\"application/rss+xml\" title=\"");
 		markup.append(title);
-		markup.append(" (RSS feed)\" href=\"/feed\"><link rel=\"icon\" href=\"");
+		markup.append(
+				" (RSS feed)\" href=\"/feed\"><link rel=\"icon\" href=\"");
 		markup.append("{favicon}");
 		markup.append("\" type=\"image/x-icon\"><title>");
-		markup.append(title);
+		markup.append(title + " - " + title());
 		markup.append("</title></head><body>");
 		markup.append("<h1>");
 		markup.append(title);
@@ -92,9 +94,9 @@ abstract class StaticTemplate implements PageMarkup {
 	}
 
 	private void appendNavigationLinks (StringBuffer markup) {
-		List<Page> pages = PageServiceProvider.provide().getPages(
-				Boolean.FALSE, Integer.valueOf(0), null,
-				PageSortType.PageSortTypePriority, null);
+		List<Page> pages = PageServiceProvider.provide().getPages(Boolean.FALSE,
+				Integer.valueOf(0), null, PageSortType.PageSortTypePriority,
+				null);
 
 		if (pages != null) {
 			markup.append("<ul>");
@@ -109,15 +111,16 @@ abstract class StaticTemplate implements PageMarkup {
 	}
 
 	protected void appendFooter (StringBuffer markup) {
-		String copyright = PropertyServiceProvider.provide().getNamedProperty(
-				PropertyHelper.COPYRIGHT_URL).value;
+		String copyright = PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.COPYRIGHT_URL).value;
 		String copyrightHolder = PropertyServiceProvider.provide()
 				.getNamedProperty(PropertyHelper.COPYRIGHT_HOLDER).value;
 
-		String title = PropertyServiceProvider.provide().getNamedProperty(
-				PropertyHelper.TITLE).value;
+		String title = PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.TITLE).value;
 
-		markup.append("<footer class=\"footer\"> <div class=\"container\">Copyright &copy; <a href=\"");
+		markup.append(
+				"<footer class=\"footer\"> <div class=\"container\">Copyright &copy; <a href=\"");
 		markup.append(copyright);
 		markup.append("\" target=\"_blank\">");
 		markup.append(copyrightHolder);
@@ -141,5 +144,7 @@ abstract class StaticTemplate implements PageMarkup {
 	}
 
 	protected abstract void appendPage (StringBuffer markup);
+
+	protected abstract String title ();
 
 }

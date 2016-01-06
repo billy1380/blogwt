@@ -16,6 +16,8 @@ import com.willshex.blogwt.shared.page.Stack;
  */
 public class PageMarkupFactory {
 
+	private static PageMarkup POSTS = new StaticPosts(null);
+
 	public static PageMarkup createFromStack (Stack stack) {
 		PageType pageType = PageType.fromString(stack.getPage());
 		pageType = (pageType == null ? PageType.PageDetailPageType : pageType);
@@ -38,7 +40,7 @@ public class PageMarkupFactory {
 			break;
 		}
 
-		return pageMarkup;
+		return pageMarkup.canCreate() ? pageMarkup : POSTS;
 	}
 
 }

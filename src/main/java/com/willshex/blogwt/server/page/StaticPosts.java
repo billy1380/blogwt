@@ -37,8 +37,7 @@ class StaticPosts extends StaticTemplate {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
+	 * @see com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
 	 * StringBuffer) */
 	@Override
 	protected void appendPage (StringBuffer markup) {
@@ -46,9 +45,9 @@ class StaticPosts extends StaticTemplate {
 
 		BlogApi api = new BlogApi();
 
-		GetPostsRequest input = input(GetPostsRequest.class).pager(
-				PagerHelper.createDefaultPager().sortBy(
-						PostSortType.PostSortTypePublished.toString()));
+		GetPostsRequest input = input(GetPostsRequest.class)
+				.pager(PagerHelper.createDefaultPager()
+						.sortBy(PostSortType.PostSortTypePublished.toString()));
 
 		GetPostsResponse output = api.getPosts(input);
 
@@ -72,9 +71,8 @@ class StaticPosts extends StaticTemplate {
 				body = post.summary;
 			}
 
-			link = "#"
-					+ PageType.PostDetailPageType
-							.asTargetHistoryToken(PostHelper.getSlug(post));
+			link = "#" + PageType.PostDetailPageType
+					.asTargetHistoryToken(PostHelper.getSlug(post));
 
 			markup.append("<div><a href=\"");
 			markup.append(link);
@@ -94,6 +92,22 @@ class StaticPosts extends StaticTemplate {
 			markup.append(link);
 			markup.append("\">Read More</a></div>");
 		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.page.StaticTemplate#title() */
+	@Override
+	protected String title () {
+		return "Blog";
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.page.PageMarkup#canCreate() */
+	@Override
+	public boolean canCreate () {
+		return true;
 	}
 
 }

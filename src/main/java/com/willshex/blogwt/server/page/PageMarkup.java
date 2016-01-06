@@ -7,7 +7,6 @@
 //
 package com.willshex.blogwt.server.page;
 
-
 /**
  * @author William Shakour (billy1380)
  *
@@ -16,4 +15,5 @@ public interface PageMarkup {
 
 	String asString ();
 
+	boolean canCreate ();
 }
