@@ -1,6 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with field="name" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="username" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="avatar" type="com.google.gwt.safehtml.shared.SafeUri" />
+	<ui:with field="summary" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:style>
 	
 	</ui:style>
