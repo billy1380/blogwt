@@ -6,6 +6,9 @@
 	
 	</ui:style>
 	<div>
-		<ui:safehtml from="{title}" />
+		<div>
+			<ui:safehtml from="{title}" />
+		</div>
+		<a href="{link}">View Page</a>
 	</div>
 </ui:UiBinder> 
