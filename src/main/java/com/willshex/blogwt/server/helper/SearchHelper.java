@@ -40,7 +40,7 @@ public class SearchHelper {
 
 	public static final String ENTITY_NAME_KEY = "name";
 	public static final String ENTITY_ID_KEY = "id";
-	
+
 	private final static String ALL_INDEX_NAME = "all";
 	private static final int SEARCH_LIMIT = 3;
 	private static final String INDEX_SEARCH_URL = "/searchindexer";
@@ -78,15 +78,15 @@ public class SearchHelper {
 		String id;
 		Post post;
 		int limit = SEARCH_LIMIT;
-		final String postName = PostServiceProvider.provide().getName();
+		final String postServiceName = PostServiceProvider.provide().getName();
 		for (ScoredDocument scoredDocument : matches) {
 			if (limit == 0) {
 				break;
 			}
 
-			if ((id = scoredDocument.getId()).startsWith(postName)) {
+			if ((id = scoredDocument.getId()).startsWith(postServiceName)) {
 				post = PostServiceProvider.provide()
-						.getPost(Long.valueOf(id.replace(postName, "")));
+						.getPost(Long.valueOf(id.replace(postServiceName, "")));
 				if (post != null) {
 					posts.add(post);
 				}
@@ -104,15 +104,15 @@ public class SearchHelper {
 		String id;
 		Page page;
 		int limit = SEARCH_LIMIT;
-		final String pageName = PageServiceProvider.provide().getName();
+		final String pageServiceName = PageServiceProvider.provide().getName();
 		for (ScoredDocument scoredDocument : matches) {
 			if (limit == 0) {
 				break;
 			}
 
-			if ((id = scoredDocument.getId()).startsWith(pageName)) {
+			if ((id = scoredDocument.getId()).startsWith(pageServiceName)) {
 				page = PageServiceProvider.provide()
-						.getPage(Long.valueOf(id.replace(pageName, "")));
+						.getPage(Long.valueOf(id.replace(pageServiceName, "")));
 				if (page != null) {
 					pages.add(page);
 				}
@@ -130,15 +130,15 @@ public class SearchHelper {
 		String id;
 		User user;
 		int limit = SEARCH_LIMIT;
-		final String userName = PostServiceProvider.provide().getName();
+		final String userServiceName = UserServiceProvider.provide().getName();
 		for (ScoredDocument scoredDocument : matches) {
 			if (limit == 0) {
 				break;
 			}
 
-			if ((id = scoredDocument.getId()).startsWith(userName)) {
+			if ((id = scoredDocument.getId()).startsWith(userServiceName)) {
 				user = UserServiceProvider.provide()
-						.getUser(Long.valueOf(id.replace(userName, "")));
+						.getUser(Long.valueOf(id.replace(userServiceName, "")));
 				if (user != null) {
 					users.add(user);
 				}
