@@ -193,7 +193,8 @@ final class UserService implements IUserService {
 	}
 
 	private User addAvatar (User user) {
-		return user == null ? null
+		return (user == null || user.email == null)
+				? (user.avatar != null ? user : null)
 				: user.avatar(UserHelper.emailAvatar(user.email));
 	}
 
