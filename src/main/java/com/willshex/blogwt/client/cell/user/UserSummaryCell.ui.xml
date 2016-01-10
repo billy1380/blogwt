@@ -5,20 +5,29 @@
 	<ui:with field="avatar" type="com.google.gwt.safehtml.shared.SafeUri" />
 	<ui:with field="summary" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:style>
+	.smaller-top-margin {
+		margin-top: 0px;
+	}
 	
+	.right {
+		margin-right: 10px;
+	}
+	
+	.top {
+		margin-top: 20px;
+	}
 	</ui:style>
-	<div>
-		<div class="col-sm-4">
-			<img class="img-circle img-responsive center-block" src="{avatar}" />
-			<h4 class="text-center">
-				<ui:safehtml from="{name}" />
-			</h4>
-			<p class="text-muted text-center">
-				<ui:safehtml from="{username}" />
-			</p>
+	<div class="row {style.top}">
+		<div class="col-sm-3">
+			<img class="img-circle img-responsive center-block {style.right}" src="{avatar}" />
 		</div>
-		<div class="col-sm-8">
-			<h3>About</h3>
+		<div class="col-sm-9">
+			<h3 class="{style.smaller-top-margin}">
+				<ui:safehtml from="{name}" />
+				<div class="small">
+					<ui:safehtml from="{username}" />
+				</div>
+			</h3>
 			<div>
 				<ui:safehtml from="{summary}" />
 			</div>
