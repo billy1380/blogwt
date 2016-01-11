@@ -44,12 +44,20 @@ import com.willshex.blogwt.shared.page.PageType;
 public class PageTypeHelper {
 	private static Page defaultPage = null;
 
-	public static final SafeUri PAGES_PAGE_HREF = asHref(PageType.PagesPageType);
-	public static final SafeUri PROPERTIES_PAGE_HREF = asHref(PageType.PropertiesPageType);
-	public static final SafeUri USERS_PAGE_HREF = asHref(PageType.UsersPageType);
-	public static final SafeUri ROLES_PAGE_HREF = asHref(PageType.RolesPageType);
-	public static final SafeUri PERMISSIONS_PAGE_HREF = asHref(PageType.PermissionsPageType);
-	public static final SafeUri RESOURCES_PAGE_HREF = asHref(PageType.ResourcesPageType);
+	public static final SafeUri PAGES_PAGE_HREF = asHref(
+			PageType.PagesPageType);
+	public static final SafeUri PROPERTIES_PAGE_HREF = asHref(
+			PageType.PropertiesPageType);
+	public static final SafeUri USERS_PAGE_HREF = asHref(
+			PageType.UsersPageType);
+	public static final SafeUri ROLES_PAGE_HREF = asHref(
+			PageType.RolesPageType);
+	public static final SafeUri PERMISSIONS_PAGE_HREF = asHref(
+			PageType.PermissionsPageType);
+	public static final SafeUri RESOURCES_PAGE_HREF = asHref(
+			PageType.ResourcesPageType);
+	public static final SafeUri POSTS_PAGE_HREF = asHref(
+			PageType.AllPostsPageType);
 
 	/**
 	 * 
@@ -124,6 +132,9 @@ public class PageTypeHelper {
 			break;
 		case WidgetTestPageType:
 			page = new WidgetTestPage();
+			break;
+		case AllPostsPageType:
+			page = new com.willshex.blogwt.client.page.admin.PostsPage();
 			break;
 		case PageDetailPageType:
 		default:
