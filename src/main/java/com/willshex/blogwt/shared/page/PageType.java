@@ -45,7 +45,8 @@ public enum PageType {
 	VerifyAccountPageType("verifyaccount", false),
 	ChangeAccessPageType("access", true),
 	EditResourcePageType("resourceedit", PermissionHelper.MANAGE_RESOURCES),
-	WidgetTestPageType("widgettest", true), ;
+	WidgetTestPageType("widgettest", true),
+	AllPostsPageType("posts", PermissionHelper.MANAGE_POSTS),;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -66,7 +67,8 @@ public enum PageType {
 		this.value = value;
 		this.requiresAuthentication = true;
 
-		if (requiredPermissionCode != null && requiredPermissionCode.length > 0) {
+		if (requiredPermissionCode != null
+				&& requiredPermissionCode.length > 0) {
 			requiredPermissions = new HashMap<String, Permission>();
 
 			Permission p;
@@ -122,13 +124,13 @@ public enum PageType {
 	}
 
 	public Collection<Permission> getRequiredPermissions () {
-		return requiredPermissions == null ? null : requiredPermissions
-				.values();
+		return requiredPermissions == null ? null
+				: requiredPermissions.values();
 	}
 
 	public Collection<String> getRequiredPermissionCodes () {
-		return requiredPermissions == null ? null : requiredPermissions
-				.keySet();
+		return requiredPermissions == null ? null
+				: requiredPermissions.keySet();
 	}
 
 	public boolean equals (String value) {

@@ -94,6 +94,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiField Anchor btnAdmin;
 	@UiField Element elAdminDropdown;
 	@UiField Element elPages;
+	@UiField Element elPosts;
 	@UiField Element elProperties;
 	@UiField Element elResources;
 	@UiField Element elRoles;
@@ -116,14 +117,14 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		initWidget(uiBinder.createAndBindUi(this));
 		Resources.RES.styles().ensureInjected();
 
-		String titleInNavBar = PropertyController.get().stringProperty(
-				PropertyHelper.TITLE_IN_NAVBAR);
+		String titleInNavBar = PropertyController.get()
+				.stringProperty(PropertyHelper.TITLE_IN_NAVBAR);
 
 		if (titleInNavBar == null
 				|| titleInNavBar.contains(PropertyHelper.LOGO_VALUE)) {
 			String title = PropertyController.get().title();
-			String logoImage = PropertyController.get().stringProperty(
-					PropertyHelper.SMALL_LOGO_URL);
+			String logoImage = PropertyController.get()
+					.stringProperty(PropertyHelper.SMALL_LOGO_URL);
 
 			if (logoImage != null
 					&& !PropertyHelper.NONE_VALUE.equalsIgnoreCase(logoImage)) {
@@ -144,8 +145,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	}
 
 	private void setupNavBarPages () {
-		String titleInNavBar = PropertyController.get().stringProperty(
-				PropertyHelper.TITLE_IN_NAVBAR);
+		String titleInNavBar = PropertyController.get()
+				.stringProperty(PropertyHelper.TITLE_IN_NAVBAR);
 
 		boolean removedHome = false;
 		if (titleInNavBar == null
@@ -188,21 +189,23 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 						} else {
 							possibleParents.put(page.id, page);
 							swapTitle(
-									PageTypeHelper.slugToTargetHistoryToken("pageid_"
-											+ page.id),
+									PageTypeHelper.slugToTargetHistoryToken(
+											"pageid_" + page.id),
 									HeaderTemplates.INSTANCE
-											.openableTitle(page.title), href);
+											.openableTitle(page.title),
+									href);
 						}
 					} else {
 						Page parent;
-						if ((parent = possibleParents.get(page.parent.id)) != null) {
+						if ((parent = possibleParents
+								.get(page.parent.id)) != null) {
 							el = getOpenable(PageTypeHelper
 									.slugToTargetHistoryToken(parent.slug));
 
 							if (el == null) {
-								el = getOpenable(PageTypeHelper
-										.slugToTargetHistoryToken("pageid_"
-												+ parent.id));
+								el = getOpenable(
+										PageTypeHelper.slugToTargetHistoryToken(
+												"pageid_" + parent.id));
 							}
 
 							if (el == null) {
@@ -212,9 +215,11 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 								if (el != null) {
 									el = convertItemToOpenable(
 											PageTypeHelper
-													.slugToTargetHistoryToken(parent.slug),
+													.slugToTargetHistoryToken(
+															parent.slug),
 											HeaderTemplates.INSTANCE
-													.openableTitle(parent.title));
+													.openableTitle(
+															parent.title));
 								}
 							}
 						} else {
@@ -240,12 +245,15 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		if (foundBrandPage || removedHome) {
 			if (!addedBlog) {
 				href = PageTypeHelper.asHref(PageType.PostsPageType);
-				addItem(elNavLeft, SafeHtmlUtils.fromSafeConstant("Blog"), href);
+				addItem(elNavLeft, SafeHtmlUtils.fromSafeConstant("Blog"),
+						href);
 			}
 		} else {
 			btnHome.setHref(PageTypeHelper.asHref(PageType.PostsPageType));
 		}
 
+		ensureItems().put(PageType.AllPostsPageType.asTargetHistoryToken(),
+				elPosts);
 		ensureItems().put(PageType.PagesPageType.asTargetHistoryToken(),
 				elPages);
 		ensureItems().put(PageType.PropertiesPageType.asTargetHistoryToken(),
@@ -329,8 +337,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	private Element addOpenable (Element parent, SafeHtml title, SafeUri href) {
 		String key = href.asString().replaceFirst("#", "");
 		final Element got;
-		final Element element = (got = getOpenable(key)) == null ? Document
-				.get().createLIElement() : got;
+		final Element element = (got = getOpenable(key)) == null
+				? Document.get().createLIElement() : got;
 
 		element.setClassName("dropdown");
 		parent.appendChild(element);
@@ -383,12 +391,11 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		registration.add(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				this));
-		registration.add(RootPanel.get().addDomHandler(this,
-				ClickEvent.getType()));
 		registration
-				.add(DefaultEventBus.get().addHandlerToSource(
-						ChangeUserDetailsEventHandler.TYPE,
-						UserController.get(), this));
+				.add(RootPanel.get().addDomHandler(this, ClickEvent.getType()));
+		registration.add(DefaultEventBus.get().addHandlerToSource(
+				ChangeUserDetailsEventHandler.TYPE, UserController.get(),
+				this));
 
 		Session session = SessionController.get().session();
 		if (session != null && session.user != null) {
@@ -440,17 +447,18 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 			}
 		}
 
-		removeItem(PageTypeHelper.asHref(login ? PageType.LoginPageType
-				: PageType.LogoutPageType));
+		removeItem(PageTypeHelper.asHref(
+				login ? PageType.LoginPageType : PageType.LogoutPageType));
 
-		if (login
-				|| PropertyController.get().booleanProperty(
-						PropertyHelper.SHOW_SIGN_IN, true)) {
-			href = PageTypeHelper.asHref(login ? PageType.LogoutPageType
-					: PageType.LoginPageType);
-			addItem(elNavRight, HeaderTemplates.INSTANCE.glyphItem(
-					login ? "log-out" : "log-in", login ? "Sign Out"
-							: "Sign In"), href);
+		if (login || PropertyController.get()
+				.booleanProperty(PropertyHelper.SHOW_SIGN_IN, true)) {
+			href = PageTypeHelper.asHref(
+					login ? PageType.LogoutPageType : PageType.LoginPageType);
+			addItem(elNavRight,
+					HeaderTemplates.INSTANCE.glyphItem(
+							login ? "log-out" : "log-in",
+							login ? "Sign Out" : "Sign In"),
+					href);
 		}
 
 		addAdminNav(login);
@@ -460,6 +468,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		boolean addAdmin = false, isAdmin = false;
 
 		if (login) {
+			Permission managePosts = PermissionHelper
+					.create(PermissionHelper.MANAGE_POSTS);
 			Permission managePages = PermissionHelper
 					.create(PermissionHelper.MANAGE_PAGES);
 			Permission managePermissions = PermissionHelper
@@ -477,6 +487,13 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				elAdminDropdown.appendChild(elProperties);
 			} else {
 				elAdminDropdown.removeAllChildren();
+			}
+
+			if (isAdmin || SessionController.get().isAuthorised(managePosts)) {
+				addAdmin = true;
+				elAdminDropdown.appendChild(elPosts);
+			} else {
+				elPosts.removeFromParent();
 			}
 
 			if (isAdmin || SessionController.get().isAuthorised(managePages)) {
@@ -500,8 +517,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				elRoles.removeFromParent();
 			}
 
-			if (isAdmin
-					|| SessionController.get().isAuthorised(managePermissions)) {
+			if (isAdmin || SessionController.get()
+					.isAuthorised(managePermissions)) {
 				addAdmin = true;
 				elAdminDropdown.appendChild(elPermissions);
 			} else {
@@ -559,9 +576,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler#loginFailure
-	 * (com.willshex.blogwt.shared.api.user.call.LoginRequest,
+	 * @see com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler#
+	 * loginFailure (com.willshex.blogwt.shared.api.user.call.LoginRequest,
 	 * java.lang.Throwable) */
 	@Override
 	public void loginFailure (LoginRequest input, Throwable caught) {
@@ -622,8 +638,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler
+	 * @see com.willshex.blogwt.shared.api.user.call.event.
+	 * ChangeUserDetailsEventHandler
 	 * #changeUserDetailsSuccess(com.willshex.blogwt.shared.api.user.call.
 	 * ChangeUserDetailsRequest,
 	 * com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse) */
@@ -641,8 +657,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler
+	 * @see com.willshex.blogwt.shared.api.user.call.event.
+	 * ChangeUserDetailsEventHandler
 	 * #changeUserDetailsFailure(com.willshex.blogwt.shared.api.user.call.
 	 * ChangeUserDetailsRequest, java.lang.Throwable) */
 	@Override

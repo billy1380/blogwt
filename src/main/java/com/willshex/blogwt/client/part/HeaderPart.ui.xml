@@ -21,8 +21,7 @@
 					<a class="navbar-brand" ui:field="btnHome">
 						<span>
 							<g:Image altText="Blogwt" title="Blogwt" ui:field="imgLogo"
-								styleName="img-rounded {style.bottom}" width="20px"
-								height="20px" />
+								styleName="img-rounded {style.bottom}" width="20px" height="20px" />
 						</span>
 						<span ui:field="elName" class="text-capitalize">Blogwt</span>
 					</a>
@@ -36,6 +35,9 @@
 								<span class="caret" />
 							</g:Anchor>
 							<ul class="dropdown-menu" ui:field="elAdminDropdown">
+								<li ui:field="elPosts">
+									<a href="{POSTS_PAGE_HREF}">Posts</a>
+								</li>
 								<li ui:field="elPages">
 									<a href="{PAGES_PAGE_HREF}">Pages</a>
 								</li>
