@@ -201,7 +201,11 @@ final class PostService implements IPostService {
 			deleteFromTags(post, removedTags);
 		}
 
-		ArchiveEntryServiceProvider.provide().archivePost(post);
+		if (Boolean.TRUE.equals(post.listed)) {
+			ArchiveEntryServiceProvider.provide().archivePost(post);
+		} else {
+			deleteFromArchive(post);
+		}
 
 		SearchHelper.queueToIndex(getName(), post.id);
 
@@ -260,12 +264,9 @@ final class PostService implements IPostService {
 	 * @param post
 	 */
 	private void deleteFromArchive (Post post) {
-		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
-			ArchiveEntryServiceProvider.provide()
-					.deleteArchiveEntryPost(ArchiveEntryServiceProvider
-							.provide().getDateArchiveEntry(post.published),
-					post);
-		}
+		ArchiveEntryServiceProvider.provide()
+				.deleteArchiveEntryPost(ArchiveEntryServiceProvider.provide()
+						.getDateArchiveEntry(post.published), post);
 	}
 
 	/* (non-Javadoc)
@@ -410,8 +411,7 @@ final class PostService implements IPostService {
 	 * @param post
 	 */
 	private void updateTags (Post post) {
-		if (Boolean.TRUE.equals(post.listed) && post.published != null
-				&& post.tags != null) {
+		if (post.published != null && post.tags != null) {
 			Tag tag;
 			for (String name : post.tags) {
 				tag = TagServiceProvider.provide()
@@ -422,7 +422,11 @@ final class PostService implements IPostService {
 							new Tag().name(name).posts(Arrays.asList(post)));
 				}
 
-				TagServiceProvider.provide().addTagPost(tag, post);
+				if (Boolean.TRUE.equals(post.listed)) {
+					TagServiceProvider.provide().addTagPost(tag, post);
+				} else {
+					TagServiceProvider.provide().removeTagPost(tag, post);
+				}
 			}
 		}
 	}
