@@ -181,16 +181,24 @@ final class PostService implements IPostService {
 			ofy().save().entity(post.content).now();
 		}
 
-		Post previousPost = null;
-		// just been published
-		if (post.published != null && post.previousSlug == null
-				&& post.nextSlug == null) {
-			previousPost = getLastPublishedPost();
+		String previousSlug = null, nextSlug = null;
+		Post previousPost = null, nextPost = null;
 
-			if (previousPost != null) {
-				post.previousSlug = previousPost.slug;
-				previousPost.nextSlug = post.slug;
+		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
+			if (post.previousSlug == null && post.nextSlug == null) {
+				previousPost = getLastPublishedPost();
+
+				if (previousPost != null) {
+					post.previousSlug = previousPost.slug;
+					previousPost.nextSlug = post.slug;
+				}
 			}
+		} else {
+			previousSlug = post.previousSlug;
+			nextSlug = post.nextSlug;
+
+			post.previousSlug = null;
+			post.nextSlug = null;
 		}
 
 		ofy().save().entity(post).now();
@@ -205,6 +213,25 @@ final class PostService implements IPostService {
 			ArchiveEntryServiceProvider.provide().archivePost(post);
 		} else {
 			deleteFromArchive(post);
+
+			if (previousSlug != null && nextSlug != null) {
+				previousPost = getSlugPost(previousSlug);
+				nextPost = getSlugPost(nextSlug);
+
+				previousPost.nextSlug = nextPost.slug;
+				nextPost.previousSlug = previousPost.slug;
+
+				updatePost(previousPost, null);
+				updatePost(nextPost, null);
+			} else if (previousSlug != null) {
+				previousPost = getSlugPost(previousSlug);
+				previousPost.nextSlug = null;
+				updatePost(previousPost, null);
+			} else if (nextSlug != null) {
+				nextPost = getSlugPost(nextSlug);
+				nextPost.previousSlug = null;
+				updatePost(nextPost, null);
+			}
 		}
 
 		SearchHelper.queueToIndex(getName(), post.id);
@@ -229,7 +256,7 @@ final class PostService implements IPostService {
 		String previousSlug = null, nextSlug = null;
 		Post previousPost = null, nextPost = null;
 
-		if (post.published != null) {
+		if (post.published != null && Boolean.TRUE.equals(post.listed)) {
 			previousSlug = post.previousSlug;
 			nextSlug = post.nextSlug;
 		}
