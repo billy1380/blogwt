@@ -186,11 +186,24 @@ final class PostService implements IPostService {
 
 		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
 			if (post.previousSlug == null && post.nextSlug == null) {
-				previousPost = getLastPublishedPost();
+				previousPost = ofy().load().type(Post.class).order("-published")
+						.filter("listed =", true)
+						.filter("published <", post.published).limit(1).first()
+						.now();
+
+				nextPost = ofy().load().type(Post.class).order("published")
+						.filter("listed =", true)
+						.filter("published >", post.published).limit(1).first()
+						.now();
 
 				if (previousPost != null) {
 					post.previousSlug = previousPost.slug;
 					previousPost.nextSlug = post.slug;
+				}
+
+				if (nextPost != null) {
+					post.nextSlug = nextPost.slug;
+					nextPost.previousSlug = post.slug;
 				}
 			}
 		} else {
