@@ -186,15 +186,9 @@ final class PostService implements IPostService {
 
 		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
 			if (post.previousSlug == null && post.nextSlug == null) {
-				previousPost = ofy().load().type(Post.class).order("-published")
-						.filter("listed =", true)
-						.filter("published <", post.published).limit(1).first()
-						.now();
+				previousPost = getPreviousPost(post);
 
-				nextPost = ofy().load().type(Post.class).order("published")
-						.filter("listed =", true)
-						.filter("published >", post.published).limit(1).first()
-						.now();
+				nextPost = getNextPost(post);
 
 				if (previousPost != null) {
 					post.previousSlug = previousPost.slug;
@@ -254,6 +248,26 @@ final class PostService implements IPostService {
 		}
 
 		return post;
+	}
+
+	/**
+	 * @param post
+	 * @return
+	 */
+	private Post getNextPost (Post post) {
+		return ofy().load().type(Post.class).order("published")
+				.filter("listed =", true).filter("published >", post.published)
+				.limit(1).first().now();
+	}
+
+	/**
+	 * @param post
+	 * @return
+	 */
+	private Post getPreviousPost (Post post) {
+		return ofy().load().type(Post.class).order("-published")
+				.filter("listed =", true).filter("published <", post.published)
+				.limit(1).first().now();
 	}
 
 	/* (non-Javadoc)
