@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.client.markdown.plugin.part;
 
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
@@ -25,6 +27,20 @@ public class GalleryPart extends Composite {
 
 	public GalleryPart () {
 		initWidget(uiBinder.createAndBindUi(this));
+	}
+
+	/**
+	 * @param params
+	 */
+	public void setParams (Map<String, String> params) {
+
+	}
+
+	/**
+	 * @param line
+	 */
+	public void addImageWithLine (String line) {
+
 	}
 
 }
