@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:p="urn:import:com.willshex.blogwt.client.part">
+	xmlns:p="urn:import:com.willshex.blogwt.client.part" xmlns:p1="urn:import:com.willshex.blogwt.client.markdown.plugin.part">
 	<ui:import field="com.willshex.blogwt.client.Resources.RES" />
 	<ui:import field="com.willshex.blogwt.client.part.AlertBox.AlertBoxType.*" />
 	<ui:style>
@@ -33,6 +33,9 @@
 			detail="Some warning detail" />
 		<p:AlertBox type="{DangerAlertBoxType}" loading="true" canDismiss="true"
 			text="Danger" detail="Some danger detail" />
+
+		<h2>Gallery</h2>
+		<p1:GalleryPart ui:field="gallery" />
 
 	</g:HTMLPanel>
 </ui:UiBinder> 
