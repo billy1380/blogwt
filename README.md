@@ -14,3 +14,8 @@ I will put a road map shortly on the wiki, maybe even with a "how to".
 
 ##Demo
 I have previously had issues with discrepancies between the appengine sdk behaviour and production so to use for testing and also for demo purposes I there is a relatively up to date version of the project running __[here](http://blogwtproject.appspot.com "Blogwt demo")__ so go have a look.
+
+## Dependencies
+The project has a few dependencies on some code that I wrote a while ago and that is not open source. The source is nothing special and the only reason I have not open sourced it is laziness (well and maybe because of the package renaming issues too)
+
+Anyway, an [https://github.com/billy1380/blogwt/issues/21](issue) has been raised for this a while back. I am planning to adde a list of the libraries to this page and start checking them off shortly.
