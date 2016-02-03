@@ -22,7 +22,7 @@ import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
-import com.willshex.gson.json.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.InputValidationException;
 
 /**
  * @author billy1380

@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.permission;
 
-import com.spacehopperstudios.service.ServiceDiscovery;
+import com.willshex.service.ServiceDiscovery;
 
 final public class PermissionServiceProvider {
 

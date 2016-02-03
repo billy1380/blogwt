@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.session;
 
-import com.spacehopperstudios.service.IService;
+import com.willshex.service.IService;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
 

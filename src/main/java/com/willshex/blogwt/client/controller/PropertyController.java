@@ -35,7 +35,7 @@ import com.willshex.blogwt.shared.api.blog.call.event.UpdatePropertiesEventHandl
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)

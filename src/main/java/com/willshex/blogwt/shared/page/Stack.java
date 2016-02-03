@@ -9,7 +9,7 @@ package com.willshex.blogwt.shared.page;
 
 import java.util.Arrays;
 
-import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.utility.StringUtils;
 
 /**
  * @author William Shakour (billy1380)

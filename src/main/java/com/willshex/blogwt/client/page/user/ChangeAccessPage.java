@@ -43,7 +43,7 @@ import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse;
 import com.willshex.blogwt.shared.api.user.call.event.ChangeUserAccessEventHandler;
 import com.willshex.blogwt.shared.page.Stack;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author billy1380

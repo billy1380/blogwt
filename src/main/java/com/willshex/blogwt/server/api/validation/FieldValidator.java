@@ -14,7 +14,7 @@ import com.willshex.blogwt.shared.api.datatype.FieldTypeType;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
-import com.willshex.gson.json.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.InputValidationException;
 
 /**
  * @author William Shakour (billy1380)

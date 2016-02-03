@@ -25,7 +25,7 @@ import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
 import com.willshex.blogwt.shared.api.user.call.VerifyAccountResponse;
 import com.willshex.blogwt.shared.api.user.call.event.VerifyAccountEventHandler;
 import com.willshex.blogwt.shared.page.Stack;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)

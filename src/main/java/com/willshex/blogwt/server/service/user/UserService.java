@@ -24,7 +24,6 @@ import com.google.appengine.api.search.Field;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
-import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.blogwt.server.helper.EmailHelper;
 import com.willshex.blogwt.server.helper.InflatorHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
@@ -43,7 +42,8 @@ import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
-import com.willshex.service.ContextAwareServlet;
+import com.willshex.server.ContextAwareServlet;
+import com.willshex.utility.StringUtils;
 
 final class UserService implements IUserService {
 

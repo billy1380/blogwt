@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.helper;
 
-import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.utility.StringUtils;
 import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;

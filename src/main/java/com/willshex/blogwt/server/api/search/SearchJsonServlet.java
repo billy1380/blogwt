@@ -9,7 +9,7 @@ package com.willshex.blogwt.server.api.search;
 
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.shared.api.search.call.SearchAllRequest;
-import com.willshex.gson.json.service.server.JsonServlet;
+import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
 public final class SearchJsonServlet extends JsonServlet {

@@ -13,7 +13,7 @@ import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.validation.ApiError;
-import com.willshex.gson.json.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.InputValidationException;
 
 /**
  * @author William Shakour (billy1380)

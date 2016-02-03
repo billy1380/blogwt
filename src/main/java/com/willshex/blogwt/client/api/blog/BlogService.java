@@ -41,8 +41,8 @@ import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdateResourceResponse;
-import com.willshex.gson.json.service.client.HttpException;
-import com.willshex.gson.json.service.client.JsonService;
+import com.willshex.gson.web.service.client.HttpException;
+import com.willshex.gson.web.service.client.JsonService;
 
 public final class BlogService extends JsonService {
 

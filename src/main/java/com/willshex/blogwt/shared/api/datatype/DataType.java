@@ -15,7 +15,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-import com.willshex.gson.json.shared.Jsonable;
+import com.willshex.gson.shared.Jsonable;
 
 public class DataType extends Jsonable {
 	@Id public Long id;

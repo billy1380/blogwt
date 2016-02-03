@@ -13,7 +13,7 @@ import java.util.List;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.validation.ApiError;
-import com.willshex.gson.json.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.InputValidationException;
 
 /**
  * @author William Shakour (billy1380)

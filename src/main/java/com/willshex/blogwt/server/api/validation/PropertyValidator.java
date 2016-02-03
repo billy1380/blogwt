@@ -5,13 +5,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.utility.StringUtils;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
-import com.willshex.gson.json.service.server.InputValidationException;
-import com.willshex.gson.json.service.server.ServiceException;
+import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.ServiceException;
 
 public class PropertyValidator {
 	private static final String type = Property.class.getSimpleName();

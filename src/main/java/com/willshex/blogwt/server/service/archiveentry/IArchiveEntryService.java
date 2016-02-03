@@ -12,9 +12,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import com.spacehopperstudios.service.IService;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.Post;
+import com.willshex.service.IService;
 
 public interface IArchiveEntryService extends IService {
 

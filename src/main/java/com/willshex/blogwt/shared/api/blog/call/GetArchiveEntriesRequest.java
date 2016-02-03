@@ -11,7 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.willshex.gson.json.service.shared.Request;
+import com.willshex.gson.web.service.shared.Request;
 
 public class GetArchiveEntriesRequest extends Request {
 	public Boolean includePosts;

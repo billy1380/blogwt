@@ -9,7 +9,7 @@ package com.willshex.blogwt.server.api.exception;
 
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.validation.ApiError;
-import com.willshex.gson.json.service.server.ServiceException;
+import com.willshex.gson.web.service.server.ServiceException;
 
 /**
  * @author William Shakour (billy1380)

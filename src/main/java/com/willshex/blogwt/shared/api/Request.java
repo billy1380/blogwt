@@ -13,7 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.willshex.blogwt.shared.api.datatype.Session;
 
-public class Request extends com.willshex.gson.json.service.shared.Request {
+public class Request extends com.willshex.gson.web.service.shared.Request {
 	public Session session;
 
 	@Override

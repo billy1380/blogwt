@@ -24,9 +24,9 @@ import com.willshex.blogwt.shared.api.search.call.SearchAllRequest;
 import com.willshex.blogwt.shared.api.search.call.SearchAllResponse;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.UserHelper;
-import com.willshex.gson.json.service.server.ActionHandler;
-import com.willshex.gson.json.service.server.InputValidationException;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.server.ActionHandler;
+import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.shared.StatusType;
 
 public final class SearchApi extends ActionHandler {
 	private static final Logger LOG = Logger

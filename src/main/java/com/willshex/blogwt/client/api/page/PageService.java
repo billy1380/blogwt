@@ -25,8 +25,8 @@ import com.willshex.blogwt.shared.api.page.call.SubmitFormRequest;
 import com.willshex.blogwt.shared.api.page.call.SubmitFormResponse;
 import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.UpdatePageResponse;
-import com.willshex.gson.json.service.client.HttpException;
-import com.willshex.gson.json.service.client.JsonService;
+import com.willshex.gson.web.service.client.HttpException;
+import com.willshex.gson.web.service.client.JsonService;
 
 public final class PageService extends JsonService {
 	public static final String PageMethodSubmitForm = "SubmitForm";

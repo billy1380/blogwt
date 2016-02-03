@@ -9,7 +9,7 @@ package com.willshex.blogwt.server.service.resource;
 
 import java.util.List;
 
-import com.spacehopperstudios.service.IService;
+import com.willshex.service.IService;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceSortType;

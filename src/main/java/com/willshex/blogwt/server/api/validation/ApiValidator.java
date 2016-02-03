@@ -10,9 +10,9 @@ package com.willshex.blogwt.server.api.validation;
 import java.lang.reflect.InvocationTargetException;
 
 import com.willshex.blogwt.shared.api.validation.ApiError;
-import com.willshex.gson.json.service.server.InputValidationException;
-import com.willshex.gson.json.service.server.ServiceException;
-import com.willshex.gson.json.service.shared.Request;
+import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.ServiceException;
+import com.willshex.gson.web.service.shared.Request;
 
 /**
  * @author William Shakour (billy1380)

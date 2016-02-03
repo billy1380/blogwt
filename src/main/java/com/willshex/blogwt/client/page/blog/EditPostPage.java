@@ -84,7 +84,7 @@ import com.willshex.blogwt.shared.helper.TagHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.blogwt.shared.page.Stack;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)

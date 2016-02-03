@@ -50,10 +50,10 @@ import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PostHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
-import com.willshex.gson.json.service.server.ActionHandler;
-import com.willshex.gson.json.service.server.InputValidationException;
-import com.willshex.gson.json.service.server.ServiceException;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.server.ActionHandler;
+import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.ServiceException;
+import com.willshex.gson.web.service.shared.StatusType;
 
 public final class PageApi extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(Page.class.getName());

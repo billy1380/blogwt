@@ -20,7 +20,7 @@ import com.willshex.blogwt.server.service.post.IPostService;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.user.IUserService;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
-import com.willshex.service.ContextAwareServlet;
+import com.willshex.server.ContextAwareServlet;
 
 /**
  * @author billy1380

@@ -15,8 +15,8 @@ import com.google.gwt.json.client.JSONException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.blogwt.shared.api.search.call.SearchAllRequest;
 import com.willshex.blogwt.shared.api.search.call.SearchAllResponse;
-import com.willshex.gson.json.service.client.HttpException;
-import com.willshex.gson.json.service.client.JsonService;
+import com.willshex.gson.web.service.client.HttpException;
+import com.willshex.gson.web.service.client.JsonService;
 
 public final class SearchService extends JsonService {
 	public static final String SearchMethodSearchAll = "SearchAll";

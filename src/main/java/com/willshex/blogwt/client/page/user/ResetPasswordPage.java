@@ -26,7 +26,7 @@ import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)

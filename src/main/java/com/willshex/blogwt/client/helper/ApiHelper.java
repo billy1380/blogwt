@@ -17,7 +17,7 @@ import com.willshex.blogwt.client.api.user.search.SearchService;
 import com.willshex.blogwt.shared.api.Request;
 import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.api.validation.ApiError;
-import com.willshex.gson.json.service.shared.Error;
+import com.willshex.gson.web.service.shared.Error;
 
 /**
  * @author billy1380

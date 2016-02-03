@@ -22,7 +22,7 @@ import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
-import com.willshex.gson.json.service.server.JsonServlet;
+import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
 public final class BlogJsonServlet extends JsonServlet {

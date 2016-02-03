@@ -47,7 +47,7 @@ import com.willshex.blogwt.shared.api.blog.call.event.UpdateResourceEventHandler
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
 import com.willshex.blogwt.shared.page.Stack;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author billy1380

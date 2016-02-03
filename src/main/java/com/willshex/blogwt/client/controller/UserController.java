@@ -64,7 +64,7 @@ import com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler.
 import com.willshex.blogwt.shared.api.user.call.event.VerifyAccountEventHandler.VerifyAccountFailure;
 import com.willshex.blogwt.shared.api.user.call.event.VerifyAccountEventHandler.VerifyAccountSuccess;
 import com.willshex.blogwt.shared.helper.PagerHelper;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)

@@ -12,10 +12,10 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.willshex.blogwt.shared.api.datatype.Session;
-import com.willshex.gson.json.service.shared.Error;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.shared.Error;
+import com.willshex.gson.web.service.shared.StatusType;
 
-public class Response extends com.willshex.gson.json.service.shared.Response {
+public class Response extends com.willshex.gson.web.service.shared.Response {
 	public Session session;
 
 	@Override

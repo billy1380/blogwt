@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.tag;
 
-import com.spacehopperstudios.service.ServiceDiscovery;
+import com.willshex.service.ServiceDiscovery;
 
 final public class TagServiceProvider {
 

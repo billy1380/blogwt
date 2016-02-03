@@ -23,7 +23,7 @@ import com.willshex.blogwt.shared.api.search.call.SearchAllRequest;
 import com.willshex.blogwt.shared.api.search.call.SearchAllResponse;
 import com.willshex.blogwt.shared.api.search.call.event.SearchAllEventHandler.SearchAllFailure;
 import com.willshex.blogwt.shared.api.search.call.event.SearchAllEventHandler.SearchAllSuccess;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)

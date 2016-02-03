@@ -10,7 +10,7 @@ package com.willshex.blogwt.server.service.tag;
 import java.util.Collection;
 import java.util.List;
 
-import com.spacehopperstudios.service.IService;
+import com.willshex.service.IService;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 

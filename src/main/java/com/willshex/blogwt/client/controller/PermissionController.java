@@ -26,7 +26,7 @@ import com.willshex.blogwt.shared.api.user.call.GetPermissionsResponse;
 import com.willshex.blogwt.shared.api.user.call.event.GetPermissionsEventHandler.GetPermissionsFailure;
 import com.willshex.blogwt.shared.api.user.call.event.GetPermissionsEventHandler.GetPermissionsSuccess;
 import com.willshex.blogwt.shared.helper.PagerHelper;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)

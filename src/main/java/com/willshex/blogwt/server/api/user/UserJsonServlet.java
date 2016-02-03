@@ -25,7 +25,7 @@ import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
 import com.willshex.blogwt.shared.api.user.call.RegisterUserRequest;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
-import com.willshex.gson.json.service.server.JsonServlet;
+import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
 public final class UserJsonServlet extends JsonServlet {

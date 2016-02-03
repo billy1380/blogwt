@@ -26,7 +26,7 @@ import com.willshex.blogwt.shared.api.user.call.GetRolesResponse;
 import com.willshex.blogwt.shared.api.user.call.event.GetRolesEventHandler.GetRolesFailure;
 import com.willshex.blogwt.shared.api.user.call.event.GetRolesEventHandler.GetRolesSuccess;
 import com.willshex.blogwt.shared.helper.PagerHelper;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)

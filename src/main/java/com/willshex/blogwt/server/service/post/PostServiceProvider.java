@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.post;
 
-import com.spacehopperstudios.service.ServiceDiscovery;
+import com.willshex.service.ServiceDiscovery;
 
 /**
  * 

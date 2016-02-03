@@ -21,7 +21,7 @@ import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.willshex.gson.json.service.client.HttpException;
+import com.willshex.gson.web.service.client.HttpException;
 
 /**
  * @author William Shakour (billy1380)

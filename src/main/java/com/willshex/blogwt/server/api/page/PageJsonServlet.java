@@ -14,7 +14,7 @@ import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
 import com.willshex.blogwt.shared.api.page.call.SubmitFormRequest;
 import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
-import com.willshex.gson.json.service.server.JsonServlet;
+import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
 public final class PageJsonServlet extends JsonServlet {

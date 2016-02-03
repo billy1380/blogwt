@@ -11,7 +11,7 @@ package com.willshex.blogwt.server.service.role;
 import java.util.Collection;
 import java.util.List;
 
-import com.spacehopperstudios.service.IService;
+import com.willshex.service.IService;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.RoleSortType;

@@ -41,8 +41,8 @@ import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.page.Stack;
-import com.willshex.gson.json.shared.Jsonable;
-import com.willshex.service.ContextAwareServlet;
+import com.willshex.gson.shared.Jsonable;
+import com.willshex.server.ContextAwareServlet;
 
 /**
  * @author William Shakour (billy1380)

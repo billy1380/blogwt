@@ -36,7 +36,7 @@ import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.service.ContextAwareServlet;
+import com.willshex.server.ContextAwareServlet;
 
 /**
  * @author William Shakour (billy1380)

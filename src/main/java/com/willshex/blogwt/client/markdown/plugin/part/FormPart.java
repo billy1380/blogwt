@@ -43,7 +43,7 @@ import com.willshex.blogwt.shared.api.datatype.Form;
 import com.willshex.blogwt.shared.api.page.call.SubmitFormRequest;
 import com.willshex.blogwt.shared.api.page.call.SubmitFormResponse;
 import com.willshex.blogwt.shared.api.page.call.event.SubmitFormEventHandler;
-import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)

@@ -12,7 +12,7 @@ import java.util.Collection;
 
 import javax.servlet.ServletException;
 
-import com.spacehopperstudios.utility.JsonUtils;
+import com.willshex.utility.JsonUtils;
 import com.willshex.blogwt.server.api.blog.BlogApi;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
@@ -27,7 +27,7 @@ import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
-import com.willshex.service.ContextAwareServlet;
+import com.willshex.server.ContextAwareServlet;
 
 /**
  * @author William Shakour (billy1380)
