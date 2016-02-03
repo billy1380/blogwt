@@ -272,36 +272,6 @@
 			<artifactId>gson-gwt</artifactId>
 			<version>1.0</version>
 		</dependency>
-		<dependency>
-			<groupId>spchopr</groupId>
-			<artifactId>gson</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>spchopr</groupId>
-			<artifactId>service</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>spchopr</groupId>
-			<artifactId>gson.json.service_appengine</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>spchopr</groupId>
-			<artifactId>gson.json.service</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>spchopr</groupId>
-			<artifactId>service_appengine</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>spchopr</groupId>
-			<artifactId>utility</artifactId>
-			<version>1.0</version>
-		</dependency>
 
 		<dependency>
 			<groupId>com.googlecode.objectify</groupId>
@@ -327,5 +297,35 @@
 			<version>1.5.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.willshex</groupId>
+			<artifactId>willshex-utility</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.willshex</groupId>
+			<artifactId>willshex-gson</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.willshex</groupId>
+			<artifactId>willshex-gson-web-service</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.willshex</groupId>
+			<artifactId>willshex-gson-web-service-appengine</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.willshex</groupId>
+			<artifactId>willshex-server</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.willshex</groupId>
+			<artifactId>willshex-service</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>
