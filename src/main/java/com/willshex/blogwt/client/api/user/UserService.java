@@ -13,6 +13,8 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.willshex.blogwt.shared.api.user.call.BlockUsersRequest;
+import com.willshex.blogwt.shared.api.user.call.BlockUsersResponse;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
@@ -21,6 +23,8 @@ import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameResponse;
+import com.willshex.blogwt.shared.api.user.call.FollowUsersRequest;
+import com.willshex.blogwt.shared.api.user.call.FollowUsersResponse;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordResponse;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
@@ -51,6 +55,92 @@ import com.willshex.gson.web.service.client.HttpException;
 import com.willshex.gson.web.service.client.JsonService;
 
 public final class UserService extends JsonService {
+
+	public static final String UserMethodBlockUsers = "BlockUsers";
+
+	public Request blockUsers (final BlockUsersRequest input,
+			final AsyncCallback<BlockUsersResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(UserMethodBlockUsers, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								BlockUsersResponse outputParameter = new BlockUsersResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(UserService.this,
+										UserMethodBlockUsers, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(UserService.this,
+										UserMethodBlockUsers, input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(UserService.this,
+									UserMethodBlockUsers, input, exception);
+						}
+					});
+			onCallStart(UserService.this, UserMethodBlockUsers, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(UserService.this, UserMethodBlockUsers, input,
+					exception);
+		}
+		return handle;
+	}
+
+	public static final String UserMethodFollowUsers = "FollowUsers";
+
+	public Request followUsers (final FollowUsersRequest input,
+			final AsyncCallback<FollowUsersResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(UserMethodFollowUsers, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								FollowUsersResponse outputParameter = new FollowUsersResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(UserService.this,
+										UserMethodFollowUsers, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(UserService.this,
+										UserMethodFollowUsers, input,
+										exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(UserService.this,
+									UserMethodFollowUsers, input, exception);
+						}
+					});
+			onCallStart(UserService.this, UserMethodFollowUsers, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(UserService.this, UserMethodFollowUsers, input,
+					exception);
+		}
+		return handle;
+	}
+
 	public static final String UserMethodChangeUserAccess = "ChangeUserAccess";
 
 	public Request changeUserAccess (final ChangeUserAccessRequest input,
@@ -199,13 +289,13 @@ public final class UserService extends JsonService {
 								parseResponse(response, outputParameter);
 								callback.onSuccess(outputParameter);
 								onCallSuccess(UserService.this,
-										UserMethodGetRolesAndPermissions,
-										input, outputParameter);
+										UserMethodGetRolesAndPermissions, input,
+										outputParameter);
 							} catch (JSONException | HttpException exception) {
 								callback.onFailure(exception);
 								onCallFailure(UserService.this,
-										UserMethodGetRolesAndPermissions,
-										input, exception);
+										UserMethodGetRolesAndPermissions, input,
+										exception);
 							}
 						}
 
@@ -394,7 +484,8 @@ public final class UserService extends JsonService {
 									UserMethodRegisterUser, input, exception);
 						}
 					});
-			onCallStart(UserService.this, UserMethodRegisterUser, input, handle);
+			onCallStart(UserService.this, UserMethodRegisterUser, input,
+					handle);
 		} catch (RequestException exception) {
 			callback.onFailure(exception);
 			onCallFailure(UserService.this, UserMethodRegisterUser, input,
@@ -691,7 +782,8 @@ public final class UserService extends JsonService {
 									UserMethodIsAuthorised, input, exception);
 						}
 					});
-			onCallStart(UserService.this, UserMethodIsAuthorised, input, handle);
+			onCallStart(UserService.this, UserMethodIsAuthorised, input,
+					handle);
 		} catch (RequestException exception) {
 			callback.onFailure(exception);
 			onCallFailure(UserService.this, UserMethodIsAuthorised, input,

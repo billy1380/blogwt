@@ -8,10 +8,12 @@
 package com.willshex.blogwt.server.api.user;
 
 import com.google.gson.JsonObject;
+import com.willshex.blogwt.shared.api.user.call.BlockUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.CheckUsernameRequest;
+import com.willshex.blogwt.shared.api.user.call.FollowUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.ForgotPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
 import com.willshex.blogwt.shared.api.user.call.GetPermissionsRequest;
@@ -101,6 +103,14 @@ public final class UserJsonServlet extends JsonServlet {
 			ForgotPasswordRequest input = new ForgotPasswordRequest();
 			input.fromJson(request);
 			output = service.forgotPassword(input).toString();
+		} else if ("BlockUsers".equals(action)) {
+			BlockUsersRequest input = new BlockUsersRequest();
+			input.fromJson(request);
+			output = service.blockUsers(input).toString();
+		} else if ("FollowUsers".equals(action)) {
+			FollowUsersRequest input = new FollowUsersRequest();
+			input.fromJson(request);
+			output = service.followUsers(input).toString();
 		}
 		return output;
 	}
