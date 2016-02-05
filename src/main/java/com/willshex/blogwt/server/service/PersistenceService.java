@@ -17,11 +17,14 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.DataType;
+import com.willshex.blogwt.shared.api.datatype.MetaNotification;
+import com.willshex.blogwt.shared.api.datatype.Notification;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.Property;
+import com.willshex.blogwt.shared.api.datatype.Relationship;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.Session;
@@ -45,6 +48,9 @@ public class PersistenceService {
 		factory().register(Page.class);
 		factory().register(Tag.class);
 		factory().register(ArchiveEntry.class);
+		factory().register(Notification.class);
+		factory().register(MetaNotification.class);
+		factory().register(Relationship.class);
 	}
 
 	public static Objectify ofy () {
@@ -105,8 +111,8 @@ public class PersistenceService {
 		try {
 			for (Object id : ids) {
 				if (id instanceof Key) {
-					list.add((T) t.newInstance().id(
-							Long.valueOf(((Key<T>) id).getId())));
+					list.add((T) t.newInstance()
+							.id(Long.valueOf(((Key<T>) id).getId())));
 				} else if (id instanceof Long) {
 					list.add((T) t.newInstance().id((Long) id));
 				}
