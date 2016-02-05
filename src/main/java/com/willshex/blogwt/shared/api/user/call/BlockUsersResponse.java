@@ -5,7 +5,7 @@
 //  Created by William Shakour on February 5, 2016.
 //  Copyright © 2016 WillShex Limited. All rights reserved.
 //
-package com.willshex.blogwt.shared.api.datatype;
+package com.willshex.blogwt.shared.api.user.call;
 
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.shared.api.Response;
