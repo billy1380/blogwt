@@ -1,6 +1,6 @@
 //  
 //  IRelationshipService.java
-//  xsdwsdl2code
+//  blogwt
 //
 //  Created by William Shakour on February 5, 2016.
 //  Copyright © 2016 WillShex Limited. All rights reserved.

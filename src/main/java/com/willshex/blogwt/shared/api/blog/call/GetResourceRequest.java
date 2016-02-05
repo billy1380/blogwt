@@ -1,6 +1,6 @@
 //  
 //  GetResourceRequest.java
-//  xsdwsdl2code
+//  blogwt
 //
 //  Created by William Shakour on October 30, 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.

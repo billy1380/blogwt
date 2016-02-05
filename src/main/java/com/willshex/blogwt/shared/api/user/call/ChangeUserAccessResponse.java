@@ -1,6 +1,6 @@
 //  
 //  ChangeUserAccessResponse.java
-//  xsdwsdl2code
+//  blogwt
 //
 //  Created by William Shakour on September 2, 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.

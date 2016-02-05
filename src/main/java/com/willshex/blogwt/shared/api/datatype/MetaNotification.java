@@ -1,6 +1,6 @@
 //  
 //  MetaNotification.java
-//  xsdwsdl2code
+//  blogwt
 //
 //  Created by William Shakour on January 26, 2016.
 //  Copyright © 2016 WillShex Limited. All rights reserved.
