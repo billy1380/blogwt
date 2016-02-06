@@ -8,6 +8,25 @@
 package com.willshex.blogwt.server.api.user;
 
 import com.google.gson.JsonObject;
+import com.willshex.blogwt.server.api.user.action.BlockUsersActionHandler;
+import com.willshex.blogwt.server.api.user.action.ChangePasswordActionHandler;
+import com.willshex.blogwt.server.api.user.action.ChangeUserAccessActionHandler;
+import com.willshex.blogwt.server.api.user.action.ChangeUserDetailsActionHandler;
+import com.willshex.blogwt.server.api.user.action.CheckUsernameActionHandler;
+import com.willshex.blogwt.server.api.user.action.FollowUsersActionHandler;
+import com.willshex.blogwt.server.api.user.action.ForgotPasswordActionHandler;
+import com.willshex.blogwt.server.api.user.action.GetEmailAvatarActionHandler;
+import com.willshex.blogwt.server.api.user.action.GetPermissionsActionHandler;
+import com.willshex.blogwt.server.api.user.action.GetRolesActionHandler;
+import com.willshex.blogwt.server.api.user.action.GetRolesAndPermissionsActionHandler;
+import com.willshex.blogwt.server.api.user.action.GetUserDetailsActionHandler;
+import com.willshex.blogwt.server.api.user.action.GetUsersActionHandler;
+import com.willshex.blogwt.server.api.user.action.IsAuthorisedActionHandler;
+import com.willshex.blogwt.server.api.user.action.LoginActionHandler;
+import com.willshex.blogwt.server.api.user.action.LogoutActionHandler;
+import com.willshex.blogwt.server.api.user.action.RegisterUserActionHandler;
+import com.willshex.blogwt.server.api.user.action.ResetPasswordActionHandler;
+import com.willshex.blogwt.server.api.user.action.VerifyAccountActionHandler;
 import com.willshex.blogwt.shared.api.user.call.BlockUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
@@ -34,83 +53,82 @@ public final class UserJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
-		UserApi service = new UserApi();
 		if ("ChangeUserAccess".equals(action)) {
 			ChangeUserAccessRequest input = new ChangeUserAccessRequest();
 			input.fromJson(request);
-			output = service.changeUserAccess(input).toString();
+			output = new ChangeUserAccessActionHandler().handle(input).toString();
 		} else if ("GetRoles".equals(action)) {
 			GetRolesRequest input = new GetRolesRequest();
 			input.fromJson(request);
-			output = service.getRoles(input).toString();
+			output = new GetRolesActionHandler().handle(input).toString();
 		} else if ("GetPermissions".equals(action)) {
 			GetPermissionsRequest input = new GetPermissionsRequest();
 			input.fromJson(request);
-			output = service.getPermissions(input).toString();
+			output = new GetPermissionsActionHandler().handle(input).toString();
 		} else if ("GetRolesAndPermissions".equals(action)) {
 			GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
 			input.fromJson(request);
-			output = service.getRolesAndPermissions(input).toString();
+			output = new GetRolesAndPermissionsActionHandler().handle(input).toString();
 		} else if ("VerifyAccount".equals(action)) {
 			VerifyAccountRequest input = new VerifyAccountRequest();
 			input.fromJson(request);
-			output = service.verifyAccount(input).toString();
+			output = new VerifyAccountActionHandler().handle(input).toString();
 		} else if ("ResetPassword".equals(action)) {
 			ResetPasswordRequest input = new ResetPasswordRequest();
 			input.fromJson(request);
-			output = service.resetPassword(input).toString();
+			output = new ResetPasswordActionHandler().handle(input).toString();
 		} else if ("GetEmailAvatar".equals(action)) {
 			GetEmailAvatarRequest input = new GetEmailAvatarRequest();
 			input.fromJson(request);
-			output = service.getEmailAvatar(input).toString();
+			output = new GetEmailAvatarActionHandler().handle(input).toString();
 		} else if ("RegisterUser".equals(action)) {
 			RegisterUserRequest input = new RegisterUserRequest();
 			input.fromJson(request);
-			output = service.registerUser(input).toString();
+			output = new RegisterUserActionHandler().handle(input).toString();
 		} else if ("ChangeUserDetails".equals(action)) {
 			ChangeUserDetailsRequest input = new ChangeUserDetailsRequest();
 			input.fromJson(request);
-			output = service.changeUserDetails(input).toString();
+			output = new ChangeUserDetailsActionHandler().handle(input).toString();
 		} else if ("GetUsers".equals(action)) {
 			GetUsersRequest input = new GetUsersRequest();
 			input.fromJson(request);
-			output = service.getUsers(input).toString();
+			output = new GetUsersActionHandler().handle(input).toString();
 		} else if ("Login".equals(action)) {
 			LoginRequest input = new LoginRequest();
 			input.fromJson(request);
-			output = service.login(input).toString();
+			output = new LoginActionHandler().handle(input).toString();
 		} else if ("Logout".equals(action)) {
 			LogoutRequest input = new LogoutRequest();
 			input.fromJson(request);
-			output = service.logout(input).toString();
+			output = new LogoutActionHandler().handle(input).toString();
 		} else if ("ChangePassword".equals(action)) {
 			ChangePasswordRequest input = new ChangePasswordRequest();
 			input.fromJson(request);
-			output = service.changePassword(input).toString();
+			output = new ChangePasswordActionHandler().handle(input).toString();
 		} else if ("CheckUsername".equals(action)) {
 			CheckUsernameRequest input = new CheckUsernameRequest();
 			input.fromJson(request);
-			output = service.checkUsername(input).toString();
+			output = new CheckUsernameActionHandler().handle(input).toString();
 		} else if ("IsAuthorised".equals(action)) {
 			IsAuthorisedRequest input = new IsAuthorisedRequest();
 			input.fromJson(request);
-			output = service.isAuthorised(input).toString();
+			output = new IsAuthorisedActionHandler().handle(input).toString();
 		} else if ("GetUserDetails".equals(action)) {
 			GetUserDetailsRequest input = new GetUserDetailsRequest();
 			input.fromJson(request);
-			output = service.getUserDetails(input).toString();
+			output = new GetUserDetailsActionHandler().handle(input).toString();
 		} else if ("ForgotPassword".equals(action)) {
 			ForgotPasswordRequest input = new ForgotPasswordRequest();
 			input.fromJson(request);
-			output = service.forgotPassword(input).toString();
+			output = new ForgotPasswordActionHandler().handle(input).toString();
 		} else if ("BlockUsers".equals(action)) {
 			BlockUsersRequest input = new BlockUsersRequest();
 			input.fromJson(request);
-			output = service.blockUsers(input).toString();
+			output = new BlockUsersActionHandler().handle(input).toString();
 		} else if ("FollowUsers".equals(action)) {
 			FollowUsersRequest input = new FollowUsersRequest();
 			input.fromJson(request);
-			output = service.followUsers(input).toString();
+			output = new FollowUsersActionHandler().handle(input).toString();
 		}
 		return output;
 	}
