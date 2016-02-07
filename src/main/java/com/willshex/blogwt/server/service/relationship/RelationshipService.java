@@ -13,6 +13,8 @@ import java.util.Date;
 
 import com.googlecode.objectify.Key;
 import com.willshex.blogwt.shared.api.datatype.Relationship;
+import com.willshex.blogwt.shared.api.datatype.RelationshipTypeType;
+import com.willshex.blogwt.shared.api.datatype.User;
 
 final class RelationshipService implements IRelationshipService {
 	public String getName () {
@@ -61,6 +63,60 @@ final class RelationshipService implements IRelationshipService {
 	@Override
 	public void deleteRelationship (Relationship relationship) {
 		ofy().delete().entity(relationship).now();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.relationship.IRelationshipService#
+	 * deleteUsersRelationship(com.willshex.blogwt.shared.api.datatype.User,
+	 * com.willshex.blogwt.shared.api.datatype.User,
+	 * com.willshex.blogwt.shared.api.datatype.RelationshipTypeType) */
+	@Override
+	public void deleteUsersRelationship (User user, User other,
+			RelationshipTypeType type) {
+		Relationship relationship = getUsersRelationship(user, other, type);
+
+		if (relationship != null) {
+			deleteRelationship(relationship);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.relationship.IRelationshipService#
+	 * getUsersRelationship(com.willshex.blogwt.shared.api.datatype.User,
+	 * com.willshex.blogwt.shared.api.datatype.User,
+	 * com.willshex.blogwt.shared.api.datatype.RelationshipTypeType) */
+	@Override
+	public Relationship getUsersRelationship (User user, User other,
+			RelationshipTypeType type) {
+		return ofy().load().type(Relationship.class).filter("oneKey", user)
+				.filter("anotherKey", other).filter("type", type).limit(1)
+				.first().now();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.relationship.IRelationshipService#
+	 * addUsersRelationship(com.willshex.blogwt.shared.api.datatype.User,
+	 * com.willshex.blogwt.shared.api.datatype.User,
+	 * com.willshex.blogwt.shared.api.datatype.RelationshipTypeType) */
+	@Override
+	public Relationship addUsersRelationship (User user, User other,
+			RelationshipTypeType type) {
+		Relationship relationship = getUsersRelationship(user, other, type);
+
+		if (relationship == null) {
+			relationship = new Relationship().one(user).another(other)
+					.type(type);
+
+			addRelationship(relationship);
+		}
+
+		return relationship;
 	}
 
 }
