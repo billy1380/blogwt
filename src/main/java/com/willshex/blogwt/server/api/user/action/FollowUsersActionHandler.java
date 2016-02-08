@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.validation.ApiValidator;
+import com.willshex.blogwt.server.api.validation.PropertyValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
@@ -24,6 +25,7 @@ import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.FollowUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.FollowUsersResponse;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.web.service.server.ActionHandler;
 import com.willshex.gson.web.service.server.InputValidationException;
@@ -37,6 +39,9 @@ public final class FollowUsersActionHandler extends ActionHandler {
 		LOG.finer("Entering followUsers");
 		FollowUsersResponse output = new FollowUsersResponse();
 		try {
+			PropertyValidator.ensureTrue(PropertyHelper.ALLOW_USER_REGISTRATION,
+					PropertyHelper.ENABLE_USER_RELATIONSHIPS);
+
 			ApiValidator.notNull(input, FollowUsersRequest.class, "input");
 			ApiValidator.accessCode(input.accessCode, "input.accessCode");
 			output.session = input.session = SessionValidator

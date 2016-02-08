@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import com.willshex.blogwt.server.api.exception.DisallowedByPropertyException;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.validation.ApiError;
@@ -102,5 +103,24 @@ public class PropertyValidator {
 					ApiError.DataTypeNotFound, type + ": " + name);
 
 		return lookupProperty;
+	}
+
+	/**
+	 * Checks whether the property or properties are all true if not throws an exception
+	 * @param propertyName
+	 * @throws DisallowedByPropertyException
+	 */
+	public static void ensureTrue (String... propertyName)
+			throws DisallowedByPropertyException {
+		for (String name : propertyName) {
+			Property property = PropertyServiceProvider.provide()
+					.getNamedProperty(name);
+
+			if (PropertyHelper.isEmpty(property))
+				throw new DisallowedByPropertyException(name);
+
+			if (Boolean.FALSE.equals(Boolean.valueOf(property.value)))
+				throw new DisallowedByPropertyException(property);
+		}
 	}
 }
