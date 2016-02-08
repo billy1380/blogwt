@@ -5,13 +5,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import com.willshex.utility.StringUtils;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.gson.web.service.server.InputValidationException;
 import com.willshex.gson.web.service.server.ServiceException;
+import com.willshex.utility.StringUtils;
 
 public class PropertyValidator {
 	private static final String type = Property.class.getSimpleName();
@@ -90,9 +90,11 @@ public class PropertyValidator {
 		Property lookupProperty;
 
 		if (isIdLookup) {
-			lookupProperty = PropertyServiceProvider.provide().getProperty(property.id);
+			lookupProperty = PropertyServiceProvider.provide()
+					.getProperty(property.id);
 		} else {
-			lookupProperty = PropertyServiceProvider.provide().getNamedProperty(property.name);
+			lookupProperty = PropertyServiceProvider.provide()
+					.getNamedProperty(property.name);
 		}
 
 		if (lookupProperty == null)

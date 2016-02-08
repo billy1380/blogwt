@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.willshex.blogwt.server.api.exception.DisallowedByProprtyException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PermissionValidator;
 import com.willshex.blogwt.server.api.validation.RoleValidator;
@@ -65,18 +64,8 @@ public final class RegisterUserActionHandler extends ActionHandler {
 					output.session = input.session = null;
 				}
 			} else {
-				Property allowUserRegistration = PropertyServiceProvider
-						.provide().getNamedProperty(
-								PropertyHelper.ALLOW_USER_REGISTRATION);
-
-				if (PropertyHelper.isEmpty(allowUserRegistration))
-					throw new DisallowedByProprtyException(
-							PropertyHelper.ALLOW_USER_REGISTRATION);
-
-				if (Boolean.FALSE
-						.equals(Boolean.valueOf(allowUserRegistration.value)))
-					throw new DisallowedByProprtyException(
-							allowUserRegistration);
+				PropertyHelper
+						.ensureTrue(PropertyHelper.ALLOW_USER_REGISTRATION);
 			}
 
 			input.user = UserValidator.validate(input.user, "input.user");

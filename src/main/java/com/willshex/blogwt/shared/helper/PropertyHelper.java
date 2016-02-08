@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.willshex.blogwt.server.api.exception.DisallowedByPropertyException;
+import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Property;
 
 /**
@@ -358,5 +360,22 @@ public class PropertyHelper {
 	 */
 	public static String value (Property property) {
 		return property == null ? null : property.value;
+	}
+
+	/**
+	 * Checks whether the property is true if not throws an exception
+	 * @param propertyName
+	 * @throws DisallowedByPropertyException
+	 */
+	public static void ensureTrue (String propertyName)
+			throws DisallowedByPropertyException {
+		Property property = PropertyServiceProvider.provide()
+				.getNamedProperty(propertyName);
+
+		if (PropertyHelper.isEmpty(property))
+			throw new DisallowedByPropertyException(propertyName);
+
+		if (Boolean.FALSE.equals(Boolean.valueOf(property.value)))
+			throw new DisallowedByPropertyException(property);
 	}
 }
