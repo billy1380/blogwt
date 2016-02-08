@@ -7,7 +7,11 @@
 //
 package com.willshex.blogwt.server.service.relationship;
 
+import java.util.List;
+
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Relationship;
+import com.willshex.blogwt.shared.api.datatype.RelationshipSortType;
 import com.willshex.blogwt.shared.api.datatype.RelationshipTypeType;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.service.IService;
@@ -67,5 +71,19 @@ public interface IRelationshipService extends IService {
 	 */
 	public Relationship getUsersRelationship (User user, User other,
 			RelationshipTypeType type);
+
+	/**
+	 * Get user relationships
+	 * @param user
+	 * @param type
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
+	 * @return
+	 */
+	public List<Relationship> getUserRelationships (User user,
+			RelationshipTypeType type, Integer start, Integer count,
+			RelationshipSortType sortBy, SortDirectionType sortDirection);
 
 }
