@@ -66,6 +66,8 @@ public class PropertyHelper {
 	public static final String NEW_USER_PERMISSIONS = "user.new.permissions";
 	public static final String NEW_USER_ROLES = "user.new.roles";
 
+	public static final String ENABLE_USER_RELATIONSHIPS = "user.enable.relationships";
+
 	// Descriptions
 	public static final String TITLE_DESCRIPTION = "Blog Title";
 	public static final String EXTENDED_TITLE_DESCRIPTION = "Extended Title/Sub Title";
@@ -110,6 +112,8 @@ public class PropertyHelper {
 	public static final String COOKIE_DETAILS_PAGE_SLUG_DESCRIPTION = "Cookie details page slug";
 
 	public static final String TITLE_IN_NAVBAR_DESCRIPTION = "Show the site title in the navigation bar";
+
+	public static final String ENABLE_USER_RELATIONSHIPS_DESCRIPTION = "Enable user following and blocking";
 
 	public static final String NONE_VALUE = "none";
 	public static final String APPLE_VALUE = "apple";
@@ -172,8 +176,8 @@ public class PropertyHelper {
 
 	public static Property createPostShareEnabled (String value) {
 		return new Property().name(POST_SHARE_ENABLED)
-				.description(POST_SHARE_ENABLED_DESCRIPTION)
-				.group("Functional").type("string").value(value);
+				.description(POST_SHARE_ENABLED_DESCRIPTION).group("Functional")
+				.type("string").value(value);
 	}
 
 	public static Property createMarkdownMapsApiKey (String value) {
@@ -288,6 +292,13 @@ public class PropertyHelper {
 				.type("string").value(value);
 	}
 
+	public static Property createEnableUserRelationships (Boolean value) {
+		return new Property().name(ENABLE_USER_RELATIONSHIPS)
+				.description(ENABLE_USER_RELATIONSHIPS_DESCRIPTION)
+				.group("User").type("boolean")
+				.value(value == null ? null : value.toString());
+	}
+
 	public static Property createOutgoingEmail (String value) {
 		return new Property().name(OUTGOING_EMAIL)
 				.description(OUTGOING_EMAIL_DESCRIPTION).group("Functional")
@@ -333,7 +344,8 @@ public class PropertyHelper {
 					createLargeLogoUrl(null), createFooterShowVersion(null),
 					createAllowUserRegistration(null),
 					createNewUserPermissions(null), createNewUserRoles(null),
-					createFaviconUrl(null), createOutgoingEmail(null),
+					createEnableUserRelationships(null), createFaviconUrl(null),
+					createOutgoingEmail(null),
 					createCookieDetailsPageSlug(null));
 		}
 
