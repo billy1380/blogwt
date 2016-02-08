@@ -74,7 +74,7 @@ public final class FollowUsersActionHandler extends ActionHandler {
 					// validate each user
 					other = UserValidator.validate(other, "input.other[n]");
 
-					// add a relationship for the validatied users (skip failures)	
+					// add a relationship for the validated users (skip failures)	
 					if (Boolean.TRUE.equals(input.un)) {
 						// un-follow
 						RelationshipServiceProvider.provide()
