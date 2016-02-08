@@ -1,5 +1,5 @@
 //
-//  DisallowedByProprtyException.java
+//  DisallowedByPropertyException.java
 //  blogwt
 //
 //  Created by William Shakour (billy1380) on 28 Sep 2015.
@@ -15,7 +15,7 @@ import com.willshex.gson.web.service.server.ServiceException;
  * @author William Shakour (billy1380)
  *
  */
-public class DisallowedByProprtyException extends ServiceException {
+public class DisallowedByPropertyException extends ServiceException {
 
 	/**
 	 * 
@@ -25,7 +25,7 @@ public class DisallowedByProprtyException extends ServiceException {
 	/**
 	 * 
 	 */
-	public DisallowedByProprtyException (Property property) {
+	public DisallowedByPropertyException (Property property) {
 		super(ApiError.PropertyDisallowed.getCode(),
 				ApiError.PropertyDisallowed.getMessage(property == null
 						|| property.name == null ? "unknown" : (property.name
@@ -36,7 +36,7 @@ public class DisallowedByProprtyException extends ServiceException {
 	/**
 	 * 
 	 */
-	public DisallowedByProprtyException (String propertyName) {
+	public DisallowedByPropertyException (String propertyName) {
 		super(ApiError.PropertyDisallowed.getCode(),
 				ApiError.PropertyDisallowed
 						.getMessage(propertyName == null ? "unknown"
