@@ -53,10 +53,23 @@ public final class UserJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
-		if ("ChangeUserAccess".equals(action)) {
+		if ("GetUsers".equals(action)) {
+			GetUsersRequest input = new GetUsersRequest();
+			input.fromJson(request);
+			output = new GetUsersActionHandler().handle(input).toString();
+		} else if ("BlockUsers".equals(action)) {
+			BlockUsersRequest input = new BlockUsersRequest();
+			input.fromJson(request);
+			output = new BlockUsersActionHandler().handle(input).toString();
+		} else if ("FollowUsers".equals(action)) {
+			FollowUsersRequest input = new FollowUsersRequest();
+			input.fromJson(request);
+			output = new FollowUsersActionHandler().handle(input).toString();
+		} else if ("ChangeUserAccess".equals(action)) {
 			ChangeUserAccessRequest input = new ChangeUserAccessRequest();
 			input.fromJson(request);
-			output = new ChangeUserAccessActionHandler().handle(input).toString();
+			output = new ChangeUserAccessActionHandler().handle(input)
+					.toString();
 		} else if ("GetRoles".equals(action)) {
 			GetRolesRequest input = new GetRolesRequest();
 			input.fromJson(request);
@@ -68,7 +81,8 @@ public final class UserJsonServlet extends JsonServlet {
 		} else if ("GetRolesAndPermissions".equals(action)) {
 			GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
 			input.fromJson(request);
-			output = new GetRolesAndPermissionsActionHandler().handle(input).toString();
+			output = new GetRolesAndPermissionsActionHandler().handle(input)
+					.toString();
 		} else if ("VerifyAccount".equals(action)) {
 			VerifyAccountRequest input = new VerifyAccountRequest();
 			input.fromJson(request);
@@ -88,11 +102,8 @@ public final class UserJsonServlet extends JsonServlet {
 		} else if ("ChangeUserDetails".equals(action)) {
 			ChangeUserDetailsRequest input = new ChangeUserDetailsRequest();
 			input.fromJson(request);
-			output = new ChangeUserDetailsActionHandler().handle(input).toString();
-		} else if ("GetUsers".equals(action)) {
-			GetUsersRequest input = new GetUsersRequest();
-			input.fromJson(request);
-			output = new GetUsersActionHandler().handle(input).toString();
+			output = new ChangeUserDetailsActionHandler().handle(input)
+					.toString();
 		} else if ("Login".equals(action)) {
 			LoginRequest input = new LoginRequest();
 			input.fromJson(request);
@@ -121,14 +132,6 @@ public final class UserJsonServlet extends JsonServlet {
 			ForgotPasswordRequest input = new ForgotPasswordRequest();
 			input.fromJson(request);
 			output = new ForgotPasswordActionHandler().handle(input).toString();
-		} else if ("BlockUsers".equals(action)) {
-			BlockUsersRequest input = new BlockUsersRequest();
-			input.fromJson(request);
-			output = new BlockUsersActionHandler().handle(input).toString();
-		} else if ("FollowUsers".equals(action)) {
-			FollowUsersRequest input = new FollowUsersRequest();
-			input.fromJson(request);
-			output = new FollowUsersActionHandler().handle(input).toString();
 		}
 		return output;
 	}
