@@ -69,16 +69,14 @@ public final class RegisterUserActionHandler extends ActionHandler {
 						.provide().getNamedProperty(
 								PropertyHelper.ALLOW_USER_REGISTRATION);
 
-				boolean emptyProperty = PropertyHelper
-						.value(allowUserRegistration) == null;
-				if (emptyProperty) throw new DisallowedByProprtyException(
-						PropertyHelper.ALLOW_USER_REGISTRATION);
+				if (PropertyHelper.isEmpty(allowUserRegistration))
+					throw new DisallowedByProprtyException(
+							PropertyHelper.ALLOW_USER_REGISTRATION);
 
 				if (Boolean.FALSE
 						.equals(Boolean.valueOf(allowUserRegistration.value)))
 					throw new DisallowedByProprtyException(
 							allowUserRegistration);
-
 			}
 
 			input.user = UserValidator.validate(input.user, "input.user");
