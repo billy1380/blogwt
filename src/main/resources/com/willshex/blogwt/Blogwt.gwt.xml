@@ -15,10 +15,10 @@
 
 	<!-- Other module inherits -->
 	<inherits name="com.google.gwt.json.JSON" />
-	<inherits name="com.willshex.gson.Json" />
+	<inherits name="com.willshex.gson.Gson" />
 	<inherits name="com.google.gson.Gson" />
-	<inherits name="com.willshex.gson.json.Service" />
-	<inherits name="com.spacehopperstudios.Utility" />
+	<inherits name="com.willshex.gson.web.Service" />
+	<inherits name="com.willshex.Utility" />
 	<inherits name="com.googlecode.objectify.Objectify" />
 	<inherits name='com.google.gwt.query.Query'/>
 	<inherits name="org.Markdown4j" />
