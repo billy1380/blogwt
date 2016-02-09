@@ -24,10 +24,12 @@ import com.willshex.blogwt.server.service.relationship.RelationshipServiceProvid
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Relationship;
 import com.willshex.blogwt.shared.api.datatype.RelationshipSortType;
+import com.willshex.blogwt.shared.api.datatype.RelationshipTypeType;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
 import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUsersResponse;
+import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
@@ -116,6 +118,12 @@ public final class GetUsersActionHandler extends ActionHandler {
 		List<Long> userIds = null;
 
 		if (Boolean.TRUE.equals(input.userIsOther)) {
+			// Cannot reveal users blocking you
+			if (input.relationshipType == RelationshipTypeType.RelationshipTypeTypeBlock)
+				ApiValidator.throwServiceError(InputValidationException.class,
+						ApiError.CannotRevealRelationshipUsers,
+						"input.relationshipType");
+
 			relationships = RelationshipServiceProvider.provide()
 					.getWithUserRelationships(user, input.relationshipType,
 							input.pager.start, input.pager.count,

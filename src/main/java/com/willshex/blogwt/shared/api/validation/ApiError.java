@@ -32,7 +32,9 @@ public enum ApiError {
 	FailedToSendEmail(100013, "Failed to send email {0}"),
 	EmptyForm(100014, "Empty form, submitted with no fields {0}"),
 	BadLength(100015, "Invalid value too long or too short ({1}-{2}) {0}"),
-	UnpublishedPost(100016, "Unpublished post {0}"), ;
+	UnpublishedPost(100016, "Unpublished post {0}"),
+	CannotRevealRelationshipUsers(100017,
+			"Cannot reveal [with] relationship users RelationshipTypeType: {0}");
 
 	private static final String PARAM_0 = "\\{0\\}";
 	private static final String PARAM_1 = "\\{1\\}";
@@ -59,9 +61,9 @@ public enum ApiError {
 	}
 
 	public String getMessage (String parent, int minValue, int maxValue) {
-		return getMessage(parent).replaceAll(PARAM_1,
-				Integer.toString(minValue)).replaceAll(PARAM_2,
-				Integer.toString(maxValue));
+		return getMessage(parent)
+				.replaceAll(PARAM_1, Integer.toString(minValue))
+				.replaceAll(PARAM_2, Integer.toString(maxValue));
 	}
 
 	public boolean isCode (int value) {
