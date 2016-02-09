@@ -540,17 +540,28 @@ final class UserService implements IUserService {
 		User user = getUser(id);
 
 		if (user.roleKeys != null) {
-			user.roles = RoleServiceProvider.provide().getIdRolesBatch(
+			user.roles = RoleServiceProvider.provide().getIdRoleBatch(
 					PersistenceService.keysToIds(user.roleKeys));
 		}
 
 		if (user.permissionKeys != null) {
 			user.permissions = PermissionServiceProvider.provide()
-					.getIdPermissionsBatch(
+					.getIdPermissionBatch(
 							PersistenceService.keysToIds(user.permissionKeys));
 		}
 
 		SearchHelper.indexDocument(toDocument(user));
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.user.IUserService#getIdUserBatch(java.
+	 * util.Collection) */
+	@Override
+	public List<User> getIdUserBatch (Collection<Long> ids) {
+		return new ArrayList<User>(
+				ofy().load().type(User.class).ids(ids).values());
 	}
 
 }

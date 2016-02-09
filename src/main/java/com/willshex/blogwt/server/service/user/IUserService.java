@@ -136,6 +136,13 @@ public interface IUserService extends IService {
 	public User getEmailUser (String email);
 
 	/**
+	 * Get Ids User Batch
+	 * @param ids
+	 * @return
+	 */
+	public List<User> getIdUserBatch (Collection<Long> ids);
+
+	/**
 	 * Index all
 	 */
 	public void indexAll ();
