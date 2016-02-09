@@ -82,7 +82,7 @@ public interface IPermissionService extends IService {
 	 * @param permissions
 	 * @return
 	 */
-	public List<Permission> getIdPermissionsBatch (
+	public List<Permission> getIdPermissionBatch (
 			Collection<Long> permissionIds);
 
 	/**

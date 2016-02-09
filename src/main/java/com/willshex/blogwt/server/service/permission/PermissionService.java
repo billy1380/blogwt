@@ -110,7 +110,7 @@ final class PermissionService implements IPermissionService {
 	 * @see com.willshex.blogwt.server.service.permission.IPermissionService#
 	 * getIdPermissionsBatch(java.util.Collection) */
 	@Override
-	public List<Permission> getIdPermissionsBatch (
+	public List<Permission> getIdPermissionBatch (
 			Collection<Long> permissionIds) {
 		return new ArrayList<Permission>(ofy().load().type(Permission.class)
 				.ids(permissionIds).values());
@@ -139,7 +139,7 @@ final class PermissionService implements IPermissionService {
 			role = RoleServiceProvider.provide().getRole(role.id);
 		}
 
-		return getIdPermissionsBatch(PersistenceService
+		return getIdPermissionBatch(PersistenceService
 				.keysToIds(role.permissionKeys));
 	}
 

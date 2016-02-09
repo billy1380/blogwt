@@ -68,7 +68,7 @@ public interface IRoleService extends IService {
 	 * @param roles
 	 * @return
 	 */
-	public List<Role> getIdRolesBatch (Collection<Long> roleIds);
+	public List<Role> getIdRoleBatch (Collection<Long> roleIds);
 
 	/**
 	 * 

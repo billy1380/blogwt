@@ -481,7 +481,7 @@ public final class BlogApi extends ActionHandler {
 				Tag tag = TagServiceProvider.provide().getSlugTag(input.tag);
 
 				if (tag != null) {
-					output.posts = PostServiceProvider.provide().getPostBatch(
+					output.posts = PostServiceProvider.provide().getIdPostBatch(
 							PersistenceService.keysToIds(tag.postKeys));
 				}
 			}
@@ -496,7 +496,7 @@ public final class BlogApi extends ActionHandler {
 					input.archiveEntry = ArchiveEntryValidator.lookup(
 							input.archiveEntry, "input.archiveEntry");
 
-					output.posts = PostServiceProvider.provide().getPostBatch(
+					output.posts = PostServiceProvider.provide().getIdPostBatch(
 							PersistenceService
 									.keysToIds(input.archiveEntry.postKeys));
 				}

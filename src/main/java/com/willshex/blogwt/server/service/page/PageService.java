@@ -200,7 +200,7 @@ final class PageService implements IPageService {
 
 		for (Page page : pages) {
 			posts.addAll(PostServiceProvider.provide()
-					.getPostBatch(PersistenceService.keysToIds(page.postKeys)));
+					.getIdPostBatch(PersistenceService.keysToIds(page.postKeys)));
 		}
 
 		for (Post post : posts) {

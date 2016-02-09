@@ -93,13 +93,13 @@ public final class LoginActionHandler extends ActionHandler {
 
 			if (output.session.user.roleKeys != null) {
 				output.session.user.roles = RoleServiceProvider.provide()
-						.getIdRolesBatch(PersistenceService
+						.getIdRoleBatch(PersistenceService
 								.keysToIds(output.session.user.roleKeys));
 			}
 
 			if (output.session.user.permissionKeys != null) {
 				output.session.user.permissions = PermissionServiceProvider
-						.provide().getIdPermissionsBatch(PersistenceService
+						.provide().getIdPermissionBatch(PersistenceService
 								.keysToIds(output.session.user.permissionKeys));
 			}
 

@@ -145,7 +145,7 @@ public interface IPostService extends IService {
 	/**
 	 * @param ids
 	 */
-	public List<Post> getPostBatch (Collection<Long> ids);
+	public List<Post> getIdPostBatch (Collection<Long> ids);
 
 	/**
 	 * Index all
