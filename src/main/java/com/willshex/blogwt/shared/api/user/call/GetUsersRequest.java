@@ -19,9 +19,9 @@ import com.willshex.blogwt.shared.api.datatype.User;
 public class GetUsersRequest extends Request {
 	public Pager pager;
 	public String query;
-	public User relatedTo;
+	public User user;
 	public RelationshipTypeType relationshipType;
-	public Boolean reverse;
+	public Boolean userIsOther;
 
 	@Override
 	public JsonObject toJson () {
@@ -32,16 +32,15 @@ public class GetUsersRequest extends Request {
 		JsonElement jsonQuery = query == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(query);
 		object.add("query", jsonQuery);
-		JsonElement jsonRelatedTo = relatedTo == null ? JsonNull.INSTANCE
-				: relatedTo.toJson();
-		object.add("relatedTo", jsonRelatedTo);
+		JsonElement jsonUser = user == null ? JsonNull.INSTANCE : user.toJson();
+		object.add("user", jsonUser);
 		JsonElement jsonRelationshipType = relationshipType == null
 				? JsonNull.INSTANCE
 				: new JsonPrimitive(relationshipType.toString());
 		object.add("relationshipType", jsonRelationshipType);
-		JsonElement jsonReverse = reverse == null ? JsonNull.INSTANCE
-				: new JsonPrimitive(reverse);
-		object.add("reverse", jsonReverse);
+		JsonElement jsonUserIsOther = userIsOther == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(userIsOther);
+		object.add("userIsOther", jsonUserIsOther);
 		return object;
 	}
 
@@ -61,11 +60,11 @@ public class GetUsersRequest extends Request {
 				query = jsonQuery.getAsString();
 			}
 		}
-		if (jsonObject.has("relatedTo")) {
-			JsonElement jsonRelatedTo = jsonObject.get("relatedTo");
-			if (jsonRelatedTo != null) {
-				relatedTo = new User();
-				relatedTo.fromJson(jsonRelatedTo.getAsJsonObject());
+		if (jsonObject.has("user")) {
+			JsonElement jsonUser = jsonObject.get("user");
+			if (jsonUser != null) {
+				user = new User();
+				user.fromJson(jsonUser.getAsJsonObject());
 			}
 		}
 		if (jsonObject.has("relationshipType")) {
@@ -76,10 +75,10 @@ public class GetUsersRequest extends Request {
 						.fromString(jsonRelationshipType.getAsString());
 			}
 		}
-		if (jsonObject.has("reverse")) {
-			JsonElement jsonReverse = jsonObject.get("reverse");
-			if (jsonReverse != null) {
-				reverse = Boolean.valueOf(jsonReverse.getAsBoolean());
+		if (jsonObject.has("userIsOther")) {
+			JsonElement jsonUserIsOther = jsonObject.get("userIsOther");
+			if (jsonUserIsOther != null) {
+				userIsOther = Boolean.valueOf(jsonUserIsOther.getAsBoolean());
 			}
 		}
 	}
@@ -94,8 +93,8 @@ public class GetUsersRequest extends Request {
 		return this;
 	}
 
-	public GetUsersRequest relatedTo (User relatedTo) {
-		this.relatedTo = relatedTo;
+	public GetUsersRequest user (User user) {
+		this.user = user;
 		return this;
 	}
 
@@ -105,8 +104,8 @@ public class GetUsersRequest extends Request {
 		return this;
 	}
 
-	public GetUsersRequest reverse (Boolean reverse) {
-		this.reverse = reverse;
+	public GetUsersRequest userIsOther (Boolean userIsOther) {
+		this.userIsOther = userIsOther;
 		return this;
 	}
 }
