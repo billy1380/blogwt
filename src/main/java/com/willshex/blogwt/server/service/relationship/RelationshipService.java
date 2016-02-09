@@ -141,10 +141,55 @@ final class RelationshipService implements IRelationshipService {
 	public List<Relationship> getUserRelationships (User user,
 			RelationshipTypeType type, Integer start, Integer count,
 			RelationshipSortType sortBy, SortDirectionType sortDirection) {
-
 		Query<Relationship> query = ofy().load().type(Relationship.class)
 				.filter(RelationshipSortType.RelationshipSortTypeOne.toString()
 						+ "Key", user)
+				.filter(RelationshipSortType.RelationshipSortTypeType
+						.toString(), type.toString());
+
+		if (start != null) {
+			query = query.offset(start.intValue());
+		}
+
+		if (count != null) {
+			query = query.limit(count.intValue());
+		}
+
+		if (sortBy != null) {
+			String condition = sortBy.toString();
+
+			if (sortDirection != null) {
+				switch (sortDirection) {
+				case SortDirectionTypeDescending:
+					condition = "-" + condition;
+					break;
+				default:
+					break;
+				}
+			}
+
+			query = query.order(condition);
+		}
+
+		return query.list();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.relationship.IRelationshipService#
+	 * getWithUserRelationships(com.willshex.blogwt.shared.api.datatype.User,
+	 * com.willshex.blogwt.shared.api.datatype.RelationshipTypeType,
+	 * java.lang.Integer, java.lang.Integer,
+	 * com.willshex.blogwt.shared.api.datatype.RelationshipSortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	@Override
+	public List<Relationship> getWithUserRelationships (User user,
+			RelationshipTypeType type, Integer start, Integer count,
+			RelationshipSortType sortBy, SortDirectionType sortDirection) {
+		Query<Relationship> query = ofy().load().type(Relationship.class)
+				.filter(RelationshipSortType.RelationshipSortTypeAnother
+						.toString() + "Key", user)
 				.filter(RelationshipSortType.RelationshipSortTypeType
 						.toString(), type.toString());
 

@@ -86,4 +86,18 @@ public interface IRelationshipService extends IService {
 			RelationshipTypeType type, Integer start, Integer count,
 			RelationshipSortType sortBy, SortDirectionType sortDirection);
 
+	/**
+	 * Get with user relationships
+	 * @param user
+	 * @param type
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
+	 * @return
+	 */
+	public List<Relationship> getWithUserRelationships (User user,
+			RelationshipTypeType type, Integer start, Integer count,
+			RelationshipSortType sortBy, SortDirectionType sortDirection);
+
 }
