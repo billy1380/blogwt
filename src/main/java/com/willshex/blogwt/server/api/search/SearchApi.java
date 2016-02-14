@@ -16,7 +16,6 @@ import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
-import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.User;
@@ -36,7 +35,7 @@ public final class SearchApi extends ActionHandler {
 		LOG.finer("Entering searchAll");
 		SearchAllResponse output = new SearchAllResponse();
 		try {
-			ApiValidator.notNull(input, UpdatePostRequest.class, "input");
+			ApiValidator.notNull(input, SearchAllRequest.class, "input");
 			ApiValidator.accessCode(input.accessCode, "input.accessCode");
 			try {
 				output.session = input.session = SessionValidator
