@@ -13,6 +13,7 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -99,6 +100,40 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 			}
 		};
 
+		Column<Post, SafeHtml> published = new Column<Post, SafeHtml>(
+				safeHtmlPrototype) {
+
+			@Override
+			public SafeHtml getValue (Post object) {
+				return object.published == null
+						? PagesPageTemplates.INSTANCE.no()
+						: SafeHtmlUtils.fromString(
+								DateTimeHelper.ago(object.published));
+			}
+		};
+
+		Column<Post, SafeHtml> listed = new Column<Post, SafeHtml>(
+				safeHtmlPrototype) {
+
+			@Override
+			public SafeHtml getValue (Post object) {
+				return Boolean.TRUE.equals(object.listed)
+						? PagesPageTemplates.INSTANCE.yes()
+						: PagesPageTemplates.INSTANCE.no();
+			}
+		};
+
+		Column<Post, SafeHtml> commentsEnabled = new Column<Post, SafeHtml>(
+				safeHtmlPrototype) {
+
+			@Override
+			public SafeHtml getValue (Post object) {
+				return Boolean.TRUE.equals(object.commentsEnabled)
+						? PagesPageTemplates.INSTANCE.yes()
+						: PagesPageTemplates.INSTANCE.no();
+			}
+		};
+
 		Column<Post, SafeHtml> edit = new Column<Post, SafeHtml>(
 				safeHtmlPrototype) {
 
@@ -131,6 +166,9 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 		tblPosts.addColumn(title, "Title");
 		tblPosts.addColumn(author, "Author");
 		tblPosts.addColumn(created, "Created");
+		tblPosts.addColumn(published, "Published");
+		tblPosts.addColumn(listed, "Listed");
+		tblPosts.addColumn(commentsEnabled, "Comments");
 		tblPosts.addColumn(edit);
 		tblPosts.addColumn(delete);
 	}
