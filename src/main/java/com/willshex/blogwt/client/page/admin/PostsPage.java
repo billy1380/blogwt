@@ -28,6 +28,7 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
+import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.admin.PagesPage.PagesPageTemplates;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
@@ -76,9 +77,11 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 
 			@Override
 			public SafeHtml getValue (Post object) {
-				return PagesPageTemplates.INSTANCE.title(PageTypeHelper
-						.asHref(PageType.PostDetailPageType, object.slug),
-						object.title);
+				return PagesPageTemplates.INSTANCE.title(
+						PageTypeHelper.asHref(PageType.PostDetailPageType,
+								object.slug),
+						SafeHtmlUtils.fromTrustedString(
+								PostHelper.makeMarkup(object.title)));
 			}
 		};
 

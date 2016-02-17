@@ -14,6 +14,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -45,8 +46,8 @@ import com.willshex.gson.web.service.shared.StatusType;
  * @author William Shakour (billy1380)
  *
  */
-public class PagesPage extends com.willshex.blogwt.client.page.Page implements
-		DeletePageEventHandler {
+public class PagesPage extends com.willshex.blogwt.client.page.Page
+		implements DeletePageEventHandler {
 
 	private static PagesPageUiBinder uiBinder = GWT
 			.create(PagesPageUiBinder.class);
@@ -67,7 +68,7 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 				.create(PagesPageTemplates.class);
 
 		@Template("<a href=\"{0}\">{1}<a>")
-		SafeHtml title (SafeUri slug, String title);
+		SafeHtml title (SafeUri slug, SafeHtml title);
 
 		@Template("<span class=\"glyphicon glyphicon-ok\"></span>")
 		SafeHtml yes ();
@@ -108,7 +109,8 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 			@Override
 			public SafeHtml getValue (Page object) {
 				return PagesPageTemplates.INSTANCE.title(
-						PageTypeHelper.slugToHref(object.slug), object.title);
+						PageTypeHelper.slugToHref(object.slug),
+						SafeHtmlUtils.fromString(object.title));
 			}
 		};
 
@@ -126,8 +128,9 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 			@Override
 			public SafeHtml getValue (Page object) {
 				return object.hasChildren != null
-						&& object.hasChildren.booleanValue() ? PagesPageTemplates.INSTANCE
-						.yes() : PagesPageTemplates.INSTANCE.no();
+						&& object.hasChildren.booleanValue()
+								? PagesPageTemplates.INSTANCE.yes()
+								: PagesPageTemplates.INSTANCE.no();
 			}
 		};
 
@@ -136,8 +139,9 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 
 			@Override
 			public SafeHtml getValue (Page object) {
-				return object.parent == null && object.priority != null ? PagesPageTemplates.INSTANCE
-						.yes() : PagesPageTemplates.INSTANCE.no();
+				return object.parent == null && object.priority != null
+						? PagesPageTemplates.INSTANCE.yes()
+						: PagesPageTemplates.INSTANCE.no();
 			}
 		};
 
@@ -153,8 +157,8 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 
 			@Override
 			public String getValue (Page object) {
-				return object.priority == null ? "not listed" : object.priority
-						.toString();
+				return object.priority == null ? "not listed"
+						: object.priority.toString();
 			}
 		};
 
@@ -163,8 +167,8 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page implements
 
 			@Override
 			public SafeHtml getValue (Page object) {
-				return PagesPageTemplates.INSTANCE.edit(PageTypeHelper.asHref(
-						PageType.EditPagePageType, object.slug));
+				return PagesPageTemplates.INSTANCE.edit(PageTypeHelper
+						.asHref(PageType.EditPagePageType, object.slug));
 			}
 		};
 
