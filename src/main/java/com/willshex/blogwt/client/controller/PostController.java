@@ -75,12 +75,13 @@ public class PostController extends AsyncDataProvider<Post> {
 	private PostOracle oracle;
 	private String tag;
 
-	private Pager pager = PagerHelper.createDefaultPager().sortBy(
-			PostSortType.PostSortTypeCreated.toString());
+	private Pager pager = PagerHelper.createDefaultPager()
+			.sortBy(PostSortType.PostSortTypeCreated.toString());
 	private Request getPostsRequest;
 	private Request getPostRequest;
 
 	private ArchiveEntry archiveEntry;
+	private boolean isAdminMode = false;
 
 	private void fetchPosts () {
 		final GetPostsRequest input = ApiHelper
@@ -89,6 +90,7 @@ public class PostController extends AsyncDataProvider<Post> {
 		input.session = SessionController.get().sessionForApiCall();
 		input.includePostContents = Boolean.FALSE;
 		input.archiveEntry = archiveEntry;
+		input.showAll = Boolean.valueOf(isAdminMode);
 
 		if (SessionController.get().isValidSession()) {
 			pager.sortBy = PostSortType.PostSortTypeCreated.toString();
@@ -111,13 +113,15 @@ public class PostController extends AsyncDataProvider<Post> {
 						getPostsRequest = null;
 
 						if (output.status == StatusType.StatusTypeSuccess) {
-							if (output.posts != null && output.posts.size() > 0) {
+							if (output.posts != null
+									&& output.posts.size() > 0) {
 								pager = output.pager;
 								updateRowCount(
 										input.pager.count == null ? 0
 												: input.pager.count.intValue(),
 										input.pager.count == null
-												|| input.pager.count.intValue() == 0);
+												|| input.pager.count
+														.intValue() == 0);
 								updateRowData(input.pager.start.intValue(),
 										output.posts);
 							} else {
@@ -148,8 +152,7 @@ public class PostController extends AsyncDataProvider<Post> {
 	public void updatePost (Post post, String title, Boolean listed,
 			Boolean commentsEnabled, String summary, String content,
 			Boolean publish, String tags) {
-		final UpdatePostRequest input = SessionController
-				.get()
+		final UpdatePostRequest input = SessionController.get()
 				.setSession(ApiHelper.setAccessCode(new UpdatePostRequest()))
 				.post(post.title(title).summary(summary).listed(listed)
 						.commentsEnabled(commentsEnabled)
@@ -231,13 +234,13 @@ public class PostController extends AsyncDataProvider<Post> {
 			Boolean publish, String tags) {
 		BlogService blogService = ApiHelper.createBlogClient();
 
-		final CreatePostRequest input = SessionController
-				.get()
+		final CreatePostRequest input = SessionController.get()
 				.setSession(ApiHelper.setAccessCode(new CreatePostRequest()))
 				.post(new Post().title(title).summary(summary)
 						.content(new PostContent().body(content))
 						.tags(TagHelper.convertToTagList(tags)).listed(listed)
-						.commentsEnabled(commentsEnabled)).publish(publish);
+						.commentsEnabled(commentsEnabled))
+				.publish(publish);
 
 		blogService.createPost(input, new AsyncCallback<CreatePostResponse>() {
 
@@ -325,16 +328,16 @@ public class PostController extends AsyncDataProvider<Post> {
 	 * @return
 	 */
 	public static String disqusId () {
-		return PropertyController.get().stringProperty(
-				PropertyHelper.POST_DISQUS_ID);
+		return PropertyController.get()
+				.stringProperty(PropertyHelper.POST_DISQUS_ID);
 	};
 
 	/**
 	 * @return
 	 */
 	public static String categoryId () {
-		return PropertyController.get().stringProperty(
-				PropertyHelper.POST_CATEGORY_ID);
+		return PropertyController.get()
+				.stringProperty(PropertyHelper.POST_CATEGORY_ID);
 	};
 
 	/**
@@ -363,6 +366,13 @@ public class PostController extends AsyncDataProvider<Post> {
 		}
 
 		return oracle;
+	}
+
+	/**
+	 * @param value
+	 */
+	public void setAdminMode (boolean value) {
+		isAdminMode = value;
 	}
 
 }

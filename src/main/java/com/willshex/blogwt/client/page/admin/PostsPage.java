@@ -68,8 +68,6 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 		createColumns();
 
 		tblPosts.setEmptyTableWidget(pnlNoPosts);
-		PostController.get().addDataDisplay(tblPosts);
-		pgrPosts.setDisplay(tblPosts);
 	}
 
 	private void createColumns () {
@@ -152,6 +150,7 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 				return "delete";
 			}
 		};
+
 		delete.setFieldUpdater(new FieldUpdater<Post, String>() {
 
 			@Override
@@ -182,6 +181,22 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				DeletePostEventHandler.TYPE, PostController.get(), this));
+
+		PostController.get().setAdminMode(true);
+		PostController.get().addDataDisplay(tblPosts);
+		pgrPosts.setDisplay(tblPosts);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#onDetach() */
+	@Override
+	protected void onDetach () {
+		super.onDetach();
+
+		PostController.get().setAdminMode(false);
+		PostController.get().removeDataDisplay(tblPosts);
+		pgrPosts.setDisplay(null);
 	}
 
 	/* (non-Javadoc)
