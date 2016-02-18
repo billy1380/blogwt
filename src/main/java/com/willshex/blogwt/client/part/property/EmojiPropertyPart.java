@@ -17,7 +17,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 import emoji.gwt.emoji.Emoji;
@@ -42,8 +41,8 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 	private static EmojiPropertyPartUiBinder uiBinder = GWT
 			.create(EmojiPropertyPartUiBinder.class);
 
-	interface EmojiPropertyPartUiBinder extends
-			UiBinder<Widget, EmojiPropertyPart> {}
+	interface EmojiPropertyPartUiBinder
+			extends UiBinder<Widget, EmojiPropertyPart> {}
 
 	public EmojiPropertyPart () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -52,7 +51,6 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 		appendAll(rdoGoogleNoto.getElement().getChild(1), Noto.INSTANCE);
 		appendAll(rdoTwitter.getElement().getChild(1), Twemoji.INSTANCE);
 
-		PostHelper.resetEmojiTheme();
 	}
 
 	/**
@@ -60,21 +58,26 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 	 * @param instance
 	 */
 	private void appendAll (Node node, Emojis theme) {
-		append(node, theme, ":poultry_leg:");
-		append(node, theme, ":eggplant:");
-		append(node, theme, ":birthday:");
-		append(node, theme, ":moneybag:");
+		append(node, theme, ":poultry_leg:", ":eggplant:", ":birthday:",
+				":moneybag:");
 	}
 
 	/**
 	 * @param instance
 	 * @param string
 	 */
-	private void append (Node node, Emojis theme, String name) {
-		Image one = new Image(Emoji.get(theme).resource(name));
-		one.setHeight("32px");
-		one.setWidth("32px");
-		node.appendChild(one.getElement());
+	private void append (final Node node, final Emojis theme,
+			final String... names) {
+		new Emoji().setTheme(theme, new Emoji.Ready() {
+			public void ready (Emoji emoji) {
+				for (String name : names) {
+					Image one = new Image(emoji.resource(name));
+					one.setHeight("32px");
+					one.setWidth("32px");
+					node.appendChild(one.getElement());
+				}
+			}
+		});
 	}
 
 	@UiHandler({ "rdoNone", "rdoApple", "rdoGoogleNoto", "rdoTwitter" })

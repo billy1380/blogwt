@@ -99,8 +99,4 @@ public class PostHelper extends com.willshex.blogwt.shared.helper.PostHelper {
 				DEFAULT_PLUGIN_READY_HANDLER);
 	}
 
-	public static void resetEmojiTheme () {
-		((Processor) processor()).resetEmojiTheme();
-	}
-
 }
