@@ -12,9 +12,13 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.willshex.blogwt.client.controller.NavigationController;
+import com.willshex.blogwt.client.markdown.Processor;
 import com.willshex.blogwt.client.part.CookieNoticePart;
 import com.willshex.blogwt.client.part.FooterPart;
 import com.willshex.blogwt.client.part.HeaderPart;
+
+import emoji.gwt.emoji.Emoji;
+import emoji.gwt.emoji.Emoji.Ready;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -26,10 +30,17 @@ public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
 	public void onModuleLoad () {
 		super.onModuleLoad();
 
+		Processor.init(new Ready() {
+			@Override
+			public void ready (Emoji emoji) {
+				start();
+			}
+		});
+	}
+
+	private void start () {
 		History.addValueChangeHandler(NavigationController.get());
-
 		createContentAndPages();
-
 		History.fireCurrentHistoryState();
 	}
 
@@ -39,8 +50,8 @@ public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
 
 		content.add(new CookieNoticePart());
 		content.add(new HeaderPart());
-		content.add(NavigationController.get().setPageHolder(
-				new HTMLPanel("<!-- pages -->")));
+		content.add(NavigationController.get()
+				.setPageHolder(new HTMLPanel("<!-- pages -->")));
 		content.add(new FooterPart());
 	}
 }

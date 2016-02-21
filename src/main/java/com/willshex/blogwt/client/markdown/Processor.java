@@ -27,6 +27,7 @@ import com.willshex.blogwt.client.markdown.plugin.YoutubePlugin;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 import emoji.gwt.emoji.Emoji;
+import emoji.gwt.emoji.Emoji.Ready;
 import emoji.gwt.emoji.res.Apple;
 import emoji.gwt.emoji.res.Emojis;
 import emoji.gwt.emoji.res.Noto;
@@ -46,16 +47,6 @@ public class Processor extends MarkdownProcessor {
 	private static final String HTTP_HOST_START = HTTP + HOST_START;
 	private static final String HTTPS_HOST_START = HTTPS + HOST_START;
 
-	private static String enableEmoji = PropertyController.get()
-			.stringProperty(PropertyHelper.POST_ENABLE_EMOJI);
-	private static Emoji emoji;
-
-	static {
-		if (!PropertyHelper.NONE_VALUE.equals(enableEmoji)) {
-			emoji = Emoji.get(theme(enableEmoji), null);
-		}
-	}
-
 	/* (non-Javadoc)
 	 * 
 	 * @see org.markdown4j.client.MarkdownProcessor#emojiEmitter() */
@@ -66,53 +57,42 @@ public class Processor extends MarkdownProcessor {
 			@Override
 			public void emitEmoji (final StringBuilder out, final String name,
 					Decorator decorator) {
+				boolean addedImage = false;
 
-				if (!PropertyHelper.NONE_VALUE.equals(enableEmoji)) {
-					Emoji.Ready ready = new Emoji.Ready() {
+				String enableEmoji = PropertyController.get()
+						.stringProperty(PropertyHelper.POST_ENABLE_EMOJI);
 
-						@Override
-						public void ready (Emoji emoji) {
-							boolean addedImage = false;
+				if (!PropertyHelper.NONE_VALUE.equals(enableEmoji)
+						&& Emoji.get() != null) {
+					SafeUri safeLink = Emoji.get().safeUri(name);
+					String link;
+					String comment;
+					if (safeLink != null
+							&& (link = safeLink.asString()).length() != 0) {
+						comment = name + " emoji";
 
-							SafeUri safeLink = emoji.safeUri(name);
-							String link;
-							String comment;
-							if (safeLink != null && (link = safeLink.asString())
-									.length() != 0) {
-								comment = name + " emoji";
-
-								out.append("<img class=\""
-										+ Resources.RES.styles().emoji()
-										+ "\" src=\"");
-								MarkdownUtils.appendValue(out, link, 0,
-										link.length());
-								out.append("\" alt=\"");
-								MarkdownUtils.appendValue(out, name, 0,
-										name.length());
-								out.append('"');
-								if (comment != null) {
-									out.append(" title=\"");
-									MarkdownUtils.appendValue(out, comment, 0,
-											comment.length());
-									out.append('"');
-								}
-								out.append(" />");
-
-								addedImage = true;
-							}
-
-							if (!addedImage) {
-								out.append(name);
-							}
+						out.append("<img class=\""
+								+ Resources.RES.styles().emoji() + "\" src=\"");
+						MarkdownUtils.appendValue(out, link, 0, link.length());
+						out.append("\" alt=\"");
+						MarkdownUtils.appendValue(out, name, 0, name.length());
+						out.append('"');
+						if (comment != null) {
+							out.append(" title=\"");
+							MarkdownUtils.appendValue(out, comment, 0,
+									comment.length());
+							out.append('"');
 						}
-					};
+						out.append(" />");
 
-					emoji.setTheme(theme(enableEmoji), ready);
+						addedImage = true;
+					}
 
-				} else {
-					out.append(name);
 				}
 
+				if (!addedImage) {
+					out.append(name);
+				}
 			}
 		};
 	}
@@ -186,7 +166,7 @@ public class Processor extends MarkdownProcessor {
 		decorator.addStyleClass("text-justify", "p");
 	}
 
-	private static Emojis theme (String enableEmoji) {
+	public static Emojis theme (String enableEmoji) {
 		Emojis theme = Noto.INSTANCE;
 
 		if (enableEmoji != null) {
@@ -201,5 +181,18 @@ public class Processor extends MarkdownProcessor {
 		}
 
 		return theme;
+	}
+
+	/**
+	 * @param ready
+	 */
+	public static void init (Ready ready) {
+		String enableEmoji = PropertyController.get()
+				.stringProperty(PropertyHelper.POST_ENABLE_EMOJI);
+		if (!PropertyHelper.NONE_VALUE.equals(enableEmoji)) {
+			Emoji.get(Processor.theme(enableEmoji), ready);
+		} else {
+			ready.ready(Emoji.get());
+		}
 	}
 }
