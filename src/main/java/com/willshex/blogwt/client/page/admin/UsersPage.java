@@ -13,16 +13,19 @@ import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.cell.StyledImageCell;
@@ -67,6 +70,7 @@ public class UsersPage extends Page {
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField SimplePager pgrUsers;
 	@UiField NoneFoundPanel pnlNoUsers;
+	@UiField Button btnRefresh;
 
 	public UsersPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -187,5 +191,10 @@ public class UsersPage extends Page {
 		tblUsers.addColumn(edit);
 		tblUsers.addColumn(admin);
 		tblUsers.addColumn(delete);
+	}
+	
+	@UiHandler("btnRefresh")
+	void onRefreshClicked (ClickEvent ce) {
+		tblUsers.setVisibleRangeAndClearData(tblUsers.getVisibleRange(), true);
 	}
 }
