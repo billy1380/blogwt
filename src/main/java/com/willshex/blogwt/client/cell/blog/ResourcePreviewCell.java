@@ -90,7 +90,7 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 	}
 
 	@UiHandler("btnDelete")
-	void quoteClicked (ClickEvent event, Element parent, Resource value) {
+	void deleteClicked (ClickEvent event, Element parent, Resource value) {
 		if (Window.confirm("Are you sure you want to delete resource "
 				+ value.name + "?")) {
 			ResourceController.get().deleteResource(value);
