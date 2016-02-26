@@ -36,8 +36,9 @@ public class FooterPart extends Composite {
 	}
 
 	@UiField DivElement divCopyright;
+	@UiField BackToTop btnBackToTop;
 
-	public FooterPart () {
+	private FooterPart () {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		PropertyController controller = PropertyController.get();
@@ -61,4 +62,21 @@ public class FooterPart extends Composite {
 		}
 	}
 
+	private static FooterPart one;
+
+	/**
+	 * @return
+	 */
+	public static FooterPart get () {
+		if (one == null) {
+			one = new FooterPart();
+		}
+		
+		return one;
+	}
+	
+	public void scrollToTop() {
+		btnBackToTop.go();
+	}
+	
 }

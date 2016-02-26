@@ -113,7 +113,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 	private List<HandlerRegistration> registration;
 
-	public HeaderPart () {
+	private HeaderPart () {
 		initWidget(uiBinder.createAndBindUi(this));
 		Resources.RES.styles().ensureInjected();
 
@@ -687,5 +687,18 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 	private Element getOpenable (String key) {
 		return openables == null ? null : openables.get(key);
+	}
+
+	private static HeaderPart one;
+
+	/**
+	 * @return
+	 */
+	public static HeaderPart get () {
+		if (one == null) {
+			one = new HeaderPart();
+		}
+		
+		return one;
 	}
 }

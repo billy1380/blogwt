@@ -27,7 +27,7 @@ import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
-import com.willshex.blogwt.client.part.BackToTop;
+import com.willshex.blogwt.client.part.FooterPart;
 import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.SectionPart;
 import com.willshex.blogwt.shared.api.datatype.Page;
@@ -61,8 +61,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 	@UiField Element elToolbar;
 
 	@UiField InlineHyperlink lnkEditPage;
-	@UiField Button btnDeletePage;
-	@UiField BackToTop btnTop;
+	@UiField Button btnDeletePage;	
 
 	private Page page;
 
@@ -72,9 +71,8 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 
 	@UiHandler("btnDeletePage")
 	void onBtnDeletePage (ClickEvent event) {
-		if (page != null
-				&& Window.confirm("Are you sure you want to delete \""
-						+ page.title + "\"")) {
+		if (page != null && Window.confirm(
+				"Are you sure you want to delete \"" + page.title + "\"")) {
 			PageController.get().deletePage(page);
 		}
 	}
@@ -105,7 +103,8 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
 		String slug = null;
-		if (PageType.fromString(current.getPage()) == PageType.PageDetailPageType) {
+		if (PageType
+				.fromString(current.getPage()) == PageType.PageDetailPageType) {
 			slug = current.getAction();
 		} else {
 			slug = current.getPageSlug();
@@ -126,9 +125,8 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 
 		pnlLoading.setVisible(true);
 
-		boolean canChange = SessionController.get().isAuthorised(
-				Arrays.asList(PermissionHelper
-						.create(PermissionHelper.MANAGE_PAGES)));
+		boolean canChange = SessionController.get().isAuthorised(Arrays.asList(
+				PermissionHelper.create(PermissionHelper.MANAGE_PAGES)));
 		if (canChange) {
 			getElement().insertFirst(elToolbar);
 		} else {
@@ -197,12 +195,12 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 			pnlContent.add(section);
 		}
 
-		lnkEditPage.setTargetHistoryToken(PageType.EditPagePageType
-				.asTargetHistoryToken(page.slug));
+		lnkEditPage.setTargetHistoryToken(
+				PageType.EditPagePageType.asTargetHistoryToken(page.slug));
 
 		pnlLoading.setVisible(false);
 
-		btnTop.go();
+		FooterPart.get().scrollToTop();
 	}
 
 	/* (non-Javadoc)
@@ -212,8 +210,8 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 	protected void reset () {
 		super.reset();
 
-		lnkEditPage.setTargetHistoryToken(PageType.EditPagePageType
-				.asTargetHistoryToken(""));
+		lnkEditPage.setTargetHistoryToken(
+				PageType.EditPagePageType.asTargetHistoryToken(""));
 
 		pnlContent.clear();
 		pnlLoading.setVisible(true);

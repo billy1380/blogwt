@@ -49,9 +49,9 @@ public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
 		RootPanel.get().add(content);
 
 		content.add(new CookieNoticePart());
-		content.add(new HeaderPart());
+		content.add(HeaderPart.get());
 		content.add(NavigationController.get()
 				.setPageHolder(new HTMLPanel("<!-- pages -->")));
-		content.add(new FooterPart());
+		content.add(FooterPart.get());
 	}
 }

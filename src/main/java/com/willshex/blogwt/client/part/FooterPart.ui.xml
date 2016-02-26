@@ -1,9 +1,10 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:style gss="true">
-	.pad-bottom {
+		.pad-bottom {
 		padding-bottom: 50px;
-	}
+		}
 	</ui:style>
 
 	<g:HTMLPanel>
@@ -12,5 +13,7 @@
 			<div class="container {style.pad-bottom}" ui:field="divCopyright" />
 		</footer>
 
+		<p:BackToTop ui:field="btnBackToTop"/>
+		
 	</g:HTMLPanel>
 </ui:UiBinder> 

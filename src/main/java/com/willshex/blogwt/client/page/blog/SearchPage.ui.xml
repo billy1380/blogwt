@@ -24,6 +24,5 @@
 		<p:NoneFoundPanel subject="results" ui:field="pnlNoResults" />
 		<p:LoadingPanel ui:field="pnlLoading" />
 
-		<p:BackToTop />
 	</g:HTMLPanel>
 </ui:UiBinder> 

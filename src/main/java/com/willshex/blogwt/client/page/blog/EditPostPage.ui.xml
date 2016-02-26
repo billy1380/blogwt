@@ -119,6 +119,5 @@
 				<c:CellList ui:field="clTags" styleName="{style.tags}" />
 			</div>
 		</g:HTMLPanel>
-		<p:BackToTop />
 	</g:HTMLPanel>
 </ui:UiBinder> 

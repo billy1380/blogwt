@@ -37,8 +37,8 @@ import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.AddToAny;
-import com.willshex.blogwt.client.part.BackToTop;
 import com.willshex.blogwt.client.part.DisqusComments;
+import com.willshex.blogwt.client.part.FooterPart;
 import com.willshex.blogwt.client.part.InlineBootstrapGwtCellList;
 import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.PostNavPart;
@@ -90,7 +90,6 @@ public class PostDetailPage extends Page implements
 
 	@UiField(provided = true) CellList<Tag> clTags = new CellList<Tag>(
 			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
-	@UiField BackToTop btnTop;
 
 	@UiField UserSummaryPart pnlUserSummary;
 	@UiField PostNavPart pnlPostNav;
@@ -230,7 +229,7 @@ public class PostDetailPage extends Page implements
 
 		pnlLoading.setVisible(false);
 
-		btnTop.go();
+		FooterPart.get().scrollToTop();
 	}
 
 	/* (non-Javadoc)

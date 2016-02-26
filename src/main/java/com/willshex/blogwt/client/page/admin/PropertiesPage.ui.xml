@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client" >
 	<ui:style>
 	
 	</ui:style>
@@ -20,7 +20,5 @@
 			</div>
 			<div class="col-sm-4"></div>
 		</div>
-
-		<p:BackToTop />
 	</g:HTMLPanel>
 </ui:UiBinder> 
