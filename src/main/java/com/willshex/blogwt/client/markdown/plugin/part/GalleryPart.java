@@ -11,11 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.helper.PostHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -30,10 +32,14 @@ public class GalleryPart extends Composite {
 
 	private static class ConfigLine {
 		public String url;
+		public String name;
+		public String caption;
 		public Map<String, String> parameters;
 	}
 
 	private static final String URL = "url";
+	private static final String NAME = "name";
+	private static final String CAPTION = "caption";
 
 	public GalleryPart () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -56,7 +62,18 @@ public class GalleryPart extends Composite {
 			if (config.url != null && config.url.length() > 0) {
 				Image image = new Image(config.url);
 
+				if (config.name != null) {
+					image.setTitle(config.name);
+					image.setAltText(config.caption);
+				}
+
 				((HTMLPanel) this.getWidget()).add(image);
+
+				if (config.caption != null) {
+					((HTMLPanel) this.getWidget())
+							.add(new HTMLPanel(SafeHtmlUtils.fromTrustedString(
+									PostHelper.makeMarkup(config.caption))));
+				}
 			}
 		}
 	}
@@ -76,6 +93,12 @@ public class GalleryPart extends Composite {
 				switch (splitParam[0]) {
 				case URL:
 					config.url = splitParam[1];
+					break;
+				case NAME:
+					config.name = splitParam[1];
+					break;
+				case CAPTION:
+					config.caption = splitParam[1];
 					break;
 				}
 			}
