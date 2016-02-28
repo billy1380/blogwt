@@ -7,9 +7,14 @@
 //
 package com.willshex.blogwt.client.page.admin;
 
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dev.util.collect.HashMap;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.markdown.plugin.part.GalleryPart;
 import com.willshex.blogwt.client.page.Page;
 
 /**
@@ -23,8 +28,25 @@ public class WidgetTestPage extends Page {
 
 	interface WidgetTestPageUiBinder extends UiBinder<Widget, WidgetTestPage> {}
 
+	@UiField GalleryPart gallery;
+
 	public WidgetTestPage () {
 		initWidget(uiBinder.createAndBindUi(this));
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
+	@Override
+	protected void onAttach () {
+		super.onAttach();
+
+		Map<String, String> params = new HashMap<>();
+		params.put("caption", "This is a test!");
+
+		gallery.setParams(params);
+		gallery.addImageWithLine("url=http://lorempixel.com/400/200/");
+
 	}
 
 }
