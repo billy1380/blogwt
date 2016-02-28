@@ -114,7 +114,7 @@ public class Processor extends MarkdownProcessor {
 		}
 
 		registerPlugins(new WebSequencePlugin(ensureManager()), includePlugin,
-				new GalleryPlugin(),
+				new GalleryPlugin(ensureManager()),
 				mapsApiKey == null ? null
 						: new MapPlugin(mapsApiKey, ensureManager()),
 				new YoutubePlugin(), new FormPlugin(ensureManager()));

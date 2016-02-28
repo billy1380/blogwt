@@ -10,8 +10,13 @@ package com.willshex.blogwt.client.markdown.plugin;
 import java.util.List;
 import java.util.Map;
 
-import org.markdown4j.Plugin;
+import org.markdown4j.client.AbstractAsyncPlugin;
+import org.markdown4j.client.event.PluginContentReadyEventHandler.PluginContentReadyEvent;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.markdown.plugin.part.GalleryPart;
 
@@ -19,10 +24,10 @@ import com.willshex.blogwt.client.markdown.plugin.part.GalleryPart;
  * @author William Shakour (billy1380)
  *
  */
-public class GalleryPlugin extends Plugin {
+public class GalleryPlugin extends AbstractAsyncPlugin {
 
-	public GalleryPlugin () {
-		super("gallery");
+	public GalleryPlugin (HandlerManager manager) {
+		super("gallery", manager);
 	}
 
 	/* (non-Javadoc)
@@ -30,9 +35,23 @@ public class GalleryPlugin extends Plugin {
 	 * @see org.markdown4j.Plugin#emit(java.lang.StringBuilder, java.util.List,
 	 * java.util.Map) */
 	@Override
-	public void emit (StringBuilder out, List<String> lines,
-			Map<String, String> params) {
-		out.append("Gallery goes here!");
+	public void emit (StringBuilder out, final List<String> lines,
+			final Map<String, String> params) {
+		final String id = HTMLPanel.createUniqueId();
+		out.append("<div id=\"");
+		out.append(id);
+		out.append("\"> Loading gallery...</div>");
+
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+			@Override
+			public void execute () {
+				if (manager != null) {
+					manager.fireEvent(new PluginContentReadyEvent(
+							GalleryPlugin.this, lines, params, id, "None"));
+				}
+			}
+		});
 	}
 
 	public Widget createWidget (List<String> lines,
