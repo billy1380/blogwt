@@ -37,9 +37,15 @@ public class GalleryPart extends Composite {
 		public Map<String, String> parameters;
 	}
 
+	private static final String NAME_PARAM_KEY = "name";
+	private static final String SHOW_THUMBNAILS_KEY = "showThumbs";
+
 	private static final String URL = "url";
 	private static final String NAME = "name";
 	private static final String CAPTION = "caption";
+
+	private String name;
+	private boolean showThumbnails;
 
 	public GalleryPart () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -49,7 +55,15 @@ public class GalleryPart extends Composite {
 	 * @param params
 	 */
 	public void setParams (Map<String, String> params) {
+		String[] splitParam;
+		
+		if (params.containsKey(SHOW_THUMBNAILS_KEY)) {
+			showThumbnails = Boolean.valueOf(params.get(SHOW_THUMBNAILS_KEY));
+		}
 
+		if (params.containsKey(NAME_PARAM_KEY)) {
+			name = params.get(NAME_PARAM_KEY);
+		}
 	}
 
 	/**
