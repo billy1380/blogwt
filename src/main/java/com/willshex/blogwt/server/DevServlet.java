@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 
 import com.willshex.utility.JsonUtils;
 import com.willshex.blogwt.server.api.blog.BlogApi;
+import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
@@ -36,7 +37,6 @@ import com.willshex.server.ContextAwareServlet;
 public class DevServlet extends ContextAwareServlet {
 
 	private static final long serialVersionUID = 8911904038164388255L;
-	private static final String DEV_ACCESS_CODE = "d8d20842-a8f7-11e5-bf72-cf5f3bd13298";
 
 	/* (non-Javadoc)
 	 * 
@@ -81,22 +81,24 @@ public class DevServlet extends ContextAwareServlet {
 
 			Permission loaded;
 			for (Permission permission : all) {
-				loaded = PermissionServiceProvider.provide().getCodePermission(
-						permission.code);
+				loaded = PermissionServiceProvider.provide()
+						.getCodePermission(permission.code);
 
 				if (loaded == null || loaded.id == null) {
-					PermissionServiceProvider.provide().addPermission(
-							permission);
+					PermissionServiceProvider.provide()
+							.addPermission(permission);
 				}
 			}
 		} else if ("getposts".equals(action)) {
-			RESPONSE.get()
-					.getOutputStream()
-					.print(JsonUtils.beautifyJson(new BlogApi().getPosts(
-							(GetPostsRequest) new GetPostsRequest()
-									.showAll(Boolean.TRUE)
-									.pager(PagerHelper.createDefaultPager())
-									.accessCode(DEV_ACCESS_CODE)).toString()));
+			RESPONSE.get().getOutputStream()
+					.print(JsonUtils.beautifyJson(new BlogApi()
+							.getPosts(
+									(GetPostsRequest) new GetPostsRequest()
+											.showAll(Boolean.TRUE)
+											.pager(PagerHelper
+													.createDefaultPager())
+									.accessCode(ApiValidator.DEV_ACCESS_CODE))
+							.toString()));
 		}
 	}
 }

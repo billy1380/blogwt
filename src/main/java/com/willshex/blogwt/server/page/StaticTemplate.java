@@ -14,6 +14,7 @@ import java.util.List;
 import org.markdown4j.server.IncludePlugin;
 import org.markdown4j.server.MarkdownProcessor;
 
+import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.Request;
@@ -27,8 +28,6 @@ import com.willshex.blogwt.shared.page.Stack;
  *
  */
 abstract class StaticTemplate implements PageMarkup {
-
-	public static final String ACCESS_CODE = "ded02740-5e12-11e5-b0c2-7054d251af02";
 
 	protected Stack stack;
 
@@ -63,7 +62,7 @@ abstract class StaticTemplate implements PageMarkup {
 			throw new RuntimeException(e);
 		}
 
-		input.accessCode = ACCESS_CODE;
+		input.accessCode = ApiValidator.STATIC_ACCESS_CODE;
 
 		return input;
 	}

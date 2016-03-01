@@ -20,11 +20,28 @@ import com.willshex.gson.web.service.shared.Request;
  */
 public class ApiValidator {
 
+	public static final String WEB_ACCESS_CODE = "2bfe5f0e-9138-401c-8619-9a66f6367c9a";
+	public static final String DEV_ACCESS_CODE = "d8d20842-a8f7-11e5-bf72-cf5f3bd13298";
+	public static final String STATIC_ACCESS_CODE = "ded02740-5e12-11e5-b0c2-7054d251af02";
+
+	private static final String[] ALLOWED_ACCESS_CODES = new String[] {
+			WEB_ACCESS_CODE, DEV_ACCESS_CODE, STATIC_ACCESS_CODE };
+
 	public static String accessCode (String accessCode, String name)
 			throws InputValidationException {
 		accessCode = validateToken(accessCode, name);
 
-		// TODO: if all is good look it up
+		boolean foundAllowedCode = false;
+
+		for (String code : ALLOWED_ACCESS_CODES) {
+			if (accessCode.equalsIgnoreCase(code)) {
+				foundAllowedCode = true;
+				break;
+			}
+		}
+
+		if (!foundAllowedCode) throwServiceError(InputValidationException.class,
+				ApiError.TokenNoMatch, name);
 
 		return accessCode;
 	}
@@ -46,12 +63,11 @@ public class ApiValidator {
 
 	public static String validateToken (String token, String name)
 			throws InputValidationException {
-		if (token == null)
-			throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, "String: " + name);
+		if (token == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, "String: " + name);
 
-		if (!token
-				.matches("([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})"))
+		if (!token.matches(
+				"([0-9a-f]{8})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{4})-([0-9a-f]{12})"))
 			throwServiceError(InputValidationException.class,
 					ApiError.TokenNoMatch, name);
 
@@ -60,18 +76,16 @@ public class ApiValidator {
 
 	public static <R extends Request> R request (R input, Class<R> c)
 			throws InputValidationException {
-		if (input == null)
-			throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, c.getSimpleName() + ": input");
+		if (input == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, c.getSimpleName() + ": input");
 
 		return input;
 	}
 
 	public static <T> T notNull (T value, Class<?> c, String name)
 			throws InputValidationException {
-		if (value == null)
-			throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, c.getSimpleName() + ": " + name);
+		if (value == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, c.getSimpleName() + ": " + name);
 
 		return value;
 	}
@@ -96,14 +110,15 @@ public class ApiValidator {
 		}
 
 		try {
-			e = c.getDeclaredConstructor(int.class, String.class).newInstance(
-					error.getCode(), message);
+			e = c.getDeclaredConstructor(int.class, String.class)
+					.newInstance(error.getCode(), message);
 		} catch (IllegalAccessException | InstantiationException
 				| IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException ex) {
 			throw new RuntimeException(
 					"Could not create ServiceException of type "
-							+ c.getCanonicalName(), ex);
+							+ c.getCanonicalName(),
+					ex);
 		}
 
 		throw e;
