@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItem;
 
+import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.images.ServingUrlOptions;
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 
@@ -46,11 +48,23 @@ public class ResourceUploadAction extends CloudStorageUploadAction {
 				resource.data = "gs://"
 						+ ((CloudStorageFileItem) i).getKey().getKeyString();
 				resource.description = "New uploaded file " + i.getName();
+
+				// try to get a permanent url for an image, if it works
+				// add it to the description
+				try {
+					resource.description += "\nDirect url:\n"
+							+ ImagesServiceFactory.getImagesService()
+									.getServingUrl(ServingUrlOptions.Builder
+											.withBlobKey(
+													((CloudStorageFileItem) i)
+															.getKey()));
+				} catch (Throwable e) {}
+
 				resource.name = i.getName();
 				resource.properties = "{\"contentType\":" + i.getContentType()
 						+ "}";
-				resource = ResourceServiceProvider.provide().addResource(
-						resource);
+				resource = ResourceServiceProvider.provide()
+						.addResource(resource);
 
 				if (resourcesJson.length() != 0) {
 					resourcesJson.append(" ");
