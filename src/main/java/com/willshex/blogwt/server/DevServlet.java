@@ -9,26 +9,32 @@ package com.willshex.blogwt.server;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
-import com.willshex.utility.JsonUtils;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.images.ServingUrlOptions;
 import com.willshex.blogwt.server.api.blog.BlogApi;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
+import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.server.ContextAwareServlet;
+import com.willshex.utility.JsonUtils;
 
 /**
  * @author William Shakour (billy1380)
@@ -92,13 +98,32 @@ public class DevServlet extends ContextAwareServlet {
 		} else if ("getposts".equals(action)) {
 			RESPONSE.get().getOutputStream()
 					.print(JsonUtils.beautifyJson(new BlogApi()
-							.getPosts(
-									(GetPostsRequest) new GetPostsRequest()
-											.showAll(Boolean.TRUE)
-											.pager(PagerHelper
-													.createDefaultPager())
+							.getPosts((GetPostsRequest) new GetPostsRequest()
+									.showAll(Boolean.TRUE)
+									.pager(PagerHelper.createDefaultPager())
 									.accessCode(ApiValidator.DEV_ACCESS_CODE))
 							.toString()));
+		} else if ("staticurl".equals(action)) {
+			List<Resource> resources = ResourceServiceProvider.provide()
+					.getResources(Integer.valueOf(0),
+							Integer.valueOf(Integer.MAX_VALUE), null, null);
+			for (Resource resource : resources) {
+				if (resource.description != null
+						&& !resource.description.contains("Static url")) {
+
+					try {
+						resource.description += "\nStatic url:\n"
+								+ ImagesServiceFactory.getImagesService()
+										.getServingUrl(ServingUrlOptions.Builder
+												.withBlobKey(new BlobKey(
+														resource.data.replace(
+																"gs://", ""))));
+						ResourceServiceProvider.provide()
+								.updateResource(resource);
+					} catch (Throwable e) {}
+
+				}
+			}
 		}
 	}
 }

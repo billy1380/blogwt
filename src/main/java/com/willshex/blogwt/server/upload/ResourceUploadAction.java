@@ -52,7 +52,7 @@ public class ResourceUploadAction extends CloudStorageUploadAction {
 				// try to get a permanent url for an image, if it works
 				// add it to the description
 				try {
-					resource.description += "\nDirect url:\n"
+					resource.description += "\nStatic url:\n"
 							+ ImagesServiceFactory.getImagesService()
 									.getServingUrl(ServingUrlOptions.Builder
 											.withBlobKey(

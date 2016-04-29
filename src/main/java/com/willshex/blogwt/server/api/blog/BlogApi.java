@@ -203,7 +203,7 @@ public final class BlogApi extends ActionHandler {
 			output.session = input.session = SessionValidator.lookupAndExtend(
 					input.session, "input.session");
 
-			output.resources = ResourceServiceProvider.provide().getResrouces(
+			output.resources = ResourceServiceProvider.provide().getResources(
 					input.pager.start, input.pager.count, null,
 					SortDirectionType.SortDirectionTypeDescending);
 

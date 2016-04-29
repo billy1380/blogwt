@@ -57,9 +57,8 @@ final class ResourceService implements IResourceService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.resource.IResourceService#updateResource
-	 * (com.willshex.blogwt.shared.api.datatype.Resource) */
+	 * @see com.willshex.blogwt.server.service.resource.IResourceService#
+	 * updateResource (com.willshex.blogwt.shared.api.datatype.Resource) */
 	@Override
 	public Resource updateResource (Resource resource) {
 		ofy().save().entity(resource).now();
@@ -68,9 +67,8 @@ final class ResourceService implements IResourceService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.resource.IResourceService#deleteResource
-	 * (com.willshex.blogwt.shared.api.datatype.Resource) */
+	 * @see com.willshex.blogwt.server.service.resource.IResourceService#
+	 * deleteResource (com.willshex.blogwt.shared.api.datatype.Resource) */
 	@Override
 	public void deleteResource (Resource resource) {
 		ofy().delete().entity(resource).now();
@@ -84,7 +82,7 @@ final class ResourceService implements IResourceService {
 	 * com.willshex.blogwt.shared.api.datatype.ResourceSortType,
 	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
-	public List<Resource> getResrouces (Integer start, Integer count,
+	public List<Resource> getResources (Integer start, Integer count,
 			ResourceSortType sortBy, SortDirectionType sortDirection) {
 		Query<Resource> query = ofy().load().type(Resource.class);
 
@@ -97,8 +95,8 @@ final class ResourceService implements IResourceService {
 		}
 
 		if (sortBy != null) {
-			String condition = sortBy == ResourceSortType.ResourceSortTypeId ? "__key__"
-					: sortBy.toString();
+			String condition = sortBy == ResourceSortType.ResourceSortTypeId
+					? "__key__" : sortBy.toString();
 
 			if (sortDirection != null) {
 				switch (sortDirection) {

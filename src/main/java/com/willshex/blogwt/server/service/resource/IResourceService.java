@@ -48,7 +48,7 @@ public interface IResourceService extends IService {
 	 * @param sortDirection
 	 * @return
 	 */
-	public List<Resource> getResrouces (Integer start, Integer count,
+	public List<Resource> getResources (Integer start, Integer count,
 			ResourceSortType sortBy, SortDirectionType sortDirection);
 
 }
