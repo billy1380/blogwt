@@ -13,7 +13,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.NavigationController;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
@@ -35,6 +34,7 @@ import com.willshex.blogwt.shared.api.page.call.event.CreatePageEventHandler;
 import com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler;
 import com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler;
 import com.willshex.blogwt.shared.page.PageType;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**

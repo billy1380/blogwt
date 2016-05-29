@@ -10,9 +10,9 @@ package com.willshex.blogwt.server.service.tag;
 import java.util.Collection;
 import java.util.List;
 
-import com.willshex.service.IService;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.Tag;
+import com.willshex.service.IService;
 
 public interface ITagService extends IService {
 	public static final String NAME = "blogwt.tag";

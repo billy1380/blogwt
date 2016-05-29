@@ -28,10 +28,6 @@ import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 import emoji.gwt.emoji.Emoji;
 import emoji.gwt.emoji.Emoji.Ready;
-import emoji.gwt.emoji.res.Apple;
-import emoji.gwt.emoji.res.Emojis;
-import emoji.gwt.emoji.res.Noto;
-import emoji.gwt.emoji.res.Twemoji;
 
 /**
  * @author William Shakour (billy1380)
@@ -166,23 +162,6 @@ public class Processor extends MarkdownProcessor {
 		decorator.addStyleClass("text-justify", "p");
 	}
 
-	public static Emojis theme (String enableEmoji) {
-		Emojis theme = Noto.INSTANCE;
-
-		if (enableEmoji != null) {
-			switch (enableEmoji) {
-			case PropertyHelper.APPLE_VALUE:
-				theme = Apple.INSTANCE;
-				break;
-			case PropertyHelper.TWITTER_VALUE:
-				theme = Twemoji.INSTANCE;
-				break;
-			}
-		}
-
-		return theme;
-	}
-
 	/**
 	 * @param ready
 	 */
@@ -190,7 +169,7 @@ public class Processor extends MarkdownProcessor {
 		String enableEmoji = PropertyController.get()
 				.stringProperty(PropertyHelper.POST_ENABLE_EMOJI);
 		if (!PropertyHelper.NONE_VALUE.equals(enableEmoji)) {
-			Emoji.get(Processor.theme(enableEmoji), ready);
+			Emoji.get(enableEmoji, ready);
 		} else {
 			ready.ready(Emoji.get());
 		}

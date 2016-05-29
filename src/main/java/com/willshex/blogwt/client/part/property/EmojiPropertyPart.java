@@ -20,10 +20,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 import emoji.gwt.emoji.Emoji;
-import emoji.gwt.emoji.res.Apple;
-import emoji.gwt.emoji.res.Emojis;
-import emoji.gwt.emoji.res.Noto;
-import emoji.gwt.emoji.res.Twemoji;
 
 /**
  * @author billy1380
@@ -47,9 +43,12 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 	public EmojiPropertyPart () {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		appendAll(rdoApple.getElement().getChild(1), Apple.INSTANCE);
-		appendAll(rdoGoogleNoto.getElement().getChild(1), Noto.INSTANCE);
-		appendAll(rdoTwitter.getElement().getChild(1), Twemoji.INSTANCE);
+		appendAll(rdoApple.getElement().getChild(1),
+				PropertyHelper.APPLE_VALUE);
+		appendAll(rdoGoogleNoto.getElement().getChild(1),
+				PropertyHelper.NOTO_VALUE);
+		appendAll(rdoTwitter.getElement().getChild(1),
+				PropertyHelper.TWEMOJI_VALUE);
 
 	}
 
@@ -57,8 +56,8 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 	 * @param appleLabel
 	 * @param instance
 	 */
-	private void appendAll (Node node, Emojis theme) {
-		append(node, theme, ":poultry_leg:", ":eggplant:", ":birthday:",
+	private void appendAll (Node node, String themeName) {
+		append(node, themeName, ":poultry_leg:", ":eggplant:", ":birthday:",
 				":moneybag:");
 	}
 
@@ -66,9 +65,9 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 	 * @param instance
 	 * @param string
 	 */
-	private void append (final Node node, final Emojis theme,
+	private void append (final Node node, final String themeName,
 			final String... names) {
-		new Emoji().setTheme(theme, new Emoji.Ready() {
+		new Emoji().setTheme(themeName, new Emoji.Ready() {
 			public void ready (Emoji emoji) {
 				for (String name : names) {
 					Image one = new Image(emoji.resource(name));
@@ -90,7 +89,7 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 			} else if (rdoGoogleNoto == vce.getSource()) {
 				value = PropertyHelper.NOTO_VALUE;
 			} else if (rdoTwitter == vce.getSource()) {
-				value = PropertyHelper.TWITTER_VALUE;
+				value = PropertyHelper.TWEMOJI_VALUE;
 			}
 
 			setValue(value, true);
@@ -115,7 +114,7 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 		case PropertyHelper.NOTO_VALUE:
 			rdoGoogleNoto.setValue(Boolean.TRUE, true);
 			break;
-		case PropertyHelper.TWITTER_VALUE:
+		case PropertyHelper.TWEMOJI_VALUE:
 			rdoTwitter.setValue(Boolean.TRUE, true);
 			break;
 		}

@@ -10,12 +10,12 @@ package com.willshex.blogwt.server.service.post;
 import java.util.Collection;
 import java.util.List;
 
-import com.willshex.service.IService;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.service.IService;
 
 /**
  * 

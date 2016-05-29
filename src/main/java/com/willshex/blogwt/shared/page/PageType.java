@@ -12,10 +12,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.willshex.utility.StringUtils;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
+import com.willshex.utility.StringUtils;
 
 /**
  * @author William Shakour (billy1380)

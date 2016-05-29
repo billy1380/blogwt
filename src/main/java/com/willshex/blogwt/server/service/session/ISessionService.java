@@ -7,9 +7,9 @@
 //
 package com.willshex.blogwt.server.service.session;
 
-import com.willshex.service.IService;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.service.IService;
 
 public interface ISessionService extends IService {
 	public static final String NAME = "blogwt.session";

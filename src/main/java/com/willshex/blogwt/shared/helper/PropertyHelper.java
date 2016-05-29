@@ -118,7 +118,7 @@ public class PropertyHelper {
 	public static final String NONE_VALUE = "none";
 	public static final String APPLE_VALUE = "apple";
 	public static final String NOTO_VALUE = "noto";
-	public static final String TWITTER_VALUE = "twitter";
+	public static final String TWEMOJI_VALUE = "twemoji";
 
 	public static final String TITLE_VALUE = "title";
 	public static final String LOGO_VALUE = "logo";

@@ -9,10 +9,10 @@ package com.willshex.blogwt.server.service.page;
 
 import java.util.List;
 
-import com.willshex.service.IService;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
+import com.willshex.service.IService;
 
 public interface IPageService extends IService {
 	public static final String NAME = "blogwt.page";

@@ -10,14 +10,6 @@ package com.willshex.blogwt.client.part.property;
 import java.util.HashMap;
 import java.util.Map;
 
-import gwtupload.client.BaseUploadStatus;
-import gwtupload.client.IUploader;
-import gwtupload.client.PreloadedImage;
-import gwtupload.client.SingleUploader;
-import gwtupload.client.IUploadStatus.Status;
-import gwtupload.client.IUploader.OnFinishUploaderHandler;
-import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -35,6 +27,14 @@ import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+
+import gwtupload.client.BaseUploadStatus;
+import gwtupload.client.IUploadStatus.Status;
+import gwtupload.client.IUploader;
+import gwtupload.client.IUploader.OnFinishUploaderHandler;
+import gwtupload.client.PreloadedImage;
+import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
+import gwtupload.client.SingleUploader;
 
 /**
  * @author billy1380
