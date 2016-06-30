@@ -18,6 +18,8 @@ import java.util.Map;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
+import com.google.appengine.api.search.Results;
+import com.google.appengine.api.search.ScoredDocument;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.SearchHelper;
@@ -199,8 +201,8 @@ final class PageService implements IPageService {
 		List<Post> posts = new ArrayList<Post>();
 
 		for (Page page : pages) {
-			posts.addAll(PostServiceProvider.provide()
-					.getIdPostBatch(PersistenceService.keysToIds(page.postKeys)));
+			posts.addAll(PostServiceProvider.provide().getIdPostBatch(
+					PersistenceService.keysToIds(page.postKeys)));
 		}
 
 		for (Post post : posts) {
@@ -326,5 +328,36 @@ final class PageService implements IPageService {
 		populatePostContents(Arrays.asList(page));
 
 		SearchHelper.indexDocument(toDocument(page));
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.page.IPageService#searchPages(java.
+	 * lang.String) */
+	@Override
+	public List<Page> searchPages (String query) {
+		Results<ScoredDocument> matches = SearchHelper.getIndex().search(query);
+		List<Page> pages = new ArrayList<Page>();
+		String id;
+		Page page;
+		int limit = SearchHelper.SHORT_SEARCH_LIMIT;
+		final String pageServiceName = getName();
+		for (ScoredDocument scoredDocument : matches) {
+			if (limit == 0) {
+				break;
+			}
+
+			if ((id = scoredDocument.getId()).startsWith(getName())) {
+				page = getPage(Long.valueOf(id.replace(pageServiceName, "")));
+				if (page != null) {
+					pages.add(page);
+				}
+			}
+
+			limit--;
+		}
+
+		return pages;
 	}
 }

@@ -21,6 +21,8 @@ import java.util.UUID;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
+import com.google.appengine.api.search.Results;
+import com.google.appengine.api.search.ScoredDocument;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
@@ -562,6 +564,37 @@ final class UserService implements IUserService {
 	public List<User> getIdUserBatch (Collection<Long> ids) {
 		return new ArrayList<User>(
 				ofy().load().type(User.class).ids(ids).values());
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.user.IUserService#searchUsers(java.
+	 * lang.String) */
+	@Override
+	public List<User> searchUsers (String query) {
+		Results<ScoredDocument> matches = SearchHelper.getIndex().search(query);
+		List<User> users = new ArrayList<User>();
+		String id;
+		User user;
+		int limit = SearchHelper.SHORT_SEARCH_LIMIT;
+		final String userServiceName = getName();
+		for (ScoredDocument scoredDocument : matches) {
+			if (limit == 0) {
+				break;
+			}
+
+			if ((id = scoredDocument.getId()).startsWith(userServiceName)) {
+				user = getUser(Long.valueOf(id.replace(userServiceName, "")));
+				if (user != null) {
+					users.add(user);
+				}
+			}
+
+			limit--;
+		}
+
+		return users;
 	}
 
 }

@@ -152,4 +152,11 @@ public interface IUserService extends IService {
 	 * @param id
 	 */
 	public void indexUser (Long id);
+
+	/**
+	 * Search users
+	 * @param query
+	 * @return
+	 */
+	public List<User> searchUsers (String query);
 }

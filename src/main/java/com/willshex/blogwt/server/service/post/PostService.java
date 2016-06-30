@@ -19,6 +19,8 @@ import java.util.Map;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
+import com.google.appengine.api.search.Results;
+import com.google.appengine.api.search.ScoredDocument;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.SearchHelper;
@@ -724,5 +726,38 @@ final class PostService implements IPostService {
 		}
 
 		SearchHelper.indexDocument(toDocument(post));
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.post.IPostService#searchPosts(java.
+	 * lang.String) */
+	@Override
+	public List<Post> searchPosts (String query) {
+
+		Results<ScoredDocument> matches = SearchHelper.getIndex().search(query);
+		List<Post> posts = new ArrayList<Post>();
+		String id;
+		Post post;
+		int limit = SearchHelper.SHORT_SEARCH_LIMIT;
+		final String postServiceName = getName();
+		for (ScoredDocument scoredDocument : matches) {
+			if (limit == 0) {
+				break;
+			}
+
+			if ((id = scoredDocument.getId()).startsWith(postServiceName)) {
+				post = getPost(Long.valueOf(id.replace(postServiceName, "")));
+				if (post != null) {
+					posts.add(post);
+				}
+			}
+
+			limit--;
+		}
+
+		return posts;
+
 	}
 }

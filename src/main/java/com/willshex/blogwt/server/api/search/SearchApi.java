@@ -14,7 +14,8 @@ import java.util.logging.Logger;
 import com.googlecode.objectify.Key;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
-import com.willshex.blogwt.server.helper.SearchHelper;
+import com.willshex.blogwt.server.service.page.PageServiceProvider;
+import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
@@ -48,7 +49,8 @@ public final class SearchApi extends ActionHandler {
 				ApiValidator.throwServiceError(InputValidationException.class,
 						ApiError.InvalidValueNull, "String: input.query");
 
-			output.posts = SearchHelper.searchPosts(input.query);
+			output.posts = PostServiceProvider.provide()
+					.searchPosts(input.query);
 
 			Map<Key<User>, User> users = new HashMap<Key<User>, User>();
 			if (output.posts != null) {
@@ -63,7 +65,8 @@ public final class SearchApi extends ActionHandler {
 				}
 			}
 
-			output.pages = SearchHelper.searchPages(input.query);
+			output.pages = PageServiceProvider.provide()
+					.searchPages(input.query);
 
 			if (output.pages != null) {
 				for (Page page : output.pages) {
@@ -77,7 +80,8 @@ public final class SearchApi extends ActionHandler {
 				}
 			}
 
-			output.users = SearchHelper.searchUsers(input.query);
+			output.users = UserServiceProvider.provide()
+					.searchUsers(input.query);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

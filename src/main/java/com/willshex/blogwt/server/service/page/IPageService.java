@@ -92,4 +92,11 @@ public interface IPageService extends IService {
 	 */
 	public void indexPage (Long id);
 
+	/**
+	 * Search pages
+	 * @param query
+	 * @return
+	 */
+	public List<Page> searchPages (String query);
+
 }

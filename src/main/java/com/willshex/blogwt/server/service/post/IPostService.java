@@ -174,4 +174,11 @@ public interface IPostService extends IService {
 	 */
 	public void clearLinks ();
 
+	/**
+	 * Search posts
+	 * @param query
+	 * @return
+	 */
+	public List<Post> searchPosts (String query);
+
 }
