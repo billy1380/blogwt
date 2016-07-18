@@ -74,7 +74,8 @@ final class PostService implements IPostService {
 			post.created = new Date();
 		}
 
-		post.slug = PostHelper.slugify(post.title);
+		post.slug = nextPostSlug(PostHelper.slugify(post.title));
+
 		post.authorKey = Key.create(post.author);
 
 		if (post.content.created == null) {
@@ -111,6 +112,17 @@ final class PostService implements IPostService {
 		}
 
 		return post;
+	}
+
+	/**
+	 * @param slug
+	 * @return
+	 */
+	private String nextPostSlug (String slug) {
+		List<Post> posts = getPartialSlugPosts(slug, Boolean.TRUE,
+				Boolean.FALSE, 0, Integer.valueOf(Integer.MAX_VALUE), null,
+				null);
+		return PostHelper.nextPostSlug(posts, slug);
 	}
 
 	/**

@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.shared.helper;
 
+import java.util.List;
+
 import com.willshex.blogwt.shared.api.datatype.Post;
 
 /**
@@ -45,8 +47,39 @@ public class PostHelper {
 	}
 
 	public static String getSlug (Post post) {
-		return post.slug == null || post.slug.length() == 0 ? post.id
-				.toString() : post.slug;
+		return post.slug == null || post.slug.length() == 0 ? post.id.toString()
+				: post.slug;
+	}
+
+	/**
+	 * @param posts
+	 * @param slug
+	 * @return
+	 */
+	public static String nextPostSlug (List<Post> posts, String slug) {
+		String nextSlug = slug;
+
+		if (posts != null) {
+			String strippedSlug;
+			int largestSuffix = 0, suffix;
+			for (Post post : posts) {
+				strippedSlug = post.slug.replace(slug, "");
+
+				if (!strippedSlug.isEmpty()) {
+					suffix = Integer.parseInt(strippedSlug);
+
+					if (suffix > largestSuffix) {
+						largestSuffix = suffix;
+					}
+				}
+			}
+
+			if (posts.size() > 0 && largestSuffix >= 0) {
+				nextSlug += Integer.toString(largestSuffix + 1);
+			}
+		}
+
+		return nextSlug;
 	}
 
 }
