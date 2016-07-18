@@ -492,13 +492,15 @@ final class PostService implements IPostService {
 	 * @param tags 
 	 */
 	private void deleteFromTags (Post post, Collection<String> tags) {
-		Tag tag;
-		for (String name : tags) {
-			tag = TagServiceProvider.provide()
-					.getSlugTag(PostHelper.slugify(name));
+		if (tags != null) {
+			Tag tag;
+			for (String name : tags) {
+				tag = TagServiceProvider.provide()
+						.getSlugTag(PostHelper.slugify(name));
 
-			if (tag != null) {
-				TagServiceProvider.provide().removeTagPost(tag, post);
+				if (tag != null) {
+					TagServiceProvider.provide().removeTagPost(tag, post);
+				}
 			}
 		}
 	}
