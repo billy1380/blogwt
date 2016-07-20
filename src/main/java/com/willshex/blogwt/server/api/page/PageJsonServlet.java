@@ -8,6 +8,12 @@
 package com.willshex.blogwt.server.api.page;
 
 import com.google.gson.JsonObject;
+import com.willshex.blogwt.server.api.page.action.CreatePageActionHandler;
+import com.willshex.blogwt.server.api.page.action.DeletePageActionHandler;
+import com.willshex.blogwt.server.api.page.action.GetPageActionHandler;
+import com.willshex.blogwt.server.api.page.action.GetPagesActionHandler;
+import com.willshex.blogwt.server.api.page.action.SubmitFormActionHandler;
+import com.willshex.blogwt.server.api.page.action.UpdatePageActionHandler;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
@@ -21,31 +27,30 @@ public final class PageJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
-		PageApi service = new PageApi();
 		if ("SubmitForm".equals(action)) {
 			SubmitFormRequest input = new SubmitFormRequest();
 			input.fromJson(request);
-			output = service.submitForm(input).toString();
-		} else if ("UpdatePage".equals(action)) {
-			UpdatePageRequest input = new UpdatePageRequest();
-			input.fromJson(request);
-			output = service.updatePage(input).toString();
-		} else if ("DeletePage".equals(action)) {
-			DeletePageRequest input = new DeletePageRequest();
-			input.fromJson(request);
-			output = service.deletePage(input).toString();
-		} else if ("CreatePage".equals(action)) {
-			CreatePageRequest input = new CreatePageRequest();
-			input.fromJson(request);
-			output = service.createPage(input).toString();
+			output = new SubmitFormActionHandler().handle(input).toString();
 		} else if ("GetPages".equals(action)) {
 			GetPagesRequest input = new GetPagesRequest();
 			input.fromJson(request);
-			output = service.getPages(input).toString();
+			output = new GetPagesActionHandler().handle(input).toString();
 		} else if ("GetPage".equals(action)) {
 			GetPageRequest input = new GetPageRequest();
 			input.fromJson(request);
-			output = service.getPage(input).toString();
+			output = new GetPageActionHandler().handle(input).toString();
+		} else if ("UpdatePage".equals(action)) {
+			UpdatePageRequest input = new UpdatePageRequest();
+			input.fromJson(request);
+			output = new UpdatePageActionHandler().handle(input).toString();
+		} else if ("DeletePage".equals(action)) {
+			DeletePageRequest input = new DeletePageRequest();
+			input.fromJson(request);
+			output = new DeletePageActionHandler().handle(input).toString();
+		} else if ("CreatePage".equals(action)) {
+			CreatePageRequest input = new CreatePageRequest();
+			input.fromJson(request);
+			output = new CreatePageActionHandler().handle(input).toString();
 		}
 		return output;
 	}
