@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.page;
 
-import com.willshex.blogwt.server.api.page.PageApi;
+import com.willshex.blogwt.server.api.page.action.GetPageActionHandler;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
@@ -63,12 +63,11 @@ class StaticPage extends StaticTemplate {
 	}
 
 	private void lookupPage () {
-		PageApi api = new PageApi();
 
 		GetPageRequest input = input(GetPageRequest.class)
 				.includePosts(Boolean.TRUE).page(new Page().slug(slug));
 
-		output = api.getPage(input);
+		output = (new GetPageActionHandler()).handle(input);
 	}
 
 	/* (non-Javadoc)
