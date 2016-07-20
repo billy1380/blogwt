@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.page;
 
-import com.willshex.blogwt.server.api.blog.BlogApi;
+import com.willshex.blogwt.server.api.blog.action.GetPostsActionHandler;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
 import com.willshex.blogwt.shared.helper.PagerHelper;
@@ -35,12 +35,11 @@ class StaticTag extends StaticPosts {
 			markup.append("<h2>Posts tagged with <strong>&apos;" + tag
 					+ "&apos;</strong></h2>");
 
-			BlogApi api = new BlogApi();
-
 			GetPostsRequest input = input(GetPostsRequest.class)
 					.pager(PagerHelper.createDefaultPager()).tag(tag);
 
-			GetPostsResponse output = api.getPosts(input);
+			GetPostsResponse output = (new GetPostsActionHandler())
+					.handle(input);
 
 			if (output.status == StatusType.StatusTypeSuccess
 					&& output.posts != null) {

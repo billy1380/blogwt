@@ -12,7 +12,7 @@ import java.util.List;
 import org.markdown4j.server.IncludePlugin;
 import org.markdown4j.server.MarkdownProcessor;
 
-import com.willshex.blogwt.server.api.blog.BlogApi;
+import com.willshex.blogwt.server.api.blog.action.GetPostsActionHandler;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
@@ -43,13 +43,11 @@ class StaticPosts extends StaticTemplate {
 	protected void appendPage (StringBuffer markup) {
 		markup.append("<h2>Blog</h2>");
 
-		BlogApi api = new BlogApi();
-
 		GetPostsRequest input = input(GetPostsRequest.class)
 				.pager(PagerHelper.createDefaultPager()
 						.sortBy(PostSortType.PostSortTypePublished.toString()));
 
-		GetPostsResponse output = api.getPosts(input);
+		GetPostsResponse output = new GetPostsActionHandler().handle(input);
 
 		if (output.status == StatusType.StatusTypeSuccess
 				&& output.posts != null) {

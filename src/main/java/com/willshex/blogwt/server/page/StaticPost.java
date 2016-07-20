@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.page;
 
-import com.willshex.blogwt.server.api.blog.BlogApi;
+import com.willshex.blogwt.server.api.blog.action.GetPostActionHandler;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.datatype.Post;
@@ -88,11 +88,9 @@ class StaticPost extends StaticTemplate {
 	}
 
 	private void lookupPost () {
-		BlogApi api = new BlogApi();
-
 		GetPostRequest input = input(GetPostRequest.class)
 				.post(new Post().slug(stack.getAction()));
-		output = api.getPost(input);
+		output = (new GetPostActionHandler()).handle(input);
 	}
 
 	/* (non-Javadoc)

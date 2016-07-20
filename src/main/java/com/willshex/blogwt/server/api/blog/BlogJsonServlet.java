@@ -8,6 +8,20 @@
 package com.willshex.blogwt.server.api.blog;
 
 import com.google.gson.JsonObject;
+import com.willshex.blogwt.server.api.blog.action.CreatePostActionHandler;
+import com.willshex.blogwt.server.api.blog.action.DeletePostActionHandler;
+import com.willshex.blogwt.server.api.blog.action.DeleteResourceActionHandler;
+import com.willshex.blogwt.server.api.blog.action.GetArchiveEntriesActionHandler;
+import com.willshex.blogwt.server.api.blog.action.GetPostActionHandler;
+import com.willshex.blogwt.server.api.blog.action.GetPostsActionHandler;
+import com.willshex.blogwt.server.api.blog.action.GetRelatedPostsActionHandler;
+import com.willshex.blogwt.server.api.blog.action.GetResourceActionHandler;
+import com.willshex.blogwt.server.api.blog.action.GetResourcesActionHandler;
+import com.willshex.blogwt.server.api.blog.action.GetTagsActionHandler;
+import com.willshex.blogwt.server.api.blog.action.SetupBlogActionHandler;
+import com.willshex.blogwt.server.api.blog.action.UpdatePostActionHandler;
+import com.willshex.blogwt.server.api.blog.action.UpdatePropertiesActionHandler;
+import com.willshex.blogwt.server.api.blog.action.UpdateResourceActionHandler;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceRequest;
@@ -29,64 +43,65 @@ public final class BlogJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
-		BlogApi service = new BlogApi();
 		if ("UpdateResource".equals(action)) {
 			UpdateResourceRequest input = new UpdateResourceRequest();
 			input.fromJson(request);
-			output = service.updateResource(input).toString();
+			output = new UpdateResourceActionHandler().handle(input).toString();
 		} else if ("GetResource".equals(action)) {
 			GetResourceRequest input = new GetResourceRequest();
 			input.fromJson(request);
-			output = service.getResource(input).toString();
-		}
-		if ("GetArchiveEntries".equals(action)) {
-			GetArchiveEntriesRequest input = new GetArchiveEntriesRequest();
-			input.fromJson(request);
-			output = service.getArchiveEntries(input).toString();
-		} else if ("DeleteResource".equals(action)) {
-			DeleteResourceRequest input = new DeleteResourceRequest();
-			input.fromJson(request);
-			output = service.deleteResource(input).toString();
-		} else if ("GetResources".equals(action)) {
-			GetResourcesRequest input = new GetResourcesRequest();
-			input.fromJson(request);
-			output = service.getResources(input).toString();
-		} else if ("GetRelatedPosts".equals(action)) {
-			GetRelatedPostsRequest input = new GetRelatedPostsRequest();
-			input.fromJson(request);
-			output = service.getRelatedPosts(input).toString();
-		} else if ("UpdateProperties".equals(action)) {
-			UpdatePropertiesRequest input = new UpdatePropertiesRequest();
-			input.fromJson(request);
-			output = service.updateProperties(input).toString();
+			output = new GetResourceActionHandler().handle(input).toString();
 		} else if ("GetPosts".equals(action)) {
 			GetPostsRequest input = new GetPostsRequest();
 			input.fromJson(request);
-			output = service.getPosts(input).toString();
+			output = new GetPostsActionHandler().handle(input).toString();
+		} else if ("GetArchiveEntries".equals(action)) {
+			GetArchiveEntriesRequest input = new GetArchiveEntriesRequest();
+			input.fromJson(request);
+			output = new GetArchiveEntriesActionHandler().handle(input)
+					.toString();
+		} else if ("DeleteResource".equals(action)) {
+			DeleteResourceRequest input = new DeleteResourceRequest();
+			input.fromJson(request);
+			output = new DeleteResourceActionHandler().handle(input).toString();
+		} else if ("GetResources".equals(action)) {
+			GetResourcesRequest input = new GetResourcesRequest();
+			input.fromJson(request);
+			output = new GetResourcesActionHandler().handle(input).toString();
+		} else if ("GetRelatedPosts".equals(action)) {
+			GetRelatedPostsRequest input = new GetRelatedPostsRequest();
+			input.fromJson(request);
+			output = new GetRelatedPostsActionHandler().handle(input)
+					.toString();
+		} else if ("UpdateProperties".equals(action)) {
+			UpdatePropertiesRequest input = new UpdatePropertiesRequest();
+			input.fromJson(request);
+			output = new UpdatePropertiesActionHandler().handle(input)
+					.toString();
 		} else if ("GetTags".equals(action)) {
 			GetTagsRequest input = new GetTagsRequest();
 			input.fromJson(request);
-			output = service.getTags(input).toString();
+			output = new GetTagsActionHandler().handle(input).toString();
 		} else if ("GetPost".equals(action)) {
 			GetPostRequest input = new GetPostRequest();
 			input.fromJson(request);
-			output = service.getPost(input).toString();
+			output = new GetPostActionHandler().handle(input).toString();
 		} else if ("DeletePost".equals(action)) {
 			DeletePostRequest input = new DeletePostRequest();
 			input.fromJson(request);
-			output = service.deletePost(input).toString();
+			output = new DeletePostActionHandler().handle(input).toString();
 		} else if ("SetupBlog".equals(action)) {
 			SetupBlogRequest input = new SetupBlogRequest();
 			input.fromJson(request);
-			output = service.setupBlog(input).toString();
+			output = new SetupBlogActionHandler().handle(input).toString();
 		} else if ("CreatePost".equals(action)) {
 			CreatePostRequest input = new CreatePostRequest();
 			input.fromJson(request);
-			output = service.createPost(input).toString();
+			output = new CreatePostActionHandler().handle(input).toString();
 		} else if ("UpdatePost".equals(action)) {
 			UpdatePostRequest input = new UpdatePostRequest();
 			input.fromJson(request);
-			output = service.updatePost(input).toString();
+			output = new UpdatePostActionHandler().handle(input).toString();
 		}
 		return output;
 	}

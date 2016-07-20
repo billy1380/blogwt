@@ -16,7 +16,7 @@ import javax.servlet.ServletException;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
-import com.willshex.blogwt.server.api.blog.BlogApi;
+import com.willshex.blogwt.server.api.blog.action.GetPostsActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
@@ -96,9 +96,9 @@ public class DevServlet extends ContextAwareServlet {
 				}
 			}
 		} else if ("getposts".equals(action)) {
-			RESPONSE.get().getOutputStream()
-					.print(JsonUtils.beautifyJson(new BlogApi()
-							.getPosts((GetPostsRequest) new GetPostsRequest()
+			RESPONSE.get().getOutputStream().print(
+					JsonUtils.beautifyJson((new GetPostsActionHandler())
+							.handle((GetPostsRequest) new GetPostsRequest()
 									.showAll(Boolean.TRUE)
 									.pager(PagerHelper.createDefaultPager())
 									.accessCode(ApiValidator.DEV_ACCESS_CODE))
