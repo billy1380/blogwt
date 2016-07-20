@@ -8,6 +8,7 @@
 package com.willshex.blogwt.server.api.search;
 
 import com.google.gson.JsonObject;
+import com.willshex.blogwt.server.api.search.action.SearchAllActionHandler;
 import com.willshex.blogwt.shared.api.search.call.SearchAllRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
@@ -16,11 +17,10 @@ public final class SearchJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
-		SearchApi service = new SearchApi();
 		if ("SearchAll".equals(action)) {
 			SearchAllRequest input = new SearchAllRequest();
 			input.fromJson(request);
-			output = service.searchAll(input).toString();
+			output = new SearchAllActionHandler().handle(input).toString();
 		}
 		return output;
 	}

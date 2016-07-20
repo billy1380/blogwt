@@ -1,11 +1,11 @@
 //  
-//  SearchApi.java
-//  blogwt
+//  SearchAllActionHandler.java
+//  xsdwsdl2code
 //
-//  Created by William Shakour on August 20, 2015.
-//  Copyright © 2015 WillShex Limited. All rights reserved.
+//  Created by William Shakour on July 20, 2016.
+//  Copyright © 2016 WillShex Limited. All rights reserved.
 //
-package com.willshex.blogwt.server.api.search;
+package com.willshex.blogwt.server.api.search.action;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,11 +28,11 @@ import com.willshex.gson.web.service.server.ActionHandler;
 import com.willshex.gson.web.service.server.InputValidationException;
 import com.willshex.gson.web.service.shared.StatusType;
 
-public final class SearchApi extends ActionHandler {
+public final class SearchAllActionHandler extends ActionHandler {
 	private static final Logger LOG = Logger
-			.getLogger(SearchApi.class.getName());
+			.getLogger(SearchAllActionHandler.class.getName());
 
-	public SearchAllResponse searchAll (SearchAllRequest input) {
+	public SearchAllResponse handle (SearchAllRequest input) {
 		LOG.finer("Entering searchAll");
 		SearchAllResponse output = new SearchAllResponse();
 		try {
