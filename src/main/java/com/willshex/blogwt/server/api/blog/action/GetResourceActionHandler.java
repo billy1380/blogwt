@@ -9,40 +9,49 @@ package com.willshex.blogwt.server.api.blog.action;
 
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.ResourceValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.shared.api.blog.call.GetResourceRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetResourceResponse;
-import com.willshex.blogwt.shared.helper.UserHelper;
-import com.willshex.gson.web.service.server.ActionHandler;
-import com.willshex.gson.web.service.shared.StatusType;
 
-public final class GetResourceActionHandler extends ActionHandler {
+public final class GetResourceActionHandler
+		extends ActionHandler<GetResourceRequest, GetResourceResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetResourceActionHandler.class.getName());
 
-	public GetResourceResponse handle (GetResourceRequest input) {
-		LOG.finer("Entering getResource");
-		GetResourceResponse output = new GetResourceResponse();
-		try {
-			ApiValidator.notNull(input, GetResourceRequest.class, "input");
-			ApiValidator.accessCode(input.accessCode, "input.accessCode");
-			output.session = input.session = SessionValidator
-					.lookupAndExtend(input.session, "input.session");
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
+	@Override
+	protected void handle (GetResourceRequest input, GetResourceResponse output)
+			throws Exception {
+		ApiValidator.notNull(input, GetResourceRequest.class, "input");
+		ApiValidator.accessCode(input.accessCode, "input.accessCode");
+		output.session = input.session = SessionValidator
+				.lookupAndExtend(input.session, "input.session");
 
-			output.resource = input.resource = ResourceValidator
-					.lookup(input.resource, "input.resource");
+		output.resource = input.resource = ResourceValidator
+				.lookup(input.resource, "input.resource");
+	}
 
-			UserHelper.stripPassword(
-					output.session == null ? null : output.session.user);
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	@Override
+	protected GetResourceResponse newOutput () {
+		return new GetResourceResponse();
+	}
 
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
-		}
-		LOG.finer("Exiting getResource");
-		return output;
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	@Override
+	protected Logger logger () {
+		return LOG;
 	}
 }

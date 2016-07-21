@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PageValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
@@ -24,57 +25,66 @@ import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.UpdatePageResponse;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PostHelper;
-import com.willshex.blogwt.shared.helper.UserHelper;
-import com.willshex.gson.web.service.server.ActionHandler;
-import com.willshex.gson.web.service.shared.StatusType;
 
-public final class UpdatePageActionHandler extends ActionHandler {
+public final class UpdatePageActionHandler
+		extends ActionHandler<UpdatePageRequest, UpdatePageResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(UpdatePageActionHandler.class.getName());
 
-	public UpdatePageResponse handle (UpdatePageRequest input) {
-		LOG.finer("Entering updatePage");
-		UpdatePageResponse output = new UpdatePageResponse();
-		try {
-			ApiValidator.notNull(input, UpdatePageRequest.class, "input");
-			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
+	@Override
+	protected void handle (UpdatePageRequest input, UpdatePageResponse output)
+			throws Exception {
+		ApiValidator.notNull(input, UpdatePageRequest.class, "input");
+		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-			output.session = input.session = SessionValidator
-					.lookupAndExtend(input.session, "input.session");
+		output.session = input.session = SessionValidator
+				.lookupAndExtend(input.session, "input.session");
 
-			List<Permission> permissions = new ArrayList<Permission>();
-			Permission postPermission = PermissionServiceProvider.provide()
-					.getCodePermission(PermissionHelper.MANAGE_PAGES);
-			permissions.add(postPermission);
+		List<Permission> permissions = new ArrayList<Permission>();
+		Permission postPermission = PermissionServiceProvider.provide()
+				.getCodePermission(PermissionHelper.MANAGE_PAGES);
+		permissions.add(postPermission);
 
-			input.session.user = UserServiceProvider.provide()
-					.getUser(Long.valueOf(input.session.userKey.getId()));
+		input.session.user = UserServiceProvider.provide()
+				.getUser(Long.valueOf(input.session.userKey.getId()));
 
-			UserValidator.authorisation(input.session.user, permissions,
-					"input.session.user");
+		UserValidator.authorisation(input.session.user, permissions,
+				"input.session.user");
 
-			Page updatedPage = input.page;
+		Page updatedPage = input.page;
 
-			input.page = PageValidator.lookup(input.page, "input.page");
-			updatedPage = PageValidator.validate(updatedPage, "input.page");
+		input.page = PageValidator.lookup(input.page, "input.page");
+		updatedPage = PageValidator.validate(updatedPage, "input.page");
 
-			input.page.hasChildren = updatedPage.hasChildren;
-			input.page.parent = updatedPage.parent;
-			input.page.posts = updatedPage.posts;
-			input.page.priority = updatedPage.priority;
-			input.page.title = updatedPage.title;
-			input.page.slug = PostHelper.slugify(input.page.title);
+		input.page.hasChildren = updatedPage.hasChildren;
+		input.page.parent = updatedPage.parent;
+		input.page.posts = updatedPage.posts;
+		input.page.priority = updatedPage.priority;
+		input.page.title = updatedPage.title;
+		input.page.slug = PostHelper.slugify(input.page.title);
 
-			output.page = PageServiceProvider.provide().updatePage(input.page);
+		output.page = PageServiceProvider.provide().updatePage(input.page);
+	}
 
-			UserHelper.stripPassword(
-					output.session == null ? null : output.session.user);
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
-		}
-		LOG.finer("Exiting updatePage");
-		return output;
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	@Override
+	protected UpdatePageResponse newOutput () {
+		return new UpdatePageResponse();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	@Override
+	protected Logger logger () {
+		return LOG;
 	}
 }

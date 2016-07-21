@@ -10,6 +10,7 @@ package com.willshex.blogwt.server.api.page.action;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PageValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
@@ -21,45 +22,54 @@ import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PostHelper;
-import com.willshex.blogwt.shared.helper.UserHelper;
-import com.willshex.gson.web.service.server.ActionHandler;
-import com.willshex.gson.web.service.shared.StatusType;
 
-public final class CreatePageActionHandler extends ActionHandler {
+public final class CreatePageActionHandler
+		extends ActionHandler<CreatePageRequest, CreatePageResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(CreatePageActionHandler.class.getName());
 
-	public CreatePageResponse handle (CreatePageRequest input) {
-		LOG.finer("Entering createPage");
-		CreatePageResponse output = new CreatePageResponse();
-		try {
-			ApiValidator.notNull(input, CreatePageRequest.class, "input");
-			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
+	@Override
+	protected void handle (CreatePageRequest input, CreatePageResponse output)
+			throws Exception {
+		ApiValidator.notNull(input, CreatePageRequest.class, "input");
+		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-			output.session = input.session = SessionValidator
-					.lookupAndExtend(input.session, "input.session");
+		output.session = input.session = SessionValidator
+				.lookupAndExtend(input.session, "input.session");
 
-			input.session.user = UserServiceProvider.provide()
-					.getUser(Long.valueOf(input.session.userKey.getId()));
+		input.session.user = UserServiceProvider.provide()
+				.getUser(Long.valueOf(input.session.userKey.getId()));
 
-			UserValidator.authorisation(input.session.user,
-					Arrays.asList(PermissionServiceProvider.provide()
-							.getCodePermission(PermissionHelper.MANAGE_PAGES)),
-					"input.session.user");
+		UserValidator.authorisation(input.session.user,
+				Arrays.asList(PermissionServiceProvider.provide()
+						.getCodePermission(PermissionHelper.MANAGE_PAGES)),
+				"input.session.user");
 
-			input.page = PageValidator.validate(input.page, "input.page");
-			input.page.slug = PostHelper.slugify(input.page.title);
+		input.page = PageValidator.validate(input.page, "input.page");
+		input.page.slug = PostHelper.slugify(input.page.title);
 
-			output.page = PageServiceProvider.provide().addPage(input.page);
+		output.page = PageServiceProvider.provide().addPage(input.page);
+	}
 
-			UserHelper.stripPassword(
-					output.session == null ? null : output.session.user);
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
-		}
-		LOG.finer("Exiting createPage");
-		return output;
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	@Override
+	protected CreatePageResponse newOutput () {
+		return new CreatePageResponse();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	@Override
+	protected Logger logger () {
+		return LOG;
 	}
 }

@@ -9,25 +9,36 @@ package com.willshex.blogwt.server.api.blog.action;
 
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesResponse;
-import com.willshex.gson.web.service.server.ActionHandler;
-import com.willshex.gson.web.service.shared.StatusType;
 
-public final class GetArchiveEntriesActionHandler extends ActionHandler {
+public final class GetArchiveEntriesActionHandler extends
+		ActionHandler<GetArchiveEntriesRequest, GetArchiveEntriesResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetArchiveEntriesActionHandler.class.getName());
 
-	public GetArchiveEntriesResponse handle (GetArchiveEntriesRequest input) {
-		LOG.finer("Entering getArchiveEntries");
-		GetArchiveEntriesResponse output = new GetArchiveEntriesResponse();
-		try {
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
-		}
-		LOG.finer("Exiting getArchiveEntries");
-		return output;
+	/* (non-Javadoc)
+	 * @see com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.gson.web.service.shared.Request, com.willshex.gson.web.service.shared.Response)
+	 */
+	@Override
+	protected void handle (GetArchiveEntriesRequest input,
+			GetArchiveEntriesResponse output) throws Exception {}
+
+	/* (non-Javadoc)
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput()
+	 */
+	@Override
+	protected GetArchiveEntriesResponse newOutput () {
+		return new GetArchiveEntriesResponse();
 	}
+
+	/* (non-Javadoc)
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger()
+	 */
+	@Override
+	protected Logger logger () {
+		return LOG;
+	}
+
 }

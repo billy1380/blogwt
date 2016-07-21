@@ -9,47 +9,58 @@ package com.willshex.blogwt.server.api.user.action;
 
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
 import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse;
-import com.willshex.gson.web.service.server.ActionHandler;
 import com.willshex.gson.web.service.server.InputValidationException;
-import com.willshex.gson.web.service.shared.StatusType;
 
-public final class GetEmailAvatarActionHandler extends ActionHandler {
+public final class GetEmailAvatarActionHandler
+		extends ActionHandler<GetEmailAvatarRequest, GetEmailAvatarResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetEmailAvatarActionHandler.class.getName());
 
-	public GetEmailAvatarResponse handle (GetEmailAvatarRequest input) {
-		LOG.finer("Entering getEmailAvatar");
-		GetEmailAvatarResponse output = new GetEmailAvatarResponse();
-		try {
-			ApiValidator.notNull(input, GetEmailAvatarRequest.class, "input");
-			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
+	@Override
+	protected void handle (GetEmailAvatarRequest input,
+			GetEmailAvatarResponse output) throws Exception {
+		ApiValidator.notNull(input, GetEmailAvatarRequest.class, "input");
+		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-			if (input.session != null) {
-				try {
-					output.session = input.session = SessionValidator
-							.lookupAndExtend(input.session, "input.session");
-				} catch (InputValidationException ex) {
-					output.session = input.session = null;
-				}
+		if (input.session != null) {
+			try {
+				output.session = input.session = SessionValidator
+						.lookupAndExtend(input.session, "input.session");
+			} catch (InputValidationException ex) {
+				output.session = input.session = null;
 			}
-
-			ApiValidator.notNull(input.email, String.class, "input.email");
-
-			output.avatar = UserHelper.emailAvatar(input.email);
-
-			UserHelper.stripPassword(
-					output.session == null ? null : output.session.user);
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
 		}
-		LOG.finer("Exiting getEmailAvatar");
-		return output;
+
+		ApiValidator.notNull(input.email, String.class, "input.email");
+
+		output.avatar = UserHelper.emailAvatar(input.email);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	@Override
+	protected GetEmailAvatarResponse newOutput () {
+		return new GetEmailAvatarResponse();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	@Override
+	protected Logger logger () {
+		return LOG;
 	}
 }

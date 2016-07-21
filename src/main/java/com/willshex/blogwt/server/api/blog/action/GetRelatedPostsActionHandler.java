@@ -9,25 +9,39 @@ package com.willshex.blogwt.server.api.blog.action;
 
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsResponse;
-import com.willshex.gson.web.service.server.ActionHandler;
-import com.willshex.gson.web.service.shared.StatusType;
 
-public final class GetRelatedPostsActionHandler extends ActionHandler {
+public final class GetRelatedPostsActionHandler
+		extends ActionHandler<GetRelatedPostsRequest, GetRelatedPostsResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetRelatedPostsActionHandler.class.getName());
 
-	public GetRelatedPostsResponse handle (GetRelatedPostsRequest input) {
-		LOG.finer("Entering getRelatedPosts");
-		GetRelatedPostsResponse output = new GetRelatedPostsResponse();
-		try {
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
-		}
-		LOG.finer("Exiting getRelatedPosts");
-		return output;
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
+	@Override
+	protected void handle (GetRelatedPostsRequest input,
+			GetRelatedPostsResponse output) throws Exception {}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	@Override
+	protected GetRelatedPostsResponse newOutput () {
+		return new GetRelatedPostsResponse();
 	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	@Override
+	protected Logger logger () {
+		return LOG;
+	}
+
 }

@@ -11,45 +11,55 @@ import java.util.logging.Logger;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.ResourceValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceResponse;
-import com.willshex.blogwt.shared.helper.UserHelper;
-import com.willshex.gson.web.service.server.ActionHandler;
-import com.willshex.gson.web.service.shared.StatusType;
 
-public final class DeleteResourceActionHandler extends ActionHandler {
+public final class DeleteResourceActionHandler
+		extends ActionHandler<DeleteResourceRequest, DeleteResourceResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(DeleteResourceActionHandler.class.getName());
 
-	public DeleteResourceResponse handle (DeleteResourceRequest input) {
-		LOG.finer("Entering deleteResource");
-		DeleteResourceResponse output = new DeleteResourceResponse();
-		try {
-			ApiValidator.notNull(input, DeleteResourceRequest.class, "input");
-			ApiValidator.accessCode(input.accessCode, "input.accessCode");
-			output.session = input.session = SessionValidator
-					.lookupAndExtend(input.session, "input.session");
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
+	@Override
+	protected void handle (DeleteResourceRequest input,
+			DeleteResourceResponse output) throws Exception {
+		ApiValidator.notNull(input, DeleteResourceRequest.class, "input");
+		ApiValidator.accessCode(input.accessCode, "input.accessCode");
+		output.session = input.session = SessionValidator
+				.lookupAndExtend(input.session, "input.session");
 
-			input.resource = ResourceValidator.lookup(input.resource,
-					"input.resource");
+		input.resource = ResourceValidator.lookup(input.resource,
+				"input.resource");
 
-			BlobstoreServiceFactory.getBlobstoreService()
-					.delete(new BlobKey(input.resource.data.substring(5)));
+		BlobstoreServiceFactory.getBlobstoreService()
+				.delete(new BlobKey(input.resource.data.substring(5)));
 
-			ResourceServiceProvider.provide().deleteResource(input.resource);
+		ResourceServiceProvider.provide().deleteResource(input.resource);
+	}
 
-			UserHelper.stripPassword(
-					output.session == null ? null : output.session.user);
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
-		}
-		LOG.finer("Exiting deleteResource");
-		return output;
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	@Override
+	protected DeleteResourceResponse newOutput () {
+		return new DeleteResourceResponse();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	@Override
+	protected Logger logger () {
+		return LOG;
 	}
 }

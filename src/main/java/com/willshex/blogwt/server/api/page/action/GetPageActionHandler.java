@@ -9,6 +9,7 @@ package com.willshex.blogwt.server.api.page.action;
 
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PageValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
@@ -19,56 +20,66 @@ import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.helper.UserHelper;
-import com.willshex.gson.web.service.server.ActionHandler;
 import com.willshex.gson.web.service.server.InputValidationException;
-import com.willshex.gson.web.service.shared.StatusType;
 
-public final class GetPageActionHandler extends ActionHandler {
+public final class GetPageActionHandler
+		extends ActionHandler<GetPageRequest, GetPageResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetPageActionHandler.class.getName());
 
-	public GetPageResponse handle (GetPageRequest input) {
-		LOG.finer("Entering getPage");
-		GetPageResponse output = new GetPageResponse();
-		try {
-			ApiValidator.notNull(input, GetPageRequest.class, "input");
-			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
+	@Override
+	protected void handle (GetPageRequest input, GetPageResponse output)
+			throws Exception {
+		ApiValidator.notNull(input, GetPageRequest.class, "input");
+		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-			if (input.session != null) {
-				try {
-					output.session = input.session = SessionValidator
-							.lookupAndExtend(input.session, "input.session");
-				} catch (InputValidationException ex) {
-					output.session = input.session = null;
-				}
+		if (input.session != null) {
+			try {
+				output.session = input.session = SessionValidator
+						.lookupAndExtend(input.session, "input.session");
+			} catch (InputValidationException ex) {
+				output.session = input.session = null;
 			}
-
-			output.page = input.page = PageValidator.lookup(input.page,
-					"input.page");
-
-			if (output.page.parentKey != null) {
-				output.page.parent = PageValidator.lookup(PersistenceService
-						.dataType(Page.class, output.page.parentKey),
-						"input.page.parent");
-			}
-
-			if (Boolean.TRUE.equals(input.includePosts)) {
-				output.page = PageServiceProvider.provide()
-						.getPage(input.page.id, input.includePosts);
-			}
-
-			output.page.owner = UserHelper
-					.stripSensitive(UserServiceProvider.provide().getUser(
-							Long.valueOf(output.page.ownerKey.getId())));
-
-			UserHelper.stripPassword(
-					output.session == null ? null : output.session.user);
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
 		}
-		LOG.finer("Exiting getPage");
-		return output;
+
+		output.page = input.page = PageValidator.lookup(input.page,
+				"input.page");
+
+		if (output.page.parentKey != null) {
+			output.page.parent = PageValidator.lookup(PersistenceService
+					.dataType(Page.class, output.page.parentKey),
+					"input.page.parent");
+		}
+
+		if (Boolean.TRUE.equals(input.includePosts)) {
+			output.page = PageServiceProvider.provide().getPage(input.page.id,
+					input.includePosts);
+		}
+
+		output.page.owner = UserHelper.stripSensitive(UserServiceProvider
+				.provide().getUser(Long.valueOf(output.page.ownerKey.getId())));
 	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	@Override
+	protected GetPageResponse newOutput () {
+		return new GetPageResponse();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	@Override
+	protected Logger logger () {
+		return LOG;
+	}
+
 }

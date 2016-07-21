@@ -9,25 +9,38 @@ package com.willshex.blogwt.server.api.blog.action;
 
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.shared.api.blog.call.GetTagsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetTagsResponse;
-import com.willshex.gson.web.service.server.ActionHandler;
-import com.willshex.gson.web.service.shared.StatusType;
 
-public final class GetTagsActionHandler extends ActionHandler {
+public final class GetTagsActionHandler
+		extends ActionHandler<GetTagsRequest, GetTagsResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetTagsActionHandler.class.getName());
 
-	public GetTagsResponse handle (GetTagsRequest input) {
-		LOG.finer("Entering getTags");
-		GetTagsResponse output = new GetTagsResponse();
-		try {
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
-		}
-		LOG.finer("Exiting getTags");
-		return output;
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
+	@Override
+	protected void handle (GetTagsRequest input, GetTagsResponse output)
+			throws Exception {}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	@Override
+	protected GetTagsResponse newOutput () {
+		return new GetTagsResponse();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	@Override
+	protected Logger logger () {
+		return LOG;
 	}
 }

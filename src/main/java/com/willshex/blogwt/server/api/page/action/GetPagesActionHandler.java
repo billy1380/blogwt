@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
@@ -22,62 +23,72 @@ import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPagesResponse;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
-import com.willshex.gson.web.service.server.ActionHandler;
-import com.willshex.gson.web.service.shared.StatusType;
 
-public final class GetPagesActionHandler extends ActionHandler {
+public final class GetPagesActionHandler
+		extends ActionHandler<GetPagesRequest, GetPagesResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetPagesActionHandler.class.getName());
 
-	public GetPagesResponse handle (GetPagesRequest input) {
-		LOG.finer("Entering getPages");
-		GetPagesResponse output = new GetPagesResponse();
-		try {
-			ApiValidator.notNull(input, GetPagesRequest.class, "input");
-			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
+	@Override
+	protected void handle (GetPagesRequest input, GetPagesResponse output)
+			throws Exception {
 
-			output.session = input.session = SessionValidator
-					.lookupAndExtend(input.session, "input.session");
+		ApiValidator.notNull(input, GetPagesRequest.class, "input");
+		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-			if (input.pager == null) {
-				input.pager = PagerHelper.createDefaultPager();
-			}
+		output.session = input.session = SessionValidator
+				.lookupAndExtend(input.session, "input.session");
 
-			if (input.query == null || input.query.trim().length() == 0) {
-				output.pages = PageServiceProvider.provide().getPages(
-						input.includePosts, input.pager.start,
-						input.pager.count,
-						PageSortType.fromString(input.pager.sortBy),
-						input.pager.sortDirection);
-			} else {
-				output.pages = PageServiceProvider.provide()
-						.getPartialSlugPages(input.query, input.includePosts,
-								input.pager.start, input.pager.count,
-								PageSortType.fromString(input.pager.sortBy),
-								input.pager.sortDirection);
-			}
-
-			Map<Long, User> owners = new HashMap<Long, User>();
-			Long id;
-			for (Page page : output.pages) {
-				id = Long.valueOf(page.ownerKey.getId());
-				page.owner = owners.get(id);
-				if (page.owner == null) {
-					owners.put(id, page.owner = UserHelper.stripSensitive(
-							UserServiceProvider.provide().getUser(id)));
-				}
-			}
-
-			output.pager = PagerHelper.moveForward(input.pager);
-
-			UserHelper.stripPassword(
-					output.session == null ? null : output.session.user);
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
+		if (input.pager == null) {
+			input.pager = PagerHelper.createDefaultPager();
 		}
-		LOG.finer("Exiting getPages");
-		return output;
+
+		if (input.query == null || input.query.trim().length() == 0) {
+			output.pages = PageServiceProvider.provide().getPages(
+					input.includePosts, input.pager.start, input.pager.count,
+					PageSortType.fromString(input.pager.sortBy),
+					input.pager.sortDirection);
+		} else {
+			output.pages = PageServiceProvider.provide().getPartialSlugPages(
+					input.query, input.includePosts, input.pager.start,
+					input.pager.count,
+					PageSortType.fromString(input.pager.sortBy),
+					input.pager.sortDirection);
+		}
+
+		Map<Long, User> owners = new HashMap<Long, User>();
+		Long id;
+		for (Page page : output.pages) {
+			id = Long.valueOf(page.ownerKey.getId());
+			page.owner = owners.get(id);
+			if (page.owner == null) {
+				owners.put(id, page.owner = UserHelper.stripSensitive(
+						UserServiceProvider.provide().getUser(id)));
+			}
+		}
+
+		output.pager = PagerHelper.moveForward(input.pager);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	@Override
+	protected GetPagesResponse newOutput () {
+		return new GetPagesResponse();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	@Override
+	protected Logger logger () {
+		return LOG;
 	}
 }

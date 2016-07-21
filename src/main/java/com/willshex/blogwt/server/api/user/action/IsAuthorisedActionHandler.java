@@ -9,36 +9,47 @@ package com.willshex.blogwt.server.api.user.action;
 
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
-import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.shared.api.user.call.IsAuthorisedRequest;
 import com.willshex.blogwt.shared.api.user.call.IsAuthorisedResponse;
-import com.willshex.gson.web.service.server.ActionHandler;
-import com.willshex.gson.web.service.shared.StatusType;
 
-public final class IsAuthorisedActionHandler extends ActionHandler {
+public final class IsAuthorisedActionHandler
+		extends ActionHandler<IsAuthorisedRequest, IsAuthorisedResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(IsAuthorisedActionHandler.class.getName());
 
-	public IsAuthorisedResponse handle (IsAuthorisedRequest input) {
-		LOG.finer("Entering isAuthorised");
-		IsAuthorisedResponse output = new IsAuthorisedResponse();
-		try {
-			ApiValidator.notNull(input, IsAuthorisedRequest.class, "input");
-			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
+	@Override
+	protected void handle (IsAuthorisedRequest input,
+			IsAuthorisedResponse output) throws Exception {
+		ApiValidator.notNull(input, IsAuthorisedRequest.class, "input");
+		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-			output.session = input.session = SessionValidator
-					.lookupAndExtend(input.session, "input.session");
-
-			UserHelper.stripPassword(
-					output.session == null ? null : output.session.user);
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
-		}
-		LOG.finer("Exiting isAuthorised");
-		return output;
+		output.session = input.session = SessionValidator
+				.lookupAndExtend(input.session, "input.session");
 	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	@Override
+	protected IsAuthorisedResponse newOutput () {
+		return new IsAuthorisedResponse();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	@Override
+	protected Logger logger () {
+		return LOG;
+	}
+
 }

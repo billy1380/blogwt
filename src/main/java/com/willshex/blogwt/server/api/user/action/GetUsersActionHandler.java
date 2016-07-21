@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.exception.AuthorisationException;
 import com.willshex.blogwt.server.api.exception.DisallowedByPropertyException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
@@ -33,46 +34,39 @@ import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
-import com.willshex.gson.web.service.server.ActionHandler;
 import com.willshex.gson.web.service.server.InputValidationException;
-import com.willshex.gson.web.service.shared.StatusType;
 
-public final class GetUsersActionHandler extends ActionHandler {
+public final class GetUsersActionHandler
+		extends ActionHandler<GetUsersRequest, GetUsersResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetUsersActionHandler.class.getName());
 
-	public GetUsersResponse handle (GetUsersRequest input) {
-		LOG.finer("Entering getUsers");
-		GetUsersResponse output = new GetUsersResponse();
-		try {
-			ApiValidator.notNull(input, GetUsersRequest.class, "input");
-			ApiValidator.accessCode(input.accessCode, "input.accessCode");
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
+	@Override
+	protected void handle (GetUsersRequest input, GetUsersResponse output)
+			throws Exception {
+		ApiValidator.notNull(input, GetUsersRequest.class, "input");
+		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-			output.session = input.session = SessionValidator
-					.lookupAndExtend(input.session, "input.session");
+		output.session = input.session = SessionValidator
+				.lookupAndExtend(input.session, "input.session");
 
-			output.session.user = UserServiceProvider.provide()
-					.getUser(Long.valueOf(output.session.userKey.getId()));
+		output.session.user = UserServiceProvider.provide()
+				.getUser(Long.valueOf(output.session.userKey.getId()));
 
-			if (input.relationshipType != null) {
-				output.users = getRelatedUsers(input);
-			} else {
-				output.users = getAllUsers(input);
-			}
-
-			UserHelper.stripPassword(output.users);
-
-			output.pager = PagerHelper.moveForward(input.pager);
-
-			UserHelper.stripPassword(
-					output.session == null ? null : output.session.user);
-			output.status = StatusType.StatusTypeSuccess;
-		} catch (Exception e) {
-			output.status = StatusType.StatusTypeFailure;
-			output.error = convertToErrorAndLog(LOG, e);
+		if (input.relationshipType != null) {
+			output.users = getRelatedUsers(input);
+		} else {
+			output.users = getAllUsers(input);
 		}
-		LOG.finer("Exiting getUsers");
-		return output;
+
+		output.pager = PagerHelper.moveForward(input.pager);
+
 	}
 
 	/**
@@ -158,6 +152,34 @@ public final class GetUsersActionHandler extends ActionHandler {
 		}
 
 		return relatedUsers;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	@Override
+	protected GetUsersResponse newOutput () {
+		return new GetUsersResponse();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	@Override
+	protected Logger logger () {
+		return LOG;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.api.ActionHandler#clearSensitiveFields(com.
+	 * willshex.blogwt.shared.api.Response) */
+	@Override
+	public void clearSensitiveFields (GetUsersResponse output) {
+		super.clearSensitiveFields(output);
+
+		UserHelper.stripPassword(output.users);
 	}
 
 }
