@@ -14,8 +14,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.willshex.blogwt.shared.api.Response;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
-import com.willshex.gson.web.service.shared.Response;
 
 public class GetArchiveEntriesResponse extends Response {
 	public List<ArchiveEntry> archive;
@@ -27,8 +27,8 @@ public class GetArchiveEntriesResponse extends Response {
 		if (archive != null) {
 			jsonArchive = new JsonArray();
 			for (int i = 0; i < archive.size(); i++) {
-				JsonElement jsonArchiveItem = archive.get(i) == null ? JsonNull.INSTANCE
-						: archive.get(i).toJson();
+				JsonElement jsonArchiveItem = archive.get(i) == null
+						? JsonNull.INSTANCE : archive.get(i).toJson();
 				((JsonArray) jsonArchive).add(jsonArchiveItem);
 			}
 		}
