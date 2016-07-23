@@ -8,7 +8,7 @@
 //
 package com.willshex.blogwt.server.service.permission;
 
-import static com.willshex.blogwt.server.service.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +18,7 @@ import java.util.List;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.SearchHelper;
-import com.willshex.blogwt.server.service.PersistenceService;
+import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;

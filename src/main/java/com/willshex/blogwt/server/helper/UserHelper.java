@@ -7,8 +7,8 @@
 //
 package com.willshex.blogwt.server.helper;
 
-import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
+import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.utility.StringUtils;

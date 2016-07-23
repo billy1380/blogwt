@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.page;
 
-import static com.willshex.blogwt.server.service.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
-import com.willshex.blogwt.server.service.PersistenceService;
+import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;

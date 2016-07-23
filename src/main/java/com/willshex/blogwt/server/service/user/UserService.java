@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.user;
 
-import static com.willshex.blogwt.server.service.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,8 +31,8 @@ import com.willshex.blogwt.server.helper.InflatorHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
-import com.willshex.blogwt.server.service.PersistenceService;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
+import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;

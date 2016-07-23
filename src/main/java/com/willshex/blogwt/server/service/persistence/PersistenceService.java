@@ -5,7 +5,7 @@
 //  Created by William Shakour on 10 May 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
 //
-package com.willshex.blogwt.server.service;
+package com.willshex.blogwt.server.service.persistence;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +15,10 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.impl.translate.Translators;
+import com.willshex.blogwt.server.service.persistence.translator.PermissionTypeTypeTranslatorFactory;
+import com.willshex.blogwt.server.service.persistence.translator.RelationshipTypeTypeTranslatorFactory;
+import com.willshex.blogwt.server.service.persistence.translator.ResourceTypeTypeTranslatorFactory;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
@@ -37,6 +41,11 @@ import com.willshex.blogwt.shared.api.datatype.User;
  */
 public class PersistenceService {
 	static {
+		Translators translators = factory().getTranslators();
+		translators.add(new PermissionTypeTypeTranslatorFactory());
+		translators.add(new RelationshipTypeTypeTranslatorFactory());
+		translators.add(new ResourceTypeTypeTranslatorFactory());
+		
 		factory().register(User.class);
 		factory().register(Session.class);
 		factory().register(Post.class);

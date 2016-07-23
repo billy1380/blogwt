@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.property;
 
-import static com.willshex.blogwt.server.service.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
 
 import java.util.Collection;
 import java.util.Date;
