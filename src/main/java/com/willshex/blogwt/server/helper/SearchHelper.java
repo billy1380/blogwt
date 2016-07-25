@@ -34,7 +34,7 @@ public class SearchHelper {
 	public static final int SHORT_SEARCH_LIMIT = 3;
 	private static final String INDEX_SEARCH_URL = "/searchindexer";
 
-	private static final int RETRY_COUNT = 2;
+	private static final int RETRY_COUNT = 3;
 
 	private static SearchService searchService;
 
@@ -49,18 +49,21 @@ public class SearchHelper {
 	}
 
 	private static void indexDocument (String name, Document document,
-			int retryCount) {
-		while (retryCount > 0) {
+			int retry) {
+		do {
 			try {
 				getIndex(name).put(document);
-				retryCount = 0;
+				retry = 0;
 			} catch (PutException e) {
 				if (StatusCode.TRANSIENT_ERROR
 						.equals(e.getOperationResult().getCode())) {
-					retryCount--;
+					retry--;
+				} else {
+					// if it is not a transient error we just stop
+					retry = 0;
 				}
 			}
-		}
+		} while (retry > 0);
 	}
 
 	private static SearchService ensureSearchService () {
@@ -105,15 +108,16 @@ public class SearchHelper {
 				.url(INDEX_SEARCH_URL).param(ENTITY_NAME_KEY, name)
 				.param(ENTITY_ID_KEY, id.toString());
 
-		try {
-			queue.add(options);
-		} catch (TransientFailureException ex) {
-			// retry once
+		int retry = RETRY_COUNT;
+		do {
 			try {
 				queue.add(options);
-			} catch (TransientFailureException reEx) {
-				// failed :( what can you do
+
+				// success no need to retry
+				retry = 0;
+			} catch (TransientFailureException ex) {
+				retry--;
 			}
-		}
+		} while (retry > 0);
 	}
 }
