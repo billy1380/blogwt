@@ -33,22 +33,31 @@ public class SearchHelper {
 	private final static String ALL_INDEX_NAME = "all";
 	public static final int SHORT_SEARCH_LIMIT = 3;
 	private static final String INDEX_SEARCH_URL = "/searchindexer";
+
+	private static final int RETRY_COUNT = 2;
+
 	private static SearchService searchService;
 
 	public static void indexDocument (Document document) {
+		indexDocument(ALL_INDEX_NAME, document);
+	}
+
+	public static void indexDocument (String name, Document document) {
 		if (document != null) {
-			indexDocument(document, 0);
+			indexDocument(name, document, RETRY_COUNT);
 		}
 	}
 
-	private static void indexDocument (Document document, int count) {
-		try {
-			getIndex().put(document);
-		} catch (PutException e) {
-			if (StatusCode.TRANSIENT_ERROR
-					.equals(e.getOperationResult().getCode())) {
-				if (count < 2) {
-					indexDocument(document, count++);
+	private static void indexDocument (String name, Document document,
+			int retryCount) {
+		while (retryCount > 0) {
+			try {
+				getIndex(name).put(document);
+				retryCount = 0;
+			} catch (PutException e) {
+				if (StatusCode.TRANSIENT_ERROR
+						.equals(e.getOperationResult().getCode())) {
+					retryCount--;
 				}
 			}
 		}
@@ -63,12 +72,20 @@ public class SearchHelper {
 	}
 
 	public static void deleteSearch (String documentId) {
-		getIndex().delete(documentId);
+		deleteSearch(ALL_INDEX_NAME);
+	}
+
+	public static void deleteSearch (String name, String documentId) {
+		getIndex(name).delete(documentId);
 	}
 
 	public static Index getIndex () {
-		return ensureSearchService().getIndex(
-				IndexSpec.newBuilder().setName(ALL_INDEX_NAME).build());
+		return getIndex(ALL_INDEX_NAME);
+	}
+
+	public static Index getIndex (String name) {
+		return ensureSearchService()
+				.getIndex(IndexSpec.newBuilder().setName(name).build());
 	}
 
 	public static <T> Query<T> addStartsWith (String field, String text,
