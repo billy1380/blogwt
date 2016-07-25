@@ -142,21 +142,4 @@ public interface IUserService extends IService {
 	 */
 	public List<User> getIdUserBatch (Collection<Long> ids);
 
-	/**
-	 * Index all
-	 */
-	public void indexAll ();
-
-	/**
-	 * Index user
-	 * @param id
-	 */
-	public void indexUser (Long id);
-
-	/**
-	 * Search users
-	 * @param query
-	 * @return
-	 */
-	public List<User> searchUsers (String query);
 }

@@ -81,22 +81,4 @@ public interface IPageService extends IService {
 			Boolean includePostContents, Integer start, Integer count,
 			PageSortType sortBy, SortDirectionType sortDirection);
 
-	/**
-	 * Index all
-	 */
-	public void indexAll ();
-
-	/**
-	 * Index page
-	 * @param id
-	 */
-	public void indexPage (Long id);
-
-	/**
-	 * Search pages
-	 * @param query
-	 * @return
-	 */
-	public List<Page> searchPages (String query);
-
 }

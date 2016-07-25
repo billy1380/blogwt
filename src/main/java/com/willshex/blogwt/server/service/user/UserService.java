@@ -35,6 +35,7 @@ import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
+import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -47,7 +48,7 @@ import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.server.ContextAwareServlet;
 import com.willshex.utility.StringUtils;
 
-final class UserService implements IUserService {
+final class UserService implements IUserService, ISearch<User> {
 
 	private static final String SALT = "af1d3250-f8d1-11e4-bbd2-7054d251af02";
 	private static final String ACTION_EMAIL_TEMPLATE = "Hi ${user.forename},\n\nPlease click the link below to ${action}:\n\n${link}\n\n${property.value}";
@@ -466,11 +467,13 @@ final class UserService implements IUserService {
 		return salt;
 	}
 
-	/**
-	 * @param user
-	 * @return
-	 */
-	private Document toDocument (User user) {
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.search.IIndex#toDocument(java.lang.
+	 * Object) */
+	@Override
+	public Document toDocument (User user) {
 		Document document = null;
 
 		if (user != null) {
@@ -535,10 +538,20 @@ final class UserService implements IUserService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.willshex.blogwt.server.service.user.IUserService#indexUser(java.lang.
-	 * Long) */
+	 * com.willshex.blogwt.server.service.user.IUserService#getIdUserBatch(java.
+	 * util.Collection) */
 	@Override
-	public void indexUser (Long id) {
+	public List<User> getIdUserBatch (Collection<Long> ids) {
+		return new ArrayList<User>(
+				ofy().load().type(User.class).ids(ids).values());
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.search.IIndex#index(java.lang.Long) */
+	@Override
+	public void index (Long id) {
 		User user = getUser(id);
 
 		if (user.roleKeys != null) {
@@ -557,27 +570,17 @@ final class UserService implements IUserService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.user.IUserService#getIdUserBatch(java.
-	 * util.Collection) */
+	 * @see com.willshex.blogwt.server.service.search.ISearch#search(java.lang.
+	 * String, java.lang.Integer, java.lang.Integer, java.lang.String,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
-	public List<User> getIdUserBatch (Collection<Long> ids) {
-		return new ArrayList<User>(
-				ofy().load().type(User.class).ids(ids).values());
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.user.IUserService#searchUsers(java.
-	 * lang.String) */
-	@Override
-	public List<User> searchUsers (String query) {
+	public List<User> search (String query, Integer start, Integer count,
+			String sortBy, SortDirectionType direction) {
 		Results<ScoredDocument> matches = SearchHelper.getIndex().search(query);
 		List<User> users = new ArrayList<User>();
 		String id;
 		User user;
-		int limit = SearchHelper.SHORT_SEARCH_LIMIT;
+		int limit = count;
 		final String userServiceName = getName();
 		for (ScoredDocument scoredDocument : matches) {
 			if (limit == 0) {

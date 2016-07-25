@@ -24,6 +24,7 @@ import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
+import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
@@ -60,11 +61,11 @@ public class DevServlet extends ContextAwareServlet {
 		if ("gentags".equals(action)) {
 			TagServiceProvider.provide().generateTags();
 		} else if ("indexposts".equals(action)) {
-			PostServiceProvider.provide().indexAll();
+			((ISearch<?>) PostServiceProvider.provide()).indexAll();
 		} else if ("indexpages".equals(action)) {
-			PageServiceProvider.provide().indexAll();
+			((ISearch<?>) PageServiceProvider.provide()).indexAll();
 		} else if ("indexusers".equals(action)) {
-			UserServiceProvider.provide().indexAll();
+			((ISearch<?>) UserServiceProvider.provide()).indexAll();
 		} else if ("linkall".equals(action)) {
 			PostServiceProvider.provide().linkAll();
 		} else if ("clearlinks".equals(action)) {

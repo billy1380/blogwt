@@ -26,6 +26,7 @@ import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
+import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
@@ -34,7 +35,7 @@ import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 
-final class PageService implements IPageService {
+final class PageService implements IPageService, ISearch<Page> {
 	public String getName () {
 		return NAME;
 	}
@@ -69,11 +70,13 @@ final class PageService implements IPageService {
 		return page;
 	}
 
-	/**
-	 * @param page
-	 * @return
-	 */
-	private Document toDocument (Page page) {
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.search.IIndex#toDocument(java.lang.
+	 * Object) */
+	@Override
+	public Document toDocument (Page page) {
 		Document document = null;
 
 		if (page != null) {
@@ -244,7 +247,7 @@ final class PageService implements IPageService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.server.service.page.IPageService#indexAll() */
+	 * @see com.willshex.blogwt.server.service.search.IIndex#indexAll() */
 	@Override
 	public void indexAll () {
 		Pager pager = PagerHelper.createDefaultPager();
@@ -316,10 +319,9 @@ final class PageService implements IPageService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.willshex.blogwt.server.service.page.IPageService#indexPage(java.lang.
-	 * Long) */
+	 * com.willshex.blogwt.server.service.search.IIndex#index(java.lang.Long) */
 	@Override
-	public void indexPage (Long id) {
+	public void index (Long id) {
 		Page page = getPage(id);
 
 		page.owner = UserServiceProvider.provide()
@@ -332,16 +334,17 @@ final class PageService implements IPageService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.page.IPageService#searchPages(java.
-	 * lang.String) */
+	 * @see com.willshex.blogwt.server.service.search.ISearch#search(java.lang.
+	 * String, java.lang.Integer, java.lang.Integer, java.lang.String,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
-	public List<Page> searchPages (String query) {
+	public List<Page> search (String query, Integer start, Integer count,
+			String sortBy, SortDirectionType direction) {
 		Results<ScoredDocument> matches = SearchHelper.getIndex().search(query);
 		List<Page> pages = new ArrayList<Page>();
 		String id;
 		Page page;
-		int limit = SearchHelper.SHORT_SEARCH_LIMIT;
+		int limit = count;
 		final String pageServiceName = getName();
 		for (ScoredDocument scoredDocument : matches) {
 			if (limit == 0) {

@@ -25,6 +25,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
+import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
@@ -43,7 +44,7 @@ import com.willshex.blogwt.shared.helper.UserHelper;
  * @author William Shakour (billy1380)
  *
  */
-final class PostService implements IPostService {
+final class PostService implements IPostService, ISearch<Post> {
 
 	/* (non-Javadoc)
 	 * 
@@ -125,12 +126,13 @@ final class PostService implements IPostService {
 		return PostHelper.nextPostSlug(posts, slug);
 	}
 
-	/**
-	 * To search-able document
-	 * @param post
-	 * @return
-	 */
-	private Document toDocument (Post post) {
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.search.IIndex#toDocument(java.lang.
+	 * Object) */
+	@Override
+	public Document toDocument (Post post) {
 		Document document = null;
 
 		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
@@ -519,7 +521,7 @@ final class PostService implements IPostService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.server.service.post.IPostService#indexAll() */
+	 * @see com.willshex.blogwt.server.service.search.IIndex#indexAll() */
 	@Override
 	public void indexAll () {
 		Pager pager = PagerHelper.createDefaultPager();
@@ -723,10 +725,9 @@ final class PostService implements IPostService {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#indexPost(java.lang.
-	 * Long) */
+	 * com.willshex.blogwt.server.service.search.IIndex#index(java.lang.Long) */
 	@Override
-	public void indexPost (Long id) {
+	public void index (Long id) {
 		Post post = getPost(id);
 
 		if (post.authorKey != null) {
@@ -744,12 +745,12 @@ final class PostService implements IPostService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#searchPosts(java.
-	 * lang.String) */
+	 * @see com.willshex.blogwt.server.service.search.ISearch#search(java.lang.
+	 * String, java.lang.Integer, java.lang.Integer, java.lang.String,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
-	public List<Post> searchPosts (String query) {
-
+	public List<Post> search (String query, Integer start, Integer count,
+			String sortBy, SortDirectionType direction) {
 		Results<ScoredDocument> matches = SearchHelper.getIndex().search(query);
 		List<Post> posts = new ArrayList<Post>();
 		String id;
@@ -772,6 +773,5 @@ final class PostService implements IPostService {
 		}
 
 		return posts;
-
 	}
 }

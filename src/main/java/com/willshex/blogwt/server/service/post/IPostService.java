@@ -148,17 +148,6 @@ public interface IPostService extends IService {
 	public List<Post> getIdPostBatch (Collection<Long> ids);
 
 	/**
-	 * Index all
-	 */
-	public void indexAll ();
-
-	/**
-	 * Index post
-	 * @param id
-	 */
-	public void indexPost (Long id);
-
-	/**
 	 * Get last published post
 	 * @return
 	 */
@@ -173,12 +162,5 @@ public interface IPostService extends IService {
 	 * Clear links
 	 */
 	public void clearLinks ();
-
-	/**
-	 * Search posts
-	 * @param query
-	 * @return
-	 */
-	public List<Post> searchPosts (String query);
 
 }

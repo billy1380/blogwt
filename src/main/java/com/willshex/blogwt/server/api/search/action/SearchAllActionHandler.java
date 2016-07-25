@@ -15,8 +15,10 @@ import com.googlecode.objectify.Key;
 import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
+import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
+import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
@@ -38,6 +40,7 @@ public final class SearchAllActionHandler
 	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
 	 * gson.web.service.shared.Request,
 	 * com.willshex.gson.web.service.shared.Response) */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void handle (SearchAllRequest input, SearchAllResponse output)
 			throws Exception {
@@ -54,7 +57,9 @@ public final class SearchAllActionHandler
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, "String: input.query");
 
-		output.posts = PostServiceProvider.provide().searchPosts(input.query);
+		output.posts = ((ISearch<Post>) PostServiceProvider.provide()).search(
+				input.query, Integer.valueOf(0),
+				SearchHelper.SHORT_SEARCH_LIMIT, null, null);
 
 		Map<Key<User>, User> users = new HashMap<Key<User>, User>();
 		if (output.posts != null) {
@@ -68,7 +73,9 @@ public final class SearchAllActionHandler
 			}
 		}
 
-		output.pages = PageServiceProvider.provide().searchPages(input.query);
+		output.pages = ((ISearch<Page>) PageServiceProvider.provide()).search(
+				input.query, Integer.valueOf(0),
+				SearchHelper.SHORT_SEARCH_LIMIT, null, null);
 
 		if (output.pages != null) {
 			for (Page page : output.pages) {
@@ -81,7 +88,9 @@ public final class SearchAllActionHandler
 			}
 		}
 
-		output.users = UserServiceProvider.provide().searchUsers(input.query);
+		output.users = ((ISearch<User>) UserServiceProvider.provide()).search(
+				input.query, Integer.valueOf(0),
+				SearchHelper.SHORT_SEARCH_LIMIT, null, null);
 	}
 
 	/* (non-Javadoc)
