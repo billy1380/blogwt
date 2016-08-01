@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.client.part;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -35,8 +37,8 @@ public class CookieNoticePart extends Composite {
 	private static CookieNoticePartUiBinder uiBinder = GWT
 			.create(CookieNoticePartUiBinder.class);
 
-	interface CookieNoticePartUiBinder extends
-			UiBinder<Widget, CookieNoticePart> {}
+	interface CookieNoticePartUiBinder
+			extends UiBinder<Widget, CookieNoticePart> {}
 
 	interface Style extends CssResource {
 		String fixed ();
@@ -67,8 +69,8 @@ public class CookieNoticePart extends Composite {
 
 		elTitle.setInnerText(PropertyController.get().title());
 
-		String detailsPageSlug = PropertyController.get().stringProperty(
-				PropertyHelper.COOKIE_DETAILS_PAGE_SLUG);
+		String detailsPageSlug = PropertyController.get()
+				.stringProperty(PropertyHelper.COOKIE_DETAILS_PAGE_SLUG);
 
 		if (detailsPageSlug == null
 				|| PropertyHelper.NONE_VALUE.equals(detailsPageSlug)) {
@@ -98,7 +100,8 @@ public class CookieNoticePart extends Composite {
 	}
 
 	private void setCookie () {
-		Cookies.setCookie(EU_COOKIE_NOTICE_KEY, "Got It!");
+		Cookies.setCookie(EU_COOKIE_NOTICE_KEY, "Got It!",
+				new Date(Long.MAX_VALUE));
 	}
 
 	/* (non-Javadoc)
