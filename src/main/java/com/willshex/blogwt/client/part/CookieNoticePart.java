@@ -45,6 +45,8 @@ public class CookieNoticePart extends Composite {
 	}
 
 	private static final String EU_COOKIE_NOTICE_KEY = "eu.cookie.notice";
+	private static final long TWENTY_YEARS = 20l * 365l * 24l * 60l * 60l
+			* 1000l;
 
 	@UiField Element elTitle;
 	@UiField InlineHyperlink btnSeeDetails;
@@ -101,7 +103,7 @@ public class CookieNoticePart extends Composite {
 
 	private void setCookie () {
 		Cookies.setCookie(EU_COOKIE_NOTICE_KEY, "Got It!",
-				new Date(Long.MAX_VALUE));
+				new Date(new Date().getTime() + TWENTY_YEARS));
 	}
 
 	/* (non-Javadoc)
