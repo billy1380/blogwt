@@ -52,10 +52,25 @@ public final class LoginActionHandler
 		if (!foundToken) {
 			IUserService userService = UserServiceProvider.provide();
 
-			User user = userService.getLoginUser(input.username,
-					input.password);
+			User user = null;
 
-			if (user == null) throw new AuthenticationException(input.username);
+			if (input.username != null) {
+				user = userService.getLoginUser(input.username, input.password);
+
+				if (user == null)
+					throw new AuthenticationException(input.username);
+			}
+
+			if (user == null && input.email != null) {
+				user = userService.getEmailLoginUser(input.email,
+						input.password);
+
+				if (user == null)
+					throw new AuthenticationException(input.email);
+			}
+
+			if (user == null) throw new AuthenticationException(
+					"Either username or email addressed cannot be null");
 
 			ISessionService sessionService = SessionServiceProvider.provide();
 

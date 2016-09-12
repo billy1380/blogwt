@@ -22,8 +22,9 @@ public class AuthenticationException extends ServiceException {
 	 * @param code
 	 * @param message
 	 */
-	public AuthenticationException(String username) {
-		super(ApiError.AuthenticationFailed.getCode(), ApiError.AuthenticationFailed.getMessage(username));
+	public AuthenticationException (String usernameOrEmail) {
+		super(ApiError.AuthenticationFailed.getCode(),
+				ApiError.AuthenticationFailed.getMessage(usernameOrEmail));
 	}
 
 }

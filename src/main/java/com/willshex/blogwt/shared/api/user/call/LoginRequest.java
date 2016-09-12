@@ -15,6 +15,7 @@ import com.willshex.blogwt.shared.api.Request;
 
 public class LoginRequest extends Request {
 	public String username;
+	public String email;
 	public String password;
 	public Boolean longTerm;
 
@@ -24,6 +25,9 @@ public class LoginRequest extends Request {
 		JsonElement jsonUsername = username == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(username);
 		object.add("username", jsonUsername);
+		JsonElement jsonEmail = email == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(email);
+		object.add("email", jsonEmail);
 		JsonElement jsonPassword = password == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(password);
 		object.add("password", jsonPassword);
@@ -42,6 +46,12 @@ public class LoginRequest extends Request {
 				username = jsonUsername.getAsString();
 			}
 		}
+		if (jsonObject.has("email")) {
+			JsonElement jsonEmail = jsonObject.get("email");
+			if (jsonEmail != null) {
+				email = jsonEmail.getAsString();
+			}
+		}
 		if (jsonObject.has("password")) {
 			JsonElement jsonPassword = jsonObject.get("password");
 			if (jsonPassword != null) {
@@ -58,6 +68,11 @@ public class LoginRequest extends Request {
 
 	public LoginRequest username (String username) {
 		this.username = username;
+		return this;
+	}
+
+	public LoginRequest email (String email) {
+		this.email = email;
 		return this;
 	}
 

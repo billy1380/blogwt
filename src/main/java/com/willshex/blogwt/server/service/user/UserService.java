@@ -600,4 +600,20 @@ final class UserService implements IUserService, ISearch<User> {
 		return users;
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.user.IUserService#getEmailLoginUser(
+	 * java.lang.String, java.lang.String) */
+	@Override
+	public User getEmailLoginUser (String email, String password) {
+		User user = getEmailUser(email);
+
+		if (!verifyPassword(user, password)) {
+			user = null;
+		}
+
+		return user;
+	}
+
 }

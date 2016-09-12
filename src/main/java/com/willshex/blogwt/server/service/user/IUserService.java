@@ -61,6 +61,14 @@ public interface IUserService extends IService {
 	public User getLoginUser (String username, String password);
 
 	/**
+	 * Get email login user
+	 * @param email
+	 * @param password
+	 * @return
+	 */
+	public User getEmailLoginUser (String email, String password);
+
+	/**
 	 * @param userId
 	 */
 	public void updateUserIdLastLoggedIn (Long userId);
