@@ -33,17 +33,38 @@ public class UserValidator extends ApiValidator {
 
 	public static User validate (User user, String name)
 			throws InputValidationException {
+
+		ApiValidator.validateLength(user.username, 1, 512,
+				type + ": " + name + "[" + user.username + "].username");
+
+		ApiValidator.validateLength(user.email, 1, 512,
+				type + ": " + name + "[" + user.email + "].email");
+
+		User existingUsernameUser = UserServiceProvider.provide()
+				.getUsernameUser(user.username);
+
+		if (existingUsernameUser != null)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.UsernameInUse, "String: " + name + ".username");
+
+		User existingEmailUser = UserServiceProvider.provide()
+				.getEmailUser(user.email);
+
+		if (existingEmailUser != null)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.EmailInUse, "String: " + name + ".email");
+
 		return user;
 	}
 
-	public static <T extends Iterable<User>> T validateAll (T users, String name)
-			throws InputValidationException {
+	public static <T extends Iterable<User>> T validateAll (T users,
+			String name) throws InputValidationException {
 		return users;
 	}
 
 	public static boolean isAdmin (User user) {
-		List<Role> roles = user.roles == null && user.roleKeys != null ? RoleServiceProvider
-				.provide().getIdRoleBatch(
+		List<Role> roles = user.roles == null && user.roleKeys != null
+				? RoleServiceProvider.provide().getIdRoleBatch(
 						PersistenceService.keysToIds(user.roleKeys))
 				: user.roles;
 		return user != null && roles != null
@@ -55,10 +76,11 @@ public class UserValidator extends ApiValidator {
 			throws AuthorisationException {
 		boolean authorised = isAdmin(user);
 		List<Permission> permissions = user.permissions == null
-				&& user.permissionKeys != null ? PermissionServiceProvider
-				.provide().getIdPermissionBatch(
-						PersistenceService.keysToIds(user.permissionKeys))
-				: user.permissions;
+				&& user.permissionKeys != null
+						? PermissionServiceProvider.provide()
+								.getIdPermissionBatch(PersistenceService
+										.keysToIds(user.permissionKeys))
+						: user.permissions;
 
 		if (!authorised && user != null && permissions != null) {
 			if (requiredPermissions != null && requiredPermissions.size() > 0) {
@@ -80,9 +102,8 @@ public class UserValidator extends ApiValidator {
 
 	public static User lookup (User user, String name)
 			throws InputValidationException {
-		if (user == null)
-			throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (user == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, type + ": " + name);
 
 		boolean isIdLookup = false, isNameLookup = false;
 
@@ -100,8 +121,8 @@ public class UserValidator extends ApiValidator {
 		if (isIdLookup) {
 			lookupUser = UserServiceProvider.provide().getUser(user.id);
 		} else if (isNameLookup) {
-			lookupUser = UserServiceProvider.provide().getUsernameUser(
-					user.username);
+			lookupUser = UserServiceProvider.provide()
+					.getUsernameUser(user.username);
 		}
 
 		if (lookupUser == null)
