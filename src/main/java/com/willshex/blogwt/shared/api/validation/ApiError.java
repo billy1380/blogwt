@@ -35,7 +35,8 @@ public enum ApiError {
 	BadLength(100015, "Invalid value too long or too short ({1}-{2}) {0}"),
 	UnpublishedPost(100016, "Unpublished post {0}"),
 	CannotRevealRelationshipUsers(100017,
-			"Cannot reveal [with] relationship users RelationshipTypeType: {0}");
+			"Cannot reveal [with] relationship users RelationshipTypeType: {0}"),
+	NotEnoughData(100017, "Not enough data provided {0}");
 
 	private static final String PARAM_0 = "\\{0\\}";
 	private static final String PARAM_1 = "\\{1\\}";

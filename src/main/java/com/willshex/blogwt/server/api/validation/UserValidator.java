@@ -33,26 +33,44 @@ public class UserValidator extends ApiValidator {
 
 	public static User validate (User user, String name)
 			throws InputValidationException {
+		boolean foundUsername = false, foundEmail = false;
 
-		ApiValidator.validateLength(user.username, 1, 512,
-				type + ": " + name + "[" + user.username + "].username");
+		if (user.username != null) {
+			ApiValidator.validateLength(user.username, 1, 512,
+					type + ": " + name + "[" + user.username + "].username");
 
-		ApiValidator.validateLength(user.email, 1, 512,
-				type + ": " + name + "[" + user.email + "].email");
+			foundUsername = true;
+		}
 
-		User existingUsernameUser = UserServiceProvider.provide()
-				.getUsernameUser(user.username);
+		if (user.email != null) {
+			ApiValidator.validateLength(user.email, 1, 512,
+					type + ": " + name + "[" + user.email + "].email");
+			foundEmail = true;
+		}
 
-		if (existingUsernameUser != null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.UsernameInUse, "String: " + name + ".username");
+		if (foundUsername) {
+			User existingUsernameUser = UserServiceProvider.provide()
+					.getUsernameUser(user.username);
 
-		User existingEmailUser = UserServiceProvider.provide()
-				.getEmailUser(user.email);
+			if (existingUsernameUser != null)
+				ApiValidator.throwServiceError(InputValidationException.class,
+						ApiError.UsernameInUse,
+						"String: " + name + ".username");
+		}
 
-		if (existingEmailUser != null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.EmailInUse, "String: " + name + ".email");
+		if (foundEmail) {
+			User existingEmailUser = UserServiceProvider.provide()
+					.getEmailUser(user.email);
+
+			if (existingEmailUser != null)
+				ApiValidator.throwServiceError(InputValidationException.class,
+						ApiError.EmailInUse, "String: " + name + ".email");
+		}
+
+		if (!(foundUsername || foundEmail))
+			throwServiceError(InputValidationException.class,
+					ApiError.NotEnoughData,
+					type + ": no username or email in " + name);
 
 		return user;
 	}
