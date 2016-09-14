@@ -9,7 +9,9 @@ package com.willshex.blogwt.server.service.persistence;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
@@ -129,6 +131,35 @@ public class PersistenceService {
 		} catch (InstantiationException | IllegalAccessException ex) {}
 
 		return list;
+	}
+
+	public static <T extends DataType> Map<Long, T> toMap (List<T> items) {
+		Map<Long, T> lookup = new HashMap<>();
+
+		for (T item : items) {
+			lookup.put(item.id, item);
+		}
+
+		return lookup;
+	}
+
+	/**
+	 * @param dataTypeCollection
+	 * @return
+	 */
+	public static <T extends DataType> List<Long> dataTypeCollectionToIds (
+			Collection<T> dataTypeCollection) {
+		List<Long> ids = null;
+
+		if (dataTypeCollection != null && dataTypeCollection.size() > 0) {
+			ids = new ArrayList<>();
+
+			for (T dataType : dataTypeCollection) {
+				ids.add(dataType.id);
+			}
+		}
+
+		return ids;
 	}
 
 }
