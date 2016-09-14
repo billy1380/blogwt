@@ -8,6 +8,7 @@
 package com.willshex.blogwt.server.api.blog.action;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.ActionHandler;
@@ -59,9 +60,11 @@ public final class UpdatePropertiesActionHandler extends
 						"input.properties[n]");
 				found = true;
 			} catch (InputValidationException ex) {
-				LOG.info("Property [" + property.name
-						+ "] does not exist. Will add with value ["
-						+ property.value + "].");
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info("Property [" + property.name
+							+ "] does not exist. Will add with value ["
+							+ property.value + "].");
+				}
 			}
 
 			if (found) {
