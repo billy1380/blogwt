@@ -5,7 +5,7 @@
 /* @alternate */ -moz-osx-font-smoothing: grayscale;
  }
  
- @defmixin blink(DURATION) {
+@defmixin blink(DURATION) {
     -webkit-animation-name: blinker;
     -webkit-animation-duration: DURATION;
     -webkit-animation-timing-function: linear;

@@ -84,7 +84,7 @@ public class UsersPage extends Page {
 	}
 
 	/**
-	 * 
+	 * create columns
 	 */
 	private void createColumns () {
 		Column<User, String> avatar = new Column<User, String>(imagePrototype) {

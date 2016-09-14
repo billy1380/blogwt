@@ -49,8 +49,8 @@ import com.willshex.gson.web.service.shared.StatusType;
  * @author billy1380
  *
  */
-public class ChangeAccessPage extends Page implements
-		NavigationChangedEventHandler, ChangeUserAccessEventHandler {
+public class ChangeAccessPage extends Page
+		implements NavigationChangedEventHandler, ChangeUserAccessEventHandler {
 
 	public interface Templates extends SafeHtmlTemplates {
 		Templates INSTANCE = GWT.create(Templates.class);
@@ -63,8 +63,8 @@ public class ChangeAccessPage extends Page implements
 	private static ChangeAccessPageUiBinder uiBinder = GWT
 			.create(ChangeAccessPageUiBinder.class);
 
-	interface ChangeAccessPageUiBinder extends
-			UiBinder<Widget, ChangeAccessPage> {}
+	interface ChangeAccessPageUiBinder
+			extends UiBinder<Widget, ChangeAccessPage> {}
 
 	@UiField(provided = true) CellTable<Role> tblRoles = new CellTable<Role>(
 			Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
@@ -127,13 +127,13 @@ public class ChangeAccessPage extends Page implements
 
 			@Override
 			public void update (int index, Role object, String value) {
-				if (Window
-						.confirm("Are you sure you want to remove user role: "
-								+ object.name + "?")) {
+				if (Window.confirm("Are you sure you want to remove user role: "
+						+ object.name + "?")) {
 					UserController.get().revokeUserRoles(user, object);
 				}
 			}
 		});
+		delete.setHorizontalAlignment(Column.ALIGN_RIGHT);
 
 		tblRoles.addColumn(code);
 		tblRoles.addColumn(name);
@@ -170,13 +170,14 @@ public class ChangeAccessPage extends Page implements
 
 			@Override
 			public void update (int index, Permission object, String value) {
-				if (Window
-						.confirm("Are you sure you want to revoke user permission: "
+				if (Window.confirm(
+						"Are you sure you want to revoke user permission: "
 								+ object.name + "?")) {
 					UserController.get().revokeUserPermissions(user, object);
 				}
 			}
 		});
+		delete.setHorizontalAlignment(Column.ALIGN_RIGHT);
 
 		tblPermissions.addColumn(code);
 		tblPermissions.addColumn(name);
@@ -219,8 +220,8 @@ public class ChangeAccessPage extends Page implements
 		ready();
 
 		User loggedIn = SessionController.get().user();
-		if (current.getAction() == null
-				|| (loggedIn != null && loggedIn.id.equals(current.getAction()))) {
+		if (current.getAction() == null || (loggedIn != null
+				&& loggedIn.id.equals(current.getAction()))) {
 			user = loggedIn;
 		} else {
 			user = null;
@@ -255,8 +256,8 @@ public class ChangeAccessPage extends Page implements
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserAccessEventHandler
+	 * @see com.willshex.blogwt.shared.api.user.call.event.
+	 * ChangeUserAccessEventHandler
 	 * #changeUserAccessSuccess(com.willshex.blogwt.shared.api.user.call.
 	 * ChangeUserAccessRequest,
 	 * com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse) */
@@ -283,8 +284,8 @@ public class ChangeAccessPage extends Page implements
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserAccessEventHandler
+	 * @see com.willshex.blogwt.shared.api.user.call.event.
+	 * ChangeUserAccessEventHandler
 	 * #changeUserAccessFailure(com.willshex.blogwt.shared.api.user.call.
 	 * ChangeUserAccessRequest, java.lang.Throwable) */
 	@Override
