@@ -10,17 +10,15 @@ package com.willshex.blogwt.server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.willshex.blogwt.server.helper.UserHelper;
+import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.page.PageMarkup;
 import com.willshex.blogwt.server.page.PageMarkupFactory;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
@@ -28,10 +26,7 @@ import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
-import com.willshex.blogwt.server.service.session.ISessionService;
-import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
-import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
@@ -121,11 +116,11 @@ public class MainServlet extends ContextAwareServlet {
 		if (properties != null) {
 			propertyLookup = PropertyHelper.toLookup(properties);
 
-			rssPropertyValue = PropertyHelper.value(propertyLookup
-					.get(PropertyHelper.GENERATE_RSS_FEED));
+			rssPropertyValue = PropertyHelper.value(
+					propertyLookup.get(PropertyHelper.GENERATE_RSS_FEED));
 
-			faviconPropertyValue = PropertyHelper.value(propertyLookup
-					.get(PropertyHelper.FAVICON_URL));
+			faviconPropertyValue = PropertyHelper
+					.value(propertyLookup.get(PropertyHelper.FAVICON_URL));
 		}
 
 		if (rssPropertyValue == null
@@ -140,10 +135,8 @@ public class MainServlet extends ContextAwareServlet {
 			faviconLink = String.format(FAVICON_FORMAT, faviconPropertyValue);
 		}
 
-		RESPONSE.get()
-				.getOutputStream()
-				.print(String.format(PAGE_FORMAT, rssLink, faviconLink,
-						pageTitle, scriptVariables.toString()));
+		RESPONSE.get().getOutputStream().print(String.format(PAGE_FORMAT,
+				rssLink, faviconLink, pageTitle, scriptVariables.toString()));
 
 	}
 
@@ -151,9 +144,9 @@ public class MainServlet extends ContextAwareServlet {
 	 * @param scriptVariables
 	 */
 	private void appendPages (StringBuffer scriptVariables) {
-		List<Page> pages = PageServiceProvider.provide().getPages(
-				Boolean.FALSE, Integer.valueOf(0), null,
-				PageSortType.PageSortTypePriority, null);
+		List<Page> pages = PageServiceProvider.provide().getPages(Boolean.FALSE,
+				Integer.valueOf(0), null, PageSortType.PageSortTypePriority,
+				null);
 		if (pages != null) {
 			scriptVariables.append("var pages='[");
 
@@ -216,8 +209,8 @@ public class MainServlet extends ContextAwareServlet {
 
 			boolean first = true;
 			for (ArchiveEntry archiveEntry : archiveEntries) {
-				archiveEntry.posts = PersistenceService.dataTypeList(
-						Post.class, archiveEntry.postKeys);
+				archiveEntry.posts = PersistenceService.dataTypeList(Post.class,
+						archiveEntry.postKeys);
 
 				if (first) {
 					first = false;
@@ -247,7 +240,8 @@ public class MainServlet extends ContextAwareServlet {
 			for (Property property : properties) {
 				if (PropertyHelper.PASSWORD_HASH_SALT.equals(property.name)
 						|| PropertyHelper.RECAPTCHA_API_KEY
-								.equals(property.name)) continue;
+								.equals(property.name))
+					continue;
 
 				if (first) {
 					first = false;
@@ -268,45 +262,15 @@ public class MainServlet extends ContextAwareServlet {
 	 * @param scriptVariables 
 	 * 
 	 */
-	private void appendSession (StringBuffer scriptVariables) {
-		ISessionService sessionService = SessionServiceProvider.provide();
-		Session userSession = null;
-		Cookie[] cookies = REQUEST.get().getCookies();
-		String sessionId = null;
-
-		if (cookies != null) {
-			for (Cookie currentCookie : cookies) {
-				if ("session.id".equals(currentCookie.getName())) {
-					sessionId = currentCookie.getValue();
-					break;
-				}
-			}
-
-			if (sessionId != null) {
-				userSession = sessionService
-						.getSession(Long.valueOf(sessionId));
-
-				if (userSession != null) {
-					if (userSession.expires.getTime() > new Date().getTime()) {
-						userSession = sessionService.extendSession(userSession,
-								Long.valueOf(ISessionService.MILLIS_MINUTES));
-						userSession.user = UserServiceProvider.provide()
-								.getUser(userSession.userKey.getId());
-						UserHelper.stripPassword(userSession.user);
-						UserHelper
-								.populateRolesAndPermissionsFromKeys(userSession.user);
-					} else {
-						sessionService.deleteSession(userSession);
-						userSession = null;
-					}
-				}
-			}
-		}
+	private Session appendSession (StringBuffer scriptVariables) {
+		Session userSession = ServletHelper.session(REQUEST.get());
 
 		if (userSession != null) {
-			scriptVariables.append("var session='"
-					+ jsonForJsVar(slim(userSession)) + "';");
+			scriptVariables.append(
+					"var session='" + jsonForJsVar(slim(userSession)) + "';");
 		}
+
+		return userSession;
 	}
 
 	/**
@@ -323,8 +287,8 @@ public class MainServlet extends ContextAwareServlet {
 	 * @throws FailingHttpStatusCodeException 
 	 * 
 	 */
-	private void processStaticRequest () throws FailingHttpStatusCodeException,
-			IOException {
+	private void processStaticRequest ()
+			throws FailingHttpStatusCodeException, IOException {
 		HttpServletRequest request = REQUEST.get();
 		String fragmentParameter = request.getParameter("_escaped_fragment_");
 
@@ -334,8 +298,8 @@ public class MainServlet extends ContextAwareServlet {
 		HttpServletResponse response = RESPONSE.get();
 
 		response.setCharacterEncoding(CHAR_ENCODING);
-		response.setHeader("Content-Type", "text/html; charset="
-				+ CHAR_ENCODING);
+		response.setHeader("Content-Type",
+				"text/html; charset=" + CHAR_ENCODING);
 
 		if (p != null) {
 			response.getWriter().print(p.asString());
@@ -343,15 +307,16 @@ public class MainServlet extends ContextAwareServlet {
 	}
 
 	private String jsonForJsVar (Jsonable jsonable) {
-		return null == jsonable ? null : jsonable.toString()
-				.replace("'", "\\'").replace("\\n", "\\\\n")
-				.replace("\\\"", "\\\\\"");
+		return null == jsonable ? null
+				: jsonable.toString().replace("'", "\\'")
+						.replace("\\n", "\\\\n").replace("\\\"", "\\\\\"");
 	}
 
 	private Property slim (Property property) {
-		return (Property) (new Property().name(property.name).value(
-				property.value).created(PropertyHelper.TITLE
-				.equals(property.name) ? property.created : null));
+		return (Property) (new Property().name(property.name)
+				.value(property.value)
+				.created(PropertyHelper.TITLE.equals(property.name)
+						? property.created : null));
 	}
 
 	private Tag slim (Tag tag) {
