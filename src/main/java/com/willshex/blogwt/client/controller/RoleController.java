@@ -16,6 +16,8 @@ import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
 import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.api.user.event.GetRolesEventHandler.GetRolesFailure;
+import com.willshex.blogwt.client.api.user.event.GetRolesEventHandler.GetRolesSuccess;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.oracle.RoleOracle;
 import com.willshex.blogwt.shared.api.Pager;
@@ -23,8 +25,6 @@ import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.user.call.GetRolesRequest;
 import com.willshex.blogwt.shared.api.user.call.GetRolesResponse;
-import com.willshex.blogwt.shared.api.user.call.event.GetRolesEventHandler.GetRolesFailure;
-import com.willshex.blogwt.shared.api.user.call.event.GetRolesEventHandler.GetRolesSuccess;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.gson.web.service.shared.StatusType;
 

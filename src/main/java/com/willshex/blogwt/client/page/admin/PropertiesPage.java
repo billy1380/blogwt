@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.api.blog.event.UpdatePropertiesEventHandler;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.property.AbstractPropertyPart;
@@ -41,7 +42,6 @@ import com.willshex.blogwt.client.part.property.StringPropertyPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse;
-import com.willshex.blogwt.shared.api.blog.call.event.UpdatePropertiesEventHandler;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 

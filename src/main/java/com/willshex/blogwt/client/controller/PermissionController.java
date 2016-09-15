@@ -15,6 +15,8 @@ import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
 import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.api.user.event.GetPermissionsEventHandler.GetPermissionsFailure;
+import com.willshex.blogwt.client.api.user.event.GetPermissionsEventHandler.GetPermissionsSuccess;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.oracle.PermissionOracle;
 import com.willshex.blogwt.client.oracle.SuggestOracle;
@@ -23,8 +25,6 @@ import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
 import com.willshex.blogwt.shared.api.user.call.GetPermissionsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetPermissionsResponse;
-import com.willshex.blogwt.shared.api.user.call.event.GetPermissionsEventHandler.GetPermissionsFailure;
-import com.willshex.blogwt.shared.api.user.call.event.GetPermissionsEventHandler.GetPermissionsSuccess;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.gson.web.service.shared.StatusType;
 

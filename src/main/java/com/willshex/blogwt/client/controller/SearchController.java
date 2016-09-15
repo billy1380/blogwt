@@ -15,14 +15,14 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.api.search.event.SearchAllEventHandler.SearchAllFailure;
+import com.willshex.blogwt.client.api.search.event.SearchAllEventHandler.SearchAllSuccess;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.search.call.SearchAllRequest;
 import com.willshex.blogwt.shared.api.search.call.SearchAllResponse;
-import com.willshex.blogwt.shared.api.search.call.event.SearchAllEventHandler.SearchAllFailure;
-import com.willshex.blogwt.shared.api.search.call.event.SearchAllEventHandler.SearchAllSuccess;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**

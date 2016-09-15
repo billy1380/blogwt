@@ -15,13 +15,13 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.api.blog.event.GetPostEventHandler;
 import com.willshex.blogwt.client.cell.blog.ResultSummaryCell;
 import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.controller.SearchController;
 import com.willshex.blogwt.client.controller.SearchController.SearchResult;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
-import com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**

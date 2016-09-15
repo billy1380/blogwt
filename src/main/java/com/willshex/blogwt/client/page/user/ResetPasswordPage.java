@@ -19,13 +19,13 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.api.user.event.ResetPasswordEventHandler;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse;
-import com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**

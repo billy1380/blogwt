@@ -9,11 +9,11 @@ package com.willshex.blogwt.client.controller;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.api.page.event.SubmitFormEventHandler;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.shared.api.datatype.Form;
 import com.willshex.blogwt.shared.api.page.call.SubmitFormRequest;
 import com.willshex.blogwt.shared.api.page.call.SubmitFormResponse;
-import com.willshex.blogwt.shared.api.page.call.event.SubmitFormEventHandler;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**

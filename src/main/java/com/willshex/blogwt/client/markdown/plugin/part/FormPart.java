@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.api.page.event.SubmitFormEventHandler;
 import com.willshex.blogwt.client.controller.FormController;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.part.AlertBox;
@@ -42,7 +43,6 @@ import com.willshex.blogwt.shared.api.datatype.FieldTypeType;
 import com.willshex.blogwt.shared.api.datatype.Form;
 import com.willshex.blogwt.shared.api.page.call.SubmitFormRequest;
 import com.willshex.blogwt.shared.api.page.call.SubmitFormResponse;
-import com.willshex.blogwt.shared.api.page.call.event.SubmitFormEventHandler;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**

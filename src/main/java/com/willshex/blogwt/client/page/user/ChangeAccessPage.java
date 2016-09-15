@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.api.user.event.ChangeUserAccessEventHandler;
 import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.PermissionController;
@@ -41,7 +42,6 @@ import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse;
-import com.willshex.blogwt.shared.api.user.call.event.ChangeUserAccessEventHandler;
 import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
