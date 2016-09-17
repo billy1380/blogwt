@@ -17,10 +17,12 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.cmd.Query;
 import com.googlecode.objectify.impl.translate.Translators;
 import com.willshex.blogwt.server.service.persistence.translator.PermissionTypeTypeTranslatorFactory;
 import com.willshex.blogwt.server.service.persistence.translator.RelationshipTypeTypeTranslatorFactory;
 import com.willshex.blogwt.server.service.persistence.translator.ResourceTypeTypeTranslatorFactory;
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
@@ -42,6 +44,11 @@ import com.willshex.blogwt.shared.api.datatype.User;
  * 
  */
 public class PersistenceService {
+
+	public interface ISortable<T extends Enum<T>> {
+		public String map (T sortBy);
+	}
+
 	static {
 		Translators translators = factory().getTranslators();
 		translators.add(new PermissionTypeTypeTranslatorFactory());
@@ -162,4 +169,47 @@ public class PersistenceService {
 		return ids;
 	}
 
+	public static String direction (SortDirectionType sortDirection) {
+		String direction = "";
+		if (sortDirection != null) {
+			switch (sortDirection) {
+			case SortDirectionTypeDescending:
+				direction = "-";
+				break;
+			default:
+				break;
+			}
+		}
+
+		return direction;
+	}
+
+	/**
+	 * Takes a query and adds pagination parameters
+	 * @param filter
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortable
+	 * @param sortDirection
+	 * @return
+	 */
+	public static <T extends DataType, E extends Enum<E>> Query<T> pagedAndSorted (
+			Query<T> query, Integer start, Integer count, E sortBy,
+			ISortable<E> sortable, SortDirectionType sortDirection) {
+		if (start != null) {
+			query = query.offset(start.intValue());
+		}
+
+		if (count != null) {
+			query = query.limit(count.intValue());
+		}
+
+		if (sortBy != null) {
+			query = query.order(PersistenceService.direction(sortDirection)
+					+ sortable.map(sortBy));
+		}
+
+		return query;
+	}
 }
