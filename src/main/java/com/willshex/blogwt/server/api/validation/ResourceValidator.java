@@ -7,6 +7,9 @@
 //
 package com.willshex.blogwt.server.api.validation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.validation.ApiError;
@@ -47,8 +50,8 @@ public class ResourceValidator {
 
 		Resource lookupResource = null;
 		if (isIdLookup) {
-			lookupResource = ResourceServiceProvider.provide().getResource(
-					resource.id);
+			lookupResource = ResourceServiceProvider.provide()
+					.getResource(resource.id);
 		}
 
 		if (lookupResource == null)
@@ -56,6 +59,26 @@ public class ResourceValidator {
 					ApiError.DataTypeNotFound, type + ": " + name);
 
 		return lookupResource;
+	}
+
+	/**
+	 * @param resources
+	 * @return 
+	 * @throws InputValidationException 
+	 */
+	public static List<Resource> lookupAll (List<Resource> resources,
+			String name) throws InputValidationException {
+		if (resources == null)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, type + "[]: " + name);
+
+		List<Resource> lookupResources = new ArrayList<Resource>();
+
+		for (Resource resource : resources) {
+			lookupResources.add(lookup(resource, name + "[n]"));
+		}
+
+		return lookupResources;
 	}
 
 }
