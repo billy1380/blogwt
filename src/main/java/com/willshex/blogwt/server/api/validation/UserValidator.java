@@ -52,7 +52,9 @@ public class UserValidator extends ApiValidator {
 			User existingUsernameUser = UserServiceProvider.provide()
 					.getUsernameUser(user.username);
 
-			if (existingUsernameUser != null)
+			if (existingUsernameUser != null
+					&& (user.id == null || (user.id != null
+							&& !user.id.equals(existingUsernameUser.id))))
 				ApiValidator.throwServiceError(InputValidationException.class,
 						ApiError.UsernameInUse,
 						"String: " + name + ".username");
@@ -62,7 +64,9 @@ public class UserValidator extends ApiValidator {
 			User existingEmailUser = UserServiceProvider.provide()
 					.getEmailUser(user.email);
 
-			if (existingEmailUser != null)
+			if (existingEmailUser != null
+					&& (user.id == null || (user.id != null
+							&& !user.id.equals(existingEmailUser.id))))
 				ApiValidator.throwServiceError(InputValidationException.class,
 						ApiError.EmailInUse, "String: " + name + ".email");
 		}
