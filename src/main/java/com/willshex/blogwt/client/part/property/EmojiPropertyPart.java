@@ -11,6 +11,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -70,10 +71,13 @@ public class EmojiPropertyPart extends AbstractPropertyPart {
 		new Emoji().setTheme(themeName, new Emoji.Ready() {
 			public void ready (Emoji emoji) {
 				for (String name : names) {
-					Image one = new Image(emoji.resource(name));
-					one.setHeight("32px");
-					one.setWidth("32px");
-					node.appendChild(one.getElement());
+					ImageResource res = emoji.resource(name);
+					if (res != null) {
+						Image one = new Image(res);
+						one.setHeight("32px");
+						one.setWidth("32px");
+						node.appendChild(one.getElement());
+					}
 				}
 			}
 		});
