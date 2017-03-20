@@ -26,7 +26,7 @@
 		<gwt.style>OBF</gwt.style>
 
 		<!-- App Engine -->
-		<appengine.version>1.9.27</appengine.version>
+		<appengine.version>1.9.50</appengine.version>
 
 		<!-- Maven -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
