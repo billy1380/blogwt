@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
@@ -38,6 +39,7 @@ import com.willshex.blogwt.client.api.user.event.ResetPasswordEventHandler.Reset
 import com.willshex.blogwt.client.api.user.event.VerifyAccountEventHandler.VerifyAccountFailure;
 import com.willshex.blogwt.client.api.user.event.VerifyAccountEventHandler.VerifyAccountSuccess;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.client.oracle.UserOracle;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
@@ -119,6 +121,8 @@ public class UserController extends AsyncDataProvider<User> {
 	private Request getUserRequest;
 	private Request getEmailAvatarRequest;
 	private Request getRolesAndPermissionsRequest;
+	
+	private UserOracle oracle;
 
 	private void fetchUsers () {
 		final GetUsersRequest input = ApiHelper
@@ -613,5 +617,13 @@ public class UserController extends AsyncDataProvider<User> {
 
 	public void setUser (User value) {
 		user = value;
+	}
+	
+	public SuggestOracle oracle () {
+		if (oracle == null) {
+			oracle = new UserOracle();
+		}
+
+		return oracle;
 	}
 }

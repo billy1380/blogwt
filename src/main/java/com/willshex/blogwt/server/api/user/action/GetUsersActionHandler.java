@@ -22,6 +22,7 @@ import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.relationship.RelationshipServiceProvider;
+import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Relationship;
 import com.willshex.blogwt.shared.api.datatype.RelationshipSortType;
@@ -59,14 +60,17 @@ public final class GetUsersActionHandler
 		output.session.user = UserServiceProvider.provide()
 				.getUser(Long.valueOf(output.session.userKey.getId()));
 
-		if (input.relationshipType != null) {
-			output.users = getRelatedUsers(input);
+		if (input.query == null) {
+			if (input.relationshipType != null) {
+				output.users = getRelatedUsers(input);
+			} else {
+				output.users = getAllUsers(input);
+			}
 		} else {
-			output.users = getAllUsers(input);
+			output.users = searchUsers(input);
 		}
 
 		output.pager = PagerHelper.moveForward(input.pager);
-
 	}
 
 	/**
@@ -85,6 +89,22 @@ public final class GetUsersActionHandler
 				input.pager.count, UserSortType.fromString(input.pager.sortBy),
 				input.pager.sortDirection);
 
+	}
+
+	/**
+	 * @param input
+	 * @return
+	 * @throws InputValidationException
+	 */
+	@SuppressWarnings("unchecked")
+	private List<User> searchUsers (GetUsersRequest input)
+			throws InputValidationException {
+		ApiValidator.validateLength(input.query = input.query.trim(), 1, 255,
+				"input.query");
+
+		return ((ISearch<User>) UserServiceProvider.provide()).search(
+				input.query, input.pager.start, input.pager.count,
+				input.pager.sortBy, input.pager.sortDirection);
 	}
 
 	/**

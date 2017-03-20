@@ -25,6 +25,8 @@
 		<c:CellTable ui:field="tblUsers" styleName="col-sm-12 table table-striped" />
 		<c:SimplePager ui:field="pgrUsers" location="LEFT" />
 
+		<p:LoadingPanel ui:field="pnlLoading" />
+
 		<p:NoneFoundPanel subject="users" ui:field="pnlNoUsers" />
 	</g:HTMLPanel>
 </ui:UiBinder> 

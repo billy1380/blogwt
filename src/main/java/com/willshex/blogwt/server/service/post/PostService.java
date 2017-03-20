@@ -774,4 +774,17 @@ final class PostService implements IPostService, ISearch<Post> {
 
 		return posts;
 	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.search.ISearch#search(java.util.
+	 * Collection, java.lang.String, java.lang.String, java.lang.Integer,
+	 * java.lang.String, com.willshex.blogwt.shared.api.SortDirectionType) */
+	@Override
+	public String search (Collection<Post> resultHolder, String query,
+			String next, Integer count, String sortBy,
+			SortDirectionType direction) {
+		throw new UnsupportedOperationException();
+	}
+
 }

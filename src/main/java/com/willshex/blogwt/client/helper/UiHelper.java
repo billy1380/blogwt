@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.client.helper;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -59,5 +61,13 @@ public class UiHelper {
 
 	public static void autoFocus (Widget widget) {
 		widget.getElement().setAttribute("autofocus", "");
+	}
+
+	public static void setVisible (Element e, boolean visible) {
+		if (visible) {
+			e.getStyle().clearDisplay();
+		} else {
+			e.getStyle().setDisplay(Display.NONE);
+		}
 	}
 }

@@ -18,9 +18,9 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.user.UserService;
-import com.willshex.blogwt.client.api.user.event.LogoutEventHandler;
 import com.willshex.blogwt.client.api.user.event.LoginEventHandler.LoginFailure;
 import com.willshex.blogwt.client.api.user.event.LoginEventHandler.LoginSuccess;
+import com.willshex.blogwt.client.api.user.event.LogoutEventHandler;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.shared.api.Request;
@@ -37,7 +37,6 @@ import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.web.service.client.JsonService;
 import com.willshex.gson.web.service.client.JsonServiceCallEventHandler;
-import com.willshex.gson.web.service.shared.Response;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
@@ -67,8 +66,8 @@ public class SessionController implements JsonServiceCallEventHandler {
 			removeSession();
 		}
 
-		DefaultEventBus.get()
-				.addHandler(JsonServiceCallEventHandler.TYPE, this);
+		DefaultEventBus.get().addHandler(JsonServiceCallEventHandler.TYPE,
+				this);
 	}
 
 	public void login (String username, String password, boolean rememberMe) {
@@ -84,8 +83,8 @@ public class SessionController implements JsonServiceCallEventHandler {
 	public void restoreSession () {
 		UserService userService = ApiHelper.createUserClient();
 
-		final LoginRequest input = setSession(ApiHelper
-				.setAccessCode(new LoginRequest()));
+		final LoginRequest input = setSession(
+				ApiHelper.setAccessCode(new LoginRequest()));
 
 		userService.login(input, createAsyncResponse(input));
 	}
@@ -110,16 +109,16 @@ public class SessionController implements JsonServiceCallEventHandler {
 					}
 				}
 
-				DefaultEventBus.get()
-						.fireEventFromSource(new LoginSuccess(input, result),
-								SessionController.this);
+				DefaultEventBus.get().fireEventFromSource(
+						new LoginSuccess(input, result),
+						SessionController.this);
 			}
 
 			@Override
 			public void onFailure (Throwable caught) {
-				DefaultEventBus.get()
-						.fireEventFromSource(new LoginFailure(input, caught),
-								SessionController.this);
+				DefaultEventBus.get().fireEventFromSource(
+						new LoginFailure(input, caught),
+						SessionController.this);
 			}
 		};
 	}
@@ -134,8 +133,8 @@ public class SessionController implements JsonServiceCallEventHandler {
 
 	public boolean isValidSession () {
 		return sessionForApiCall() != null
-				&& (session == null || (session.expires != null && session.expires
-						.getTime() > (new Date()).getTime()));
+				&& (session == null || (session.expires != null
+						&& session.expires.getTime() > (new Date()).getTime()));
 	}
 
 	public Session sessionForApiCall () {
@@ -162,8 +161,8 @@ public class SessionController implements JsonServiceCallEventHandler {
 	public void logout (PageType pageType, String... params) {
 		UserService userService = ApiHelper.createUserClient();
 
-		final LogoutRequest input = setSession(ApiHelper
-				.setAccessCode(new LogoutRequest()));
+		final LogoutRequest input = setSession(
+				ApiHelper.setAccessCode(new LogoutRequest()));
 
 		userService.logout(input, new AsyncCallback<LogoutResponse>() {
 
@@ -225,7 +224,8 @@ public class SessionController implements JsonServiceCallEventHandler {
 
 		if (!authorised && isValidSession() && user() != null
 				&& permissions() != null) {
-			if (requiredPermissions == null || requiredPermissions.size() == 0) {
+			if (requiredPermissions == null
+					|| requiredPermissions.size() == 0) {
 				authorised = true;
 			} else {
 				Map<String, Permission> lookup = PermissionHelper
@@ -284,9 +284,19 @@ public class SessionController implements JsonServiceCallEventHandler {
 	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	public void jsonServiceCallSuccess (JsonService origin, String callName,
-			com.willshex.gson.web.service.shared.Request input, Response output) {
+			com.willshex.gson.web.service.shared.Request input,
+			com.willshex.gson.web.service.shared.Response output) {
 		GWT.log("Call to " + origin.getUrl() + "." + callName + " with input ["
 				+ input + "] succeeded with output [" + output + "].");
+
+		if (output instanceof com.willshex.blogwt.shared.api.Response) {
+			if (input instanceof com.willshex.blogwt.shared.api.Request) {
+				if (((com.willshex.blogwt.shared.api.Response) output).session == null
+						&& session != null) {
+					logout();
+				}
+			}
+		}
 	}
 
 	/* (non-Javadoc)

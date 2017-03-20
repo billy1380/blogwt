@@ -11,6 +11,7 @@ import static com.willshex.blogwt.server.service.persistence.PersistenceService.
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -363,4 +364,17 @@ final class PageService implements IPageService, ISearch<Page> {
 
 		return pages;
 	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.search.ISearch#search(java.util.
+	 * Collection, java.lang.String, java.lang.String, java.lang.Integer,
+	 * java.lang.String, com.willshex.blogwt.shared.api.SortDirectionType) */
+	@Override
+	public String search (Collection<Page> resultHolder, String query,
+			String next, Integer count, String sortBy,
+			SortDirectionType direction) {
+		throw new UnsupportedOperationException();
+	}
+
 }

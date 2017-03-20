@@ -33,6 +33,7 @@ import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
+import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
@@ -71,6 +72,7 @@ public class UsersPage extends Page {
 	@UiField SimplePager pgrUsers;
 	@UiField NoneFoundPanel pnlNoUsers;
 	@UiField Button btnRefresh;
+	@UiField LoadingPanel pnlLoading;
 
 	public UsersPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -79,6 +81,7 @@ public class UsersPage extends Page {
 		createColumns();
 
 		tblUsers.setEmptyTableWidget(pnlNoUsers);
+		tblUsers.setLoadingIndicator(pnlLoading);
 		UserController.get().addDataDisplay(tblUsers);
 		pgrUsers.setDisplay(tblUsers);
 	}
@@ -131,11 +134,12 @@ public class UsersPage extends Page {
 				safeHtmlPrototype) {
 			@Override
 			public SafeHtml getValue (User object) {
-				return SafeHtmlUtils
-						.fromSafeConstant("<a class=\"btn btn-default btn-xs\" href=\""
-								+ PageTypeHelper.asHref(
-										PageType.ChangeDetailsPageType, "id",
-										object.id.toString()).asString()
+				return SafeHtmlUtils.fromSafeConstant(
+						"<a class=\"btn btn-default btn-xs\" href=\""
+								+ PageTypeHelper
+										.asHref(PageType.ChangeDetailsPageType,
+												"id", object.id.toString())
+										.asString()
 								+ "\" ><span class=\"glyphicon glyphicon-edit\"></span> edit<a>");
 			}
 		};
@@ -192,7 +196,7 @@ public class UsersPage extends Page {
 		tblUsers.addColumn(admin);
 		tblUsers.addColumn(delete);
 	}
-	
+
 	@UiHandler("btnRefresh")
 	void onRefreshClicked (ClickEvent ce) {
 		tblUsers.setVisibleRangeAndClearData(tblUsers.getVisibleRange(), true);
