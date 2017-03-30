@@ -37,6 +37,10 @@ public final class GetResourcesActionHandler
 		output.session = input.session = SessionValidator
 				.lookupAndExtend(input.session, "input.session");
 
+		if (input.pager == null) {
+			input.pager = PagerHelper.createDefaultPager();
+		}
+
 		output.resources = ResourceServiceProvider.provide().getResources(
 				input.pager.start, input.pager.count, null,
 				SortDirectionType.SortDirectionTypeDescending);
