@@ -25,6 +25,8 @@ import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetRatingsRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetRatingsResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetResourceRequest;
@@ -35,6 +37,8 @@ import com.willshex.blogwt.shared.api.blog.call.GetTagsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetTagsResponse;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
+import com.willshex.blogwt.shared.api.blog.call.SubmitRatingRequest;
+import com.willshex.blogwt.shared.api.blog.call.SubmitRatingResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
@@ -45,6 +49,92 @@ import com.willshex.gson.web.service.client.HttpException;
 import com.willshex.gson.web.service.client.JsonService;
 
 public final class BlogService extends JsonService {
+
+	public static final String BlogMethodGetRatings = "GetRatings";
+
+	public Request getRatings (final GetRatingsRequest input,
+			final AsyncCallback<GetRatingsResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(BlogMethodGetRatings, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								GetRatingsResponse outputParameter = new GetRatingsResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(BlogService.this,
+										BlogMethodGetRatings, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(BlogService.this,
+										BlogMethodGetRatings, input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(BlogService.this,
+									BlogMethodGetRatings, input, exception);
+						}
+					});
+			onCallStart(BlogService.this, BlogMethodGetRatings, input, handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodGetRatings, input,
+					exception);
+		}
+		return handle;
+	}
+
+	public static final String BlogMethodSubmitRating = "SubmitRating";
+
+	public Request submitRating (final SubmitRatingRequest input,
+			final AsyncCallback<SubmitRatingResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(BlogMethodSubmitRating, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								SubmitRatingResponse outputParameter = new SubmitRatingResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(BlogService.this,
+										BlogMethodSubmitRating, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(BlogService.this,
+										BlogMethodSubmitRating, input,
+										exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(BlogService.this,
+									BlogMethodSubmitRating, input, exception);
+						}
+					});
+			onCallStart(BlogService.this, BlogMethodSubmitRating, input,
+					handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodSubmitRating, input,
+					exception);
+		}
+		return handle;
+	}
 
 	public static final String BlogMethodUpdateResource = "UpdateResource";
 
@@ -111,7 +201,8 @@ public final class BlogService extends JsonService {
 							} catch (JSONException | HttpException exception) {
 								callback.onFailure(exception);
 								onCallFailure(BlogService.this,
-										BlogMethodGetResource, input, exception);
+										BlogMethodGetResource, input,
+										exception);
 							}
 						}
 
@@ -255,7 +346,8 @@ public final class BlogService extends JsonService {
 									BlogMethodGetResources, input, exception);
 						}
 					});
-			onCallStart(BlogService.this, BlogMethodGetResources, input, handle);
+			onCallStart(BlogService.this, BlogMethodGetResources, input,
+					handle);
 		} catch (RequestException exception) {
 			callback.onFailure(exception);
 			onCallFailure(BlogService.this, BlogMethodGetResources, input,
@@ -295,7 +387,8 @@ public final class BlogService extends JsonService {
 								Throwable exception) {
 							callback.onFailure(exception);
 							onCallFailure(BlogService.this,
-									BlogMethodGetRelatedPosts, input, exception);
+									BlogMethodGetRelatedPosts, input,
+									exception);
 						}
 					});
 			onCallStart(BlogService.this, BlogMethodGetRelatedPosts, input,
@@ -431,7 +524,8 @@ public final class BlogService extends JsonService {
 			onCallStart(BlogService.this, BlogMethodGetTags, input, handle);
 		} catch (RequestException exception) {
 			callback.onFailure(exception);
-			onCallFailure(BlogService.this, BlogMethodGetTags, input, exception);
+			onCallFailure(BlogService.this, BlogMethodGetTags, input,
+					exception);
 		}
 		return handle;
 	}
@@ -472,7 +566,8 @@ public final class BlogService extends JsonService {
 			onCallStart(BlogService.this, BlogMethodGetPost, input, handle);
 		} catch (RequestException exception) {
 			callback.onFailure(exception);
-			onCallFailure(BlogService.this, BlogMethodGetPost, input, exception);
+			onCallFailure(BlogService.this, BlogMethodGetPost, input,
+					exception);
 		}
 		return handle;
 	}
@@ -548,8 +643,8 @@ public final class BlogService extends JsonService {
 						public void onError (Request request,
 								Throwable exception) {
 							callback.onFailure(exception);
-							onCallFailure(BlogService.this,
-									BlogMethodSetupBlog, input, exception);
+							onCallFailure(BlogService.this, BlogMethodSetupBlog,
+									input, exception);
 						}
 					});
 			onCallStart(BlogService.this, BlogMethodSetupBlog, input, handle);

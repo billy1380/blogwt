@@ -13,6 +13,7 @@ import java.util.List;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Rating;
 import com.willshex.blogwt.shared.api.datatype.RatingSortType;
+import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.service.IService;
 
 public interface IRatingService extends IService {
@@ -53,5 +54,32 @@ public interface IRatingService extends IService {
 	 */
 	public List<Rating> getRatings (Integer start, Integer count,
 			RatingSortType sortBy, SortDirectionType sortDirection);
+
+	/**
+	 * Get user ratings
+	 * 
+	 * @param user
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
+	 * @return
+	 */
+	public List<Rating> getUserRatings (User user, Integer start, Integer count,
+			RatingSortType sortBy, SortDirectionType sortDirection);
+
+	/**
+	 * Get subject ratings
+	 * @param subjectId
+	 * @param subjectType
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
+	 * @return
+	 */
+	public List<Rating> getSubjectRatings (Long subjectId, String subjectType,
+			Integer start, Integer count, RatingSortType sortBy,
+			SortDirectionType sortDirection);
 
 }

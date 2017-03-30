@@ -14,12 +14,14 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.server.service.persistence.PersistenceService;
+import com.willshex.blogwt.server.service.persistence.PersistenceService.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Rating;
 import com.willshex.blogwt.shared.api.datatype.RatingSortType;
+import com.willshex.blogwt.shared.api.datatype.User;
 
-final class RatingService implements IRatingService {
+final class RatingService implements IRatingService, ISortable<RatingSortType> {
 	public String getName () {
 		return NAME;
 	}
@@ -70,33 +72,63 @@ final class RatingService implements IRatingService {
 	@Override
 	public List<Rating> getRatings (Integer start, Integer count,
 			RatingSortType sortBy, SortDirectionType sortDirection) {
-		Query<Rating> query = ofy().load().type(Rating.class);
+		return PersistenceService
+				.pagedAndSorted(ofy().load().type(Rating.class), start, count,
+						sortBy, this, sortDirection)
+				.list();
+	}
 
-		if (start != null) {
-			query = query.offset(start.intValue());
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.rating.IRatingService#getUserRatings(
+	 * com.willshex.blogwt.shared.api.datatype.User, java.lang.Integer,
+	 * java.lang.Integer,
+	 * com.willshex.blogwt.shared.api.datatype.RatingSortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	@Override
+	public List<Rating> getUserRatings (User user, Integer start, Integer count,
+			RatingSortType sortBy, SortDirectionType sortDirection) {
+		return PersistenceService
+				.pagedAndSorted(ofy().load().type(Rating.class), start, count,
+						sortBy, this, sortDirection)
+				.filter(map(RatingSortType.RatingSortTypeBy), Key.create(user))
+				.list();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.rating.IRatingService#
+	 * getSubjectRatings(java.lang.Long, java.lang.String, java.lang.Integer,
+	 * java.lang.Integer,
+	 * com.willshex.blogwt.shared.api.datatype.RatingSortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	@Override
+	public List<Rating> getSubjectRatings (Long subjectId, String subjectType,
+			Integer start, Integer count, RatingSortType sortBy,
+			SortDirectionType sortDirection) {
+		return PersistenceService
+				.pagedAndSorted(ofy().load().type(Rating.class), start, count,
+						sortBy, this, sortDirection)
+				.filter(map(RatingSortType.RatingSortTypeSubjectId), subjectId)
+				.filter(map(RatingSortType.RatingSortTypeSubjectId),
+						subjectType)
+				.list();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.persistence.PersistenceService.
+	 * ISortable#map(java.lang.Enum) */
+	@Override
+	public String map (RatingSortType sortBy) {
+		String mapped = sortBy.toString();
+
+		if (sortBy == RatingSortType.RatingSortTypeBy) {
+			mapped += "Key";
 		}
 
-		if (count != null) {
-			query = query.limit(count.intValue());
-		}
-
-		if (sortBy != null) {
-			String condition = sortBy.toString();
-
-			if (sortDirection != null) {
-				switch (sortDirection) {
-				case SortDirectionTypeDescending:
-					condition = "-" + condition;
-					break;
-				default:
-					break;
-				}
-			}
-
-			query = query.order(condition);
-		}
-
-		return query.list();
+		return mapped;
 	}
 
 }
