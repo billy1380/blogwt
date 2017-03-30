@@ -32,6 +32,7 @@ import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.Property;
+import com.willshex.blogwt.shared.api.datatype.Rating;
 import com.willshex.blogwt.shared.api.datatype.Relationship;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.Role;
@@ -54,7 +55,7 @@ public class PersistenceService {
 		translators.add(new PermissionTypeTypeTranslatorFactory());
 		translators.add(new RelationshipTypeTypeTranslatorFactory());
 		translators.add(new ResourceTypeTypeTranslatorFactory());
-		
+
 		factory().register(User.class);
 		factory().register(Session.class);
 		factory().register(Post.class);
@@ -69,6 +70,7 @@ public class PersistenceService {
 		factory().register(Notification.class);
 		factory().register(MetaNotification.class);
 		factory().register(Relationship.class);
+		factory().register(Rating.class);
 	}
 
 	public static Objectify ofy () {
