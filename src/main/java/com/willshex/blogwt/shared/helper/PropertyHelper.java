@@ -61,6 +61,8 @@ public class PropertyHelper {
 
 	public static final String TITLE_IN_NAVBAR = "heading.title";
 
+	public static final String RATING_ENABLED = "rating.enabled";
+
 	// user properties
 	public static final String ALLOW_USER_REGISTRATION = "user.allow.registration";
 	public static final String NEW_USER_PERMISSIONS = "user.new.permissions";
@@ -114,6 +116,8 @@ public class PropertyHelper {
 	public static final String TITLE_IN_NAVBAR_DESCRIPTION = "Show the site title in the navigation bar";
 
 	public static final String ENABLE_USER_RELATIONSHIPS_DESCRIPTION = "Enable user following and blocking";
+
+	public static final String RATING_ENABLED_DESCRIPTION = "Enable ratings";
 
 	public static final String NONE_VALUE = "none";
 	public static final String APPLE_VALUE = "apple";
@@ -322,6 +326,12 @@ public class PropertyHelper {
 				.type("string").value(value);
 	}
 
+	public static Property createRatingEnabled (String value) {
+		return new Property().name(RATING_ENABLED)
+				.description(RATING_ENABLED_DESCRIPTION).value(value)
+				.group("Functional").type("boolean");
+	}
+
 	/**
 	 * @return
 	 */
@@ -346,7 +356,8 @@ public class PropertyHelper {
 					createNewUserPermissions(null), createNewUserRoles(null),
 					createEnableUserRelationships(null), createFaviconUrl(null),
 					createOutgoingEmail(null),
-					createCookieDetailsPageSlug(null));
+					createCookieDetailsPageSlug(null),
+					createRatingEnabled(null));
 		}
 
 		return properties;

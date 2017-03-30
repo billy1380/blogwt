@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
@@ -26,7 +27,6 @@ import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
-import com.willshex.gson.web.service.server.ActionHandler;
 import com.willshex.gson.web.service.server.InputValidationException;
 
 public final class GetRatingsActionHandler
@@ -112,9 +112,9 @@ public final class GetRatingsActionHandler
 				List<User> users = UserServiceProvider.provide()
 						.getIdUserBatch(userRatingLookup.keySet());
 
-				UserHelper.stripPassword(users);
-
 				for (User user : users) {
+					UserHelper.stripPassword(user);
+
 					ratings = userRatingLookup.get(user.id);
 
 					for (Rating rating : ratings) {
