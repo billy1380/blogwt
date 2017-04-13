@@ -8,7 +8,7 @@
 //
 package com.willshex.blogwt.server.service.permission;
 
-import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,8 +17,8 @@ import java.util.List;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
-import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -32,7 +32,7 @@ final class PermissionService implements IPermissionService {
 
 	@Override
 	public Permission getPermission (Long id) {
-		return ofy().load().type(Permission.class).id(id.longValue()).now();
+		return provide().load().type(Permission.class).id(id.longValue()).now();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ final class PermissionService implements IPermissionService {
 			permission.created = new Date();
 		}
 
-		Key<Permission> permissionKey = ofy().save().entity(permission).now();
+		Key<Permission> permissionKey = provide().save().entity(permission).now();
 		permission.id = Long.valueOf(permissionKey.getId());
 
 		return permission;
@@ -49,13 +49,13 @@ final class PermissionService implements IPermissionService {
 
 	@Override
 	public Permission updatePermission (Permission permission) {
-		ofy().save().entity(permission).now();
+		provide().save().entity(permission).now();
 		return permission;
 	}
 
 	@Override
 	public void deletePermission (Permission permission) {
-		ofy().delete().entity(permission).now();
+		provide().delete().entity(permission).now();
 	}
 
 	/* (non-Javadoc)
@@ -67,7 +67,7 @@ final class PermissionService implements IPermissionService {
 	@Override
 	public List<Permission> getPermissions (Integer start, Integer count,
 			PermissionSortType sortBy, SortDirectionType sortDirection) {
-		Query<Permission> query = ofy().load().type(Permission.class);
+		Query<Permission> query = provide().load().type(Permission.class);
 
 		if (start != null) {
 			query = query.offset(start.intValue());
@@ -112,7 +112,7 @@ final class PermissionService implements IPermissionService {
 	@Override
 	public List<Permission> getIdPermissionBatch (
 			Collection<Long> permissionIds) {
-		return new ArrayList<Permission>(ofy().load().type(Permission.class)
+		return new ArrayList<Permission>(provide().load().type(Permission.class)
 				.ids(permissionIds).values());
 	}
 
@@ -122,11 +122,10 @@ final class PermissionService implements IPermissionService {
 	 * getCodePermission(java.lang.String) */
 	@Override
 	public Permission getCodePermission (String code) {
-		return ofy()
-				.load()
-				.type(Permission.class)
+		return provide().load().type(Permission.class)
 				.filter(PermissionSortType.PermissionSortTypeCode.toString(),
-						code).first().now();
+						code)
+				.first().now();
 	}
 
 	/* (non-Javadoc)
@@ -139,8 +138,8 @@ final class PermissionService implements IPermissionService {
 			role = RoleServiceProvider.provide().getRole(role.id);
 		}
 
-		return getIdPermissionBatch(PersistenceService
-				.keysToIds(role.permissionKeys));
+		return getIdPermissionBatch(
+				PersistenceHelper.keysToIds(role.permissionKeys));
 	}
 
 	/* (non-Javadoc)
@@ -154,7 +153,7 @@ final class PermissionService implements IPermissionService {
 	public List<Permission> getPartialNamePermissions (String partialName,
 			Integer start, Integer count, PermissionSortType sortBy,
 			SortDirectionType sortDirection) {
-		Query<Permission> query = ofy().load().type(Permission.class);
+		Query<Permission> query = provide().load().type(Permission.class);
 
 		if (start != null) {
 			query = query.offset(start.intValue());

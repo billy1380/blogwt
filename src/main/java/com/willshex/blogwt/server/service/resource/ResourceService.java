@@ -8,7 +8,7 @@
 
 package com.willshex.blogwt.server.service.resource;
 
-import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Date;
 import java.util.List;
@@ -36,7 +36,7 @@ final class ResourceService implements IResourceService {
 	 * (java.lang.Long) */
 	@Override
 	public Resource getResource (Long id) {
-		return ofy().load().type(Resource.class).id(id.longValue()).now();
+		return provide().load().type(Resource.class).id(id.longValue()).now();
 	}
 
 	/* (non-Javadoc)
@@ -50,7 +50,7 @@ final class ResourceService implements IResourceService {
 			resource.created = new Date();
 		}
 
-		Key<Resource> key = ofy().save().entity(resource).now();
+		Key<Resource> key = provide().save().entity(resource).now();
 		resource.id = Long.valueOf(key.getId());
 		return resource;
 	}
@@ -61,7 +61,7 @@ final class ResourceService implements IResourceService {
 	 * updateResource (com.willshex.blogwt.shared.api.datatype.Resource) */
 	@Override
 	public Resource updateResource (Resource resource) {
-		ofy().save().entity(resource).now();
+		provide().save().entity(resource).now();
 		return resource;
 	}
 
@@ -71,7 +71,7 @@ final class ResourceService implements IResourceService {
 	 * deleteResource (com.willshex.blogwt.shared.api.datatype.Resource) */
 	@Override
 	public void deleteResource (Resource resource) {
-		ofy().delete().entity(resource).now();
+		provide().delete().entity(resource).now();
 	}
 
 	/* (non-Javadoc)
@@ -84,7 +84,7 @@ final class ResourceService implements IResourceService {
 	@Override
 	public List<Resource> getResources (Integer start, Integer count,
 			ResourceSortType sortBy, SortDirectionType sortDirection) {
-		Query<Resource> query = ofy().load().type(Resource.class);
+		Query<Resource> query = provide().load().type(Resource.class);
 
 		if (start != null) {
 			query = query.offset(start.intValue());

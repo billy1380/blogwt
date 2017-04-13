@@ -15,9 +15,9 @@ import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
-import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -59,10 +59,10 @@ public final class GetRolesAndPermissionsActionHandler extends
 
 		boolean idsOnly = Boolean.TRUE.equals(input.idsOnly);
 		if (idsOnly) {
-			input.user.roles = PersistenceService.dataTypeList(Role.class,
+			input.user.roles = PersistenceHelper.typeList(Role.class,
 					input.user.roleKeys);
-			input.user.permissions = PersistenceService
-					.dataTypeList(Permission.class, input.user.permissionKeys);
+			input.user.permissions = PersistenceHelper
+					.typeList(Permission.class, input.user.permissionKeys);
 		} else {
 			if ((input.permissionOnly == null && input.rolesOnly == null)
 					|| (Boolean.FALSE.equals(input.rolesOnly)
@@ -92,7 +92,7 @@ public final class GetRolesAndPermissionsActionHandler extends
 					lookupRole = RoleServiceProvider.provide().getRole(role.id);
 
 					if (lookupRole != null) {
-						expandedPermissions = PersistenceService.dataTypeList(
+						expandedPermissions = PersistenceHelper.typeList(
 								Permission.class, lookupRole.permissionKeys);
 
 						if (expandedPermissions != null) {

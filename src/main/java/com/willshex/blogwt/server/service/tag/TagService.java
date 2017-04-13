@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.tag;
 
-import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +34,7 @@ final class TagService implements ITagService {
 
 	@Override
 	public Tag getTag (Long id) {
-		return ofy().load().type(Tag.class).id(id.longValue()).now();
+		return provide().load().type(Tag.class).id(id.longValue()).now();
 	}
 
 	@Override
@@ -56,7 +56,7 @@ final class TagService implements ITagService {
 			}
 		}
 
-		Key<Tag> tagKey = ofy().save().entity(tag).now();
+		Key<Tag> tagKey = provide().save().entity(tag).now();
 		tag.id = Long.valueOf(tagKey.getId());
 
 		return tag;
@@ -64,7 +64,7 @@ final class TagService implements ITagService {
 
 	@Override
 	public void deleteTag (Tag tag) {
-		ofy().delete().entity(tag).now();
+		provide().delete().entity(tag).now();
 	}
 
 	/* (non-Javadoc)
@@ -72,7 +72,7 @@ final class TagService implements ITagService {
 	 * @see com.willshex.blogwt.server.service.tag.ITagService#getTags() */
 	@Override
 	public List<Tag> getTags () {
-		return ofy().load().type(Tag.class).list();
+		return provide().load().type(Tag.class).list();
 	}
 
 	/* (non-Javadoc)
@@ -145,7 +145,7 @@ final class TagService implements ITagService {
 			}
 		}
 
-		ofy().save().entities(tags).now();
+		provide().save().entities(tags).now();
 	}
 
 	/* (non-Javadoc)
@@ -154,7 +154,7 @@ final class TagService implements ITagService {
 	 * lang.String) */
 	@Override
 	public Tag getSlugTag (String slug) {
-		return ofy().load().type(Tag.class).filter("slug", slug).first().now();
+		return provide().load().type(Tag.class).filter("slug", slug).first().now();
 	}
 
 	/* (non-Javadoc)
@@ -165,7 +165,7 @@ final class TagService implements ITagService {
 	 * com.willshex.blogwt.shared.api.datatype.Post) */
 	@Override
 	public void addTagPost (final Tag tag, final Post post) {
-		ofy().transact(new Work<Void>() {
+		provide().transact(new Work<Void>() {
 
 			@Override
 			public Void run () {
@@ -187,7 +187,7 @@ final class TagService implements ITagService {
 					latest.postKeys.add(Key.create(post));
 				}
 
-				ofy().save().entity(latest).now();
+				provide().save().entity(latest).now();
 
 				return null;
 			}
@@ -202,7 +202,7 @@ final class TagService implements ITagService {
 	 * com.willshex.blogwt.shared.api.datatype.Post) */
 	@Override
 	public void removeTagPost (final Tag tag, final Post post) {
-		ofy().transact(new Work<Void>() {
+		provide().transact(new Work<Void>() {
 
 			@Override
 			public Void run () {
@@ -225,7 +225,7 @@ final class TagService implements ITagService {
 						deleteTag(latest);
 					} else {
 						latest.postKeys.remove(foundKey);
-						ofy().save().entity(latest).now();
+						provide().save().entity(latest).now();
 					}
 				}
 

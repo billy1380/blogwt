@@ -8,7 +8,6 @@
 package com.willshex.blogwt.server.helper;
 
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
-import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.utility.StringUtils;
@@ -31,7 +30,7 @@ public class UserHelper extends com.willshex.blogwt.shared.helper.UserHelper {
 		if (user != null) {
 			if (user.roleKeys != null) {
 				user.roles = RoleServiceProvider.provide().getIdRoleBatch(
-						PersistenceService.keysToIds(user.roleKeys));
+						PersistenceHelper.keysToIds(user.roleKeys));
 			}
 		}
 	}
@@ -40,9 +39,8 @@ public class UserHelper extends com.willshex.blogwt.shared.helper.UserHelper {
 		if (user != null) {
 			if (user.permissionKeys != null) {
 				user.permissions = PermissionServiceProvider.provide()
-						.getIdPermissionBatch(
-								PersistenceService
-										.keysToIds(user.permissionKeys));
+						.getIdPermissionBatch(PersistenceHelper
+								.keysToIds(user.permissionKeys));
 			}
 		}
 	}

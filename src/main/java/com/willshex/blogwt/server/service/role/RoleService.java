@@ -8,7 +8,7 @@
 //
 package com.willshex.blogwt.server.service.role;
 
-import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +30,7 @@ final class RoleService implements IRoleService {
 
 	@Override
 	public Role getRole (Long id) {
-		return ofy().load().type(Role.class).id(id.longValue()).now();
+		return provide().load().type(Role.class).id(id.longValue()).now();
 	}
 
 	@Override
@@ -39,7 +39,7 @@ final class RoleService implements IRoleService {
 			role.created = new Date();
 		}
 
-		Key<Role> roleKey = ofy().save().entity(role).now();
+		Key<Role> roleKey = provide().save().entity(role).now();
 		role.id = Long.valueOf(roleKey.getId());
 
 		return role;
@@ -47,19 +47,19 @@ final class RoleService implements IRoleService {
 
 	@Override
 	public Role updateRole (Role role) {
-		ofy().save().entity(role).now();
+		provide().save().entity(role).now();
 		return role;
 	}
 
 	@Override
 	public void deleteRole (Role role) {
-		ofy().delete().entity(role);
+		provide().delete().entity(role);
 	}
 
 	@Override
 	public List<Role> getRoles (Integer start, Integer count,
 			RoleSortType sortBy, SortDirectionType sortDirection) {
-		Query<Role> query = ofy().load().type(Role.class);
+		Query<Role> query = provide().load().type(Role.class);
 
 		if (start != null) {
 			query = query.offset(start.intValue());
@@ -104,7 +104,7 @@ final class RoleService implements IRoleService {
 	 * .util.Collection) */
 	@Override
 	public List<Role> getIdRoleBatch (Collection<Long> roleIds) {
-		return new ArrayList<Role>(ofy().load().type(Role.class).ids(roleIds)
+		return new ArrayList<Role>(provide().load().type(Role.class).ids(roleIds)
 				.values());
 	}
 
@@ -115,7 +115,7 @@ final class RoleService implements IRoleService {
 	 * .lang.String) */
 	@Override
 	public Role getCodeRole (String code) {
-		return ofy().load().type(Role.class).filter("code", code).first().now();
+		return provide().load().type(Role.class).filter("code", code).first().now();
 	}
 
 	/* (non-Javadoc)
@@ -128,7 +128,7 @@ final class RoleService implements IRoleService {
 	@Override
 	public List<Role> getPartialNameRoles (String partialName, Integer start,
 			Integer count, RoleSortType sortBy, SortDirectionType sortDirection) {
-		Query<Role> query = ofy().load().type(Role.class);
+		Query<Role> query = provide().load().type(Role.class);
 
 		if (start != null) {
 			query = query.offset(start.intValue());

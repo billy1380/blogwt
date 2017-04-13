@@ -14,8 +14,8 @@ import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.exception.AuthenticationException;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
-import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
@@ -109,13 +109,13 @@ public final class LoginActionHandler
 
 		if (output.session.user.roleKeys != null) {
 			output.session.user.roles = RoleServiceProvider.provide()
-					.getIdRoleBatch(PersistenceService
+					.getIdRoleBatch(PersistenceHelper
 							.keysToIds(output.session.user.roleKeys));
 		}
 
 		if (output.session.user.permissionKeys != null) {
 			output.session.user.permissions = PermissionServiceProvider
-					.provide().getIdPermissionBatch(PersistenceService
+					.provide().getIdPermissionBatch(PersistenceHelper
 							.keysToIds(output.session.user.permissionKeys));
 		}
 	}

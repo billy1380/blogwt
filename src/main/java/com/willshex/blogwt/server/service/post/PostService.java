@@ -8,7 +8,7 @@
 //
 package com.willshex.blogwt.server.service.post;
 
-import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +61,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * .Long) */
 	@Override
 	public Post getPost (Long id) {
-		return ofy().load().type(Post.class).id(id.longValue()).now();
+		return provide().load().type(Post.class).id(id.longValue()).now();
 	}
 
 	/* (non-Javadoc)
@@ -83,7 +83,7 @@ final class PostService implements IPostService, ISearch<Post> {
 			post.content.created = post.created;
 		}
 
-		post.contentKey = ofy().save().entity(post.content).now();
+		post.contentKey = provide().save().entity(post.content).now();
 
 		Post previousPost = null;
 		// just been published
@@ -96,11 +96,11 @@ final class PostService implements IPostService, ISearch<Post> {
 			}
 		}
 
-		Key<Post> postKey = ofy().save().entity(post).now();
+		Key<Post> postKey = provide().save().entity(post).now();
 		post.id = Long.valueOf(postKey.getId());
 
 		post.content.postKey = postKey;
-		ofy().save().entity(post.content).now();
+		provide().save().entity(post.content).now();
 
 		updateTags(post);
 
@@ -194,7 +194,7 @@ final class PostService implements IPostService, ISearch<Post> {
 				post.content.postKey = Key.create(post);
 			}
 
-			ofy().save().entity(post.content).now();
+			provide().save().entity(post.content).now();
 		}
 
 		String previousSlug = null, nextSlug = null;
@@ -224,7 +224,7 @@ final class PostService implements IPostService, ISearch<Post> {
 			post.nextSlug = null;
 		}
 
-		ofy().save().entity(post).now();
+		provide().save().entity(post).now();
 
 		updateTags(post);
 
@@ -271,7 +271,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * @return
 	 */
 	private Post getNextPost (Post post) {
-		return ofy().load().type(Post.class).order("published")
+		return provide().load().type(Post.class).order("published")
 				.filter("listed =", true).filter("published >", post.published)
 				.limit(1).first().now();
 	}
@@ -281,7 +281,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * @return
 	 */
 	private Post getPreviousPost (Post post) {
-		return ofy().load().type(Post.class).order("-published")
+		return provide().load().type(Post.class).order("-published")
 				.filter("listed =", true).filter("published <", post.published)
 				.limit(1).first().now();
 	}
@@ -304,9 +304,9 @@ final class PostService implements IPostService, ISearch<Post> {
 			nextSlug = post.nextSlug;
 		}
 
-		ofy().delete().entity(post).now();
+		provide().delete().entity(post).now();
 
-		ofy().delete().key(post.contentKey).now();
+		provide().delete().key(post.contentKey).now();
 
 		SearchHelper.deleteSearch(getName() + post.id.toString());
 
@@ -352,7 +352,7 @@ final class PostService implements IPostService, ISearch<Post> {
 			Boolean includeContents, Integer start, Integer count,
 			PostSortType sortBy, SortDirectionType sortDirection) {
 
-		Query<Post> query = ofy().load().type(Post.class);
+		Query<Post> query = provide().load().type(Post.class);
 
 		if (user != null && user.id != null) {
 			query = query.filter(
@@ -397,7 +397,7 @@ final class PostService implements IPostService, ISearch<Post> {
 				postContentIds.add(Long.valueOf(post.contentKey.getId()));
 			}
 
-			Map<Long, PostContent> contents = ofy().load()
+			Map<Long, PostContent> contents = provide().load()
 					.type(PostContent.class).ids(postContentIds);
 
 			for (Post post : posts) {
@@ -431,7 +431,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * .lang.String) */
 	@Override
 	public Post getSlugPost (String slug) {
-		return ofy().load().type(Post.class)
+		return provide().load().type(Post.class)
 				.filter(PostSortType.PostSortTypeSlug.toString(), slug).first()
 				.now();
 	}
@@ -462,7 +462,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * com.willshex.blogwt.shared.api.datatype.Post) */
 	@Override
 	public PostContent getPostContent (Post post) {
-		return ofy().load().type(PostContent.class).id(post.contentKey.getId())
+		return provide().load().type(PostContent.class).id(post.contentKey.getId())
 				.now();
 	}
 
@@ -474,7 +474,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	@Override
 	public List<Post> getIdPostBatch (Collection<Long> ids) {
 		return new ArrayList<Post>(
-				ofy().load().type(Post.class).ids(ids).values());
+				provide().load().type(Post.class).ids(ids).values());
 	}
 
 	/**
@@ -568,7 +568,7 @@ final class PostService implements IPostService, ISearch<Post> {
 			User user, Boolean showAll, Boolean includeContents, Integer start,
 			Integer count, PostSortType sortBy,
 			SortDirectionType sortDirection) {
-		Query<Post> query = ofy().load().type(Post.class);
+		Query<Post> query = provide().load().type(Post.class);
 
 		if (user != null && user.id != null) {
 			query = query.filter(
@@ -618,7 +618,7 @@ final class PostService implements IPostService, ISearch<Post> {
 				postContentIds.add(Long.valueOf(post.contentKey.getId()));
 			}
 
-			Map<Long, PostContent> contents = ofy().load()
+			Map<Long, PostContent> contents = provide().load()
 					.type(PostContent.class).ids(postContentIds);
 
 			for (Post post : posts) {
@@ -715,7 +715,7 @@ final class PostService implements IPostService, ISearch<Post> {
 					post.previousSlug = null;
 				}
 
-				ofy().save().entities(posts).now();
+				provide().save().entities(posts).now();
 			}
 
 			PagerHelper.moveForward(pager);
@@ -736,7 +736,7 @@ final class PostService implements IPostService, ISearch<Post> {
 		}
 
 		if (post.contentKey != null) {
-			post.content = ofy().load().type(PostContent.class)
+			post.content = provide().load().type(PostContent.class)
 					.id(Long.valueOf(post.contentKey.getId())).now();
 		}
 

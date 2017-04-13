@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.property;
 
-import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Collection;
 import java.util.Date;
@@ -22,7 +22,7 @@ final class PropertyService implements IPropertyService {
 	}
 
 	public Property getProperty (Long id) {
-		return ofy().load().type(Property.class).id(id.longValue()).now();
+		return provide().load().type(Property.class).id(id.longValue()).now();
 	}
 
 	/* (non-Javadoc)
@@ -35,7 +35,7 @@ final class PropertyService implements IPropertyService {
 			property.created = new Date();
 		}
 
-		Key<Property> key = ofy().save().entity(property).now();
+		Key<Property> key = provide().save().entity(property).now();
 		property.id = Long.valueOf(key.getId());
 		return property;
 	}
@@ -46,7 +46,7 @@ final class PropertyService implements IPropertyService {
 	 * #updateProperty(com.willshex.blogwt.shared.api.datatypes .Property) */
 	@Override
 	public Property updateProperty (Property property) {
-		ofy().save().entity(property).now();
+		provide().save().entity(property).now();
 		return property;
 	}
 
@@ -56,7 +56,7 @@ final class PropertyService implements IPropertyService {
 	 * #deleteProperty(com.willshex.blogwt.shared.api.datatypes .Property) */
 	@Override
 	public void deleteProperty (Property property) {
-		ofy().delete().entity(property).now();
+		provide().delete().entity(property).now();
 	}
 
 	/* (non-Javadoc)
@@ -65,7 +65,7 @@ final class PropertyService implements IPropertyService {
 	 * #getNamedProperty(java.lang.String) */
 	@Override
 	public Property getNamedProperty (String name) {
-		return ofy().load().type(Property.class).filter("name", name).first()
+		return provide().load().type(Property.class).filter("name", name).first()
 				.now();
 	}
 
@@ -82,7 +82,7 @@ final class PropertyService implements IPropertyService {
 			}
 		}
 
-		ofy().save().entities(properties).now();
+		provide().save().entities(properties).now();
 	}
 
 	/* (non-Javadoc)
@@ -92,7 +92,7 @@ final class PropertyService implements IPropertyService {
 	 * () */
 	@Override
 	public List<Property> getProperties () {
-		return ofy().load().type(Property.class).list();
+		return provide().load().type(Property.class).list();
 	}
 
 }

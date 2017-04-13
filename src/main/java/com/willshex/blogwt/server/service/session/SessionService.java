@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.session;
 
-import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Date;
 
@@ -23,7 +23,7 @@ final class SessionService implements ISessionService {
 	}
 
 	public Session getSession (Long id) {
-		Session session = ofy().load().type(Session.class).id(id.longValue())
+		Session session = provide().load().type(Session.class).id(id.longValue())
 				.now();
 
 		return session;
@@ -45,7 +45,7 @@ final class SessionService implements ISessionService {
 			session.expires = afterMinutes();
 		}
 
-		Key<Session> key = ofy().save().entity(session).now();
+		Key<Session> key = provide().save().entity(session).now();
 		session.id = Long.valueOf(key.getId());
 
 		return session;
@@ -57,7 +57,7 @@ final class SessionService implements ISessionService {
 	 * #updateSession(com.willshex.blogwt.shared.api.datatypes.Session ) */
 	@Override
 	public Session updateSession (Session session) {
-		ofy().save().entity(session);
+		provide().save().entity(session);
 		return session;
 	}
 
@@ -83,7 +83,7 @@ final class SessionService implements ISessionService {
 	 * #deleteSession(com.willshex.blogwt.shared.api.datatypes.Session ) */
 	@Override
 	public void deleteSession (Session session) {
-		ofy().delete().entity(session);
+		provide().delete().entity(session);
 	}
 
 	/* (non-Javadoc)
@@ -104,7 +104,7 @@ final class SessionService implements ISessionService {
 	 * #getUserSession(com.willshex.blogwt.shared.api.datatypes.User) */
 	@Override
 	public Session getUserSession (User user) {
-		Session session = ofy().load().type(Session.class)
+		Session session = provide().load().type(Session.class)
 				.filter("userKey", user).first().now();
 
 		if (session != null && session.expires.getTime() < new Date().getTime()) {

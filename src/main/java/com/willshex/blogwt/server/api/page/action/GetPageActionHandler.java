@@ -13,8 +13,8 @@ import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PageValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
-import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
@@ -52,8 +52,8 @@ public final class GetPageActionHandler
 				"input.page");
 
 		if (output.page.parentKey != null) {
-			output.page.parent = PageValidator.lookup(PersistenceService
-					.dataType(Page.class, output.page.parentKey),
+			output.page.parent = PageValidator.lookup(
+					PersistenceHelper.type(Page.class, output.page.parentKey),
 					"input.page.parent");
 		}
 

@@ -8,7 +8,7 @@
 
 package com.willshex.blogwt.server.service.archiveentry;
 
-import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +45,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	 * #getArchiveEntry(java.lang.Long) */
 	@Override
 	public ArchiveEntry getArchiveEntry (Long id) {
-		return ofy().load().type(ArchiveEntry.class).id(id).now();
+		return provide().load().type(ArchiveEntry.class).id(id).now();
 	}
 
 	/* (non-Javadoc)
@@ -64,7 +64,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 			archiveEntry.postKeys.add(Key.create(post));
 		}
 
-		Key<ArchiveEntry> archiveEntryKey = ofy().save().entity(archiveEntry)
+		Key<ArchiveEntry> archiveEntryKey = provide().save().entity(archiveEntry)
 				.now();
 		archiveEntry.id = Long.valueOf(archiveEntryKey.getId());
 
@@ -123,7 +123,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	 * #getMonthArchiveEntry(java.lang.Integer, java.lang.Integer) */
 	@Override
 	public ArchiveEntry getMonthArchiveEntry (Integer month, Integer year) {
-		return ofy().load().type(ArchiveEntry.class).filter("year", year)
+		return provide().load().type(ArchiveEntry.class).filter("year", year)
 				.filter("month", month).first().now();
 	}
 
@@ -143,7 +143,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	 * #getArchiveEntries() */
 	@Override
 	public List<ArchiveEntry> getArchiveEntries () {
-		return ofy().load().type(ArchiveEntry.class).list();
+		return provide().load().type(ArchiveEntry.class).list();
 	}
 
 	@Override
@@ -214,7 +214,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 			}
 		}
 
-		ofy().save().entities(archiveEntries).now();
+		provide().save().entities(archiveEntries).now();
 	}
 
 	/* (non-Javadoc)
@@ -238,7 +238,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 		ArchiveEntry updated = null;
 
 		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
-			updated = ofy().transact(new Work<ArchiveEntry>() {
+			updated = provide().transact(new Work<ArchiveEntry>() {
 
 				@Override
 				public ArchiveEntry run () {
@@ -260,7 +260,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 						latest.postKeys.add(Key.create(post));
 					}
 
-					ofy().save().entity(latest).now();
+					provide().save().entity(latest).now();
 
 					return latest;
 				}
@@ -273,7 +273,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	@Override
 	public void deleteArchiveEntryPost (final ArchiveEntry archiveEntry,
 			final Post post) {
-		ofy().transact(new Work<ArchiveEntry>() {
+		provide().transact(new Work<ArchiveEntry>() {
 
 			@Override
 			public ArchiveEntry run () {
@@ -282,9 +282,9 @@ final class ArchiveEntryService implements IArchiveEntryService {
 				latest.postKeys.remove(Key.create(post));
 
 				if (latest.postKeys.size() == 0) {
-					ofy().delete().entities(latest).now();
+					provide().delete().entities(latest).now();
 				} else {
-					ofy().save().entities(latest).now();
+					provide().save().entities(latest).now();
 				}
 
 				return latest;

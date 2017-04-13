@@ -8,14 +8,14 @@
 
 package com.willshex.blogwt.server.service.rating;
 
-import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
-import com.willshex.blogwt.server.service.persistence.PersistenceService;
-import com.willshex.blogwt.server.service.persistence.PersistenceService.ISortable;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Rating;
 import com.willshex.blogwt.shared.api.datatype.RatingSortType;
@@ -28,7 +28,7 @@ final class RatingService implements IRatingService, ISortable<RatingSortType> {
 
 	@Override
 	public Rating getRating (Long id) {
-		return ofy().load().type(Rating.class).id(id.longValue()).now();
+		return provide().load().type(Rating.class).id(id.longValue()).now();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ final class RatingService implements IRatingService, ISortable<RatingSortType> {
 			rating.byKey = Key.create(rating.by);
 		}
 
-		Key<Rating> key = ofy().save().entity(rating).now();
+		Key<Rating> key = provide().save().entity(rating).now();
 		rating.id = Long.valueOf(key.getId());
 		return rating;
 	}
@@ -52,14 +52,14 @@ final class RatingService implements IRatingService, ISortable<RatingSortType> {
 			rating.byKey = Key.create(rating.by);
 		}
 
-		ofy().save().entity(rating).now();
+		provide().save().entity(rating).now();
 
 		return rating;
 	}
 
 	@Override
 	public void deleteRating (Rating rating) {
-		ofy().delete().entity(rating).now();
+		provide().delete().entity(rating).now();
 	}
 
 	/* (non-Javadoc)
@@ -72,10 +72,8 @@ final class RatingService implements IRatingService, ISortable<RatingSortType> {
 	@Override
 	public List<Rating> getRatings (Integer start, Integer count,
 			RatingSortType sortBy, SortDirectionType sortDirection) {
-		return PersistenceService
-				.pagedAndSorted(ofy().load().type(Rating.class), start, count,
-						sortBy, this, sortDirection)
-				.list();
+		return PersistenceHelper.pagedAndSorted(provide().load().type(Rating.class),
+				start, count, sortBy, this, sortDirection).list();
 	}
 
 	/* (non-Javadoc)
@@ -89,8 +87,8 @@ final class RatingService implements IRatingService, ISortable<RatingSortType> {
 	@Override
 	public List<Rating> getUserRatings (User user, Integer start, Integer count,
 			RatingSortType sortBy, SortDirectionType sortDirection) {
-		return PersistenceService
-				.pagedAndSorted(ofy().load().type(Rating.class), start, count,
+		return PersistenceHelper
+				.pagedAndSorted(provide().load().type(Rating.class), start, count,
 						sortBy, this, sortDirection)
 				.filter(map(RatingSortType.RatingSortTypeBy), Key.create(user))
 				.list();
@@ -107,8 +105,8 @@ final class RatingService implements IRatingService, ISortable<RatingSortType> {
 	public List<Rating> getSubjectRatings (Long subjectId, String subjectType,
 			Integer start, Integer count, RatingSortType sortBy,
 			SortDirectionType sortDirection) {
-		return PersistenceService
-				.pagedAndSorted(ofy().load().type(Rating.class), start, count,
+		return PersistenceHelper
+				.pagedAndSorted(provide().load().type(Rating.class), start, count,
 						sortBy, this, sortDirection)
 				.filter(map(RatingSortType.RatingSortTypeSubjectId), subjectId)
 				.filter(map(RatingSortType.RatingSortTypeSubjectId),

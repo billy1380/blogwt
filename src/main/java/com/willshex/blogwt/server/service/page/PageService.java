@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.page;
 
-import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,9 +23,9 @@ import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
-import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
@@ -43,7 +43,7 @@ final class PageService implements IPageService, ISearch<Page> {
 
 	@Override
 	public Page getPage (Long id) {
-		return ofy().load().type(Page.class).id(id).now();
+		return provide().load().type(Page.class).id(id).now();
 	}
 
 	@Override
@@ -63,7 +63,7 @@ final class PageService implements IPageService, ISearch<Page> {
 			page.parentKey = Key.create(page.parent);
 		}
 
-		Key<Page> pageKey = ofy().save().entity(page).now();
+		Key<Page> pageKey = provide().save().entity(page).now();
 		page.id = Long.valueOf(pageKey.getId());
 
 		SearchHelper.queueToIndex(getName(), page.id);
@@ -123,7 +123,7 @@ final class PageService implements IPageService, ISearch<Page> {
 			page.parentKey = null;
 		}
 
-		ofy().save().entity(page).now();
+		provide().save().entity(page).now();
 
 		SearchHelper.queueToIndex(getName(), page.id);
 
@@ -132,7 +132,7 @@ final class PageService implements IPageService, ISearch<Page> {
 
 	@Override
 	public void deletePage (Page page) {
-		ofy().delete().entity(page).now();
+		provide().delete().entity(page).now();
 
 		SearchHelper.deleteSearch(getName() + page.id.toString());
 	}
@@ -144,7 +144,7 @@ final class PageService implements IPageService, ISearch<Page> {
 	 * .lang.String, java.lang.Boolean) */
 	@Override
 	public Page getSlugPage (String slug, Boolean includePostContents) {
-		Page page = ofy().load().type(Page.class)
+		Page page = provide().load().type(Page.class)
 				.filter(PageSortType.PageSortTypeSlug.toString(), slug).first()
 				.now();
 
@@ -166,7 +166,7 @@ final class PageService implements IPageService, ISearch<Page> {
 	public List<Page> getPages (Boolean includePostContents, Integer start,
 			Integer count, PageSortType sortBy,
 			SortDirectionType sortDirection) {
-		Query<Page> query = ofy().load().type(Page.class);
+		Query<Page> query = provide().load().type(Page.class);
 
 		if (start != null) {
 			query = query.offset(start.intValue());
@@ -206,7 +206,7 @@ final class PageService implements IPageService, ISearch<Page> {
 
 		for (Page page : pages) {
 			posts.addAll(PostServiceProvider.provide().getIdPostBatch(
-					PersistenceService.keysToIds(page.postKeys)));
+					PersistenceHelper.keysToIds(page.postKeys)));
 		}
 
 		for (Post post : posts) {
@@ -277,7 +277,7 @@ final class PageService implements IPageService, ISearch<Page> {
 	public List<Page> getPartialSlugPages (String partialSlug,
 			Boolean includePostContents, Integer start, Integer count,
 			PageSortType sortBy, SortDirectionType sortDirection) {
-		Query<Page> query = ofy().load().type(Page.class);
+		Query<Page> query = provide().load().type(Page.class);
 
 		if (start != null) {
 			query = query.offset(start.intValue());

@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.willshex.blogwt.server.api.exception.AuthorisationException;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
-import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -87,7 +87,7 @@ public class UserValidator extends ApiValidator {
 	public static boolean isAdmin (User user) {
 		List<Role> roles = user.roles == null && user.roleKeys != null
 				? RoleServiceProvider.provide().getIdRoleBatch(
-						PersistenceService.keysToIds(user.roleKeys))
+						PersistenceHelper.keysToIds(user.roleKeys))
 				: user.roles;
 		return user != null && roles != null
 				&& RoleHelper.toLookup(roles).containsKey(RoleHelper.ADMIN);
@@ -100,7 +100,7 @@ public class UserValidator extends ApiValidator {
 		List<Permission> permissions = user.permissions == null
 				&& user.permissionKeys != null
 						? PermissionServiceProvider.provide()
-								.getIdPermissionBatch(PersistenceService
+								.getIdPermissionBatch(PersistenceHelper
 										.keysToIds(user.permissionKeys))
 						: user.permissions;
 

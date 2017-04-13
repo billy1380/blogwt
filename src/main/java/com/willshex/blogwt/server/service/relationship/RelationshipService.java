@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.relationship;
 
-import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Date;
 import java.util.List;
@@ -27,7 +27,7 @@ final class RelationshipService implements IRelationshipService {
 
 	@Override
 	public Relationship getRelationship (Long id) {
-		return ofy().load().type(Relationship.class).id(id.longValue()).now();
+		return provide().load().type(Relationship.class).id(id.longValue()).now();
 	}
 
 	@Override
@@ -44,7 +44,7 @@ final class RelationshipService implements IRelationshipService {
 			relationship.anotherKey = Key.create(relationship.another);
 		}
 
-		Key<Relationship> key = ofy().save().entity(relationship).now();
+		Key<Relationship> key = provide().save().entity(relationship).now();
 		relationship.id = Long.valueOf(key.getId());
 		return relationship;
 	}
@@ -59,14 +59,14 @@ final class RelationshipService implements IRelationshipService {
 			relationship.anotherKey = Key.create(relationship.another);
 		}
 
-		ofy().save().entity(relationship).now();
+		provide().save().entity(relationship).now();
 
 		return relationship;
 	}
 
 	@Override
 	public void deleteRelationship (Relationship relationship) {
-		ofy().delete().entity(relationship).now();
+		provide().delete().entity(relationship).now();
 	}
 
 	/* (non-Javadoc)
@@ -96,7 +96,7 @@ final class RelationshipService implements IRelationshipService {
 	@Override
 	public Relationship getUsersRelationship (User user, User other,
 			RelationshipTypeType type) {
-		return ofy().load().type(Relationship.class)
+		return provide().load().type(Relationship.class)
 				.filter(RelationshipSortType.RelationshipSortTypeOne.toString()
 						+ "Key", user)
 				.filter(RelationshipSortType.RelationshipSortTypeAnother
@@ -141,7 +141,7 @@ final class RelationshipService implements IRelationshipService {
 	public List<Relationship> getUserRelationships (User user,
 			RelationshipTypeType type, Integer start, Integer count,
 			RelationshipSortType sortBy, SortDirectionType sortDirection) {
-		Query<Relationship> query = ofy().load().type(Relationship.class)
+		Query<Relationship> query = provide().load().type(Relationship.class)
 				.filter(RelationshipSortType.RelationshipSortTypeOne.toString()
 						+ "Key", user)
 				.filter(RelationshipSortType.RelationshipSortTypeType
@@ -187,7 +187,7 @@ final class RelationshipService implements IRelationshipService {
 	public List<Relationship> getWithUserRelationships (User user,
 			RelationshipTypeType type, Integer start, Integer count,
 			RelationshipSortType sortBy, SortDirectionType sortDirection) {
-		Query<Relationship> query = ofy().load().type(Relationship.class)
+		Query<Relationship> query = provide().load().type(Relationship.class)
 				.filter(RelationshipSortType.RelationshipSortTypeAnother
 						.toString() + "Key", user)
 				.filter(RelationshipSortType.RelationshipSortTypeType

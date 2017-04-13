@@ -21,8 +21,8 @@ import com.willshex.blogwt.server.api.validation.ArchiveEntryValidator;
 import com.willshex.blogwt.server.api.validation.PostValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
-import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
@@ -101,7 +101,7 @@ public final class GetPostsActionHandler
 
 			if (tag != null) {
 				output.posts = PostServiceProvider.provide().getIdPostBatch(
-						PersistenceService.keysToIds(tag.postKeys));
+						PersistenceHelper.keysToIds(tag.postKeys));
 			}
 		}
 
@@ -116,7 +116,7 @@ public final class GetPostsActionHandler
 						.lookup(input.archiveEntry, "input.archiveEntry");
 
 				output.posts = PostServiceProvider.provide()
-						.getIdPostBatch(PersistenceService
+						.getIdPostBatch(PersistenceHelper
 								.keysToIds(input.archiveEntry.postKeys));
 			}
 		}

@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.server.service.user;
 
-import static com.willshex.blogwt.server.service.persistence.PersistenceService.ofy;
+import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,11 +28,11 @@ import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.EmailHelper;
 import com.willshex.blogwt.server.helper.InflatorHelper;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
-import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.search.ISearch;
@@ -59,7 +59,7 @@ final class UserService implements IUserService, ISearch<User> {
 
 	public User getUser (Long id) {
 		return addAvatar(
-				ofy().load().type(User.class).id(id.longValue()).now());
+				provide().load().type(User.class).id(id.longValue()).now());
 	}
 
 	/* (non-Javadoc)
@@ -89,7 +89,7 @@ final class UserService implements IUserService, ISearch<User> {
 			}
 		}
 
-		Key<User> key = ofy().save().entity(user).now();
+		Key<User> key = provide().save().entity(user).now();
 		user.id = Long.valueOf(key.getId());
 
 		SearchHelper.queueToIndex(getName(), user.id);
@@ -103,7 +103,7 @@ final class UserService implements IUserService, ISearch<User> {
 	 * (com.willshex.blogwt.shared.api.datatypes.User) */
 	@Override
 	public User updateUser (User user) {
-		ofy().save().entity(user).now();
+		provide().save().entity(user).now();
 
 		SearchHelper.queueToIndex(getName(), user.id);
 
@@ -116,7 +116,7 @@ final class UserService implements IUserService, ISearch<User> {
 	 * (com.willshex.blogwt.shared.api.datatypes.User) */
 	@Override
 	public void deleteUser (User user) {
-		ofy().delete().entity(user);
+		provide().delete().entity(user);
 
 		SearchHelper.deleteSearch(getName() + user.id.toString());
 	}
@@ -130,7 +130,7 @@ final class UserService implements IUserService, ISearch<User> {
 	@Override
 	public List<User> getUsers (Integer start, Integer count,
 			UserSortType sortBy, SortDirectionType sortDirection) {
-		Query<User> query = ofy().load().type(User.class);
+		Query<User> query = provide().load().type(User.class);
 
 		if (start != null) {
 			query = query.offset(start.intValue());
@@ -165,7 +165,7 @@ final class UserService implements IUserService, ISearch<User> {
 	 * (java.lang.String, java.lang.String) */
 	@Override
 	public User getLoginUser (String username, String password) {
-		User user = ofy().load().type(User.class).filter("username", username)
+		User user = provide().load().type(User.class).filter("username", username)
 				.first().now();
 
 		if (!verifyPassword(user, password)) {
@@ -226,7 +226,7 @@ final class UserService implements IUserService, ISearch<User> {
 			user.password = generatePassword(user.password);
 		}
 
-		ofy().save().entities(users).now();
+		provide().save().entities(users).now();
 	}
 
 	/* (non-Javadoc)
@@ -235,7 +235,7 @@ final class UserService implements IUserService, ISearch<User> {
 	 * (java.lang.String) */
 	@Override
 	public User getUsernameUser (String username) {
-		return addAvatar(ofy().load().type(User.class)
+		return addAvatar(provide().load().type(User.class)
 				.filter("username", username).first().now());
 	}
 
@@ -267,7 +267,7 @@ final class UserService implements IUserService, ISearch<User> {
 	@Override
 	public User addUserRolesAndPermissions (final User user,
 			final List<Role> roles, final List<Permission> permissions) {
-		return ofy().transact(new Work<User>() {
+		return provide().transact(new Work<User>() {
 
 			@Override
 			public User run () {
@@ -292,7 +292,7 @@ final class UserService implements IUserService, ISearch<User> {
 						current.add(permission.id);
 					}
 
-					latest.permissionKeys = PersistenceService
+					latest.permissionKeys = PersistenceHelper
 							.idsToKeys(Permission.class, current);
 				}
 
@@ -313,11 +313,11 @@ final class UserService implements IUserService, ISearch<User> {
 						current.add(role.id);
 					}
 
-					latest.roleKeys = PersistenceService.idsToKeys(Role.class,
+					latest.roleKeys = PersistenceHelper.idsToKeys(Role.class,
 							current);
 				}
 
-				ofy().save().entity(latest).now();
+				provide().save().entity(latest).now();
 
 				return latest;
 			}
@@ -333,7 +333,7 @@ final class UserService implements IUserService, ISearch<User> {
 	@Override
 	public User removeUserRolesAndPermissions (final User user,
 			final List<Role> roles, final List<Permission> permissions) {
-		return ofy().transact(new Work<User>() {
+		return provide().transact(new Work<User>() {
 
 			@Override
 			public User run () {
@@ -354,7 +354,7 @@ final class UserService implements IUserService, ISearch<User> {
 						}
 					}
 
-					latest.permissionKeys = PersistenceService
+					latest.permissionKeys = PersistenceHelper
 							.idsToKeys(Permission.class, current);
 				}
 
@@ -375,11 +375,11 @@ final class UserService implements IUserService, ISearch<User> {
 						}
 					}
 
-					latest.roleKeys = PersistenceService.idsToKeys(Role.class,
+					latest.roleKeys = PersistenceHelper.idsToKeys(Role.class,
 							current);
 				}
 
-				ofy().save().entity(latest).now();
+				provide().save().entity(latest).now();
 
 				return latest;
 			}
@@ -441,7 +441,7 @@ final class UserService implements IUserService, ISearch<User> {
 	 * (java.lang.String) */
 	@Override
 	public User getActionCodeUser (String actionCode) {
-		return addAvatar(ofy().load().type(User.class)
+		return addAvatar(provide().load().type(User.class)
 				.filter("actionCode", actionCode).first().now());
 	}
 
@@ -452,7 +452,7 @@ final class UserService implements IUserService, ISearch<User> {
 	 * .lang.String) */
 	@Override
 	public User getEmailUser (String email) {
-		return addAvatar(ofy().load().type(User.class).filter("email", email)
+		return addAvatar(provide().load().type(User.class).filter("email", email)
 				.first().now());
 	}
 
@@ -543,7 +543,7 @@ final class UserService implements IUserService, ISearch<User> {
 	@Override
 	public List<User> getIdUserBatch (Collection<Long> ids) {
 		return addAvatars(new ArrayList<User>(
-				ofy().load().type(User.class).ids(ids).values()));
+				provide().load().type(User.class).ids(ids).values()));
 	}
 
 	/* (non-Javadoc)
@@ -555,14 +555,14 @@ final class UserService implements IUserService, ISearch<User> {
 		User user = getUser(id);
 
 		if (user.roleKeys != null) {
-			user.roles = RoleServiceProvider.provide().getIdRoleBatch(
-					PersistenceService.keysToIds(user.roleKeys));
+			user.roles = RoleServiceProvider.provide()
+					.getIdRoleBatch(PersistenceHelper.keysToIds(user.roleKeys));
 		}
 
 		if (user.permissionKeys != null) {
 			user.permissions = PermissionServiceProvider.provide()
 					.getIdPermissionBatch(
-							PersistenceService.keysToIds(user.permissionKeys));
+							PersistenceHelper.keysToIds(user.permissionKeys));
 		}
 
 		SearchHelper.indexDocument(toDocument(user));

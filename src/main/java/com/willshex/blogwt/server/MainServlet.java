@@ -18,12 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.page.PageMarkup;
 import com.willshex.blogwt.server.page.PageMarkupFactory;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
-import com.willshex.blogwt.server.service.persistence.PersistenceService;
 import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
@@ -159,7 +159,7 @@ public class MainServlet extends ContextAwareServlet {
 				}
 
 				if (page.parentKey != null) {
-					page.parent = PersistenceService.dataType(Page.class,
+					page.parent = PersistenceHelper.type(Page.class,
 							page.parentKey);
 				}
 
@@ -181,7 +181,7 @@ public class MainServlet extends ContextAwareServlet {
 
 			boolean first = true;
 			for (Tag tag : tags) {
-				tag.posts = PersistenceService.dataTypeList(Post.class,
+				tag.posts = PersistenceHelper.typeList(Post.class,
 						tag.postKeys);
 
 				if (first) {
@@ -209,7 +209,7 @@ public class MainServlet extends ContextAwareServlet {
 
 			boolean first = true;
 			for (ArchiveEntry archiveEntry : archiveEntries) {
-				archiveEntry.posts = PersistenceService.dataTypeList(Post.class,
+				archiveEntry.posts = PersistenceHelper.typeList(Post.class,
 						archiveEntry.postKeys);
 
 				if (first) {
