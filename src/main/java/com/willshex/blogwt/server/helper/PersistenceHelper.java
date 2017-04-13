@@ -212,6 +212,10 @@ public class PersistenceHelper {
 			}
 		}
 
+		if (k == null && c.getSuperclass() != Object.class) {
+			k = key(c.getSuperclass());
+		}
+
 		return k;
 	}
 }
