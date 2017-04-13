@@ -20,7 +20,6 @@ import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
-import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
 import com.willshex.blogwt.shared.api.datatype.Post;
@@ -43,10 +42,7 @@ public final class UpdatePostActionHandler
 		ApiValidator.notNull(input, UpdatePostRequest.class, "input");
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
-
-		input.session.user = UserServiceProvider.provide()
-				.getUser(Long.valueOf(input.session.userKey.getId()));
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		UserValidator.authorisation(input.session.user,
 				Arrays.asList(PermissionServiceProvider.provide()

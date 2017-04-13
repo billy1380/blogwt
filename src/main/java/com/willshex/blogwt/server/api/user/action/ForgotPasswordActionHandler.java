@@ -21,8 +21,11 @@ public final class ForgotPasswordActionHandler
 			.getLogger(ForgotPasswordActionHandler.class.getName());
 
 	/* (non-Javadoc)
-	 * @see com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.gson.web.service.shared.Request, com.willshex.gson.web.service.shared.Response)
-	 */
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (ForgotPasswordRequest input,
 			ForgotPasswordResponse output) throws Exception {
@@ -30,20 +33,20 @@ public final class ForgotPasswordActionHandler
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
+				.lookupCheckAndExtend(input.session, "input.session");
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput()
-	 */
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected ForgotPasswordResponse newOutput () {
 		return new ForgotPasswordResponse();
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger()
-	 */
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

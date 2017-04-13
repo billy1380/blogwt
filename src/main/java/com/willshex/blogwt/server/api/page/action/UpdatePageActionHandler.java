@@ -18,7 +18,6 @@ import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
-import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
@@ -44,15 +43,12 @@ public final class UpdatePageActionHandler
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		List<Permission> permissions = new ArrayList<Permission>();
 		Permission postPermission = PermissionServiceProvider.provide()
 				.getCodePermission(PermissionHelper.MANAGE_PAGES);
 		permissions.add(postPermission);
-
-		input.session.user = UserServiceProvider.provide()
-				.getUser(Long.valueOf(input.session.userKey.getId()));
 
 		UserValidator.authorisation(input.session.user, permissions,
 				"input.session.user");

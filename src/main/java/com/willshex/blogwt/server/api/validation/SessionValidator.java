@@ -9,11 +9,14 @@ package com.willshex.blogwt.server.api.validation;
 
 import java.util.Date;
 
+import com.willshex.blogwt.server.api.exception.AuthorisationException;
 import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
+import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.ServiceException;
 
 /**
  * @author William Shakour (billy1380)
@@ -22,8 +25,8 @@ import com.willshex.gson.web.service.server.InputValidationException;
 public class SessionValidator {
 	private static final String type = Session.class.getSimpleName();
 
-	public static Session lookupAndExtend (Session session, String name)
-			throws InputValidationException {
+	public static Session lookupCheckAndExtend (Session session, String name)
+			throws ServiceException {
 		Session lookupSession = lookup(session, name);
 
 		Date now = new Date();
@@ -31,10 +34,18 @@ public class SessionValidator {
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.DataTypeNotFound, type + ": " + name);
 
-		if ((lookupSession.expires.getTime() - now.getTime()) < ISessionService.MILLIS_MINUTES) {
-			lookupSession = SessionServiceProvider.provide()
-					.extendSession(lookupSession,
-							Long.valueOf(ISessionService.MILLIS_MINUTES));
+		lookupSession.user = UserServiceProvider.provide()
+				.getUser(Long.valueOf(lookupSession.userKey.getId()));
+
+		if (UserValidator.isSuspended(lookupSession.user)) {
+			AuthorisationException.suspended(lookupSession.user);
+		}
+
+		if ((lookupSession.expires.getTime()
+				- now.getTime()) < ISessionService.MILLIS_MINUTES) {
+			lookupSession = SessionServiceProvider.provide().extendSession(
+					lookupSession,
+					Long.valueOf(ISessionService.MILLIS_MINUTES));
 		}
 
 		return lookupSession;
@@ -64,8 +75,8 @@ public class SessionValidator {
 
 		Session lookupSession = null;
 		if (isIdLookup) {
-			lookupSession = SessionServiceProvider.provide().getSession(
-					session.id);
+			lookupSession = SessionServiceProvider.provide()
+					.getSession(session.id);
 		}
 
 		if (lookupSession == null)

@@ -61,15 +61,12 @@ public final class GetPostsActionHandler
 		if (input.session != null) {
 			try {
 				output.session = input.session = SessionValidator
-						.lookupAndExtend(input.session, "input.session");
+						.lookupCheckAndExtend(input.session, "input.session");
 
 				List<Permission> permissions = new ArrayList<Permission>();
 				Permission postPermission = PermissionServiceProvider.provide()
 						.getCodePermission(PermissionHelper.MANAGE_POSTS);
 				permissions.add(postPermission);
-
-				input.session.user = UserServiceProvider.provide()
-						.getUser(Long.valueOf(input.session.userKey.getId()));
 
 				try {
 					UserValidator.authorisation(input.session.user, permissions,

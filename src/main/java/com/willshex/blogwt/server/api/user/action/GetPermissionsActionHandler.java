@@ -15,7 +15,6 @@ import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
-import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
 import com.willshex.blogwt.shared.api.user.call.GetPermissionsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetPermissionsResponse;
@@ -39,10 +38,7 @@ public final class GetPermissionsActionHandler
 		ApiValidator.notNull(input, GetPermissionsRequest.class, "input");
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
-
-		input.session.user = UserServiceProvider.provide()
-				.getUser(Long.valueOf(input.session.userKey.getId()));
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		UserValidator.authorisation(input.session.user,
 				Arrays.asList(

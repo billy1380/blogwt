@@ -43,15 +43,12 @@ public final class CreatePostActionHandler
 		ApiValidator.notNull(input, CreatePostRequest.class, "input");
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		List<Permission> permissions = new ArrayList<Permission>();
 		Permission postPermission = PermissionServiceProvider.provide()
 				.getCodePermission(PermissionHelper.MANAGE_POSTS);
 		permissions.add(postPermission);
-
-		input.session.user = UserServiceProvider.provide()
-				.getUser(Long.valueOf(input.session.userKey.getId()));
 
 		UserValidator.authorisation(input.session.user, permissions,
 				"input.session.user");

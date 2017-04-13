@@ -17,7 +17,6 @@ import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
-import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
@@ -41,10 +40,7 @@ public final class CreatePageActionHandler
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
-
-		input.session.user = UserServiceProvider.provide()
-				.getUser(Long.valueOf(input.session.userKey.getId()));
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		UserValidator.authorisation(input.session.user,
 				Arrays.asList(PermissionServiceProvider.provide()

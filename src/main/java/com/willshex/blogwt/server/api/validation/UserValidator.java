@@ -154,4 +154,12 @@ public class UserValidator extends ApiValidator {
 		return lookupUser;
 	}
 
+	/**
+	 * @param user
+	 * @return
+	 */
+	public static boolean isSuspended (User user) {
+		return false;
+	}
+
 }

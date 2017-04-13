@@ -44,7 +44,7 @@ public final class GetRatingsActionHandler
 		if (input.session != null) {
 			try {
 				output.session = input.session = SessionValidator
-						.lookupAndExtend(input.session, "input.session");
+						.lookupCheckAndExtend(input.session, "input.session");
 
 				UserHelper.stripPassword(
 						output.session == null ? null : output.session.user);

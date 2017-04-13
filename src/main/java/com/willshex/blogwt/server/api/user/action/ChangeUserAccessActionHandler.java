@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.api.user.action;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.ActionHandler;
@@ -38,7 +39,7 @@ public final class ChangeUserAccessActionHandler extends
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		if (input.revoke == null) {
 			input.revoke = Boolean.FALSE;
@@ -63,6 +64,21 @@ public final class ChangeUserAccessActionHandler extends
 			output.user = UserServiceProvider.provide()
 					.addUserRolesAndPermissions(input.user, input.roles,
 							input.permissions);
+		}
+
+		if (input.suspend != null) {
+			if (Boolean.TRUE.equals(input.suspend)) {
+				if (input.suspendUntil == null) {
+					input.suspendUntil = new Date(Long.MAX_VALUE);
+				}
+
+				input.user.suspendUntil = input.suspendUntil;
+
+			} else {
+				input.user.suspendUntil = null;
+			}
+
+			output.user = UserServiceProvider.provide().updateUser(input.user);
 		}
 	}
 

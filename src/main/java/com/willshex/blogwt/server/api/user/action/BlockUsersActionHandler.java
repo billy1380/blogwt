@@ -19,7 +19,6 @@ import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.relationship.RelationshipServiceProvider;
-import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Relationship;
 import com.willshex.blogwt.shared.api.datatype.RelationshipTypeType;
 import com.willshex.blogwt.shared.api.datatype.User;
@@ -49,10 +48,7 @@ public final class BlockUsersActionHandler
 		ApiValidator.notNull(input, BlockUsersRequest.class, "input");
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
-
-		input.session.user = UserServiceProvider.provide()
-				.getUser(Long.valueOf(input.session.userKey.getId()));
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		User user = null;
 		if (input.user == null) {

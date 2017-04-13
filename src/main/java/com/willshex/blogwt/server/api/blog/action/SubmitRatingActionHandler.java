@@ -16,7 +16,6 @@ import com.willshex.blogwt.server.api.validation.RatingValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.rating.RatingServiceProvider;
-import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.SubmitRatingRequest;
 import com.willshex.blogwt.shared.api.blog.call.SubmitRatingResponse;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
@@ -28,19 +27,16 @@ public final class SubmitRatingActionHandler
 			.getLogger(SubmitRatingActionHandler.class.getName());
 
 	@Override
-	public void handle (SubmitRatingRequest input, SubmitRatingResponse output)
-			throws Exception {
+	protected void handle (SubmitRatingRequest input,
+			SubmitRatingResponse output) throws Exception {
 		ApiValidator.notNull(input, SubmitRatingRequest.class, "input");
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		PropertyValidator.ensureTrue(PropertyHelper.RATING_ENABLED,
 				PropertyHelper.RATING_ENABLED);
-
-		input.session.user = UserServiceProvider.provide()
-				.getUser(Long.valueOf(input.session.userKey.getId()));
 
 		if (input.rating != null && input.rating.by == null) {
 			input.rating.by = input.session.user;

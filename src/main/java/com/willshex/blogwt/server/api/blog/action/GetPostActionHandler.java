@@ -41,10 +41,7 @@ public final class GetPostActionHandler
 		if (input.session != null) {
 			try {
 				output.session = input.session = SessionValidator
-						.lookupAndExtend(input.session, "input.session");
-
-				UserHelper.stripPassword(
-						output.session == null ? null : output.session.user);
+						.lookupCheckAndExtend(input.session, "input.session");
 			} catch (InputValidationException ex) {
 				output.session = input.session = null;
 			}

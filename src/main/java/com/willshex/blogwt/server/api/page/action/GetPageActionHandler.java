@@ -42,7 +42,7 @@ public final class GetPageActionHandler
 		if (input.session != null) {
 			try {
 				output.session = input.session = SessionValidator
-						.lookupAndExtend(input.session, "input.session");
+						.lookupCheckAndExtend(input.session, "input.session");
 			} catch (InputValidationException ex) {
 				output.session = input.session = null;
 			}

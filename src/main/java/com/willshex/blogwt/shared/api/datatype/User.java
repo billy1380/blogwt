@@ -46,6 +46,8 @@ public class User extends DataType {
 	public Date expires;
 	@Index public String actionCode;
 
+	public Date suspendUntil;
+
 	@Override
 	public JsonObject toJson () {
 		JsonObject object = super.toJson();
@@ -59,8 +61,8 @@ public class User extends DataType {
 		if (permissions != null) {
 			jsonPermissions = new JsonArray();
 			for (int i = 0; i < permissions.size(); i++) {
-				JsonElement jsonPermissionsItem = permissions.get(i) == null ? JsonNull.INSTANCE
-						: permissions.get(i).toJson();
+				JsonElement jsonPermissionsItem = permissions.get(i) == null
+						? JsonNull.INSTANCE : permissions.get(i).toJson();
 				((JsonArray) jsonPermissions).add(jsonPermissionsItem);
 			}
 		}
@@ -69,8 +71,8 @@ public class User extends DataType {
 		if (roles != null) {
 			jsonRoles = new JsonArray();
 			for (int i = 0; i < roles.size(); i++) {
-				JsonElement jsonRolesItem = roles.get(i) == null ? JsonNull.INSTANCE
-						: roles.get(i).toJson();
+				JsonElement jsonRolesItem = roles.get(i) == null
+						? JsonNull.INSTANCE : roles.get(i).toJson();
 				((JsonArray) jsonRoles).add(jsonRolesItem);
 			}
 		}
@@ -99,6 +101,9 @@ public class User extends DataType {
 		JsonElement jsonVerified = verified == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(verified);
 		object.add("verified", jsonVerified);
+		JsonElement jsonSuspendUntil = suspendUntil == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(suspendUntil.getTime());
+		object.add("suspendUntil", jsonSuspendUntil);
 		JsonElement jsonAdded = added == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(added.getTime());
 		object.add("added", jsonAdded);
@@ -131,7 +136,8 @@ public class User extends DataType {
 			if (jsonPermissions != null) {
 				permissions = new ArrayList<Permission>();
 				Permission item = null;
-				for (int i = 0; i < jsonPermissions.getAsJsonArray().size(); i++) {
+				for (int i = 0; i < jsonPermissions.getAsJsonArray()
+						.size(); i++) {
 					if (jsonPermissions.getAsJsonArray().get(i) != null) {
 						(item = new Permission()).fromJson(jsonPermissions
 								.getAsJsonArray().get(i).getAsJsonObject());
@@ -202,6 +208,12 @@ public class User extends DataType {
 			JsonElement jsonVerified = jsonObject.get("verified");
 			if (jsonVerified != null) {
 				verified = Boolean.valueOf(jsonVerified.getAsBoolean());
+			}
+		}
+		if (jsonObject.has("suspendUntil")) {
+			JsonElement jsonSuspendUntil = jsonObject.get("suspendUntil");
+			if (jsonSuspendUntil != null) {
+				suspendUntil = new Date(jsonSuspendUntil.getAsLong());
 			}
 		}
 		if (jsonObject.has("added")) {
@@ -281,6 +293,11 @@ public class User extends DataType {
 
 	public User verified (Boolean verified) {
 		this.verified = verified;
+		return this;
+	}
+
+	public User suspendUntil (Date suspendUntil) {
+		this.suspendUntil = suspendUntil;
 		return this;
 	}
 

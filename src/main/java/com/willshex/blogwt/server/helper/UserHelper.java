@@ -53,4 +53,9 @@ public class UserHelper extends com.willshex.blogwt.shared.helper.UserHelper {
 		return "https://secure.gravatar.com/avatar/"
 				+ StringUtils.md5Hash(email.trim().toLowerCase());
 	}
+
+	public static String suspendedMessage (User user) {
+		return "";
+
+	}
 }

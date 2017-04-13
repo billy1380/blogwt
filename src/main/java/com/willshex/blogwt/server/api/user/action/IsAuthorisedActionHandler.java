@@ -33,7 +33,7 @@ public final class IsAuthorisedActionHandler
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
+				.lookupCheckAndExtend(input.session, "input.session");
 	}
 
 	/* (non-Javadoc)

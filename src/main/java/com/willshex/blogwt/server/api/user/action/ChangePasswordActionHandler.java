@@ -43,7 +43,7 @@ public final class ChangePasswordActionHandler
 		if (input.session != null) {
 			try {
 				output.session = input.session = SessionValidator
-						.lookupAndExtend(input.session, "input.session");
+						.lookupCheckAndExtend(input.session, "input.session");
 			} catch (InputValidationException ex) {
 				output.session = input.session = null;
 			}
@@ -94,8 +94,7 @@ public final class ChangePasswordActionHandler
 		}
 
 		if (isExistingPassword && !isActionCode) {
-			user = UserServiceProvider.provide()
-					.getUser(Long.valueOf(input.session.userKey.getId()));
+			user = input.session.user;
 
 			if (!UserServiceProvider.provide().verifyPassword(user,
 					input.password))

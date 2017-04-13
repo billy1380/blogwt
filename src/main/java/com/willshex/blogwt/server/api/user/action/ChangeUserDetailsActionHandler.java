@@ -40,17 +40,14 @@ public final class ChangeUserDetailsActionHandler extends
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		User updatedUser = input.user;
 
 		input.user = UserValidator.lookup(input.user, "input.user");
 
 		// if the not logged in user
-		if (input.user.id.longValue() != input.session.userKey.getId()) {
-			input.session.user = UserServiceProvider.provide()
-					.getUser(Long.valueOf(input.session.userKey.getId()));
-
+		if (input.user.id.longValue() != input.session.user.id.longValue()) {
 			UserValidator.authorisation(input.session.user,
 					Arrays.asList(PermissionServiceProvider.provide()
 							.getCodePermission(PermissionHelper.MANAGE_USERS)),
@@ -92,7 +89,7 @@ public final class ChangeUserDetailsActionHandler extends
 	@Override
 	public void clearSensitiveFields (ChangeUserDetailsResponse output) {
 		super.clearSensitiveFields(output);
-		
+
 		UserHelper.stripPassword(output.user);
 	}
 }

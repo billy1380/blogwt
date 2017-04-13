@@ -44,7 +44,7 @@ public final class SubmitFormActionHandler
 
 		if (input.session != null) {
 			output.session = input.session = SessionValidator
-					.lookupAndExtend(input.session, "input.session");
+					.lookupCheckAndExtend(input.session, "input.session");
 		}
 
 		input.form = FormValidator.validate(input.form, "input.form");

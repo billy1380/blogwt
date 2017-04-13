@@ -43,7 +43,7 @@ public final class GetPagesActionHandler
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		if (input.pager == null) {
 			input.pager = PagerHelper.createDefaultPager();

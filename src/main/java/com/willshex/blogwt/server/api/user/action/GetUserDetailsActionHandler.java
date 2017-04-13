@@ -16,7 +16,6 @@ import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
-import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
@@ -39,16 +38,10 @@ public final class GetUserDetailsActionHandler
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
-
-		input.session.user = UserServiceProvider.provide()
-				.getUser(Long.valueOf(input.session.userKey.getId()));
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		// if the not logged in user
-		if (input.user.id.longValue() != input.session.userKey.getId()) {
-			input.session.user = UserServiceProvider.provide()
-					.getUser(Long.valueOf(input.session.userKey.getId()));
-
+		if (input.user.id.longValue() != input.session.user.id.longValue()) {
 			UserValidator.authorisation(input.session.user,
 					Arrays.asList(PermissionServiceProvider.provide()
 							.getCodePermission(PermissionHelper.MANAGE_USERS)),

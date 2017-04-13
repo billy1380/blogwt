@@ -88,23 +88,15 @@ public final class LoginActionHandler
 
 				output.session = sessionService.createUserSession(user,
 						input.longTerm);
-
-				if (output.session != null) {
-					output.session.user = user;
-				} else {
-					throw new Exception(
-							"Unexpected blank session after creating user session.");
-				}
+				UserServiceProvider.provide().updateUserIdLastLoggedIn(user.id);
 			} else {
 				output.session = SessionServiceProvider.provide().extendSession(
 						output.session, ISessionService.MILLIS_MINUTES);
 				output.session.user = user;
 			}
 		} else {
-			output.session = SessionValidator.lookupAndExtend(input.session,
-					"input.session");
-			input.session.user = UserServiceProvider.provide()
-					.getUser(Long.valueOf(input.session.userKey.getId()));
+			output.session = SessionValidator
+					.lookupCheckAndExtend(input.session, "input.session");
 		}
 
 		if (output.session.user.roleKeys != null) {

@@ -55,10 +55,7 @@ public final class GetUsersActionHandler
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
-
-		output.session.user = UserServiceProvider.provide()
-				.getUser(Long.valueOf(output.session.userKey.getId()));
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		if (input.query == null) {
 			if (input.relationshipType != null) {
@@ -88,7 +85,6 @@ public final class GetUsersActionHandler
 		return UserServiceProvider.provide().getUsers(input.pager.start,
 				input.pager.count, UserSortType.fromString(input.pager.sortBy),
 				input.pager.sortDirection);
-
 	}
 
 	/**

@@ -33,7 +33,7 @@ public final class GetResourceActionHandler
 		ApiValidator.notNull(input, GetResourceRequest.class, "input");
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		output.resource = input.resource = ResourceValidator
 				.lookup(input.resource, "input.resource");

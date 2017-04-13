@@ -35,7 +35,7 @@ public final class GetResourcesActionHandler
 		ApiValidator.notNull(input, GetResourcesRequest.class, "input");
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
-				.lookupAndExtend(input.session, "input.session");
+				.lookupCheckAndExtend(input.session, "input.session");
 
 		if (input.pager == null) {
 			input.pager = PagerHelper.createDefaultPager();
@@ -46,7 +46,6 @@ public final class GetResourcesActionHandler
 				SortDirectionType.SortDirectionTypeDescending);
 
 		output.pager = PagerHelper.moveForward(input.pager);
-
 	}
 
 	/* (non-Javadoc)

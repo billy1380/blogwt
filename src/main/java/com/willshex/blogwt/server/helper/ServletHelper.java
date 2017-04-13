@@ -7,15 +7,14 @@
 //
 package com.willshex.blogwt.server.helper;
 
-import java.util.Date;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
-import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Session;
+import com.willshex.gson.web.service.server.ServiceException;
 
 /**
  * @author William Shakour (billy1380)
@@ -55,16 +54,13 @@ public class ServletHelper {
 						.getSession(Long.valueOf(sessionId));
 
 				if (userSession != null) {
-					if (userSession.expires.getTime() > new Date().getTime()) {
-						userSession = sessionService.extendSession(userSession,
-								Long.valueOf(ISessionService.MILLIS_MINUTES));
-						userSession.user = UserServiceProvider.provide()
-								.getUser(userSession.userKey.getId());
+					try {
+						userSession = SessionValidator
+								.lookupCheckAndExtend(userSession, "session");
 						UserHelper.stripPassword(userSession.user);
 						UserHelper.populateRolesAndPermissionsFromKeys(
 								userSession.user);
-					} else {
-						sessionService.deleteSession(userSession);
+					} catch (ServiceException e) {
 						userSession = null;
 					}
 				}

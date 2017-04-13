@@ -54,10 +54,7 @@ public final class RegisterUserActionHandler
 		if (input.session != null) {
 			try {
 				output.session = input.session = SessionValidator
-						.lookupAndExtend(input.session, "input.session");
-
-				input.session.user = UserServiceProvider.provide()
-						.getUser(Long.valueOf(output.session.userKey.getId()));
+						.lookupCheckAndExtend(input.session, "input.session");
 
 				UserValidator.authorisation(input.session.user,
 						Arrays.asList(PermissionServiceProvider.provide()
