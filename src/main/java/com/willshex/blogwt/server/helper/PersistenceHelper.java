@@ -180,8 +180,8 @@ public class PersistenceHelper {
 		}
 
 		if (sortBy != null) {
-			query = query.order(PersistenceHelper.direction(sortDirection)
-					+ sortable.map(sortBy));
+			query = query
+					.order(direction(sortDirection) + sortable.map(sortBy));
 		}
 
 		return query;
