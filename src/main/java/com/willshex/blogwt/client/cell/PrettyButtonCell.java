@@ -7,6 +7,9 @@
 //
 package com.willshex.blogwt.client.cell;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -17,58 +20,66 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
  */
 public class PrettyButtonCell extends ButtonCell {
 
+	public static class Button {
+		public String name;
+		public String glyph;
+		public String style;
+
+		public Button (String name, String style, String glyph) {
+			this.name = name;
+			this.glyph = glyph;
+			this.style = style;
+		}
+	}
+
+	private Map<String, Button> buttons = new HashMap<>();
+
+	public PrettyButtonCell () {
+		addButton("re-run", "btn-default", "glyphicon-repeat");
+		addButton("run", "btn-primary", "glyphicon-play");
+		addButton("resume", "btn-default", "glyphicon-play");
+		addButton("pause", "btn-default", "glyphicon-pause");
+		addButton("delete", "btn-danger", "glyphicon-trash");
+		addButton("suspend", "btn-danger", "glyphicon-ban-circle");
+		addButton("unsuspend", "btn-success", null);
+		addButton("clone", "btn-default", "glyphicon-duplicate");
+		addButton("edit", "btn-default", "glyphicon-edit");
+		addButton("admin", "btn-default", "glyphicon-sunglasses");
+		addButton("user", "btn-default", "glyphicon-user");
+	}
+
+	/**
+	 * @param name
+	 * @param glyph
+	 * @param style
+	 */
+	private void addButton (String name, String glyph, String style) {
+		Button button = new Button(name, glyph, style);
+		buttons.put(name, button);
+	}
+
+	/**
+	 * 
+	 */
+	public PrettyButtonCell (Button... buttons) {
+		this();
+		for (Button button : buttons) {
+			this.buttons.put(button.name, button);
+		}
+	}
+
 	@Override
 	public void render (Context context, SafeHtml data, SafeHtmlBuilder sb) {
 		String buttonStyle = null, glyph = null;
 
 		if (data != null) {
-			switch (data.asString()) {
-			case "re-run":
-				glyph = "glyphicon-repeat";
+			Button b = buttons.get(data.asString());
+
+			if (b != null) {
+				buttonStyle = b.style;
+				glyph = b.glyph;
+			} else {
 				buttonStyle = "btn-default";
-				break;
-			case "run":
-				glyph = "glyphicon-play";
-				buttonStyle = "btn-primary";
-				break;
-			case "resume":
-				buttonStyle = "btn-default";
-				glyph = "glyphicon-play";
-				break;
-			case "pause":
-				buttonStyle = "btn-default";
-				glyph = "glyphicon-pause";
-				break;
-			case "delete":
-				buttonStyle = "btn-danger";
-				glyph = "glyphicon-trash";
-				break;
-			case "suspend":
-				buttonStyle = "btn-danger";
-				glyph = "glyphicon-ban-circle";
-				break;
-			case "unsuspend":
-				buttonStyle = "btn-success";
-				break;
-			case "clone":
-				buttonStyle = "btn-default";
-				glyph = "glyphicon-duplicate";
-				break;
-			case "edit":
-				buttonStyle = "btn-default";
-				glyph = "glyphicon-edit";
-				break;
-			case "admin":
-				buttonStyle = "btn-default";
-				glyph = "glyphicon-sunglasses";
-				break;
-			case "user":
-				buttonStyle = "btn-default";
-				glyph = "glyphicon-user";
-				break;
-			default:
-				buttonStyle = "btn-default";
-				break;
 			}
 		}
 
