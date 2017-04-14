@@ -13,6 +13,7 @@ import java.util.Map;
 
 import com.willshex.blogwt.server.api.exception.AuthorisationException;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
+import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
@@ -20,6 +21,7 @@ import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
+import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.gson.web.service.server.InputValidationException;
@@ -154,12 +156,10 @@ public class UserValidator extends ApiValidator {
 		return lookupUser;
 	}
 
-	/**
-	 * @param user
-	 * @return
-	 */
-	public static boolean isSuspended (User user) {
-		return false;
+	public static void suspended (User user) throws AuthorisationException {
+		if (UserHelper.isSuspended(user)) throw new AuthorisationException(
+				type + ": [" + UserHelper.identifier(user) + "] suspended "
+						+ DateTimeHelper.forDays(user.suspendUntil));
 	}
 
 }

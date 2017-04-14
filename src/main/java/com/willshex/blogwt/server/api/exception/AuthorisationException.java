@@ -9,7 +9,6 @@ package com.willshex.blogwt.server.api.exception;
 
 import java.util.Collection;
 
-import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
@@ -31,6 +30,11 @@ public class AuthorisationException extends ServiceException {
 								+ describe(permissions) + "]: " + fieldName));
 	}
 
+	public AuthorisationException (String message) {
+		super(ApiError.UserSuspended.getCode(),
+				ApiError.UserSuspended.getMessage(message));
+	}
+
 	public static String describe (Collection<Permission> permissions) {
 		StringBuffer buffer = new StringBuffer();
 
@@ -47,15 +51,6 @@ public class AuthorisationException extends ServiceException {
 		}
 
 		return buffer.toString();
-	}
-
-	private AuthorisationException (User user) {
-		super(ApiError.UserSuspended.getCode(), ApiError.UserSuspended
-				.getMessage(UserHelper.suspendedMessage(user)));
-	}
-
-	public static void suspended (User user) throws AuthorisationException {
-		throw new AuthorisationException(user);
 	}
 
 }

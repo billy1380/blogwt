@@ -9,7 +9,6 @@ package com.willshex.blogwt.server.api.validation;
 
 import java.util.Date;
 
-import com.willshex.blogwt.server.api.exception.AuthorisationException;
 import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
@@ -37,9 +36,7 @@ public class SessionValidator {
 		lookupSession.user = UserServiceProvider.provide()
 				.getUser(Long.valueOf(lookupSession.userKey.getId()));
 
-		if (UserValidator.isSuspended(lookupSession.user)) {
-			AuthorisationException.suspended(lookupSession.user);
-		}
+		UserValidator.suspended(lookupSession.user);
 
 		if ((lookupSession.expires.getTime()
 				- now.getTime()) < ISessionService.MILLIS_MINUTES) {

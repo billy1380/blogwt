@@ -54,8 +54,4 @@ public class UserHelper extends com.willshex.blogwt.shared.helper.UserHelper {
 				+ StringUtils.md5Hash(email.trim().toLowerCase());
 	}
 
-	public static String suspendedMessage (User user) {
-		return "";
-
-	}
 }

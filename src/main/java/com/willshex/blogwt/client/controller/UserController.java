@@ -9,6 +9,7 @@ package com.willshex.blogwt.client.controller;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.http.client.Request;
@@ -112,8 +113,8 @@ public class UserController extends AsyncDataProvider<User> {
 		return one;
 	}
 
-	private Pager pager = PagerHelper.createDefaultPager().sortBy(
-			UserSortType.UserSortTypeAdded.toString());
+	private Pager pager = PagerHelper.createDefaultPager()
+			.sortBy(UserSortType.UserSortTypeAdded.toString());
 
 	private User user;
 
@@ -121,7 +122,7 @@ public class UserController extends AsyncDataProvider<User> {
 	private Request getUserRequest;
 	private Request getEmailAvatarRequest;
 	private Request getRolesAndPermissionsRequest;
-	
+
 	private UserOracle oracle;
 
 	private void fetchUsers () {
@@ -142,13 +143,15 @@ public class UserController extends AsyncDataProvider<User> {
 						getUsersRequest = null;
 
 						if (output.status == StatusType.StatusTypeSuccess) {
-							if (output.users != null && output.users.size() > 0) {
+							if (output.users != null
+									&& output.users.size() > 0) {
 								pager = output.pager;
 								updateRowCount(
 										input.pager.count == null ? 0
 												: input.pager.count.intValue(),
 										input.pager.count == null
-												|| input.pager.count.intValue() == 0);
+												|| input.pager.count
+														.intValue() == 0);
 								updateRowData(input.pager.start.intValue(),
 										output.users);
 							} else {
@@ -172,7 +175,6 @@ public class UserController extends AsyncDataProvider<User> {
 								new GetUsersFailure(input, caught),
 								UserController.this);
 					}
-
 				});
 	}
 
@@ -184,8 +186,8 @@ public class UserController extends AsyncDataProvider<User> {
 	@Override
 	protected void onRangeChanged (HasData<User> display) {
 		Range range = display.getVisibleRange();
-		pager.start(Integer.valueOf(range.getStart())).count(
-				Integer.valueOf(range.getLength()));
+		pager.start(Integer.valueOf(range.getStart()))
+				.count(Integer.valueOf(range.getLength()));
 
 		fetchUsers();
 	}
@@ -211,9 +213,7 @@ public class UserController extends AsyncDataProvider<User> {
 					public void onSuccess (GetUserDetailsResponse output) {
 						getUserRequest = null;
 
-						if (output.status == StatusType.StatusTypeSuccess) {
-
-						}
+						if (output.status == StatusType.StatusTypeSuccess) {}
 
 						DefaultEventBus.get().fireEventFromSource(
 								new GetUserDetailsSuccess(input, output),
@@ -226,7 +226,6 @@ public class UserController extends AsyncDataProvider<User> {
 								new GetUserDetailsFailure(input, caught),
 								UserController.this);
 					}
-
 				});
 	}
 
@@ -245,9 +244,7 @@ public class UserController extends AsyncDataProvider<User> {
 
 					@Override
 					public void onSuccess (ChangeUserDetailsResponse output) {
-						if (output.status == StatusType.StatusTypeSuccess) {
-
-						}
+						if (output.status == StatusType.StatusTypeSuccess) {}
 
 						DefaultEventBus.get().fireEventFromSource(
 								new ChangeUserDetailsSuccess(input, output),
@@ -279,9 +276,7 @@ public class UserController extends AsyncDataProvider<User> {
 
 					@Override
 					public void onSuccess (ChangePasswordResponse output) {
-						if (output.status == StatusType.StatusTypeSuccess) {
-
-						}
+						if (output.status == StatusType.StatusTypeSuccess) {}
 
 						DefaultEventBus.get().fireEventFromSource(
 								new ChangePasswordSuccess(input, output),
@@ -316,9 +311,7 @@ public class UserController extends AsyncDataProvider<User> {
 
 					@Override
 					public void onSuccess (ChangePasswordResponse output) {
-						if (output.status == StatusType.StatusTypeSuccess) {
-
-						}
+						if (output.status == StatusType.StatusTypeSuccess) {}
 
 						DefaultEventBus.get().fireEventFromSource(
 								new ChangePasswordSuccess(input, output),
@@ -349,9 +342,7 @@ public class UserController extends AsyncDataProvider<User> {
 
 					@Override
 					public void onSuccess (ResetPasswordResponse output) {
-						if (output.status == StatusType.StatusTypeSuccess) {
-
-						}
+						if (output.status == StatusType.StatusTypeSuccess) {}
 
 						DefaultEventBus.get().fireEventFromSource(
 								new ResetPasswordSuccess(input, output),
@@ -364,7 +355,6 @@ public class UserController extends AsyncDataProvider<User> {
 								new ResetPasswordFailure(input, caught),
 								UserController.this);
 					}
-
 				});
 	}
 
@@ -389,9 +379,7 @@ public class UserController extends AsyncDataProvider<User> {
 					public void onSuccess (GetEmailAvatarResponse output) {
 						getEmailAvatarRequest = null;
 
-						if (output.status == StatusType.StatusTypeSuccess) {
-
-						}
+						if (output.status == StatusType.StatusTypeSuccess) {}
 
 						DefaultEventBus.get().fireEventFromSource(
 								new GetEmailAvatarSuccess(input, output),
@@ -404,7 +392,6 @@ public class UserController extends AsyncDataProvider<User> {
 								new GetEmailAvatarFailure(input, caught),
 								UserController.this);
 					}
-
 				});
 	}
 
@@ -423,9 +410,7 @@ public class UserController extends AsyncDataProvider<User> {
 
 					@Override
 					public void onSuccess (RegisterUserResponse output) {
-						if (output.status == StatusType.StatusTypeSuccess) {
-
-						}
+						if (output.status == StatusType.StatusTypeSuccess) {}
 
 						DefaultEventBus.get().fireEventFromSource(
 								new RegisterUserSuccess(input, output),
@@ -446,7 +431,8 @@ public class UserController extends AsyncDataProvider<User> {
 	 * @param roles
 	 */
 	public void assignUserRoles (User user, Role... roles) {
-		changeUserAccess(false, user, null, Arrays.asList(roles));
+		changeUserAccess(Boolean.FALSE, user, null, Arrays.asList(roles), null,
+				null);
 	}
 
 	/**
@@ -455,7 +441,8 @@ public class UserController extends AsyncDataProvider<User> {
 	 * @param roles
 	 */
 	public void revokeUserRoles (User user, Role... roles) {
-		changeUserAccess(true, user, null, Arrays.asList(roles));
+		changeUserAccess(Boolean.TRUE, user, null, Arrays.asList(roles), null,
+				null);
 	}
 
 	/**
@@ -463,7 +450,8 @@ public class UserController extends AsyncDataProvider<User> {
 	 * @param permissions
 	 */
 	public void assignUserPermissions (User user, Permission... permissions) {
-		changeUserAccess(false, user, Arrays.asList(permissions), null);
+		changeUserAccess(Boolean.FALSE, user, Arrays.asList(permissions), null,
+				null, null);
 	}
 
 	/**
@@ -472,28 +460,44 @@ public class UserController extends AsyncDataProvider<User> {
 	 * @param permissions
 	 */
 	public void revokeUserPermissions (User user, Permission... permissions) {
-		changeUserAccess(true, user, Arrays.asList(permissions), null);
+		changeUserAccess(Boolean.TRUE, user, Arrays.asList(permissions), null,
+				null, null);
 	}
 
-	private void changeUserAccess (boolean revoke, User user,
-			List<Permission> permissions, List<Role> roles) {
+	/**
+	 * @param user
+	 */
+	public void unsuspendUser (User user) {
+		changeUserAccess(null, user, null, null, Boolean.FALSE, null);
+	}
+
+	/**
+	 * @param user
+	 */
+	public void suspendUser (User user) {
+		changeUserAccess(null, user, null, null, Boolean.TRUE, null);
+	}
+
+	private void changeUserAccess (Boolean revoke, User user,
+			List<Permission> permissions, List<Role> roles, Boolean suspend,
+			Date suspendUntil) {
 		final ChangeUserAccessRequest input = ApiHelper
 				.setAccessCode(new ChangeUserAccessRequest());
 
 		input.session = SessionController.get().sessionForApiCall();
 		input.user = user;
-		input.revoke = Boolean.valueOf(revoke);
+		input.revoke = revoke;
 		input.roles = roles;
 		input.permissions = permissions;
+		input.suspend = suspend;
+		input.suspendUntil = suspendUntil;
 
 		ApiHelper.createUserClient().changeUserAccess(input,
 				new AsyncCallback<ChangeUserAccessResponse>() {
 
 					@Override
 					public void onSuccess (ChangeUserAccessResponse output) {
-						if (output.status == StatusType.StatusTypeSuccess) {
-
-						}
+						if (output.status == StatusType.StatusTypeSuccess) {}
 
 						DefaultEventBus.get().fireEventFromSource(
 								new ChangeUserAccessSuccess(input, output),
@@ -524,9 +528,7 @@ public class UserController extends AsyncDataProvider<User> {
 
 					@Override
 					public void onSuccess (VerifyAccountResponse output) {
-						if (output.status == StatusType.StatusTypeSuccess) {
-
-						}
+						if (output.status == StatusType.StatusTypeSuccess) {}
 
 						DefaultEventBus.get().fireEventFromSource(
 								new VerifyAccountSuccess(input, output),
@@ -558,10 +560,8 @@ public class UserController extends AsyncDataProvider<User> {
 			input.session = SessionController.get().sessionForApiCall();
 			input.user = user;
 
-			getRolesAndPermissionsRequest = ApiHelper
-					.createUserClient()
-					.getRolesAndPermissions(
-							input,
+			getRolesAndPermissionsRequest = ApiHelper.createUserClient()
+					.getRolesAndPermissions(input,
 							new AsyncCallback<GetRolesAndPermissionsResponse>() {
 
 								@Override
@@ -571,11 +571,11 @@ public class UserController extends AsyncDataProvider<User> {
 
 									if (output.status == StatusType.StatusTypeSuccess) {
 										if (output.roles != null) {
-											USER_ROLES_PROVIDER.updateRowData(
-													0, output.roles);
+											USER_ROLES_PROVIDER.updateRowData(0,
+													output.roles);
 										} else {
-											USER_ROLES_PROVIDER.updateRowCount(
-													0, true);
+											USER_ROLES_PROVIDER
+													.updateRowCount(0, true);
 										}
 
 										if (output.permissions != null) {
@@ -618,7 +618,7 @@ public class UserController extends AsyncDataProvider<User> {
 	public void setUser (User value) {
 		user = value;
 	}
-	
+
 	public SuggestOracle oracle () {
 		if (oracle == null) {
 			oracle = new UserOracle();

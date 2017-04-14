@@ -18,7 +18,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 public class PrettyButtonCell extends ButtonCell {
 
 	@Override
-	public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
+	public void render (Context context, SafeHtml data, SafeHtmlBuilder sb) {
 		String buttonStyle = null, glyph = null;
 
 		if (data != null) {
@@ -43,6 +43,13 @@ public class PrettyButtonCell extends ButtonCell {
 				buttonStyle = "btn-danger";
 				glyph = "glyphicon-trash";
 				break;
+			case "suspend":
+				buttonStyle = "btn-danger";
+				glyph = "glyphicon-ban-circle";
+				break;
+			case "unsuspend":
+				buttonStyle = "btn-success";
+				break;
 			case "clone":
 				buttonStyle = "btn-default";
 				glyph = "glyphicon-duplicate";
@@ -59,14 +66,20 @@ public class PrettyButtonCell extends ButtonCell {
 				buttonStyle = "btn-default";
 				glyph = "glyphicon-user";
 				break;
+			default:
+				buttonStyle = "btn-default";
+				break;
 			}
 		}
 
-		sb.appendHtmlConstant("<button type=\"button\" class=\"btn btn-xs " + (buttonStyle == null || buttonStyle.length() == 0 ? "" : buttonStyle)
+		sb.appendHtmlConstant("<button type=\"button\" class=\"btn btn-xs "
+				+ (buttonStyle == null || buttonStyle.length() == 0 ? ""
+						: buttonStyle)
 				+ "\" tabindex=\"-1\">");
 
 		if (glyph != null && glyph.length() > 0) {
-			sb.appendHtmlConstant("<span class=\"glyphicon " + glyph + "\"></span> ");
+			sb.appendHtmlConstant(
+					"<span class=\"glyphicon " + glyph + "\"></span> ");
 		}
 
 		if (data != null) {

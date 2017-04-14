@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.api.user.action;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -17,9 +18,12 @@ import com.willshex.blogwt.server.api.validation.RoleValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.helper.UserHelper;
+import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse;
+import com.willshex.blogwt.shared.helper.DateTimeHelper;
+import com.willshex.blogwt.shared.helper.PermissionHelper;
 
 public final class ChangeUserAccessActionHandler extends
 		ActionHandler<ChangeUserAccessRequest, ChangeUserAccessResponse> {
@@ -41,6 +45,11 @@ public final class ChangeUserAccessActionHandler extends
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");
 
+		UserValidator.authorisation(input.session.user,
+				Arrays.asList(PermissionServiceProvider.provide()
+						.getCodePermission(PermissionHelper.MANAGE_USERS)),
+				"input.session.user");
+
 		if (input.revoke == null) {
 			input.revoke = Boolean.FALSE;
 		}
@@ -56,24 +65,27 @@ public final class ChangeUserAccessActionHandler extends
 					"input.permissions");
 		}
 
-		if (Boolean.TRUE.equals(input.revoke)) {
-			output.user = UserServiceProvider.provide()
-					.removeUserRolesAndPermissions(input.user, input.roles,
-							input.permissions);
-		} else {
-			output.user = UserServiceProvider.provide()
-					.addUserRolesAndPermissions(input.user, input.roles,
-							input.permissions);
+		if (input.permissions != null || input.roles != null) {
+			if (Boolean.TRUE.equals(input.revoke)) {
+				output.user = UserServiceProvider.provide()
+						.removeUserRolesAndPermissions(input.user, input.roles,
+								input.permissions);
+			} else {
+				output.user = UserServiceProvider.provide()
+						.addUserRolesAndPermissions(input.user, input.roles,
+								input.permissions);
+			}
 		}
 
 		if (input.suspend != null) {
 			if (Boolean.TRUE.equals(input.suspend)) {
 				if (input.suspendUntil == null) {
-					input.suspendUntil = new Date(Long.MAX_VALUE);
+					// by default suspend for 2000 years
+					input.suspendUntil = new Date(DateTimeHelper.now().getTime()
+							+ DateTimeHelper.YEARS_2000);
 				}
 
 				input.user.suspendUntil = input.suspendUntil;
-
 			} else {
 				input.user.suspendUntil = null;
 			}

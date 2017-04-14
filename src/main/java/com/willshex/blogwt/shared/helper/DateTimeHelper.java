@@ -14,6 +14,12 @@ import java.util.Date;
  *
  */
 public class DateTimeHelper {
+	// 2000 years
+	public static final long YEARS_2000 = 2000L * 365L * 24L * 60L * 60L
+			* 1000L;
+	public static final long YEARS_100 = 100L * 365L * 24L * 60L * 60L * 1000L;
+	public static final long MILLIS_PER_DAY = 24L * 60L * 60L * 1000L;
+
 	public static String ago (Date date) {
 		return date == null ? "not yet" : ago(date, true);
 	}
@@ -65,5 +71,15 @@ public class DateTimeHelper {
 		}
 
 		return ago;
+	}
+
+	public static Date now () {
+		return new Date();
+	}
+
+	public static String forDays (Date date) {
+		long diff = date.getTime() - now().getTime();
+		return diff > YEARS_100 ? "indefintly"
+				: ("for " + (diff / MILLIS_PER_DAY) + " days");
 	}
 }

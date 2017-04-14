@@ -37,7 +37,7 @@ public enum ApiError {
 	CannotRevealRelationshipUsers(100017,
 			"Cannot reveal [with] relationship users RelationshipTypeType: {0}"),
 	NotEnoughData(100018, "Not enough data provided {0}"),
-	UserSuspended(100019, "User suspended: {0}"),;
+	UserSuspended(100019, "Unauthorised user suspended {0}"),;
 
 	private static final String PARAM_0 = "\\{0\\}";
 	private static final String PARAM_1 = "\\{1\\}";

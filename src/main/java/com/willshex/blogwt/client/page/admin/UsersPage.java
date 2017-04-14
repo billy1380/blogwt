@@ -27,6 +27,8 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.api.user.event.ChangeUserAccessEventHandler;
 import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.cell.StyledImageCell;
 import com.willshex.blogwt.client.controller.UserController;
@@ -37,6 +39,8 @@ import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
+import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
@@ -47,7 +51,7 @@ import com.willshex.blogwt.shared.page.PageType;
  * @author William Shakour (billy1380)
  *
  */
-public class UsersPage extends Page {
+public class UsersPage extends Page implements ChangeUserAccessEventHandler {
 
 	private static UsersPageUiBinder uiBinder = GWT
 			.create(UsersPageUiBinder.class);
@@ -145,25 +149,29 @@ public class UsersPage extends Page {
 		};
 		tblUsers.setColumnWidth(edit, 1.0, Unit.PX);
 
-		Column<User, String> delete = new Column<User, String>(
+		Column<User, String> suspend = new Column<User, String>(
 				actionButtonPrototype) {
 			@Override
 			public String getValue (User object) {
-				return "delete";
+				return UserHelper.isSuspended(object) ? "unsuspend" : "suspend";
 			}
 		};
-		delete.setFieldUpdater(new FieldUpdater<User, String>() {
+		suspend.setFieldUpdater(new FieldUpdater<User, String>() {
 			@Override
 			public void update (int index, User object, String value) {
-				if (Window.confirm("Are you sure you want to delete "
-						+ object.username + "'s account?")) {
-					// delete user (preferably if not the last user)
-					Window.alert("Users cannot, currently, be deleted.");
-				}
+				boolean suspended = UserHelper.isSuspended(object);
 
+				if (suspended) {
+					UserController.get().unsuspendUser(object);
+				} else {
+					if (Window.confirm("Are you sure you want to suspend "
+							+ object.username + "'s account indefinitely?")) {
+						UserController.get().suspendUser(object);
+					}
+				}
 			}
 		});
-		tblUsers.setColumnWidth(delete, 1.0, Unit.PX);
+		tblUsers.setColumnWidth(suspend, 1.0, Unit.PX);
 
 		Column<User, String> admin = new Column<User, String>(
 				actionButtonPrototype) {
@@ -194,11 +202,49 @@ public class UsersPage extends Page {
 		tblUsers.addColumn(lastLoggedIn, "Last seen");
 		tblUsers.addColumn(edit);
 		tblUsers.addColumn(admin);
-		tblUsers.addColumn(delete);
+		tblUsers.addColumn(suspend);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
+	@Override
+	protected void onAttach () {
+		super.onAttach();
+
+		register(DefaultEventBus.get().addHandlerToSource(
+				ChangeUserAccessEventHandler.TYPE, UserController.get(), this));
+	}
+
+	private void refresh () {
+		tblUsers.setVisibleRangeAndClearData(tblUsers.getVisibleRange(), true);
 	}
 
 	@UiHandler("btnRefresh")
 	void onRefreshClicked (ClickEvent ce) {
-		tblUsers.setVisibleRangeAndClearData(tblUsers.getVisibleRange(), true);
+		refresh();
 	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.client.api.user.event.ChangeUserAccessEventHandler#
+	 * changeUserAccessSuccess(com.willshex.blogwt.shared.api.user.call.
+	 * ChangeUserAccessRequest,
+	 * com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse) */
+	@Override
+	public void changeUserAccessSuccess (ChangeUserAccessRequest input,
+			ChangeUserAccessResponse output) {
+		refresh();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.client.api.user.event.ChangeUserAccessEventHandler#
+	 * changeUserAccessFailure(com.willshex.blogwt.shared.api.user.call.
+	 * ChangeUserAccessRequest, java.lang.Throwable) */
+	@Override
+	public void changeUserAccessFailure (ChangeUserAccessRequest input,
+			Throwable caught) {}
 }

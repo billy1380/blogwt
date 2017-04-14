@@ -36,8 +36,8 @@ public class UserHelper {
 	 * @return
 	 */
 	public static String emailDescription (User user) {
-		return user.email == null ? "empty" : user.email.replace(".", " dot ")
-				.replace("@", " at ");
+		return user.email == null ? "empty"
+				: user.email.replace(".", " dot ").replace("@", " at ");
 	}
 
 	public static User stripPassword (User user) {
@@ -77,7 +77,26 @@ public class UserHelper {
 	 * @return
 	 */
 	public static boolean isAdmin (User user) {
-		return user.roles == null ? false : RoleHelper.toLookup(user.roles)
-				.containsKey(RoleHelper.ADMIN);
+		return user.roles == null ? false
+				: RoleHelper.toLookup(user.roles).containsKey(RoleHelper.ADMIN);
+	}
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	public static boolean isSuspended (User user) {
+		return user.suspendUntil != null
+				&& user.suspendUntil.getTime() > DateTimeHelper.now().getTime();
+	}
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	public static String identifier (User user) {
+		return user.username == null
+				? (user.email == null ? name(user) : user.email)
+				: user.username;
 	}
 }
