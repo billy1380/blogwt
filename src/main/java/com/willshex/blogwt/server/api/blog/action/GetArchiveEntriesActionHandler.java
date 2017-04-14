@@ -10,6 +10,8 @@ package com.willshex.blogwt.server.api.blog.action;
 import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.ActionHandler;
+import com.willshex.blogwt.server.api.validation.ApiValidator;
+import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesResponse;
 
@@ -19,23 +21,32 @@ public final class GetArchiveEntriesActionHandler extends
 			.getLogger(GetArchiveEntriesActionHandler.class.getName());
 
 	/* (non-Javadoc)
-	 * @see com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.gson.web.service.shared.Request, com.willshex.gson.web.service.shared.Response)
-	 */
+	 * 
+	 * @see
+	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
+	 * gson.web.service.shared.Request,
+	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (GetArchiveEntriesRequest input,
-			GetArchiveEntriesResponse output) throws Exception {}
+			GetArchiveEntriesResponse output) throws Exception {
+		ApiValidator.notNull(input, GetArchiveEntriesRequest.class, "input");
+		ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+		output.session = input.session = SessionValidator
+				.lookupCheckAndExtend(input.session, "input.session");
+	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput()
-	 */
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected GetArchiveEntriesResponse newOutput () {
 		return new GetArchiveEntriesResponse();
 	}
 
 	/* (non-Javadoc)
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger()
-	 */
+	 * 
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

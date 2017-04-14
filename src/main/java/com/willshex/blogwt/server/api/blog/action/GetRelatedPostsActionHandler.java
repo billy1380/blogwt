@@ -10,6 +10,8 @@ package com.willshex.blogwt.server.api.blog.action;
 import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.ActionHandler;
+import com.willshex.blogwt.server.api.validation.ApiValidator;
+import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsResponse;
 
@@ -26,7 +28,13 @@ public final class GetRelatedPostsActionHandler
 	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (GetRelatedPostsRequest input,
-			GetRelatedPostsResponse output) throws Exception {}
+			GetRelatedPostsResponse output) throws Exception {
+		ApiValidator.notNull(input, GetRelatedPostsRequest.class, "input");
+		ApiValidator.accessCode(input.accessCode, "input.accessCode");
+
+		output.session = input.session = SessionValidator
+				.lookupCheckAndExtend(input.session, "input.session");
+	}
 
 	/* (non-Javadoc)
 	 * 
