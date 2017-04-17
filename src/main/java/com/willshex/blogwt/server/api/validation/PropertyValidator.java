@@ -14,14 +14,22 @@ import com.willshex.gson.web.service.server.InputValidationException;
 import com.willshex.gson.web.service.server.ServiceException;
 import com.willshex.utility.StringUtils;
 
-public class PropertyValidator {
-	private static final String type = Property.class.getSimpleName();
+public class PropertyValidator extends ApiValidator {
+	private static final String TYPE = Property.class.getSimpleName();
+	private static final Processor<Property> VALIDATE = new Processor<Property>() {
+
+		@Override
+		public Property process (Property item, String name)
+				throws InputValidationException {
+			return validate(item, name);
+		}
+	};
 
 	public static List<Property> setup (Collection<Property> properties,
 			String name) throws ServiceException {
 		if (properties == null)
 			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + "[]: " + name);
+					ApiError.InvalidValueNull, TYPE + "[]: " + name);
 
 		HashSet<String> notFound = new HashSet<String>();
 
@@ -56,17 +64,14 @@ public class PropertyValidator {
 
 	public static <T extends Iterable<Property>> T validateAll (T properties,
 			String name) throws InputValidationException {
-		for (Property property : properties) {
-			validate(property, name + "[n]");
-		}
-		return properties;
+		return processAll(true, properties, VALIDATE, TYPE, name);
 	}
 
 	public static Property validate (Property property, String name)
 			throws InputValidationException {
 		if (property == null)
 			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+					ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		return property;
 	}
@@ -75,7 +80,7 @@ public class PropertyValidator {
 			throws InputValidationException {
 		if (property == null)
 			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+					ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		boolean isIdLookup = false, isNameLookup = false;
 		if (property.id != null) {
@@ -86,7 +91,7 @@ public class PropertyValidator {
 
 		if (!(isIdLookup || isNameLookup))
 			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNoLookup, type + ": " + name);
+					ApiError.DataTypeNoLookup, TYPE + ": " + name);
 
 		Property lookupProperty;
 
@@ -100,7 +105,7 @@ public class PropertyValidator {
 
 		if (lookupProperty == null)
 			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNotFound, type + ": " + name);
+					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
 		return lookupProperty;
 	}

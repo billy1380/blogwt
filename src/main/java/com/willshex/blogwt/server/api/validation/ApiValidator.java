@@ -124,4 +124,26 @@ public class ApiValidator {
 		throw e;
 	}
 
+	static interface Processor<T> {
+		T process (T item, String name) throws InputValidationException;
+	}
+
+	public static <T extends Iterable<S>, S> T processAll (boolean nullable,
+			T l, Processor<S> p, String type, String name)
+			throws InputValidationException {
+		if (l == null && !nullable)
+			ApiValidator.throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, type + "[]: " + name);
+
+		if (l != null) {
+			int i = 0;
+			for (S s : l) {
+				p.process(s, name + "[" + i + "]");
+				i++;
+			}
+		}
+
+		return l;
+	}
+
 }

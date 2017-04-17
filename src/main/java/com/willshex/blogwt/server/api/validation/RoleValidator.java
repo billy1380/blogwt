@@ -7,9 +7,6 @@
 //
 package com.willshex.blogwt.server.api.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.validation.ApiError;
@@ -19,14 +16,21 @@ import com.willshex.gson.web.service.server.InputValidationException;
  * @author William Shakour (billy1380)
  *
  */
-public class RoleValidator {
-	private static final String type = Role.class.getSimpleName();
+public class RoleValidator extends ApiValidator {
+	private static final String TYPE = Role.class.getSimpleName();
+	private static final Processor<Role> LOOKUP = new Processor<Role>() {
+
+		@Override
+		public Role process (Role item, String name)
+				throws InputValidationException {
+			return lookup(item, name);
+		}
+	};
 
 	public static Role lookup (Role role, String name)
 			throws InputValidationException {
-		if (role == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (role == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		boolean isIdLookup = false, isCodeLookup = false, isNameLookup = false;
 
@@ -37,8 +41,8 @@ public class RoleValidator {
 		}
 
 		if (!(isIdLookup || isNameLookup || isCodeLookup))
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNoLookup, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNoLookup, TYPE + ": " + name);
 
 		Role lookupRole = null;
 		if (isIdLookup) {
@@ -48,8 +52,8 @@ public class RoleValidator {
 		}
 
 		if (lookupRole == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNotFound, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
 		return lookupRole;
 	}
@@ -59,18 +63,8 @@ public class RoleValidator {
 	 * @return 
 	 * @throws InputValidationException 
 	 */
-	public static List<Role> lookupAll (List<Role> roles, String name)
+	public static <T extends Iterable<Role>> T lookupAll (T roles, String name)
 			throws InputValidationException {
-		if (roles == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + "[]: " + name);
-
-		List<Role> lookupRoles = new ArrayList<Role>();
-
-		for (Role role : roles) {
-			lookupRoles.add(lookup(role, name + "[n]"));
-		}
-
-		return lookupRoles;
+		return processAll(false, roles, LOOKUP, TYPE, name);
 	}
 }

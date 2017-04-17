@@ -20,23 +20,22 @@ import com.willshex.gson.web.service.server.InputValidationException;
  * @author William Shakour (billy1380)
  *
  */
-public class FieldValidator {
-	private static final String type = Field.class.getSimpleName();
+public class FieldValidator extends ApiValidator {
+	private static final String TYPE = Field.class.getSimpleName();
 
 	public static Field validate (Field field, String name)
 			throws InputValidationException {
-		if (field == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (field == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		if (field.type == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name + ".type");
+			throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, TYPE + ": " + name + ".type");
 
 		if (field.type != FieldTypeType.FieldTypeTypeCaptcha
 				&& field.name == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name + ".name");
+			throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, TYPE + ": " + name + ".name");
 
 		switch (field.type) {
 		case FieldTypeTypeCaptcha:
@@ -44,35 +43,35 @@ public class FieldValidator {
 					.getNamedProperty(PropertyHelper.RECAPTCHA_API_KEY);
 
 			if (!RecaptchaHelper.isHuman(field.value, reCaptchaKey.value))
-				ApiValidator.throwServiceError(InputValidationException.class,
-						ApiError.InvalidValueNull, type + ": " + name);
+				throwServiceError(InputValidationException.class,
+						ApiError.InvalidValueNull, TYPE + ": " + name);
 			break;
 		case FieldTypeTypeText:
 			if (field.value == null)
-				ApiValidator.throwServiceError(InputValidationException.class,
-						ApiError.InvalidValueNull, type + ": " + name + "["
-								+ field.name + "].value");
+				throwServiceError(InputValidationException.class,
+						ApiError.InvalidValueNull,
+						TYPE + ": " + name + "[" + field.name + "].value");
 
-			ApiValidator.validateLength(field.value, 1, 512, type + ": " + name + "["
-					+ field.name + "].value");
+			validateLength(field.value, 1, 512,
+					TYPE + ": " + name + "[" + field.name + "].value");
 			break;
 		case FieldTypeTypeLongText:
 			if (field.value == null)
-				ApiValidator.throwServiceError(InputValidationException.class,
-						ApiError.InvalidValueNull, type + ": " + name + "["
-								+ field.name + "].value");
+				throwServiceError(InputValidationException.class,
+						ApiError.InvalidValueNull,
+						TYPE + ": " + name + "[" + field.name + "].value");
 
-			ApiValidator.validateLength(field.value, 1, 2048, type + ": "
-					+ name + "[" + field.name + "].value");
+			validateLength(field.value, 1, 2048,
+					TYPE + ": " + name + "[" + field.name + "].value");
 			break;
 		case FieldTypeTypeSingleOption:
 			if (field.value == null)
-				ApiValidator.throwServiceError(InputValidationException.class,
-						ApiError.InvalidValueNull, type + ": " + name + "["
-								+ field.name + "].value");
+				throwServiceError(InputValidationException.class,
+						ApiError.InvalidValueNull,
+						TYPE + ": " + name + "[" + field.name + "].value");
 
-			ApiValidator.validateLength(field.value, 1, 512, type + ": " + name
-					+ "[" + field.name + "].value");
+			validateLength(field.value, 1, 512,
+					TYPE + ": " + name + "[" + field.name + "].value");
 			break;
 		}
 

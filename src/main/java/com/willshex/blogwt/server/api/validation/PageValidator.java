@@ -20,14 +20,13 @@ import com.willshex.gson.web.service.server.InputValidationException;
  * @author William Shakour (billy1380)
  *
  */
-public class PageValidator {
-	private static final String type = Page.class.getSimpleName();
+public class PageValidator extends ApiValidator {
+	private static final String TYPE = Page.class.getSimpleName();
 
 	public static Page validate (Page page, String name)
 			throws InputValidationException {
-		if (page == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (page == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		List<Post> posts = new ArrayList<Post>();
 		for (Post post : page.posts) {
@@ -47,9 +46,8 @@ public class PageValidator {
 
 	public static Page lookup (Page page, String name)
 			throws InputValidationException {
-		if (page == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (page == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		boolean isIdLookup = false, isSlugLookup = false;
 		if (page.id != null) {
@@ -59,8 +57,8 @@ public class PageValidator {
 		}
 
 		if (!(isIdLookup || isSlugLookup))
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNoLookup, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNoLookup, TYPE + ": " + name);
 
 		Page lookupPage;
 
@@ -72,8 +70,8 @@ public class PageValidator {
 		}
 
 		if (lookupPage == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNotFound, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
 		return lookupPage;
 	}

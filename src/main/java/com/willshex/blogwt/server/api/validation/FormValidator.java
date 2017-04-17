@@ -16,30 +16,28 @@ import com.willshex.gson.web.service.server.InputValidationException;
  * @author William Shakour (billy1380)
  *
  */
-public class FormValidator {
-	private static final String type = Form.class.getSimpleName();
+public class FormValidator extends ApiValidator {
+	private static final String TYPE = Form.class.getSimpleName();
 
 	public static Form validate (Form form, String name)
 			throws InputValidationException {
-		if (form == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (form == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		if (form.fields == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name + ".fields");
+			throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, TYPE + ": " + name + ".fields");
 
 		if (form.fields.size() == 0)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.EmptyForm, type + ": " + name + ".fields");
+			throwServiceError(InputValidationException.class,
+					ApiError.EmptyForm, TYPE + ": " + name + ".fields");
 
 		for (Field field : form.fields) {
 			FieldValidator.validate(field, name + ".field[n]");
 		}
 
 		if (form.name != null) {
-			ApiValidator.validateLength(form.name, 1, 512, type + ": " + name
-					+ ".name");
+			validateLength(form.name, 1, 512, TYPE + ": " + name + ".name");
 		}
 
 		return form;

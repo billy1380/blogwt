@@ -21,8 +21,8 @@ import com.willshex.gson.web.service.server.ServiceException;
  * @author William Shakour (billy1380)
  *
  */
-public class SessionValidator {
-	private static final String type = Session.class.getSimpleName();
+public class SessionValidator extends ApiValidator {
+	private static final String TYPE = Session.class.getSimpleName();
 
 	public static Session lookupCheckAndExtend (Session session, String name)
 			throws ServiceException {
@@ -30,8 +30,8 @@ public class SessionValidator {
 
 		Date now = new Date();
 		if (lookupSession.expires.getTime() < now.getTime())
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNotFound, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
 		lookupSession.user = UserServiceProvider.provide()
 				.getUser(Long.valueOf(lookupSession.userKey.getId()));
@@ -56,9 +56,8 @@ public class SessionValidator {
 	 */
 	public static Session lookup (Session session, String name)
 			throws InputValidationException {
-		if (session == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (session == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		boolean isIdLookup = false;
 
@@ -66,9 +65,8 @@ public class SessionValidator {
 			isIdLookup = true;
 		}
 
-		if (!isIdLookup)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNoLookup, type + ": " + name);
+		if (!isIdLookup) throwServiceError(InputValidationException.class,
+				ApiError.DataTypeNoLookup, TYPE + ": " + name);
 
 		Session lookupSession = null;
 		if (isIdLookup) {
@@ -77,8 +75,8 @@ public class SessionValidator {
 		}
 
 		if (lookupSession == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNotFound, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
 		return lookupSession;
 	}

@@ -7,9 +7,6 @@
 //
 package com.willshex.blogwt.server.api.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.validation.ApiError;
@@ -19,14 +16,22 @@ import com.willshex.gson.web.service.server.InputValidationException;
  * @author William Shakour (billy1380)
  *
  */
-public class PermissionValidator {
-	private static final String type = Permission.class.getSimpleName();
+public class PermissionValidator extends ApiValidator {
+	private static final String TYPE = Permission.class.getSimpleName();
+	private static final Processor<Permission> LOOKUP = new Processor<Permission>() {
+
+		@Override
+		public Permission process (Permission item, String name)
+				throws InputValidationException {
+			return lookup(item, name);
+		}
+	};
 
 	public static Permission lookup (Permission permission, String name)
 			throws InputValidationException {
 		if (permission == null)
 			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+					ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		boolean isIdLookup = false, isCodeLookup = false, isNameLookup = false;
 
@@ -38,7 +43,7 @@ public class PermissionValidator {
 
 		if (!(isIdLookup || isNameLookup || isCodeLookup))
 			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNoLookup, type + ": " + name);
+					ApiError.DataTypeNoLookup, TYPE + ": " + name);
 
 		Permission lookupPermission = null;
 		if (isIdLookup) {
@@ -51,7 +56,7 @@ public class PermissionValidator {
 
 		if (lookupPermission == null)
 			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNotFound, type + ": " + name);
+					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
 		return lookupPermission;
 	}
@@ -61,18 +66,8 @@ public class PermissionValidator {
 	 * @return 
 	 * @throws InputValidationException 
 	 */
-	public static List<Permission> lookupAll (List<Permission> permissions,
+	public static <T extends Iterable<Permission>> T lookupAll (T permissions,
 			String name) throws InputValidationException {
-		if (permissions == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + "[]: " + name);
-
-		List<Permission> lookupPermissions = new ArrayList<Permission>();
-
-		for (Permission permission : permissions) {
-			lookupPermissions.add(lookup(permission, name + "[n]"));
-		}
-
-		return lookupPermissions;
+		return processAll(false, permissions, LOOKUP, TYPE, name);
 	}
 }

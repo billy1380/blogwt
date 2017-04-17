@@ -7,9 +7,6 @@
 //
 package com.willshex.blogwt.server.api.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.validation.ApiError;
@@ -19,24 +16,29 @@ import com.willshex.gson.web.service.server.InputValidationException;
  * @author William Shakour (billy1380)
  *
  */
-public class ResourceValidator {
+public class ResourceValidator extends ApiValidator {
+	private static final String TYPE = Resource.class.getSimpleName();
+	private static final Processor<Resource> LOOKUP = new Processor<Resource>() {
 
-	private static final String type = Resource.class.getSimpleName();
+		@Override
+		public Resource process (Resource item, String name)
+				throws InputValidationException {
+			return lookup(item, name);
+		}
+	};
 
 	public static Resource validate (Resource resource, String name)
 			throws InputValidationException {
-		if (resource == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (resource == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		return resource;
 	}
 
 	public static Resource lookup (Resource resource, String name)
 			throws InputValidationException {
-		if (resource == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (resource == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		boolean isIdLookup = false;
 
@@ -44,9 +46,8 @@ public class ResourceValidator {
 			isIdLookup = true;
 		}
 
-		if (!isIdLookup)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNoLookup, type + ": " + name);
+		if (!isIdLookup) throwServiceError(InputValidationException.class,
+				ApiError.DataTypeNoLookup, TYPE + ": " + name);
 
 		Resource lookupResource = null;
 		if (isIdLookup) {
@@ -55,8 +56,8 @@ public class ResourceValidator {
 		}
 
 		if (lookupResource == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNotFound, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
 		return lookupResource;
 	}
@@ -66,19 +67,9 @@ public class ResourceValidator {
 	 * @return 
 	 * @throws InputValidationException 
 	 */
-	public static List<Resource> lookupAll (List<Resource> resources,
+	public static <T extends Iterable<Resource>> T lookupAll (T resources,
 			String name) throws InputValidationException {
-		if (resources == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + "[]: " + name);
-
-		List<Resource> lookupResources = new ArrayList<Resource>();
-
-		for (Resource resource : resources) {
-			lookupResources.add(lookup(resource, name + "[n]"));
-		}
-
-		return lookupResources;
+		return processAll(false, resources, LOOKUP, TYPE, name);
 	}
 
 }

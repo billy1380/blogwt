@@ -18,7 +18,25 @@ import com.willshex.gson.web.service.server.InputValidationException;
  */
 public class ArchiveEntryValidator extends ApiValidator {
 
-	private static final String type = ApiValidator.class.getSimpleName();
+	private static final String TYPE = ArchiveEntry.class.getSimpleName();
+
+	private static final Processor<ArchiveEntry> VALIDATE = new Processor<ArchiveEntry>() {
+
+		@Override
+		public ArchiveEntry process (ArchiveEntry item, String name)
+				throws InputValidationException {
+			return validate(item, name);
+		}
+	};
+
+	private static final Processor<ArchiveEntry> LOOKUP = new Processor<ArchiveEntry>() {
+
+		@Override
+		public ArchiveEntry process (ArchiveEntry item, String name)
+				throws InputValidationException {
+			return lookup(item, name);
+		}
+	};
 
 	public static ArchiveEntry validate (ArchiveEntry archiveEntry, String name)
 			throws InputValidationException {
@@ -26,15 +44,16 @@ public class ArchiveEntryValidator extends ApiValidator {
 	}
 
 	public static <T extends Iterable<ArchiveEntry>> T validateAll (
-			T archiveEntries, String name) throws InputValidationException {
-		return archiveEntries;
+			T archiveEntries, final String name)
+			throws InputValidationException {
+		return processAll(false, archiveEntries, VALIDATE, TYPE, name);
 	}
 
 	public static ArchiveEntry lookup (ArchiveEntry archiveEntry, String name)
 			throws InputValidationException {
 		if (archiveEntry == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		boolean isIdLookup = false, isYearMonthLookup = false;
 
@@ -45,23 +64,29 @@ public class ArchiveEntryValidator extends ApiValidator {
 		}
 
 		if (!(isIdLookup || isYearMonthLookup))
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNoLookup, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNoLookup, TYPE + ": " + name);
 
 		ArchiveEntry lookupArchiveEntry = null;
 		if (isIdLookup) {
 			lookupArchiveEntry = ArchiveEntryServiceProvider.provide()
 					.getArchiveEntry(archiveEntry.id);
 		} else if (isYearMonthLookup) {
-			lookupArchiveEntry = ArchiveEntryServiceProvider
-					.provide()
-					.getMonthArchiveEntry(archiveEntry.month, archiveEntry.year);
+			lookupArchiveEntry = ArchiveEntryServiceProvider.provide()
+					.getMonthArchiveEntry(archiveEntry.month,
+							archiveEntry.year);
 		}
 
 		if (lookupArchiveEntry == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNotFound, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
 		return lookupArchiveEntry;
+	}
+
+	public static <T extends Iterable<ArchiveEntry>> T lookupAll (
+			T archiveEntries, final String name)
+			throws InputValidationException {
+		return processAll(false, archiveEntries, LOOKUP, TYPE, name);
 	}
 }

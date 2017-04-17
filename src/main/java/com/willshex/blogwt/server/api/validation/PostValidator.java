@@ -7,9 +7,6 @@
 //
 package com.willshex.blogwt.server.api.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.Session;
@@ -20,23 +17,29 @@ import com.willshex.gson.web.service.server.InputValidationException;
  * @author William Shakour (billy1380)
  *
  */
-public class PostValidator {
-	private static final String type = Post.class.getSimpleName();
+public class PostValidator extends ApiValidator {
+	private static final String TYPE = Post.class.getSimpleName();
+	private static final Processor<Post> LOOKUP = new Processor<Post>() {
+
+		@Override
+		public Post process (Post item, String name)
+				throws InputValidationException {
+			return lookup(item, name);
+		}
+	};
 
 	public static Post validate (Post post, String name)
 			throws InputValidationException {
-		if (post == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (post == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		return post;
 	}
 
 	public static Post lookup (Post post, String name)
 			throws InputValidationException {
-		if (post == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (post == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		boolean isIdLookup = false, isSlugLookup = false;
 		if (post.id != null) {
@@ -46,8 +49,8 @@ public class PostValidator {
 		}
 
 		if (!(isIdLookup || isSlugLookup))
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNoLookup, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNoLookup, TYPE + ": " + name);
 
 		Post lookupPost;
 
@@ -58,8 +61,8 @@ public class PostValidator {
 		}
 
 		if (lookupPost == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNotFound, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
 		return lookupPost;
 	}
@@ -69,26 +72,16 @@ public class PostValidator {
 	 * @return 
 	 * @throws InputValidationException 
 	 */
-	public static List<Post> lookupAll (List<Post> posts, String name)
+	public static <T extends Iterable<Post>> T lookupAll (T posts, String name)
 			throws InputValidationException {
-		if (posts == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + "[]: " + name);
-
-		List<Post> lookupPosts = new ArrayList<Post>();
-
-		for (Post post : posts) {
-			lookupPosts.add(lookup(post, name + "[n]"));
-		}
-
-		return lookupPosts;
+		return processAll(false, posts, LOOKUP, TYPE, name);
 	}
 
 	public static Post viewable (Post post, Session session, String name)
 			throws InputValidationException {
 		if (post.published == null && session == null)
 			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.UnpublishedPost, type + ": " + name);
+					ApiError.UnpublishedPost, TYPE + ": " + name);
 
 		return post;
 	}

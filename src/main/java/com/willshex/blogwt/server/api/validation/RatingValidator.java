@@ -7,9 +7,6 @@
 //
 package com.willshex.blogwt.server.api.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.willshex.blogwt.server.service.rating.RatingServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Rating;
 import com.willshex.blogwt.shared.api.validation.ApiError;
@@ -19,30 +16,34 @@ import com.willshex.gson.web.service.server.InputValidationException;
  * @author William Shakour (billy1380)
  *
  */
-public class RatingValidator {
-	private static final String type = Rating.class.getSimpleName();
+public class RatingValidator extends ApiValidator {
+	private static final String TYPE = Rating.class.getSimpleName();
+	private static final Processor<Rating> LOOKUP = new Processor<Rating>() {
+
+		@Override
+		public Rating process (Rating item, String name)
+				throws InputValidationException {
+			return lookup(item, name);
+		}
+	};
 
 	public static Rating validate (Rating rating, String name)
 			throws InputValidationException {
-		if (rating == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (rating == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		rating.by = UserValidator.lookup(rating.by, name + ".by");
 
-		rating.value = ApiValidator.notNull(rating.value, Integer.class,
-				name + ".value");
+		rating.value = notNull(rating.value, Integer.class, name + ".value");
 
-		ApiValidator.notNull(rating.subjectId, Long.class, name + ".subjectId");
+		notNull(rating.subjectId, Long.class, name + ".subjectId");
 
-		ApiValidator.notNull(rating.subjectType, String.class,
-				name + ".subjectType");
+		notNull(rating.subjectType, String.class, name + ".subjectType");
 
-		ApiValidator.validateLength(rating.subjectType, 1, 256,
-				name + ".subjectType");
+		validateLength(rating.subjectType, 1, 256, name + ".subjectType");
 
 		if (rating.note != null) {
-			ApiValidator.validateLength(rating.note, 1, 100000, name + ".note");
+			validateLength(rating.note, 1, 100000, name + ".note");
 		}
 
 		return rating;
@@ -50,9 +51,8 @@ public class RatingValidator {
 
 	public static Rating lookup (Rating rating, String name)
 			throws InputValidationException {
-		if (rating == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + ": " + name);
+		if (rating == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		boolean isIdLookup = false;
 
@@ -60,9 +60,8 @@ public class RatingValidator {
 			isIdLookup = true;
 		}
 
-		if (!isIdLookup)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNoLookup, type + ": " + name);
+		if (!isIdLookup) throwServiceError(InputValidationException.class,
+				ApiError.DataTypeNoLookup, TYPE + ": " + name);
 
 		Rating lookupRating = null;
 		if (isIdLookup) {
@@ -70,8 +69,8 @@ public class RatingValidator {
 		}
 
 		if (lookupRating == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNotFound, type + ": " + name);
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
 		return lookupRating;
 	}
@@ -81,18 +80,8 @@ public class RatingValidator {
 	 * @return 
 	 * @throws InputValidationException 
 	 */
-	public static List<Rating> lookupAll (List<Rating> ratings, String name)
-			throws InputValidationException {
-		if (ratings == null)
-			ApiValidator.throwServiceError(InputValidationException.class,
-					ApiError.InvalidValueNull, type + "[]: " + name);
-
-		List<Rating> lookupRatings = new ArrayList<Rating>();
-
-		for (Rating rating : ratings) {
-			lookupRatings.add(lookup(rating, name + "[n]"));
-		}
-
-		return lookupRatings;
+	public static <T extends Iterable<Rating>> T lookupAll (T ratings,
+			String name) throws InputValidationException {
+		return processAll(false, ratings, LOOKUP, TYPE, name);
 	}
 }

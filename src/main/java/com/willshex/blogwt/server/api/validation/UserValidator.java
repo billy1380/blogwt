@@ -31,22 +31,31 @@ import com.willshex.gson.web.service.server.InputValidationException;
  *
  */
 public class UserValidator extends ApiValidator {
-	private static final String type = User.class.getSimpleName();
+	private static final String TYPE = User.class.getSimpleName();
+
+	private static final Processor<User> VALIDATE = new Processor<User>() {
+
+		@Override
+		public User process (User item, String name)
+				throws InputValidationException {
+			return validate(item, name);
+		}
+	};
 
 	public static User validate (User user, String name)
 			throws InputValidationException {
 		boolean foundUsername = false, foundEmail = false;
 
 		if (user.username != null) {
-			ApiValidator.validateLength(user.username, 1, 512,
-					type + ": " + name + "[" + user.username + "].username");
+			validateLength(user.username, 1, 512,
+					TYPE + ": " + name + "[" + user.username + "].username");
 
 			foundUsername = true;
 		}
 
 		if (user.email != null) {
-			ApiValidator.validateLength(user.email, 1, 512,
-					type + ": " + name + "[" + user.email + "].email");
+			validateLength(user.email, 1, 512,
+					TYPE + ": " + name + "[" + user.email + "].email");
 			foundEmail = true;
 		}
 
@@ -57,7 +66,7 @@ public class UserValidator extends ApiValidator {
 			if (existingUsernameUser != null
 					&& (user.id == null || (user.id != null
 							&& !user.id.equals(existingUsernameUser.id))))
-				ApiValidator.throwServiceError(InputValidationException.class,
+				throwServiceError(InputValidationException.class,
 						ApiError.UsernameInUse,
 						"String: " + name + ".username");
 		}
@@ -69,21 +78,21 @@ public class UserValidator extends ApiValidator {
 			if (existingEmailUser != null
 					&& (user.id == null || (user.id != null
 							&& !user.id.equals(existingEmailUser.id))))
-				ApiValidator.throwServiceError(InputValidationException.class,
+				throwServiceError(InputValidationException.class,
 						ApiError.EmailInUse, "String: " + name + ".email");
 		}
 
 		if (!(foundUsername || foundEmail))
 			throwServiceError(InputValidationException.class,
 					ApiError.NotEnoughData,
-					type + ": no username or email in " + name);
+					TYPE + ": no username or email in " + name);
 
 		return user;
 	}
 
 	public static <T extends Iterable<User>> T validateAll (T users,
 			String name) throws InputValidationException {
-		return users;
+		return processAll(false, users, VALIDATE, TYPE, name);
 	}
 
 	public static boolean isAdmin (User user) {
@@ -127,7 +136,7 @@ public class UserValidator extends ApiValidator {
 	public static User lookup (User user, String name)
 			throws InputValidationException {
 		if (user == null) throwServiceError(InputValidationException.class,
-				ApiError.InvalidValueNull, type + ": " + name);
+				ApiError.InvalidValueNull, TYPE + ": " + name);
 
 		boolean isIdLookup = false, isNameLookup = false;
 
@@ -139,7 +148,7 @@ public class UserValidator extends ApiValidator {
 
 		if (!(isIdLookup || isNameLookup))
 			throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNoLookup, type + ": " + name);
+					ApiError.DataTypeNoLookup, TYPE + ": " + name);
 
 		User lookupUser = null;
 		if (isIdLookup) {
@@ -151,14 +160,14 @@ public class UserValidator extends ApiValidator {
 
 		if (lookupUser == null)
 			throwServiceError(InputValidationException.class,
-					ApiError.DataTypeNotFound, type + ": " + name);
+					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
 		return lookupUser;
 	}
 
 	public static void suspended (User user) throws AuthorisationException {
 		if (UserHelper.isSuspended(user)) throw new AuthorisationException(
-				type + ": [" + UserHelper.identifier(user) + "] suspended "
+				TYPE + ": [" + UserHelper.identifier(user) + "] suspended "
 						+ DateTimeHelper.forDays(user.suspendUntil));
 	}
 
