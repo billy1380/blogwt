@@ -20,6 +20,10 @@ import com.willshex.gson.web.service.shared.Request;
  */
 public class ApiValidator {
 
+	public static interface Processor<T> {
+		T process (T item, String name) throws InputValidationException;
+	}
+
 	public static final String WEB_ACCESS_CODE = "2bfe5f0e-9138-401c-8619-9a66f6367c9a";
 	public static final String DEV_ACCESS_CODE = "d8d20842-a8f7-11e5-bf72-cf5f3bd13298";
 	public static final String STATIC_ACCESS_CODE = "ded02740-5e12-11e5-b0c2-7054d251af02";
@@ -122,10 +126,6 @@ public class ApiValidator {
 		}
 
 		throw e;
-	}
-
-	static interface Processor<T> {
-		T process (T item, String name) throws InputValidationException;
 	}
 
 	public static <T extends Iterable<S>, S> T processAll (boolean nullable,
