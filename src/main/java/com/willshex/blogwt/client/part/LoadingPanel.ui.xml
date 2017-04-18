@@ -2,9 +2,21 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:import field="com.willshex.blogwt.client.Resources.CELL_TABLE_RES" />
 	<ui:style gss="true">
-	
+	.progress {
+		width: 250px;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		display: inline-block;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="text-center">
-		<g:Image visible="true" resource="{CELL_TABLE_RES.cellTableLoading}" />
+		<div class="{style.progress}">
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped  active" aria-valuenow="100"
+					aria-valuemin="0" aria-valuemax="100" style="width:100%">
+					<span class="sr-only">Loading...</span>
+				</div>
+			</div>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

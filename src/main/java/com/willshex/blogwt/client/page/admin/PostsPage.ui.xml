@@ -3,7 +3,7 @@
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:import field="com.willshex.blogwt.shared.page.PageType.EditPostPageType" />
 	<ui:style>
-
+	
 	</ui:style>
 	<g:HTMLPanel styleName="container">
 		<h2>Posts</h2>
@@ -25,6 +25,8 @@
 
 		<c:CellTable ui:field="tblPosts" styleName="col-sm-12 table table-striped" />
 		<c:SimplePager ui:field="pgrPosts" location="LEFT" />
+
+		<p:LoadingPanel ui:field="pnlLoading" />
 
 		<p:NoneFoundPanel subject="posts" ui:field="pnlNoPosts" />
 	</g:HTMLPanel>

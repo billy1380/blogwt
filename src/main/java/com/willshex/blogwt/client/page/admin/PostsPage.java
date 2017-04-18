@@ -33,6 +33,7 @@ import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.admin.PagesPage.PagesPageTemplates;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
+import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostResponse;
@@ -60,8 +61,10 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 	@UiField SimplePager pgrPosts;
 	@UiField NoneFoundPanel pnlNoPosts;
 	@UiField Button btnRefresh;
-	private SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
-	private ButtonCell actionButtonPrototype = new PrettyButtonCell();
+	@UiField LoadingPanel pnlLoading;
+	
+	private static final SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
+	private static final ButtonCell actionButtonPrototype = new PrettyButtonCell();
 
 	public PostsPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -69,6 +72,7 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 		createColumns();
 
 		tblPosts.setEmptyTableWidget(pnlNoPosts);
+		tblPosts.setLoadingIndicator(pnlLoading);
 	}
 
 	private void createColumns () {

@@ -32,6 +32,7 @@ import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
+import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
@@ -60,8 +61,10 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 	@UiField SimplePager pgrPages;
 	@UiField NoneFoundPanel pnlNoPages;
 	@UiField Button btnRefresh;
-	private SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
-	private ButtonCell actionButtonPrototype = new PrettyButtonCell();
+	@UiField LoadingPanel pnlLoading;
+
+	private static final SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
+	private static final ButtonCell actionButtonPrototype = new PrettyButtonCell();
 
 	public interface PagesPageTemplates extends SafeHtmlTemplates {
 		public PagesPageTemplates INSTANCE = GWT
@@ -98,6 +101,7 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 		createColumns();
 
 		tblPages.setEmptyTableWidget(pnlNoPages);
+		tblPages.setLoadingIndicator(pnlLoading);
 		PageController.get().addDataDisplay(tblPages);
 		pgrPages.setDisplay(tblPages);
 	}

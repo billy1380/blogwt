@@ -23,6 +23,7 @@ import com.willshex.blogwt.client.cell.blog.ResourcePreviewCell;
 import com.willshex.blogwt.client.controller.ResourceController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.BootstrapGwtCellList;
+import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceResponse;
@@ -50,12 +51,14 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 	@UiField SimplePager pgrTop;
 	@UiField SimplePager pgrBottom;
 	@UiField NoneFoundPanel pnlNoResources;
+	@UiField LoadingPanel pnlLoading;
 
 	public ResourcesPage () {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		clResources.setPageSize(PagerHelper.DEFAULT_COUNT.intValue());
 		clResources.setEmptyListWidget(pnlNoResources);
+		clResources.setLoadingIndicator(pnlLoading);
 		ResourceController.get().addDataDisplay(clResources);
 		pgrTop.setDisplay(clResources);
 		pgrBottom.setDisplay(clResources);

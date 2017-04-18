@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.controller.RoleController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
+import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.helper.PagerHelper;
@@ -37,6 +38,7 @@ public class RolesPage extends Page {
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField SimplePager pgrRoles;
 	@UiField NoneFoundPanel pnlNoRoles;
+	@UiField LoadingPanel pnlLoading;
 
 	public RolesPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -44,6 +46,7 @@ public class RolesPage extends Page {
 		createColumns();
 
 		tblRoles.setEmptyTableWidget(pnlNoRoles);
+		tblRoles.setLoadingIndicator(pnlLoading);
 		RoleController.get().addDataDisplay(tblRoles);
 		pgrRoles.setDisplay(tblRoles);
 	}

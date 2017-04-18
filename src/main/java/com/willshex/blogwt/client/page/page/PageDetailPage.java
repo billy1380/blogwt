@@ -61,12 +61,13 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 	@UiField Element elToolbar;
 
 	@UiField InlineHyperlink lnkEditPage;
-	@UiField Button btnDeletePage;	
+	@UiField Button btnDeletePage;
 
 	private Page page;
 
 	public PageDetailPage () {
 		initWidget(uiBinder.createAndBindUi(this));
+		pnlLoading.addStyleName("container");
 	}
 
 	@UiHandler("btnDeletePage")

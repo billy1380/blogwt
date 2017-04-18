@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.controller.PermissionController;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
+import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.helper.PagerHelper;
@@ -37,6 +38,7 @@ public class PermissionsPage extends Page {
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField SimplePager pgrPermissions;
 	@UiField NoneFoundPanel pnlNoPermissions;
+	@UiField LoadingPanel pnlLoading;
 
 	public PermissionsPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -44,6 +46,7 @@ public class PermissionsPage extends Page {
 		createColumns();
 
 		tblPermissions.setEmptyTableWidget(pnlNoPermissions);
+		tblPermissions.setLoadingIndicator(pnlLoading);
 		PermissionController.get().addDataDisplay(tblPermissions);
 		pgrPermissions.setDisplay(tblPermissions);
 	}

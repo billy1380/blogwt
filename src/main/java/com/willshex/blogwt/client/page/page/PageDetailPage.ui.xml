@@ -25,7 +25,7 @@
 			</div>
 		</div>
 
-		<p:LoadingPanel styleName="text-center" ui:field="pnlLoading" />
+		<p:LoadingPanel ui:field="pnlLoading" />
 
 		<g:HTMLPanel ui:field="pnlContent" />
 

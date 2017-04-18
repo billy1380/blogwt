@@ -26,6 +26,8 @@
 		<c:CellTable ui:field="tblPages" styleName="col-sm-12 table table-striped" />
 		<c:SimplePager ui:field="pgrPages" location="LEFT" />
 
+		<p:LoadingPanel ui:field="pnlLoading" />
+
 		<p:NoneFoundPanel subject="pages" ui:field="pnlNoPages" />
 	</g:HTMLPanel>
 </ui:UiBinder> 
