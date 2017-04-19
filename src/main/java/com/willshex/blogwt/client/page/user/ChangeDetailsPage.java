@@ -80,7 +80,7 @@ public class ChangeDetailsPage extends Page implements
 		@Template("{0} <a href=\"{1}\"><span class=\"glyphicon glyphicon-user\"></span></a>")
 		SafeHtml rolesAndPermissions (String username, String accessHref);
 
-		@Template("{0} <a href=\"{1}\"><span class=\"glyphicon glyphicon-sunglasses\"></span></a>")
+		@Template("{0} <a href=\"{1}\"><span class=\"glyphicon glyphicon-certificate\"></span></a>")
 		SafeHtml adminRolesAndPermissions (String username, String accessHref);
 	}
 
