@@ -8,6 +8,8 @@
 package com.willshex.blogwt.server.api.validation;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.web.service.server.InputValidationException;
@@ -128,6 +130,7 @@ public class ApiValidator {
 		throw e;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T extends Iterable<S>, S> T processAll (boolean nullable,
 			T l, Processor<S> p, String type, String name)
 			throws InputValidationException {
@@ -135,15 +138,18 @@ public class ApiValidator {
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + "[]: " + name);
 
+		List<S> l1 = null;
 		if (l != null) {
 			int i = 0;
+			l1 = new ArrayList<>();
 			for (S s : l) {
-				p.process(s, name + "[" + i + "]");
+				l1.add(p.process(s, name + "[" + i + "]"));
 				i++;
 			}
+
 		}
 
-		return l;
+		return (T) l1;
 	}
 
 }
