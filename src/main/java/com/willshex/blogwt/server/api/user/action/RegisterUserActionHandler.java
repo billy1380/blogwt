@@ -26,7 +26,6 @@ import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Role;
-import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
 import com.willshex.blogwt.shared.api.user.call.RegisterUserRequest;
 import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
@@ -48,7 +47,7 @@ public final class RegisterUserActionHandler
 	@Override
 	protected void handle (RegisterUserRequest input,
 			RegisterUserResponse output) throws Exception {
-		ApiValidator.notNull(input, GetEmailAvatarRequest.class, "input");
+		ApiValidator.notNull(input, RegisterUserRequest.class, "input");
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		if (input.session != null) {
