@@ -27,12 +27,27 @@ public class ServletHelper {
 	 * @return
 	 */
 	public static String constructBaseUrl (HttpServletRequest request) {
-		String scheme = request.getScheme();
-		String serverName = request.getServerName();
-		int serverPort = request.getServerPort();
-		String url = scheme + "://" + serverName + ":" + serverPort;
+		return request.getScheme() + "://" + constructBaseAddress(request);
+	}
 
-		return url;
+	/**
+	 * @param request
+	 * @return
+	 */
+	public static String constructBaseAddress (HttpServletRequest request) {
+		int serverPort = request.getServerPort();
+		String address = request.getServerName();
+
+		if (isPortRequired(request.getScheme(), serverPort)) {
+			address += ":" + serverPort;
+		}
+
+		return address;
+	}
+
+	private static boolean isPortRequired (String scheme, int port) {
+		return (scheme.equalsIgnoreCase("https") && port != 443)
+				|| (scheme.equalsIgnoreCase("http") && port != 80);
 	}
 
 	public static Session session (HttpServletRequest request) {
