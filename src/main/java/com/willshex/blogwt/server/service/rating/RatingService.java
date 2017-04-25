@@ -72,8 +72,10 @@ final class RatingService implements IRatingService, ISortable<RatingSortType> {
 	@Override
 	public List<Rating> getRatings (Integer start, Integer count,
 			RatingSortType sortBy, SortDirectionType sortDirection) {
-		return PersistenceHelper.pagedAndSorted(provide().load().type(Rating.class),
-				start, count, sortBy, this, sortDirection).list();
+		return PersistenceHelper
+				.pagedAndSorted(provide().load().type(Rating.class), start,
+						count, sortBy, this, sortDirection)
+				.list();
 	}
 
 	/* (non-Javadoc)
@@ -88,8 +90,8 @@ final class RatingService implements IRatingService, ISortable<RatingSortType> {
 	public List<Rating> getUserRatings (User user, Integer start, Integer count,
 			RatingSortType sortBy, SortDirectionType sortDirection) {
 		return PersistenceHelper
-				.pagedAndSorted(provide().load().type(Rating.class), start, count,
-						sortBy, this, sortDirection)
+				.pagedAndSorted(provide().load().type(Rating.class), start,
+						count, sortBy, this, sortDirection)
 				.filter(map(RatingSortType.RatingSortTypeBy), Key.create(user))
 				.list();
 	}
@@ -106,10 +108,10 @@ final class RatingService implements IRatingService, ISortable<RatingSortType> {
 			Integer start, Integer count, RatingSortType sortBy,
 			SortDirectionType sortDirection) {
 		return PersistenceHelper
-				.pagedAndSorted(provide().load().type(Rating.class), start, count,
-						sortBy, this, sortDirection)
+				.pagedAndSorted(provide().load().type(Rating.class), start,
+						count, sortBy, this, sortDirection)
 				.filter(map(RatingSortType.RatingSortTypeSubjectId), subjectId)
-				.filter(map(RatingSortType.RatingSortTypeSubjectId),
+				.filter(map(RatingSortType.RatingSortTypeSubjectType),
 						subjectType)
 				.list();
 	}
