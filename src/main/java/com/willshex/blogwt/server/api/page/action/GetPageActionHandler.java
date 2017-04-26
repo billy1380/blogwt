@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.api.page.action;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
+
 import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.ActionHandler;
@@ -63,7 +65,7 @@ public final class GetPageActionHandler
 		}
 
 		output.page.owner = UserHelper.stripSensitive(UserServiceProvider
-				.provide().getUser(Long.valueOf(output.page.ownerKey.getId())));
+				.provide().getUser(keyToId(output.page.ownerKey)));
 	}
 
 	/* (non-Javadoc)

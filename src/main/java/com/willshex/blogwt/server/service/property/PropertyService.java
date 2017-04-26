@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.service.property;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Collection;
@@ -36,7 +37,7 @@ final class PropertyService implements IPropertyService {
 		}
 
 		Key<Property> key = provide().save().entity(property).now();
-		property.id = Long.valueOf(key.getId());
+		property.id = keyToId(key);
 		return property;
 	}
 
@@ -65,15 +66,14 @@ final class PropertyService implements IPropertyService {
 	 * #getNamedProperty(java.lang.String) */
 	@Override
 	public Property getNamedProperty (String name) {
-		return provide().load().type(Property.class).filter("name", name).first()
-				.now();
+		return provide().load().type(Property.class).filter("name", name)
+				.first().now();
 	}
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.property.IPropertyService#addPropertyBatch
-	 * (java.util.Collection) */
+	 * @see com.willshex.blogwt.server.service.property.IPropertyService#
+	 * addPropertyBatch (java.util.Collection) */
 	@Override
 	public void addPropertyBatch (Collection<Property> properties) {
 		for (Property property : properties) {
@@ -87,9 +87,8 @@ final class PropertyService implements IPropertyService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.property.IPropertyService#getProperties
-	 * () */
+	 * @see com.willshex.blogwt.server.service.property.IPropertyService#
+	 * getProperties () */
 	@Override
 	public List<Property> getProperties () {
 		return provide().load().type(Property.class).list();

@@ -8,6 +8,7 @@
 
 package com.willshex.blogwt.server.service.rating;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Date;
@@ -42,7 +43,8 @@ final class RatingService implements IRatingService, ISortable<RatingSortType> {
 		}
 
 		Key<Rating> key = provide().save().entity(rating).now();
-		rating.id = Long.valueOf(key.getId());
+		rating.id = keyToId(key);
+		
 		return rating;
 	}
 

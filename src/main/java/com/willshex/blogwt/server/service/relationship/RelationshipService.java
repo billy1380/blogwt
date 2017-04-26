@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.service.relationship;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Date;
@@ -27,7 +28,8 @@ final class RelationshipService implements IRelationshipService {
 
 	@Override
 	public Relationship getRelationship (Long id) {
-		return provide().load().type(Relationship.class).id(id.longValue()).now();
+		return provide().load().type(Relationship.class).id(id.longValue())
+				.now();
 	}
 
 	@Override
@@ -45,7 +47,7 @@ final class RelationshipService implements IRelationshipService {
 		}
 
 		Key<Relationship> key = provide().save().entity(relationship).now();
-		relationship.id = Long.valueOf(key.getId());
+		relationship.id = keyToId(key);
 		return relationship;
 	}
 

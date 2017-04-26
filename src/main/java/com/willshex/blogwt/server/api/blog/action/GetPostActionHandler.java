@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.api.blog.action;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
+
 import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.ActionHandler;
@@ -54,7 +56,7 @@ public final class GetPostActionHandler
 					"input.post");
 
 			output.post.author = UserServiceProvider.provide()
-					.getUser(Long.valueOf(output.post.authorKey.getId()));
+					.getUser(keyToId(output.post.authorKey));
 			UserHelper.stripSensitive(output.post.author);
 
 			output.post.content = PostServiceProvider.provide()

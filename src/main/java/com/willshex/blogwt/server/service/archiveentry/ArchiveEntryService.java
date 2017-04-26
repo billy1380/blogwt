@@ -8,6 +8,7 @@
 
 package com.willshex.blogwt.server.service.archiveentry;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
@@ -40,8 +41,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
+	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
 	 * #getArchiveEntry(java.lang.Long) */
 	@Override
 	public ArchiveEntry getArchiveEntry (Long id) {
@@ -50,8 +50,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
+	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
 	 * #addArchiveEntry(com.willshex.blogwt.shared.api.datatype.ArchiveEntry) */
 	@Override
 	public ArchiveEntry addArchiveEntry (ArchiveEntry archiveEntry) {
@@ -64,18 +63,17 @@ final class ArchiveEntryService implements IArchiveEntryService {
 			archiveEntry.postKeys.add(Key.create(post));
 		}
 
-		Key<ArchiveEntry> archiveEntryKey = provide().save().entity(archiveEntry)
-				.now();
-		archiveEntry.id = Long.valueOf(archiveEntryKey.getId());
+		Key<ArchiveEntry> key = provide().save().entity(archiveEntry).now();
+		archiveEntry.id = keyToId(key);
 
 		return archiveEntry;
 	}
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
-	 * #updateArchiveEntry(com.willshex.blogwt.shared.api.datatype.ArchiveEntry) */
+	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
+	 * #updateArchiveEntry(com.willshex.blogwt.shared.api.datatype.
+	 * ArchiveEntry) */
 	@Override
 	public ArchiveEntry updateArchiveEntry (ArchiveEntry archiveEntry) {
 		throw new UnsupportedOperationException();
@@ -83,9 +81,9 @@ final class ArchiveEntryService implements IArchiveEntryService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
-	 * #deleteArchiveEntry(com.willshex.blogwt.shared.api.datatype.ArchiveEntry) */
+	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
+	 * #deleteArchiveEntry(com.willshex.blogwt.shared.api.datatype.
+	 * ArchiveEntry) */
 	@Override
 	public void deleteArchiveEntry (ArchiveEntry archiveEntry) {
 		throw new UnsupportedOperationException();
@@ -93,8 +91,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
+	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
 	 * #archivePost(com.willshex.blogwt.shared.api.datatype.Post) */
 	@Override
 	public void archivePost (Post post) {
@@ -118,8 +115,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
+	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
 	 * #getMonthArchiveEntry(java.lang.Integer, java.lang.Integer) */
 	@Override
 	public ArchiveEntry getMonthArchiveEntry (Integer month, Integer year) {
@@ -138,8 +134,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
+	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
 	 * #getArchiveEntries() */
 	@Override
 	public List<ArchiveEntry> getArchiveEntries () {
@@ -168,13 +163,14 @@ final class ArchiveEntryService implements IArchiveEntryService {
 							&& post.published != null) {
 						Calendar c = ensureCalendar();
 						c.setTime(post.published);
-						Integer month = Integer.valueOf(c
-								.get(java.util.Calendar.MONTH));
-						Integer year = Integer.valueOf(c
-								.get(java.util.Calendar.YEAR));
+						Integer month = Integer
+								.valueOf(c.get(java.util.Calendar.MONTH));
+						Integer year = Integer
+								.valueOf(c.get(java.util.Calendar.YEAR));
 
 						String key = year + "/" + month;
-						if ((archiveEntry = archiveEntryLookup.get(key)) == null) {
+						if ((archiveEntry = archiveEntryLookup
+								.get(key)) == null) {
 							archiveEntry = new ArchiveEntry().month(month)
 									.year(year).posts(new ArrayList<Post>());
 							archiveEntryLookup.put(key, archiveEntry);
@@ -193,8 +189,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
+	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
 	 * #addArchiveEntryBatch(java.util.Collection) */
 	@Override
 	public void addArchiveEntryBatch (Collection<ArchiveEntry> archiveEntries) {
@@ -219,8 +214,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
+	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
 	 * #getDateArchiveEntry(java.util.Date) */
 	@Override
 	public ArchiveEntry getDateArchiveEntry (Date date) {
@@ -233,8 +227,8 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	}
 
 	@Override
-	public ArchiveEntry updateArchiveEntryPost (
-			final ArchiveEntry archiveEntry, final Post post) {
+	public ArchiveEntry updateArchiveEntryPost (final ArchiveEntry archiveEntry,
+			final Post post) {
 		ArchiveEntry updated = null;
 
 		if (Boolean.TRUE.equals(post.listed) && post.published != null) {

@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.service.session;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Date;
@@ -23,8 +24,8 @@ final class SessionService implements ISessionService {
 	}
 
 	public Session getSession (Long id) {
-		Session session = provide().load().type(Session.class).id(id.longValue())
-				.now();
+		Session session = provide().load().type(Session.class)
+				.id(id.longValue()).now();
 
 		return session;
 	}
@@ -46,7 +47,7 @@ final class SessionService implements ISessionService {
 		}
 
 		Key<Session> key = provide().save().entity(session).now();
-		session.id = Long.valueOf(key.getId());
+		session.id = keyToId(key);
 
 		return session;
 	}
@@ -93,9 +94,10 @@ final class SessionService implements ISessionService {
 	 * java.lang.Boolean) */
 	@Override
 	public Session createUserSession (User user, Boolean longTerm) {
-		return addSession(new Session().expires(
-				longTerm == null || !longTerm.booleanValue() ? afterMinutes()
-						: afterDays()).user(user));
+		return addSession(new Session()
+				.expires(longTerm == null || !longTerm.booleanValue()
+						? afterMinutes() : afterDays())
+				.user(user));
 	}
 
 	/* (non-Javadoc)
@@ -107,7 +109,8 @@ final class SessionService implements ISessionService {
 		Session session = provide().load().type(Session.class)
 				.filter("userKey", user).first().now();
 
-		if (session != null && session.expires.getTime() < new Date().getTime()) {
+		if (session != null
+				&& session.expires.getTime() < new Date().getTime()) {
 			deleteSession(session);
 			session = null;
 		}
@@ -134,8 +137,8 @@ final class SessionService implements ISessionService {
 
 		updateSession(session);
 
-		UserServiceProvider.provide().updateUserIdLastLoggedIn(
-				Long.valueOf(session.userKey.getId()));
+		UserServiceProvider.provide()
+				.updateUserIdLastLoggedIn(keyToId(session.userKey));
 
 		return session;
 	}

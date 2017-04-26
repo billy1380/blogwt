@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.service.tag;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
@@ -56,8 +57,8 @@ final class TagService implements ITagService {
 			}
 		}
 
-		Key<Tag> tagKey = provide().save().entity(tag).now();
-		tag.id = Long.valueOf(tagKey.getId());
+		Key<Tag> key = provide().save().entity(tag).now();
+		tag.id = keyToId(key);
 
 		return tag;
 	}
@@ -121,8 +122,7 @@ final class TagService implements ITagService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.tag.ITagService#addTagBatch(java.
+	 * @see com.willshex.blogwt.server.service.tag.ITagService#addTagBatch(java.
 	 * util.Collection) */
 	@Override
 	public void addTagBatch (Collection<Tag> tags) {
@@ -154,14 +154,14 @@ final class TagService implements ITagService {
 	 * lang.String) */
 	@Override
 	public Tag getSlugTag (String slug) {
-		return provide().load().type(Tag.class).filter("slug", slug).first().now();
+		return provide().load().type(Tag.class).filter("slug", slug).first()
+				.now();
 	}
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.tag.ITagService#addTagPost(com.willshex
-	 * .blogwt.shared.api.datatype.Tag,
+	 * @see com.willshex.blogwt.server.service.tag.ITagService#addTagPost(com.
+	 * willshex .blogwt.shared.api.datatype.Tag,
 	 * com.willshex.blogwt.shared.api.datatype.Post) */
 	@Override
 	public void addTagPost (final Tag tag, final Post post) {
@@ -196,8 +196,7 @@ final class TagService implements ITagService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.tag.ITagService#removeTagPost(com
+	 * @see com.willshex.blogwt.server.service.tag.ITagService#removeTagPost(com
 	 * .willshex.blogwt.shared.api.datatype.Tag,
 	 * com.willshex.blogwt.shared.api.datatype.Post) */
 	@Override

@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.service.user;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ final class UserService implements IUserService, ISearch<User> {
 		}
 
 		Key<User> key = provide().save().entity(user).now();
-		user.id = Long.valueOf(key.getId());
+		user.id = keyToId(key);
 
 		SearchHelper.queueToIndex(getName(), user.id);
 
@@ -165,8 +166,8 @@ final class UserService implements IUserService, ISearch<User> {
 	 * (java.lang.String, java.lang.String) */
 	@Override
 	public User getLoginUser (String username, String password) {
-		User user = provide().load().type(User.class).filter("username", username)
-				.first().now();
+		User user = provide().load().type(User.class)
+				.filter("username", username).first().now();
 
 		if (!verifyPassword(user, password)) {
 			user = null;
@@ -279,7 +280,7 @@ final class UserService implements IUserService, ISearch<User> {
 					current = new HashSet<Long>();
 
 					for (Key<Permission> key : latest.permissionKeys) {
-						current.add(Long.valueOf(key.getId()));
+						current.add(keyToId(key));
 					}
 				}
 
@@ -345,7 +346,7 @@ final class UserService implements IUserService, ISearch<User> {
 					current = new HashSet<Long>();
 
 					for (Key<Permission> key : latest.permissionKeys) {
-						current.add(Long.valueOf(key.getId()));
+						current.add(keyToId(key));
 					}
 
 					if (permissions != null) {
@@ -366,7 +367,7 @@ final class UserService implements IUserService, ISearch<User> {
 					}
 
 					for (Key<Role> key : latest.roleKeys) {
-						current.add(Long.valueOf(key.getId()));
+						current.add(keyToId(key));
 					}
 
 					if (roles != null) {
@@ -452,8 +453,8 @@ final class UserService implements IUserService, ISearch<User> {
 	 * .lang.String) */
 	@Override
 	public User getEmailUser (String email) {
-		return addAvatar(provide().load().type(User.class).filter("email", email)
-				.first().now());
+		return addAvatar(provide().load().type(User.class)
+				.filter("email", email).first().now());
 	}
 
 	private String getSalt () {

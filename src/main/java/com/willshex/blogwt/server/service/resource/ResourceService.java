@@ -8,6 +8,7 @@
 
 package com.willshex.blogwt.server.service.resource;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Date;
@@ -51,7 +52,8 @@ final class ResourceService implements IResourceService {
 		}
 
 		Key<Resource> key = provide().save().entity(resource).now();
-		resource.id = Long.valueOf(key.getId());
+		resource.id = keyToId(key);
+
 		return resource;
 	}
 

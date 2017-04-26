@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.service.page;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
@@ -63,8 +64,8 @@ final class PageService implements IPageService, ISearch<Page> {
 			page.parentKey = Key.create(page.parent);
 		}
 
-		Key<Page> pageKey = provide().save().entity(page).now();
-		page.id = Long.valueOf(pageKey.getId());
+		Key<Page> key = provide().save().entity(page).now();
+		page.id = keyToId(key);
 
 		SearchHelper.queueToIndex(getName(), page.id);
 
@@ -223,7 +224,7 @@ final class PageService implements IPageService, ISearch<Page> {
 			pagePosts = new ArrayList<Post>();
 
 			for (Key<Post> key : page.postKeys) {
-				pagePosts.add(postLookup.get(Long.valueOf(key.getId())));
+				pagePosts.add(postLookup.get(keyToId(key)));
 			}
 
 			page.posts = pagePosts;
@@ -326,7 +327,7 @@ final class PageService implements IPageService, ISearch<Page> {
 		Page page = getPage(id);
 
 		page.owner = UserServiceProvider.provide()
-				.getUser(Long.valueOf(page.ownerKey.getId()));
+				.getUser(keyToId(page.ownerKey));
 
 		populatePostContents(Arrays.asList(page));
 

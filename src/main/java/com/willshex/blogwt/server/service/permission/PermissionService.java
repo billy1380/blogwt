@@ -8,6 +8,7 @@
 //
 package com.willshex.blogwt.server.service.permission;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
@@ -41,8 +42,8 @@ final class PermissionService implements IPermissionService {
 			permission.created = new Date();
 		}
 
-		Key<Permission> permissionKey = provide().save().entity(permission).now();
-		permission.id = Long.valueOf(permissionKey.getId());
+		Key<Permission> key = provide().save().entity(permission).now();
+		permission.id = keyToId(key);
 
 		return permission;
 	}

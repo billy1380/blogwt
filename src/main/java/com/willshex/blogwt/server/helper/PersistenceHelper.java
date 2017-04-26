@@ -27,12 +27,20 @@ import com.willshex.blogwt.shared.api.SortDirectionType;
  */
 public class PersistenceHelper {
 
+	public static <T> Long keyToId (Key<T> key) {
+		return Long.valueOf(key.getId());
+	}
+
+	public static <T> Key<T> idToKey (Class<? extends T> kindClass, Long id) {
+		return Key.create(kindClass, id.longValue());
+	}
+
 	public static <T> List<Long> keysToIds (Collection<Key<T>> keys) {
 		List<Long> collection = null;
 		if (keys != null) {
 			collection = new ArrayList<Long>();
 			for (Key<T> key : keys) {
-				collection.add(Long.valueOf(key.getId()));
+				collection.add(keyToId(key));
 			}
 		}
 		return collection;
@@ -44,7 +52,7 @@ public class PersistenceHelper {
 		if (ids != null) {
 			collection = new ArrayList<Key<T>>();
 			for (Long id : ids) {
-				collection.add(Key.create(kindClass, id.longValue()));
+				collection.add(idToKey(kindClass, id));
 			}
 		}
 		return collection;
@@ -58,7 +66,7 @@ public class PersistenceHelper {
 				if (f.getType() == String.class) {
 					f.set(i, key.getName());
 				} else if (f.getType() == Long.class) {
-					f.set(i, Long.valueOf(key.getId()));
+					f.set(i, keyToId(key));
 				}
 			} catch (InstantiationException | IllegalAccessException e) {
 				throw new RuntimeException(e);

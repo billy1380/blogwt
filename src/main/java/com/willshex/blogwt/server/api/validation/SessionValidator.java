@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.api.validation;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
+
 import java.util.Date;
 
 import com.willshex.blogwt.server.service.session.ISessionService;
@@ -34,7 +36,7 @@ public class SessionValidator extends ApiValidator {
 					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
 		lookupSession.user = UserServiceProvider.provide()
-				.getUser(Long.valueOf(lookupSession.userKey.getId()));
+				.getUser(keyToId(lookupSession.userKey));
 
 		UserValidator.suspended(lookupSession.user);
 

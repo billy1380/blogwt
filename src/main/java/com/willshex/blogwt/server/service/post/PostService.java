@@ -8,6 +8,7 @@
 //
 package com.willshex.blogwt.server.service.post;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
@@ -96,10 +97,10 @@ final class PostService implements IPostService, ISearch<Post> {
 			}
 		}
 
-		Key<Post> postKey = provide().save().entity(post).now();
-		post.id = Long.valueOf(postKey.getId());
+		Key<Post> key = provide().save().entity(post).now();
+		post.id = keyToId(key);
 
-		post.content.postKey = postKey;
+		post.content.postKey = key;
 		provide().save().entity(post.content).now();
 
 		updateTags(post);
@@ -139,7 +140,7 @@ final class PostService implements IPostService, ISearch<Post> {
 
 			if (post.author == null) {
 				post.author = UserServiceProvider.provide()
-						.getUser(Long.valueOf(post.authorKey.getId()));
+						.getUser(keyToId(post.authorKey));
 			}
 
 			Document.Builder documentBuilder = Document.newBuilder();
@@ -394,15 +395,14 @@ final class PostService implements IPostService, ISearch<Post> {
 			List<Long> postContentIds = new ArrayList<Long>();
 
 			for (Post post : posts) {
-				postContentIds.add(Long.valueOf(post.contentKey.getId()));
+				postContentIds.add(keyToId(post.contentKey));
 			}
 
 			Map<Long, PostContent> contents = provide().load()
 					.type(PostContent.class).ids(postContentIds);
 
 			for (Post post : posts) {
-				post.content = contents
-						.get(Long.valueOf(post.contentKey.getId()));
+				post.content = contents.get(keyToId(post.contentKey));
 			}
 		}
 
@@ -462,8 +462,8 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * com.willshex.blogwt.shared.api.datatype.Post) */
 	@Override
 	public PostContent getPostContent (Post post) {
-		return provide().load().type(PostContent.class).id(post.contentKey.getId())
-				.now();
+		return provide().load().type(PostContent.class)
+				.id(post.contentKey.getId()).now();
 	}
 
 	/* (non-Javadoc)
@@ -615,15 +615,14 @@ final class PostService implements IPostService, ISearch<Post> {
 			List<Long> postContentIds = new ArrayList<Long>();
 
 			for (Post post : posts) {
-				postContentIds.add(Long.valueOf(post.contentKey.getId()));
+				postContentIds.add(keyToId(post.contentKey));
 			}
 
 			Map<Long, PostContent> contents = provide().load()
 					.type(PostContent.class).ids(postContentIds);
 
 			for (Post post : posts) {
-				post.content = contents
-						.get(Long.valueOf(post.contentKey.getId()));
+				post.content = contents.get(keyToId(post.contentKey));
 			}
 		}
 
@@ -732,12 +731,12 @@ final class PostService implements IPostService, ISearch<Post> {
 
 		if (post.authorKey != null) {
 			post.author = UserServiceProvider.provide()
-					.getUser(Long.valueOf(post.authorKey.getId()));
+					.getUser(keyToId(post.authorKey));
 		}
 
 		if (post.contentKey != null) {
 			post.content = provide().load().type(PostContent.class)
-					.id(Long.valueOf(post.contentKey.getId())).now();
+					.id(keyToId(post.contentKey)).now();
 		}
 
 		SearchHelper.indexDocument(toDocument(post));

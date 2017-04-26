@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.api.page.action;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -65,7 +67,7 @@ public final class GetPagesActionHandler
 		Map<Long, User> owners = new HashMap<Long, User>();
 		Long id;
 		for (Page page : output.pages) {
-			id = Long.valueOf(page.ownerKey.getId());
+			id = keyToId(page.ownerKey);
 			page.owner = owners.get(id);
 			if (page.owner == null) {
 				owners.put(id, page.owner = UserHelper.stripSensitive(

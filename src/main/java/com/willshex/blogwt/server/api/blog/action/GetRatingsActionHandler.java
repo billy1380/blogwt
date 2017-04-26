@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.api.blog.action;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +102,7 @@ public final class GetRatingsActionHandler
 				Long id;
 
 				for (Rating rating : output.ratings) {
-					id = Long.valueOf(rating.byKey.getId());
+					id = keyToId(rating.byKey);
 
 					if ((ratings = userRatingLookup.get(id)) == null) {
 						userRatingLookup.put(id, ratings = new ArrayList<>());

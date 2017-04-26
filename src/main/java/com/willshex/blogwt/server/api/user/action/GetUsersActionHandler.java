@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.api.user.action;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -143,7 +145,7 @@ public final class GetUsersActionHandler
 			if (relationships != null && !relationships.isEmpty()) {
 				userIds = new ArrayList<Long>();
 				for (Relationship relationship : relationships) {
-					userIds.add(Long.valueOf(relationship.oneKey.getId()));
+					userIds.add(keyToId(relationship.oneKey));
 				}
 			}
 		} else {
@@ -156,7 +158,7 @@ public final class GetUsersActionHandler
 			if (relationships != null && !relationships.isEmpty()) {
 				userIds = new ArrayList<Long>();
 				for (Relationship relationship : relationships) {
-					userIds.add(Long.valueOf(relationship.anotherKey.getId()));
+					userIds.add(keyToId(relationship.anotherKey));
 				}
 			}
 		}

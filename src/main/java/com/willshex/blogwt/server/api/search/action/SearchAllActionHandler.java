@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.api.search.action;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -66,7 +68,7 @@ public final class SearchAllActionHandler
 			for (Post post : output.posts) {
 				if (users.get(post.authorKey) == null) {
 					users.put(post.authorKey, UserServiceProvider.provide()
-							.getUser(Long.valueOf(post.authorKey.getId())));
+							.getUser(keyToId(post.authorKey)));
 				}
 
 				post.author = users.get(post.authorKey);
@@ -81,7 +83,7 @@ public final class SearchAllActionHandler
 			for (Page page : output.pages) {
 				if (users.get(page.ownerKey) == null) {
 					users.put(page.ownerKey, UserServiceProvider.provide()
-							.getUser(Long.valueOf(page.ownerKey.getId())));
+							.getUser(keyToId(page.ownerKey)));
 				}
 
 				page.owner = users.get(page.ownerKey);

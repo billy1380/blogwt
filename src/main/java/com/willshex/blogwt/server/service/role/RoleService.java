@@ -8,6 +8,7 @@
 //
 package com.willshex.blogwt.server.service.role;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ final class RoleService implements IRoleService {
 			role.created = new Date();
 		}
 
-		Key<Role> roleKey = provide().save().entity(role).now();
-		role.id = Long.valueOf(roleKey.getId());
+		Key<Role> key = provide().save().entity(role).now();
+		role.id = keyToId(key);
 
 		return role;
 	}
@@ -99,13 +100,12 @@ final class RoleService implements IRoleService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.role.IRoleService#getIdRoles(java
+	 * @see com.willshex.blogwt.server.service.role.IRoleService#getIdRoles(java
 	 * .util.Collection) */
 	@Override
 	public List<Role> getIdRoleBatch (Collection<Long> roleIds) {
-		return new ArrayList<Role>(provide().load().type(Role.class).ids(roleIds)
-				.values());
+		return new ArrayList<Role>(
+				provide().load().type(Role.class).ids(roleIds).values());
 	}
 
 	/* (non-Javadoc)
@@ -115,7 +115,8 @@ final class RoleService implements IRoleService {
 	 * .lang.String) */
 	@Override
 	public Role getCodeRole (String code) {
-		return provide().load().type(Role.class).filter("code", code).first().now();
+		return provide().load().type(Role.class).filter("code", code).first()
+				.now();
 	}
 
 	/* (non-Javadoc)
@@ -127,7 +128,8 @@ final class RoleService implements IRoleService {
 	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
 	public List<Role> getPartialNameRoles (String partialName, Integer start,
-			Integer count, RoleSortType sortBy, SortDirectionType sortDirection) {
+			Integer count, RoleSortType sortBy,
+			SortDirectionType sortDirection) {
 		Query<Role> query = provide().load().type(Role.class);
 
 		if (start != null) {

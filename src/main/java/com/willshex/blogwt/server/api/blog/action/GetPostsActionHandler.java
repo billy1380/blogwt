@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.api.blog.action;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -151,9 +153,10 @@ public final class GetPostsActionHandler
 
 			for (Post post : output.posts) {
 				if (users.get(post.authorKey) == null) {
-					users.put(post.authorKey, UserHelper.stripSensitive(
-							UserServiceProvider.provide().getUser(
-									Long.valueOf(post.authorKey.getId()))));
+					users.put(post.authorKey,
+							UserHelper.stripSensitive(
+									UserServiceProvider.provide()
+											.getUser(keyToId(post.authorKey))));
 				}
 
 				post.author = users.get(post.authorKey);
