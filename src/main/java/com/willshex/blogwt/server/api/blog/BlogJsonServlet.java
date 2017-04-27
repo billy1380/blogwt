@@ -14,6 +14,7 @@ import com.willshex.blogwt.server.api.blog.action.DeleteResourceActionHandler;
 import com.willshex.blogwt.server.api.blog.action.GetArchiveEntriesActionHandler;
 import com.willshex.blogwt.server.api.blog.action.GetPostActionHandler;
 import com.willshex.blogwt.server.api.blog.action.GetPostsActionHandler;
+import com.willshex.blogwt.server.api.blog.action.GetPropertiesActionHandler;
 import com.willshex.blogwt.server.api.blog.action.GetRatingsActionHandler;
 import com.willshex.blogwt.server.api.blog.action.GetRelatedPostsActionHandler;
 import com.willshex.blogwt.server.api.blog.action.GetResourceActionHandler;
@@ -30,6 +31,7 @@ import com.willshex.blogwt.shared.api.blog.call.DeleteResourceRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetPropertiesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRatingsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetResourceRequest;
@@ -47,7 +49,11 @@ public final class BlogJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
-		if ("GetRatings".equals(action)) {
+		if ("GetProperties".equals(action)) {
+			GetPropertiesRequest input = new GetPropertiesRequest();
+			input.fromJson(request);
+			output = new GetPropertiesActionHandler().handle(input).toString();
+		} else if ("GetRatings".equals(action)) {
 			GetRatingsRequest input = new GetRatingsRequest();
 			input.fromJson(request);
 			output = new GetRatingsActionHandler().handle(input).toString();

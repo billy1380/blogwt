@@ -25,6 +25,8 @@ import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsResponse;
+import com.willshex.blogwt.shared.api.blog.call.GetPropertiesRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetPropertiesResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetRatingsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRatingsResponse;
 import com.willshex.blogwt.shared.api.blog.call.GetRelatedPostsRequest;
@@ -49,6 +51,50 @@ import com.willshex.gson.web.service.client.HttpException;
 import com.willshex.gson.web.service.client.JsonService;
 
 public final class BlogService extends JsonService {
+
+	public static final String BlogMethodGetProperties = "GetProperties";
+
+	public Request getProperties (final GetPropertiesRequest input,
+			final AsyncCallback<GetPropertiesResponse> callback) {
+		Request handle = null;
+		try {
+			handle = sendRequest(BlogMethodGetProperties, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								GetPropertiesResponse outputParameter = new GetPropertiesResponse();
+								parseResponse(response, outputParameter);
+								callback.onSuccess(outputParameter);
+								onCallSuccess(BlogService.this,
+										BlogMethodGetProperties, input,
+										outputParameter);
+							} catch (JSONException | HttpException exception) {
+								callback.onFailure(exception);
+								onCallFailure(BlogService.this,
+										BlogMethodGetProperties, input,
+										exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							callback.onFailure(exception);
+							onCallFailure(BlogService.this,
+									BlogMethodGetProperties, input, exception);
+						}
+					});
+			onCallStart(BlogService.this, BlogMethodGetProperties, input,
+					handle);
+		} catch (RequestException exception) {
+			callback.onFailure(exception);
+			onCallFailure(BlogService.this, BlogMethodGetProperties, input,
+					exception);
+		}
+		return handle;
+	}
 
 	public static final String BlogMethodGetRatings = "GetRatings";
 
