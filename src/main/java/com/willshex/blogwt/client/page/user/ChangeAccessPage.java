@@ -36,6 +36,7 @@ import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.BootstrapGwtSuggestBox;
+import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
@@ -78,6 +79,9 @@ public class ChangeAccessPage extends Page
 	@UiField NoneFoundPanel pnlNoPermissions;
 	@UiField FormPanel frmChangeAccess;
 
+	@UiField LoadingPanel pnlRolesLoading;
+	@UiField LoadingPanel pnlPermissionsLoading;
+
 	private User user;
 	private SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
 	private ButtonCell actionButtonPrototype = new PrettyButtonCell();
@@ -91,9 +95,11 @@ public class ChangeAccessPage extends Page
 		UserController.permissions().addDataDisplay(tblPermissions);
 
 		tblRoles.setEmptyTableWidget(pnlNoRoles);
+		tblRoles.setLoadingIndicator(pnlRolesLoading);
 		createRoleColumns();
 
 		tblPermissions.setEmptyTableWidget(pnlNoPermissions);
+		tblPermissions.setLoadingIndicator(pnlPermissionsLoading);
 		createPermissionColumns();
 	}
 

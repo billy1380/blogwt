@@ -54,5 +54,9 @@
 		<p:NoneFoundPanel ui:field="pnlNoRoles" subject="roles" />
 
 		<p:NoneFoundPanel ui:field="pnlNoPermissions" subject="permissions" />
+		
+		<p:LoadingPanel ui:field="pnlRolesLoading" />
+		
+		<p:LoadingPanel ui:field="pnlPermissionsLoading" />
 	</g:HTMLPanel>
 </ui:UiBinder> 
