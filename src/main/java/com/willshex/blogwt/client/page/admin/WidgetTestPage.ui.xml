@@ -37,5 +37,7 @@
 		<h2>Gallery</h2>
 		<p1:GalleryPart ui:field="gallery" />
 
+		<p:LoadingPanel />
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

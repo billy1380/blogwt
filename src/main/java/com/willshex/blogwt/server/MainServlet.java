@@ -231,17 +231,14 @@ public class MainServlet extends ContextAwareServlet {
 	 */
 	private List<Property> appendProperties (StringBuffer scriptVariables) {
 		List<Property> properties = PropertyServiceProvider.provide()
-				.getProperties();
+				.getProperties(0, 10000, null, null);
 
 		if (properties.size() >= 0) {
 			scriptVariables.append("var properties='[");
 
 			boolean first = true;
 			for (Property property : properties) {
-				if (PropertyHelper.PASSWORD_HASH_SALT.equals(property.name)
-						|| PropertyHelper.RECAPTCHA_API_KEY
-								.equals(property.name))
-					continue;
+				if (PropertyHelper.isSecretProperty(property)) continue;
 
 				if (first) {
 					first = false;

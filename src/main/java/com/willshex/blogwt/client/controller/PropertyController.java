@@ -17,23 +17,30 @@ import java.util.Map;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Request;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.ListDataProvider;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.BlogService;
+import com.willshex.blogwt.client.api.blog.event.GetPropertiesEventHandler.GetPropertiesFailure;
+import com.willshex.blogwt.client.api.blog.event.GetPropertiesEventHandler.GetPropertiesSuccess;
 import com.willshex.blogwt.client.api.blog.event.SetupBlogEventHandler.SetupBlogFailure;
 import com.willshex.blogwt.client.api.blog.event.SetupBlogEventHandler.SetupBlogSuccess;
 import com.willshex.blogwt.client.api.blog.event.UpdatePropertiesEventHandler.UpdatePropertiesFailure;
 import com.willshex.blogwt.client.api.blog.event.UpdatePropertiesEventHandler.UpdatePropertiesSuccess;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.shared.api.Pager;
+import com.willshex.blogwt.shared.api.blog.call.GetPropertiesRequest;
+import com.willshex.blogwt.shared.api.blog.call.GetPropertiesResponse;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest;
 import com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.gson.web.service.shared.StatusType;
 
@@ -57,12 +64,15 @@ public class PropertyController extends ListDataProvider<Property> {
 
 	private Map<String, Property> propertyLookup = new HashMap<String, Property>();
 
+	private Pager pager = PagerHelper.createInfinitePager();
+	private Request getPropertiesRequest;
+
 	private PropertyController () {
 		String propertiesJson = properties();
 
 		if (propertiesJson != null) {
-			JsonArray jsonPropertyArray = (new JsonParser()).parse(
-					propertiesJson).getAsJsonArray();
+			JsonArray jsonPropertyArray = (new JsonParser())
+					.parse(propertiesJson).getAsJsonArray();
 			if (getList() == null) {
 				setList(new ArrayList<Property>());
 			} else {
@@ -72,8 +82,8 @@ public class PropertyController extends ListDataProvider<Property> {
 			Property item = null;
 			for (int i = 0; i < jsonPropertyArray.size(); i++) {
 				if (jsonPropertyArray.get(i).isJsonObject()) {
-					(item = new Property()).fromJson(jsonPropertyArray.get(i)
-							.getAsJsonObject());
+					(item = new Property()).fromJson(
+							jsonPropertyArray.get(i).getAsJsonObject());
 					propertyLookup.put(item.name, item);
 					getList().add(item);
 				}
@@ -90,9 +100,8 @@ public class PropertyController extends ListDataProvider<Property> {
 	 */
 	public SafeUri copyrightHolderUrl () {
 		Property p = propertyLookup.get(PropertyHelper.COPYRIGHT_URL);
-		return UriUtils
-				.fromSafeConstant(PropertyHelper.isEmpty(p) ? "https://www.willshex.com"
-						: p.value);
+		return UriUtils.fromSafeConstant(PropertyHelper.isEmpty(p)
+				? "https://www.willshex.com" : p.value);
 	}
 
 	/**
@@ -127,9 +136,12 @@ public class PropertyController extends ListDataProvider<Property> {
 		return PropertyHelper.isEmpty(p) ? new Date(1199188800000L) : p.created;
 	}
 
-	private static native String properties ()
-	/*-{
-		return $wnd['properties'];
+	private static native String properties () /*-{
+	return $wnd['properties'];
+	}-*/;
+
+	private static native String set (String properties) /*-{
+	$wnd['properties'] = properties;
 	}-*/;
 
 	public void setupBlog (List<Property> properties, List<User> users) {
@@ -172,8 +184,8 @@ public class PropertyController extends ListDataProvider<Property> {
 		for (Property property : properties) {
 			addToChanged = false;
 
-			existingPropertyValue = PropertyHelper.value(propertyLookup
-					.get(property.name));
+			existingPropertyValue = PropertyHelper
+					.value(propertyLookup.get(property.name));
 
 			if (!PropertyHelper.isEmpty(property)) {
 				if (existingPropertyValue == null) {
@@ -196,16 +208,16 @@ public class PropertyController extends ListDataProvider<Property> {
 
 		if (updating) {
 			final UpdatePropertiesRequest input = SessionController.get()
-					.setSession(
-							ApiHelper.setAccessCode(
-									new UpdatePropertiesRequest()).properties(
-									changed));
+					.setSession(ApiHelper
+							.setAccessCode(new UpdatePropertiesRequest())
+							.properties(changed));
 
 			ApiHelper.createBlogClient().updateProperties(input,
 					new AsyncCallback<UpdatePropertiesResponse>() {
 
 						@Override
-						public void onSuccess (UpdatePropertiesResponse output) {
+						public void onSuccess (
+								UpdatePropertiesResponse output) {
 							if (output != null
 									&& output.status == StatusType.StatusTypeSuccess) {
 								GWT.log("Properties have been updated successfully... reload to see the effects.");
@@ -226,6 +238,57 @@ public class PropertyController extends ListDataProvider<Property> {
 		}
 
 		return updating;
+	}
+
+	public void refreshProperties () {
+		fetchProperties();
+	}
+
+	private void fetchProperties () {
+		final GetPropertiesRequest input = ApiHelper
+				.setAccessCode(new GetPropertiesRequest());
+		input.pager = pager;
+		input.session = SessionController.get().sessionForApiCall();
+
+		if (getPropertiesRequest != null) {
+			getPropertiesRequest.cancel();
+		}
+
+		getPropertiesRequest = ApiHelper.createBlogClient().getProperties(input,
+				new AsyncCallback<GetPropertiesResponse>() {
+
+					@Override
+					public void onSuccess (GetPropertiesResponse output) {
+						getPropertiesRequest = null;
+
+						if (output.status == StatusType.StatusTypeSuccess) {
+							if (output.properties != null
+									&& output.properties.size() > 0) {
+								pager = output.pager;
+
+								JsonArray propertyArray = new JsonArray();
+								for (Property p : output.properties) {
+									propertyArray.add(p.toJson());
+								}
+
+								set(propertyArray.toString());
+							}
+						}
+
+						DefaultEventBus.get().fireEventFromSource(
+								new GetPropertiesSuccess(input, output),
+								PropertyController.this);
+					}
+
+					@Override
+					public void onFailure (Throwable caught) {
+						getPropertiesRequest = null;
+
+						DefaultEventBus.get().fireEventFromSource(
+								new GetPropertiesFailure(input, caught),
+								PropertyController.this);
+					}
+				});
 	}
 
 	/**

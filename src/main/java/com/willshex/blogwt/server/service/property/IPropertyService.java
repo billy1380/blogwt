@@ -10,7 +10,9 @@ package com.willshex.blogwt.server.service.property;
 import java.util.Collection;
 import java.util.List;
 
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Property;
+import com.willshex.blogwt.shared.api.datatype.PropertySortType;
 import com.willshex.service.IService;
 
 public interface IPropertyService extends IService {
@@ -54,8 +56,14 @@ public interface IPropertyService extends IService {
 	public void addPropertyBatch (Collection<Property> properties);
 
 	/**
+	 * Get Properties
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
 	 * @return
 	 */
-	public List<Property> getProperties ();
+	public List<Property> getProperties (Integer start, Integer count,
+			PropertySortType sortBy, SortDirectionType sortDirection);
 
 }

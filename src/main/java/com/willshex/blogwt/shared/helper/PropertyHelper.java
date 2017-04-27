@@ -371,4 +371,13 @@ public class PropertyHelper {
 		return property == null ? null : property.value;
 	}
 
+	/**
+	 * @param property
+	 * @return
+	 */
+	public static boolean isSecretProperty (Property property) {
+		return PASSWORD_HASH_SALT.equals(property.name)
+				|| RECAPTCHA_API_KEY.equals(property.name);
+	}
+
 }

@@ -46,7 +46,6 @@ public class WidgetTestPage extends Page {
 
 		gallery.setParams(params);
 		gallery.addImageWithLine("url=http://lorempixel.com/400/200/");
-
 	}
 
 }

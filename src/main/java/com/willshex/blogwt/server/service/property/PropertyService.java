@@ -15,9 +15,14 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
+import com.willshex.blogwt.server.service.ISortable;
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Property;
+import com.willshex.blogwt.shared.api.datatype.PropertySortType;
 
-final class PropertyService implements IPropertyService {
+final class PropertyService
+		implements IPropertyService, ISortable<PropertySortType> {
 	public String getName () {
 		return NAME;
 	}
@@ -88,10 +93,24 @@ final class PropertyService implements IPropertyService {
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.property.IPropertyService#
-	 * getProperties () */
+	 * getProperties(java.lang.Integer, java.lang.Integer,
+	 * com.willshex.blogwt.shared.api.datatype.PropertySortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
-	public List<Property> getProperties () {
-		return provide().load().type(Property.class).list();
+	public List<Property> getProperties (Integer start, Integer count,
+			PropertySortType sortBy, SortDirectionType sortDirection) {
+		return PersistenceHelper
+				.pagedAndSorted(provide().load().type(Property.class), start,
+						count, sortBy, this, sortDirection)
+				.list();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
+	@Override
+	public String map (PropertySortType sortBy) {
+		return sortBy.toString();
 	}
 
 }
