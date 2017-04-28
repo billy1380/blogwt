@@ -71,7 +71,7 @@ public final class GetPropertiesActionHandler
 
 		if (output.properties != null) {
 			Property property;
-			for (int i = output.properties.size() - 1; i >= 0; i++) {
+			for (int i = output.properties.size() - 1; i >= 0; i--) {
 				property = output.properties.get(i);
 				if (PropertyHelper.isSecretProperty(property)) {
 					output.properties.remove(i);
