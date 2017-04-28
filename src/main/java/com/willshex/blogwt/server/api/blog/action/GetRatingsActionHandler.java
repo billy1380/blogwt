@@ -7,20 +7,16 @@
 //
 package com.willshex.blogwt.server.api.blog.action;
 
-import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
+import com.googlecode.objectify.Key;
 import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
+import com.willshex.blogwt.server.helper.UserHelper;
+import com.willshex.blogwt.server.helper.UserHelper.HasUser;
 import com.willshex.blogwt.server.service.rating.RatingServiceProvider;
-import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.GetRatingsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRatingsResponse;
 import com.willshex.blogwt.shared.api.datatype.Rating;
@@ -28,7 +24,6 @@ import com.willshex.blogwt.shared.api.datatype.RatingSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PagerHelper;
-import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.web.service.server.InputValidationException;
 
 public final class GetRatingsActionHandler
@@ -96,34 +91,18 @@ public final class GetRatingsActionHandler
 					RatingSortType.fromString(input.pager.sortBy),
 					input.pager.sortDirection);
 
-			if (output.ratings != null && !output.ratings.isEmpty()) {
-				Map<Long, List<Rating>> userRatingLookup = new HashMap<>();
-				List<Rating> ratings;
-				Long id;
-
-				for (Rating rating : output.ratings) {
-					id = keyToId(rating.byKey);
-
-					if ((ratings = userRatingLookup.get(id)) == null) {
-						userRatingLookup.put(id, ratings = new ArrayList<>());
-					}
-
-					ratings.add(rating);
+			UserHelper.lookupUsers(output.ratings, new HasUser<Rating>() {
+				@Override
+				public Key<User> get (Rating t) {
+					return t.byKey;
 				}
 
-				List<User> users = UserServiceProvider.provide()
-						.getIdUserBatch(userRatingLookup.keySet());
-
-				for (User user : users) {
-					UserHelper.stripPassword(user);
-
-					ratings = userRatingLookup.get(user.id);
-
-					for (Rating rating : ratings) {
-						rating.by = user;
-					}
+				@Override
+				public void set (Rating t, User u) {
+					t.by = u;
+					UserHelper.stripPassword(u);
 				}
-			}
+			});
 		}
 
 		output.pager = PagerHelper.moveForward(input.pager);
