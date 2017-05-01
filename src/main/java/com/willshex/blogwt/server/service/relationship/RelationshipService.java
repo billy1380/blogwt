@@ -14,7 +14,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Relationship;
 import com.willshex.blogwt.shared.api.datatype.RelationshipSortType;
@@ -28,8 +30,11 @@ final class RelationshipService implements IRelationshipService {
 
 	@Override
 	public Relationship getRelationship (Long id) {
-		return provide().load().type(Relationship.class).id(id.longValue())
-				.now();
+		return load().id(id.longValue()).now();
+	}
+
+	private LoadType<Relationship> load () {
+		return provide().load().type(Relationship.class);
 	}
 
 	@Override
@@ -98,14 +103,13 @@ final class RelationshipService implements IRelationshipService {
 	@Override
 	public Relationship getUsersRelationship (User user, User other,
 			RelationshipTypeType type) {
-		return provide().load().type(Relationship.class)
+		return PersistenceHelper.one(load()
 				.filter(RelationshipSortType.RelationshipSortTypeOne.toString()
 						+ "Key", user)
 				.filter(RelationshipSortType.RelationshipSortTypeAnother
 						.toString() + "Key", other)
 				.filter(RelationshipSortType.RelationshipSortTypeType
-						.toString(), type)
-				.limit(1).first().now();
+						.toString(), type));
 	}
 
 	/* (non-Javadoc)
@@ -143,7 +147,7 @@ final class RelationshipService implements IRelationshipService {
 	public List<Relationship> getUserRelationships (User user,
 			RelationshipTypeType type, Integer start, Integer count,
 			RelationshipSortType sortBy, SortDirectionType sortDirection) {
-		Query<Relationship> query = provide().load().type(Relationship.class)
+		Query<Relationship> query = load()
 				.filter(RelationshipSortType.RelationshipSortTypeOne.toString()
 						+ "Key", user)
 				.filter(RelationshipSortType.RelationshipSortTypeType
@@ -189,7 +193,7 @@ final class RelationshipService implements IRelationshipService {
 	public List<Relationship> getWithUserRelationships (User user,
 			RelationshipTypeType type, Integer start, Integer count,
 			RelationshipSortType sortBy, SortDirectionType sortDirection) {
-		Query<Relationship> query = provide().load().type(Relationship.class)
+		Query<Relationship> query = load()
 				.filter(RelationshipSortType.RelationshipSortTypeAnother
 						.toString() + "Key", user)
 				.filter(RelationshipSortType.RelationshipSortTypeType

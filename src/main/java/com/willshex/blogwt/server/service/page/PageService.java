@@ -23,10 +23,12 @@ import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
@@ -37,14 +39,22 @@ import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 
-final class PageService implements IPageService, ISearch<Page> {
+final class PageService
+		implements IPageService, ISearch<Page>, ISortable<PageSortType> {
 	public String getName () {
 		return NAME;
 	}
 
 	@Override
 	public Page getPage (Long id) {
-		return provide().load().type(Page.class).id(id).now();
+		return load().id(id).now();
+	}
+
+	/**
+	 * @return
+	 */
+	private LoadType<Page> load () {
+		return provide().load().type(Page.class);
 	}
 
 	@Override
@@ -145,9 +155,8 @@ final class PageService implements IPageService, ISearch<Page> {
 	 * .lang.String, java.lang.Boolean) */
 	@Override
 	public Page getSlugPage (String slug, Boolean includePostContents) {
-		Page page = provide().load().type(Page.class)
-				.filter(PageSortType.PageSortTypeSlug.toString(), slug).first()
-				.now();
+		Page page = PersistenceHelper.one(
+				load().filter(PageSortType.PageSortTypeSlug.toString(), slug));
 
 		if (Boolean.TRUE.equals(includePostContents)) {
 			populatePostContents(Arrays.asList(page));
@@ -167,33 +176,8 @@ final class PageService implements IPageService, ISearch<Page> {
 	public List<Page> getPages (Boolean includePostContents, Integer start,
 			Integer count, PageSortType sortBy,
 			SortDirectionType sortDirection) {
-		Query<Page> query = provide().load().type(Page.class);
-
-		if (start != null) {
-			query = query.offset(start.intValue());
-		}
-
-		if (count != null) {
-			query = query.limit(count.intValue());
-		}
-
-		if (sortBy != null) {
-			String condition = sortBy.toString();
-
-			if (sortDirection != null) {
-				switch (sortDirection) {
-				case SortDirectionTypeDescending:
-					condition = "-" + condition;
-					break;
-				default:
-					break;
-				}
-			}
-
-			query = query.order(condition);
-		}
-
-		List<Page> pages = query.list();
+		List<Page> pages = PersistenceHelper.pagedAndSorted(load(), start,
+				count, sortBy, this, sortDirection).list();
 
 		if (Boolean.TRUE.equals(includePostContents)) {
 			populatePostContents(pages);
@@ -278,32 +262,9 @@ final class PageService implements IPageService, ISearch<Page> {
 	public List<Page> getPartialSlugPages (String partialSlug,
 			Boolean includePostContents, Integer start, Integer count,
 			PageSortType sortBy, SortDirectionType sortDirection) {
-		Query<Page> query = provide().load().type(Page.class);
-
-		if (start != null) {
-			query = query.offset(start.intValue());
-		}
-
-		if (count != null) {
-			query = query.limit(count.intValue());
-		}
-
-		if (sortBy != null) {
-			String condition = sortBy.toString();
-
-			if (sortDirection != null) {
-				switch (sortDirection) {
-				case SortDirectionTypeDescending:
-					condition = "-" + condition;
-					break;
-				default:
-					break;
-				}
-			}
-
-			query = query.order(condition);
-		}
-
+		Query<Page> query = PersistenceHelper.pagedAndSorted(load(), start,
+				count, sortBy, this, sortDirection);
+		
 		if (partialSlug != null) {
 			query = SearchHelper.addStartsWith("slug",
 					partialSlug.toLowerCase(), query);
@@ -376,6 +337,20 @@ final class PageService implements IPageService, ISearch<Page> {
 			String next, Integer count, String sortBy,
 			SortDirectionType direction) {
 		throw new UnsupportedOperationException();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
+	@Override
+	public String map (PageSortType sortBy) {
+		String mapped = sortBy.toString();
+
+		if (sortBy == PageSortType.PageSortTypeParent) {
+			mapped += "Key";
+		}
+
+		return mapped;
 	}
 
 }

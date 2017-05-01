@@ -13,6 +13,8 @@ import static com.willshex.blogwt.server.service.persistence.PersistenceServiceP
 import java.util.Date;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.cmd.LoadType;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
@@ -24,10 +26,11 @@ final class SessionService implements ISessionService {
 	}
 
 	public Session getSession (Long id) {
-		Session session = provide().load().type(Session.class)
-				.id(id.longValue()).now();
+		return load().id(id.longValue()).now();
+	}
 
-		return session;
+	private LoadType<Session> load () {
+		return provide().load().type(Session.class);
 	}
 
 	/* (non-Javadoc)
@@ -106,8 +109,7 @@ final class SessionService implements ISessionService {
 	 * #getUserSession(com.willshex.blogwt.shared.api.datatypes.User) */
 	@Override
 	public Session getUserSession (User user) {
-		Session session = provide().load().type(Session.class)
-				.filter("userKey", user).first().now();
+		Session session = PersistenceHelper.one(load().filter("userKey", user));
 
 		if (session != null
 				&& session.expires.getTime() < new Date().getTime()) {

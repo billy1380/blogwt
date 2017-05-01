@@ -19,6 +19,8 @@ import java.util.Map;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Work;
+import com.googlecode.objectify.cmd.LoadType;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
@@ -35,7 +37,11 @@ final class TagService implements ITagService {
 
 	@Override
 	public Tag getTag (Long id) {
-		return provide().load().type(Tag.class).id(id.longValue()).now();
+		return load().id(id.longValue()).now();
+	}
+
+	private LoadType<Tag> load () {
+		return provide().load().type(Tag.class);
 	}
 
 	@Override
@@ -73,7 +79,7 @@ final class TagService implements ITagService {
 	 * @see com.willshex.blogwt.server.service.tag.ITagService#getTags() */
 	@Override
 	public List<Tag> getTags () {
-		return provide().load().type(Tag.class).list();
+		return load().list();
 	}
 
 	/* (non-Javadoc)
@@ -154,8 +160,7 @@ final class TagService implements ITagService {
 	 * lang.String) */
 	@Override
 	public Tag getSlugTag (String slug) {
-		return provide().load().type(Tag.class).filter("slug", slug).first()
-				.now();
+		return PersistenceHelper.one(load().filter("slug", slug));
 	}
 
 	/* (non-Javadoc)

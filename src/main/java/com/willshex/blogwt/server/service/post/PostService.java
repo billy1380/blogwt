@@ -23,7 +23,9 @@ import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.search.ISearch;
@@ -62,7 +64,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * .Long) */
 	@Override
 	public Post getPost (Long id) {
-		return provide().load().type(Post.class).id(id.longValue()).now();
+		return load().id(id.longValue()).now();
 	}
 
 	/* (non-Javadoc)
@@ -272,9 +274,9 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * @return
 	 */
 	private Post getNextPost (Post post) {
-		return provide().load().type(Post.class).order("published")
-				.filter("listed =", true).filter("published >", post.published)
-				.limit(1).first().now();
+		return PersistenceHelper
+				.one(load().order("published").filter("listed =", true)
+						.filter("published >", post.published));
 	}
 
 	/**
@@ -282,9 +284,13 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * @return
 	 */
 	private Post getPreviousPost (Post post) {
-		return provide().load().type(Post.class).order("-published")
-				.filter("listed =", true).filter("published <", post.published)
-				.limit(1).first().now();
+		return PersistenceHelper
+				.one(load().order("-published").filter("listed =", true)
+						.filter("published <", post.published));
+	}
+
+	private LoadType<Post> load () {
+		return provide().load().type(Post.class);
 	}
 
 	/* (non-Javadoc)
@@ -353,7 +359,7 @@ final class PostService implements IPostService, ISearch<Post> {
 			Boolean includeContents, Integer start, Integer count,
 			PostSortType sortBy, SortDirectionType sortDirection) {
 
-		Query<Post> query = provide().load().type(Post.class);
+		Query<Post> query = load();
 
 		if (user != null && user.id != null) {
 			query = query.filter(
@@ -431,9 +437,8 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * .lang.String) */
 	@Override
 	public Post getSlugPost (String slug) {
-		return provide().load().type(Post.class)
-				.filter(PostSortType.PostSortTypeSlug.toString(), slug).first()
-				.now();
+		return PersistenceHelper.one(
+				load().filter(PostSortType.PostSortTypeSlug.toString(), slug));
 	}
 
 	/* (non-Javadoc)
@@ -473,8 +478,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * .util.Collection) */
 	@Override
 	public List<Post> getIdPostBatch (Collection<Long> ids) {
-		return new ArrayList<Post>(
-				provide().load().type(Post.class).ids(ids).values());
+		return new ArrayList<Post>(load().ids(ids).values());
 	}
 
 	/**
@@ -568,7 +572,7 @@ final class PostService implements IPostService, ISearch<Post> {
 			User user, Boolean showAll, Boolean includeContents, Integer start,
 			Integer count, PostSortType sortBy,
 			SortDirectionType sortDirection) {
-		Query<Post> query = provide().load().type(Post.class);
+		Query<Post> query = load();
 
 		if (user != null && user.id != null) {
 			query = query.filter(

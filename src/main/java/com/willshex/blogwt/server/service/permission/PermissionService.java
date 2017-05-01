@@ -17,23 +17,26 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
 import com.willshex.blogwt.shared.api.datatype.Role;
 
-final class PermissionService implements IPermissionService {
+final class PermissionService
+		implements IPermissionService, ISortable<PermissionSortType> {
 	public String getName () {
 		return NAME;
 	}
 
 	@Override
 	public Permission getPermission (Long id) {
-		return provide().load().type(Permission.class).id(id.longValue()).now();
+		return load().id(id.longValue()).now();
 	}
 
 	@Override
@@ -68,33 +71,8 @@ final class PermissionService implements IPermissionService {
 	@Override
 	public List<Permission> getPermissions (Integer start, Integer count,
 			PermissionSortType sortBy, SortDirectionType sortDirection) {
-		Query<Permission> query = provide().load().type(Permission.class);
-
-		if (start != null) {
-			query = query.offset(start.intValue());
-		}
-
-		if (count != null) {
-			query = query.limit(count.intValue());
-		}
-
-		if (sortBy != null) {
-			String condition = sortBy.toString();
-
-			if (sortDirection != null) {
-				switch (sortDirection) {
-				case SortDirectionTypeDescending:
-					condition = "-" + condition;
-					break;
-				default:
-					break;
-				}
-			}
-
-			query = query.order(condition);
-		}
-
-		return query.list();
+		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
+				this, sortDirection).list();
 	}
 
 	/* (non-Javadoc)
@@ -113,8 +91,7 @@ final class PermissionService implements IPermissionService {
 	@Override
 	public List<Permission> getIdPermissionBatch (
 			Collection<Long> permissionIds) {
-		return new ArrayList<Permission>(provide().load().type(Permission.class)
-				.ids(permissionIds).values());
+		return new ArrayList<Permission>(load().ids(permissionIds).values());
 	}
 
 	/* (non-Javadoc)
@@ -123,10 +100,16 @@ final class PermissionService implements IPermissionService {
 	 * getCodePermission(java.lang.String) */
 	@Override
 	public Permission getCodePermission (String code) {
-		return provide().load().type(Permission.class)
-				.filter(PermissionSortType.PermissionSortTypeCode.toString(),
-						code)
-				.first().now();
+		return PersistenceHelper.one(load().filter(
+				PermissionSortType.PermissionSortTypeCode.toString(), code));
+	}
+
+	/**
+	 * @return 
+	 * @return
+	 */
+	private LoadType<Permission> load () {
+		return provide().load().type(Permission.class);
 	}
 
 	/* (non-Javadoc)
@@ -154,35 +137,22 @@ final class PermissionService implements IPermissionService {
 	public List<Permission> getPartialNamePermissions (String partialName,
 			Integer start, Integer count, PermissionSortType sortBy,
 			SortDirectionType sortDirection) {
-		Query<Permission> query = provide().load().type(Permission.class);
+		Query<Permission> query = PersistenceHelper.pagedAndSorted(load(),
+				start, count, sortBy, this, sortDirection);
 
-		if (start != null) {
-			query = query.offset(start.intValue());
-		}
-
-		if (count != null) {
-			query = query.limit(count.intValue());
-		}
-
-		if (sortBy != null) {
-			String condition = sortBy.toString();
-
-			if (sortDirection != null) {
-				switch (sortDirection) {
-				case SortDirectionTypeDescending:
-					condition = "-" + condition;
-					break;
-				default:
-					break;
-				}
-			}
-
-			query = query.order(condition);
-		}
-
-		query = SearchHelper.addStartsWith("code", partialName, query);
+		query = SearchHelper.addStartsWith(
+				map(PermissionSortType.PermissionSortTypeCode), partialName,
+				query);
 
 		return query.list();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
+	@Override
+	public String map (PermissionSortType sortBy) {
+		return sortBy.toString();
 	}
 
 }

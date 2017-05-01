@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
@@ -28,7 +29,11 @@ final class PropertyService
 	}
 
 	public Property getProperty (Long id) {
-		return provide().load().type(Property.class).id(id.longValue()).now();
+		return load().id(id.longValue()).now();
+	}
+
+	private LoadType<Property> load () {
+		return provide().load().type(Property.class);
 	}
 
 	/* (non-Javadoc)
@@ -71,8 +76,7 @@ final class PropertyService
 	 * #getNamedProperty(java.lang.String) */
 	@Override
 	public Property getNamedProperty (String name) {
-		return provide().load().type(Property.class).filter("name", name)
-				.first().now();
+		return PersistenceHelper.one(load().filter("name", name));
 	}
 
 	/* (non-Javadoc)
@@ -99,10 +103,8 @@ final class PropertyService
 	@Override
 	public List<Property> getProperties (Integer start, Integer count,
 			PropertySortType sortBy, SortDirectionType sortDirection) {
-		return PersistenceHelper
-				.pagedAndSorted(provide().load().type(Property.class), start,
-						count, sortBy, this, sortDirection)
-				.list();
+		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
+				this, sortDirection).list();
 	}
 
 	/* (non-Javadoc)

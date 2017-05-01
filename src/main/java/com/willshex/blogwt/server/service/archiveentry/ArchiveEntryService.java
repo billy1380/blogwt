@@ -23,6 +23,8 @@ import java.util.TimeZone;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Work;
+import com.googlecode.objectify.cmd.LoadType;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
@@ -45,7 +47,14 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	 * #getArchiveEntry(java.lang.Long) */
 	@Override
 	public ArchiveEntry getArchiveEntry (Long id) {
-		return provide().load().type(ArchiveEntry.class).id(id).now();
+		return load().id(id).now();
+	}
+
+	/**
+	 * @return
+	 */
+	private LoadType<ArchiveEntry> load () {
+		return provide().load().type(ArchiveEntry.class);
 	}
 
 	/* (non-Javadoc)
@@ -119,8 +128,8 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	 * #getMonthArchiveEntry(java.lang.Integer, java.lang.Integer) */
 	@Override
 	public ArchiveEntry getMonthArchiveEntry (Integer month, Integer year) {
-		return provide().load().type(ArchiveEntry.class).filter("year", year)
-				.filter("month", month).first().now();
+		return PersistenceHelper
+				.one(load().filter("year", year).filter("month", month));
 	}
 
 	private Calendar ensureCalendar () {
@@ -138,7 +147,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	 * #getArchiveEntries() */
 	@Override
 	public List<ArchiveEntry> getArchiveEntries () {
-		return provide().load().type(ArchiveEntry.class).list();
+		return load().list();
 	}
 
 	@Override
@@ -284,7 +293,6 @@ final class ArchiveEntryService implements IArchiveEntryService {
 				return latest;
 			}
 		});
-
 	}
 
 }

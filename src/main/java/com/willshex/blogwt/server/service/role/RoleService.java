@@ -17,13 +17,15 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.cmd.Query;
+import com.googlecode.objectify.cmd.LoadType;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.RoleSortType;
 
-final class RoleService implements IRoleService {
+final class RoleService implements IRoleService, ISortable<RoleSortType> {
 
 	public String getName () {
 		return NAME;
@@ -31,7 +33,11 @@ final class RoleService implements IRoleService {
 
 	@Override
 	public Role getRole (Long id) {
-		return provide().load().type(Role.class).id(id.longValue()).now();
+		return load().id(id.longValue()).now();
+	}
+
+	private LoadType<Role> load () {
+		return provide().load().type(Role.class);
 	}
 
 	@Override
@@ -60,33 +66,8 @@ final class RoleService implements IRoleService {
 	@Override
 	public List<Role> getRoles (Integer start, Integer count,
 			RoleSortType sortBy, SortDirectionType sortDirection) {
-		Query<Role> query = provide().load().type(Role.class);
-
-		if (start != null) {
-			query = query.offset(start.intValue());
-		}
-
-		if (count != null) {
-			query = query.limit(count.intValue());
-		}
-
-		if (sortBy != null) {
-			String condition = sortBy.toString();
-
-			if (sortDirection != null) {
-				switch (sortDirection) {
-				case SortDirectionTypeDescending:
-					condition = "-" + condition;
-					break;
-				default:
-					break;
-				}
-			}
-
-			query = query.order(condition);
-		}
-
-		return query.list();
+		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
+				this, sortDirection).list();
 	}
 
 	/* (non-Javadoc)
@@ -104,8 +85,7 @@ final class RoleService implements IRoleService {
 	 * .util.Collection) */
 	@Override
 	public List<Role> getIdRoleBatch (Collection<Long> roleIds) {
-		return new ArrayList<Role>(
-				provide().load().type(Role.class).ids(roleIds).values());
+		return new ArrayList<Role>(load().ids(roleIds).values());
 	}
 
 	/* (non-Javadoc)
@@ -115,8 +95,8 @@ final class RoleService implements IRoleService {
 	 * .lang.String) */
 	@Override
 	public Role getCodeRole (String code) {
-		return provide().load().type(Role.class).filter("code", code).first()
-				.now();
+		return PersistenceHelper
+				.one(load().filter(map(RoleSortType.RoleSortTypeCode), code));
 	}
 
 	/* (non-Javadoc)
@@ -130,35 +110,20 @@ final class RoleService implements IRoleService {
 	public List<Role> getPartialNameRoles (String partialName, Integer start,
 			Integer count, RoleSortType sortBy,
 			SortDirectionType sortDirection) {
-		Query<Role> query = provide().load().type(Role.class);
+		// FIXME: this will not work because name is not indexed
+		return SearchHelper
+				.addStartsWith("name",
+						partialName, PersistenceHelper.pagedAndSorted(load(),
+								start, count, sortBy, this, sortDirection))
+				.list();
+	}
 
-		if (start != null) {
-			query = query.offset(start.intValue());
-		}
-
-		if (count != null) {
-			query = query.limit(count.intValue());
-		}
-
-		if (sortBy != null) {
-			String condition = sortBy.toString();
-
-			if (sortDirection != null) {
-				switch (sortDirection) {
-				case SortDirectionTypeDescending:
-					condition = "-" + condition;
-					break;
-				default:
-					break;
-				}
-			}
-
-			query = query.order(condition);
-		}
-
-		query = SearchHelper.addStartsWith("name", partialName, query);
-
-		return query.list();
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
+	@Override
+	public String map (RoleSortType sortBy) {
+		return sortBy.toString();
 	}
 
 }

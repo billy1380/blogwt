@@ -26,13 +26,14 @@ import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Work;
-import com.googlecode.objectify.cmd.Query;
+import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.EmailHelper;
 import com.willshex.blogwt.server.helper.InflatorHelper;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
@@ -49,7 +50,8 @@ import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.server.ContextAwareServlet;
 import com.willshex.utility.StringUtils;
 
-final class UserService implements IUserService, ISearch<User> {
+final class UserService
+		implements IUserService, ISearch<User>, ISortable<UserSortType> {
 
 	private static final String SALT = "af1d3250-f8d1-11e4-bbd2-7054d251af02";
 	private static final String ACTION_EMAIL_TEMPLATE = "Hi ${user.forename},\n\nPlease click the link below to ${action}:\n\n${link}\n\n${property.value}";
@@ -59,8 +61,11 @@ final class UserService implements IUserService, ISearch<User> {
 	}
 
 	public User getUser (Long id) {
-		return addAvatar(
-				provide().load().type(User.class).id(id.longValue()).now());
+		return addAvatar(load().id(id.longValue()).now());
+	}
+
+	private LoadType<User> load () {
+		return provide().load().type(User.class);
 	}
 
 	/* (non-Javadoc)
@@ -131,33 +136,8 @@ final class UserService implements IUserService, ISearch<User> {
 	@Override
 	public List<User> getUsers (Integer start, Integer count,
 			UserSortType sortBy, SortDirectionType sortDirection) {
-		Query<User> query = provide().load().type(User.class);
-
-		if (start != null) {
-			query = query.offset(start.intValue());
-		}
-
-		if (count != null) {
-			query = query.limit(count.intValue());
-		}
-
-		if (sortBy != null) {
-			String condition = sortBy.toString();
-
-			if (sortDirection != null) {
-				switch (sortDirection) {
-				case SortDirectionTypeDescending:
-					condition = "-" + condition;
-					break;
-				default:
-					break;
-				}
-			}
-
-			query = query.order(condition);
-		}
-
-		return addAvatars(query.list());
+		return addAvatars(PersistenceHelper.pagedAndSorted(load(), start, count,
+				sortBy, this, sortDirection).list());
 	}
 
 	/* (non-Javadoc)
@@ -166,8 +146,8 @@ final class UserService implements IUserService, ISearch<User> {
 	 * (java.lang.String, java.lang.String) */
 	@Override
 	public User getLoginUser (String username, String password) {
-		User user = provide().load().type(User.class)
-				.filter("username", username).first().now();
+		User user = PersistenceHelper.one(load()
+				.filter(map(UserSortType.UserSortTypeUsername), username));
 
 		if (mismatch(user, password)) {
 			user = null;
@@ -236,8 +216,8 @@ final class UserService implements IUserService, ISearch<User> {
 	 * (java.lang.String) */
 	@Override
 	public User getUsernameUser (String username) {
-		return addAvatar(provide().load().type(User.class)
-				.filter("username", username).first().now());
+		return addAvatar(PersistenceHelper.one(load()
+				.filter(map(UserSortType.UserSortTypeUsername), username)));
 	}
 
 	/* (non-Javadoc)
@@ -446,8 +426,8 @@ final class UserService implements IUserService, ISearch<User> {
 	 * (java.lang.String) */
 	@Override
 	public User getActionCodeUser (String actionCode) {
-		return addAvatar(provide().load().type(User.class)
-				.filter("actionCode", actionCode).first().now());
+		return addAvatar(PersistenceHelper.one(load()
+				.filter(map(UserSortType.UserSortTypeActionCode), actionCode)));
 	}
 
 	/* (non-Javadoc)
@@ -457,8 +437,8 @@ final class UserService implements IUserService, ISearch<User> {
 	 * .lang.String) */
 	@Override
 	public User getEmailUser (String email) {
-		return addAvatar(provide().load().type(User.class)
-				.filter("email", email).first().now());
+		return addAvatar(PersistenceHelper.one(
+				load().filter(map(UserSortType.UserSortTypeEmail), email)));
 	}
 
 	private String getSalt () {
@@ -547,8 +527,7 @@ final class UserService implements IUserService, ISearch<User> {
 	 * util.Collection) */
 	@Override
 	public List<User> getIdUserBatch (Collection<Long> ids) {
-		return addAvatars(new ArrayList<User>(
-				provide().load().type(User.class).ids(ids).values()));
+		return addAvatars(new ArrayList<User>(load().ids(ids).values()));
 	}
 
 	/* (non-Javadoc)
@@ -631,6 +610,14 @@ final class UserService implements IUserService, ISearch<User> {
 			String next, Integer count, String sortBy,
 			SortDirectionType direction) {
 		throw new UnsupportedOperationException();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
+	@Override
+	public String map (UserSortType sortBy) {
+		return sortBy.toString();
 	}
 
 }
