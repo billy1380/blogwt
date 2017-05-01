@@ -226,4 +226,8 @@ public class PersistenceHelper {
 
 		return k;
 	}
+
+	public static <T> T one (Query<T> q) {
+		return q.limit(1).first().now();
+	}
 }
