@@ -9,6 +9,7 @@ package com.willshex.blogwt.server.api.blog.action;
 
 import java.util.logging.Logger;
 
+import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
@@ -19,7 +20,6 @@ import com.willshex.blogwt.shared.api.datatype.PropertySortType;
 import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
-import com.willshex.gson.web.service.server.ActionHandler;
 
 public final class GetPropertiesActionHandler
 		extends ActionHandler<GetPropertiesRequest, GetPropertiesResponse> {
