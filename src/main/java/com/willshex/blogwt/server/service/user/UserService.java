@@ -169,7 +169,7 @@ final class UserService implements IUserService, ISearch<User> {
 		User user = provide().load().type(User.class)
 				.filter("username", username).first().now();
 
-		if (!verifyPassword(user, password)) {
+		if (mismatch(user, password)) {
 			user = null;
 		}
 
@@ -246,8 +246,12 @@ final class UserService implements IUserService, ISearch<User> {
 	 * com.willshex.blogwt.shared.api.datatype.User, java.lang.String) */
 	@Override
 	public Boolean verifyPassword (User user, String password) {
-		return Boolean.valueOf(user != null && StringUtils
-				.sha1Hash(password + getSalt()).equals(user.password));
+		return Boolean.valueOf(user != null
+				&& generatePassword(password).equals(user.password));
+	}
+
+	private boolean mismatch (User user, String password) {
+		return !Boolean.TRUE.equals(verifyPassword(user, password));
 	}
 
 	/* (non-Javadoc)
@@ -610,7 +614,7 @@ final class UserService implements IUserService, ISearch<User> {
 	public User getEmailLoginUser (String email, String password) {
 		User user = getEmailUser(email);
 
-		if (!verifyPassword(user, password)) {
+		if (mismatch(user, password)) {
 			user = null;
 		}
 
