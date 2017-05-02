@@ -12,6 +12,7 @@ import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.ServiceException;
 
 /**
  * @author William Shakour (billy1380)
@@ -73,7 +74,7 @@ public class PostValidator extends ApiValidator {
 	 * @throws InputValidationException 
 	 */
 	public static <T extends Iterable<Post>> T lookupAll (T posts, String name)
-			throws InputValidationException {
+			throws ServiceException {
 		return processAll(false, posts, LOOKUP, TYPE, name);
 	}
 

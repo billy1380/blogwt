@@ -23,7 +23,7 @@ import com.willshex.gson.web.service.shared.Request;
 public class ApiValidator {
 
 	public static interface Processor<T> {
-		T process (T item, String name) throws InputValidationException;
+		T process (T item, String name) throws ServiceException;
 	}
 
 	public static final String WEB_ACCESS_CODE = "2bfe5f0e-9138-401c-8619-9a66f6367c9a";
@@ -133,7 +133,7 @@ public class ApiValidator {
 	@SuppressWarnings("unchecked")
 	public static <T extends Iterable<S>, S> T processAll (boolean nullable,
 			T l, Processor<S> p, String type, String name)
-			throws InputValidationException {
+			throws ServiceException {
 		if (l == null && !nullable)
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + "[]: " + name);

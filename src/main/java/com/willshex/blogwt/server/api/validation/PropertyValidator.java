@@ -63,7 +63,7 @@ public class PropertyValidator extends ApiValidator {
 	}
 
 	public static <T extends Iterable<Property>> T validateAll (T properties,
-			String name) throws InputValidationException {
+			String name) throws ServiceException {
 		return processAll(true, properties, VALIDATE, TYPE, name);
 	}
 

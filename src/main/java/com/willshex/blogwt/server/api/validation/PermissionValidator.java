@@ -11,6 +11,7 @@ import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.ServiceException;
 
 /**
  * @author William Shakour (billy1380)
@@ -67,7 +68,7 @@ public class PermissionValidator extends ApiValidator {
 	 * @throws InputValidationException 
 	 */
 	public static <T extends Iterable<Permission>> T lookupAll (T permissions,
-			String name) throws InputValidationException {
+			String name) throws ServiceException {
 		return processAll(false, permissions, LOOKUP, TYPE, name);
 	}
 }

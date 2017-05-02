@@ -25,6 +25,7 @@ import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.ServiceException;
 
 /**
  * @author billy1380
@@ -91,7 +92,7 @@ public class UserValidator extends ApiValidator {
 	}
 
 	public static <T extends Iterable<User>> T validateAll (T users,
-			String name) throws InputValidationException {
+			String name) throws ServiceException {
 		return processAll(false, users, VALIDATE, TYPE, name);
 	}
 

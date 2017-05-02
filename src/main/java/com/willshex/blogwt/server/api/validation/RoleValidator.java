@@ -11,6 +11,7 @@ import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.ServiceException;
 
 /**
  * @author William Shakour (billy1380)
@@ -64,7 +65,7 @@ public class RoleValidator extends ApiValidator {
 	 * @throws InputValidationException 
 	 */
 	public static <T extends Iterable<Role>> T lookupAll (T roles, String name)
-			throws InputValidationException {
+			throws ServiceException {
 		return processAll(false, roles, LOOKUP, TYPE, name);
 	}
 }

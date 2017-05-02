@@ -11,6 +11,7 @@ import com.willshex.blogwt.server.service.rating.RatingServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Rating;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.ServiceException;
 
 /**
  * @author William Shakour (billy1380)
@@ -81,7 +82,7 @@ public class RatingValidator extends ApiValidator {
 	 * @throws InputValidationException 
 	 */
 	public static <T extends Iterable<Rating>> T lookupAll (T ratings,
-			String name) throws InputValidationException {
+			String name) throws ServiceException {
 		return processAll(false, ratings, LOOKUP, TYPE, name);
 	}
 }

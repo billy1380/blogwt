@@ -11,6 +11,7 @@ import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.ServiceException;
 
 /**
  * @author William Shakour (billy1380)
@@ -68,7 +69,7 @@ public class ResourceValidator extends ApiValidator {
 	 * @throws InputValidationException 
 	 */
 	public static <T extends Iterable<Resource>> T lookupAll (T resources,
-			String name) throws InputValidationException {
+			String name) throws ServiceException {
 		return processAll(false, resources, LOOKUP, TYPE, name);
 	}
 

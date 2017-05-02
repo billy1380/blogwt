@@ -11,6 +11,7 @@ import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvid
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.ServiceException;
 
 /**
  * @author William Shakour (billy1380)
@@ -44,8 +45,7 @@ public class ArchiveEntryValidator extends ApiValidator {
 	}
 
 	public static <T extends Iterable<ArchiveEntry>> T validateAll (
-			T archiveEntries, final String name)
-			throws InputValidationException {
+			T archiveEntries, final String name) throws ServiceException {
 		return processAll(false, archiveEntries, VALIDATE, TYPE, name);
 	}
 
@@ -85,8 +85,7 @@ public class ArchiveEntryValidator extends ApiValidator {
 	}
 
 	public static <T extends Iterable<ArchiveEntry>> T lookupAll (
-			T archiveEntries, final String name)
-			throws InputValidationException {
+			T archiveEntries, final String name) throws ServiceException {
 		return processAll(false, archiveEntries, LOOKUP, TYPE, name);
 	}
 }
