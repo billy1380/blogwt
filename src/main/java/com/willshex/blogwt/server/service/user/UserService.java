@@ -177,9 +177,11 @@ final class UserService
 	}
 
 	private User addAvatar (User user) {
-		return (user == null || user.email == null)
-				? (user != null && user.avatar != null ? user : null)
-				: user.avatar(UserHelper.emailAvatar(user.email));
+		if (user != null && user.email != null) {
+			user.avatar = UserHelper.emailAvatar(user.email);
+		}
+
+		return user;
 	}
 
 	@Override
