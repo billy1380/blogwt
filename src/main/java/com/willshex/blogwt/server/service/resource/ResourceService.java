@@ -11,16 +11,20 @@ package com.willshex.blogwt.server.service.resource;
 import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.cmd.Query;
+import com.googlecode.objectify.cmd.LoadType;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceSortType;
 
-final class ResourceService implements IResourceService {
+final class ResourceService
+		implements IResourceService, ISortable<ResourceSortType> {
 
 	/* (non-Javadoc)
 	 * 
@@ -37,7 +41,11 @@ final class ResourceService implements IResourceService {
 	 * (java.lang.Long) */
 	@Override
 	public Resource getResource (Long id) {
-		return provide().load().type(Resource.class).id(id.longValue()).now();
+		return load().id(id.longValue()).now();
+	}
+
+	private LoadType<Resource> load () {
+		return provide().load().type(Resource.class);
 	}
 
 	/* (non-Javadoc)
@@ -86,34 +94,26 @@ final class ResourceService implements IResourceService {
 	@Override
 	public List<Resource> getResources (Integer start, Integer count,
 			ResourceSortType sortBy, SortDirectionType sortDirection) {
-		Query<Resource> query = provide().load().type(Resource.class);
+		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
+				this, sortDirection).list();
+	}
 
-		if (start != null) {
-			query = query.offset(start.intValue());
-		}
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.resource.IResourceService#
+	 * getIdsResourceBatch(java.util.List) */
+	@Override
+	public List<Resource> getIdsResourceBatch (List<Long> ids) {
+		return new ArrayList<Resource>(load().ids(ids).values());
+	}
 
-		if (count != null) {
-			query = query.limit(count.intValue());
-		}
-
-		if (sortBy != null) {
-			String condition = sortBy == ResourceSortType.ResourceSortTypeId
-					? "__key__" : sortBy.toString();
-
-			if (sortDirection != null) {
-				switch (sortDirection) {
-				case SortDirectionTypeDescending:
-					condition = "-" + condition;
-					break;
-				default:
-					break;
-				}
-			}
-
-			query = query.order(condition);
-		}
-
-		return query.list();
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
+	@Override
+	public String map (ResourceSortType sortBy) {
+		return sortBy == ResourceSortType.ResourceSortTypeId ? "__key__"
+				: sortBy.toString();
 	}
 
 }

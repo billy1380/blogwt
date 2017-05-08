@@ -51,4 +51,11 @@ public interface IResourceService extends IService {
 	public List<Resource> getResources (Integer start, Integer count,
 			ResourceSortType sortBy, SortDirectionType sortDirection);
 
+	/**
+	 * Get ids resource batch 
+	 * @param ids
+	 * @return
+	 */
+	public List<Resource> getIdsResourceBatch (List<Long> ids);
+
 }
