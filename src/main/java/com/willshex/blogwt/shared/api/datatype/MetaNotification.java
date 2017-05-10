@@ -7,6 +7,10 @@
 //
 package com.willshex.blogwt.shared.api.datatype;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -19,9 +23,12 @@ import com.googlecode.objectify.annotation.Index;
 @Cache
 public class MetaNotification extends DataType {
 	@Index public String code;
+
 	public String content;
 	public String name;
-	public String description;
+	public String group;
+	public List<NotificationModeType> modes;
+	public List<NotificationModeType> defaults;
 
 	@Override
 	public JsonObject toJson () {
@@ -35,9 +42,31 @@ public class MetaNotification extends DataType {
 		JsonElement jsonName = name == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(name);
 		object.add("name", jsonName);
-		JsonElement jsonDescription = description == null ? JsonNull.INSTANCE
-				: new JsonPrimitive(description);
-		object.add("description", jsonDescription);
+		JsonElement jsonGroup = group == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(group);
+		object.add("group", jsonGroup);
+		JsonElement jsonModes = JsonNull.INSTANCE;
+		if (modes != null) {
+			jsonModes = new JsonArray();
+			for (int i = 0; i < modes.size(); i++) {
+				JsonElement jsonModesItem = modes.get(i) == null
+						? JsonNull.INSTANCE
+						: new JsonPrimitive(modes.get(i).toString());
+				((JsonArray) jsonModes).add(jsonModesItem);
+			}
+		}
+		object.add("modes", jsonModes);
+		JsonElement jsonDefaults = JsonNull.INSTANCE;
+		if (defaults != null) {
+			jsonDefaults = new JsonArray();
+			for (int i = 0; i < defaults.size(); i++) {
+				JsonElement jsonDefaultsItem = defaults.get(i) == null
+						? JsonNull.INSTANCE
+						: new JsonPrimitive(defaults.get(i).toString());
+				((JsonArray) jsonDefaults).add(jsonDefaultsItem);
+			}
+		}
+		object.add("defaults", jsonDefaults);
 		return object;
 	}
 
@@ -62,12 +91,34 @@ public class MetaNotification extends DataType {
 				name = jsonName.getAsString();
 			}
 		}
-		if (jsonObject.has("description")) {
-			JsonElement jsonDescription = jsonObject.get("description");
-			if (jsonDescription != null) {
-				description = jsonDescription.getAsString();
+		if (jsonObject.has("group")) {
+			JsonElement jsonGroup = jsonObject.get("group");
+			if (jsonGroup != null) {
+				group = jsonGroup.getAsString();
 			}
 		}
+		if (jsonObject.has("modes")) {
+			JsonElement jsonModes = jsonObject.get("modes");
+			if (jsonModes != null) {
+				modes = new ArrayList<NotificationModeType>();
+				for (int i = 0; i < jsonModes.getAsJsonArray().size(); i++) {
+					modes.add(NotificationModeType.fromString(
+							jsonModes.getAsJsonArray().get(i).getAsString()));
+				}
+			}
+		}
+
+		if (jsonObject.has("defaults")) {
+			JsonElement jsonDefaults = jsonObject.get("defaults");
+			if (jsonDefaults != null) {
+				defaults = new ArrayList<NotificationModeType>();
+				for (int i = 0; i < jsonDefaults.getAsJsonArray().size(); i++) {
+					defaults.add(NotificationModeType.fromString(jsonDefaults
+							.getAsJsonArray().get(i).getAsString()));
+				}
+			}
+		}
+
 	}
 
 	public MetaNotification code (String code) {
@@ -85,8 +136,18 @@ public class MetaNotification extends DataType {
 		return this;
 	}
 
-	public MetaNotification description (String description) {
-		this.description = description;
+	public MetaNotification group (String group) {
+		this.group = group;
+		return this;
+	}
+
+	public MetaNotification modes (List<NotificationModeType> modes) {
+		this.modes = modes;
+		return this;
+	}
+
+	public MetaNotification defaults (List<NotificationModeType> defaults) {
+		this.defaults = defaults;
 		return this;
 	}
 }
