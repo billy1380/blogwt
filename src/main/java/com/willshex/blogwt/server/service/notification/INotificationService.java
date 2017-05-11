@@ -8,7 +8,12 @@
 
 package com.willshex.blogwt.server.service.notification;
 
+import java.util.List;
+
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Notification;
+import com.willshex.blogwt.shared.api.datatype.NotificationSortType;
+import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.service.IService;
 
 public interface INotificationService extends IService {
@@ -37,5 +42,18 @@ public interface INotificationService extends IService {
 	* @param notification
 	*/
 	public void deleteNotification (Notification notification);
+
+	/**
+	 * Get user notifications
+	 * @param user
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
+	 * @return
+	 */
+	public List<Notification> getUserNotifications (User user, Integer start,
+			Integer count, NotificationSortType sortBy,
+			SortDirectionType sortDirection);
 
 }
