@@ -28,6 +28,7 @@ public class PermissionHelper {
 	public static final String MANAGE_POSTS = "MPO";
 	public static final String MANAGE_PAGES = "MPA";
 	public static final String MANAGE_RESOURCES = "MRE";
+	public static final String MANAGE_NOTIFICATIONS = "MNO";
 
 	public static final String MANAGE_PERMISSIONS_NAME = "Manage Permissions";
 	public static final String MANAGE_ROLES_NAME = "Manage Roles";
@@ -35,6 +36,7 @@ public class PermissionHelper {
 	public static final String MANAGE_POSTS_NAME = "Manage Posts";
 	public static final String MANAGE_PAGES_NAME = "Manage Pages";
 	public static final String MANAGE_RESOURCES_NAME = "Manage Resources";
+	public static final String MANAGE_NOTIFICATIONS_NAME = "Manage Notifications";
 
 	public static final String MANAGE_PERMISSIONS_DESCRIPTION = "allows users to add permissions to users";
 	public static final String MANAGE_ROLES_DESCRIPTION = "allows users to add roles to other users as well as add permissions to roles";
@@ -42,6 +44,7 @@ public class PermissionHelper {
 	public static final String MANAGE_POSTS_DESCRIPTION = "allows users to add and remove posts";
 	public static final String MANAGE_PAGES_DESCRIPTION = "allows users to add pages with links that appear in the header";
 	public static final String MANAGE_RESOURCES_DESCRIPTION = "allows users to edit and delete resources (images)";
+	public static final String MANAGER_NOTIFICATIONS_DESCRIPTION = "allows users to view and edit notifications and meta notifications";
 
 	public static Map<String, Permission> toLookup (
 			Collection<Permission> permissions) {

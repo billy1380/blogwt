@@ -11,12 +11,18 @@ package com.willshex.blogwt.server.service.metanotification;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Date;
+import java.util.List;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
+import com.willshex.blogwt.server.service.ISortable;
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
+import com.willshex.blogwt.shared.api.datatype.MetaNotificationSortType;
 
-final class MetaNotificationService implements IMetaNotificationService {
+final class MetaNotificationService implements IMetaNotificationService,
+		ISortable<MetaNotificationSortType> {
 	public String getName () {
 		return NAME;
 	}
@@ -54,6 +60,29 @@ final class MetaNotificationService implements IMetaNotificationService {
 	@Override
 	public void deleteMetaNotification (MetaNotification metaNotification) {
 		provide().delete().entity(metaNotification).now();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.metanotification.
+	 * IMetaNotificationService#getMetaNotifictions(java.lang.Integer,
+	 * java.lang.Integer,
+	 * com.willshex.blogwt.shared.api.datatype.MetaNotificationSortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	@Override
+	public List<MetaNotification> getMetaNotifications (Integer start,
+			Integer count, MetaNotificationSortType sortBy,
+			SortDirectionType sortDirection) {
+		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
+				this, sortDirection).list();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
+	@Override
+	public String map (MetaNotificationSortType sortBy) {
+		return sortBy.toString();
 	}
 
 }

@@ -8,7 +8,11 @@
 
 package com.willshex.blogwt.server.service.metanotification;
 
+import java.util.List;
+
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
+import com.willshex.blogwt.shared.api.datatype.MetaNotificationSortType;
 import com.willshex.service.IService;
 
 public interface IMetaNotificationService extends IService {
@@ -39,5 +43,17 @@ public interface IMetaNotificationService extends IService {
 	* @param metaNotification
 	*/
 	public void deleteMetaNotification (MetaNotification metaNotification);
+
+	/**
+	 * Get meta notifications
+	 * @param start
+	 * @param count
+	 * @param sortBy
+	 * @param sortDirection
+	 * @return
+	 */
+	public List<MetaNotification> getMetaNotifications (Integer start,
+			Integer count, MetaNotificationSortType sortBy,
+			SortDirectionType sortDirection);
 
 }

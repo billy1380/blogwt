@@ -19,24 +19,22 @@ import com.willshex.blogwt.shared.api.Response;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 
 public class GetMetaNotificationsResponse extends Response {
-	public List<MetaNotification> metaNotifications;
+	public List<MetaNotification> metas;
 	public Pager pager;
 
 	@Override
 	public JsonObject toJson () {
 		JsonObject object = super.toJson();
-		JsonElement jsonMetaNotifications = JsonNull.INSTANCE;
-		if (metaNotifications != null) {
-			jsonMetaNotifications = new JsonArray();
-			for (int i = 0; i < metaNotifications.size(); i++) {
-				JsonElement jsonMetaNotificationsItem = metaNotifications
-						.get(i) == null ? JsonNull.INSTANCE
-								: metaNotifications.get(i).toJson();
-				((JsonArray) jsonMetaNotifications)
-						.add(jsonMetaNotificationsItem);
+		JsonElement jsonMetas = JsonNull.INSTANCE;
+		if (metas != null) {
+			jsonMetas = new JsonArray();
+			for (int i = 0; i < metas.size(); i++) {
+				JsonElement jsonMetasItem = metas.get(i) == null
+						? JsonNull.INSTANCE : metas.get(i).toJson();
+				((JsonArray) jsonMetas).add(jsonMetasItem);
 			}
 		}
-		object.add("metaNotifications", jsonMetaNotifications);
+		object.add("metas", jsonMetas);
 		JsonElement jsonPager = pager == null ? JsonNull.INSTANCE
 				: pager.toJson();
 		object.add("pager", jsonPager);
@@ -46,19 +44,16 @@ public class GetMetaNotificationsResponse extends Response {
 	@Override
 	public void fromJson (JsonObject jsonObject) {
 		super.fromJson(jsonObject);
-		if (jsonObject.has("metaNotifications")) {
-			JsonElement jsonMetaNotifications = jsonObject
-					.get("metaNotifications");
-			if (jsonMetaNotifications != null) {
-				metaNotifications = new ArrayList<MetaNotification>();
+		if (jsonObject.has("metas")) {
+			JsonElement jsonMetas = jsonObject.get("metas");
+			if (jsonMetas != null) {
+				metas = new ArrayList<MetaNotification>();
 				MetaNotification item = null;
-				for (int i = 0; i < jsonMetaNotifications.getAsJsonArray()
-						.size(); i++) {
-					if (jsonMetaNotifications.getAsJsonArray().get(i) != null) {
-						(item = new MetaNotification())
-								.fromJson(jsonMetaNotifications.getAsJsonArray()
-										.get(i).getAsJsonObject());
-						metaNotifications.add(item);
+				for (int i = 0; i < jsonMetas.getAsJsonArray().size(); i++) {
+					if (jsonMetas.getAsJsonArray().get(i) != null) {
+						(item = new MetaNotification()).fromJson(jsonMetas
+								.getAsJsonArray().get(i).getAsJsonObject());
+						metas.add(item);
 					}
 				}
 			}
@@ -73,9 +68,8 @@ public class GetMetaNotificationsResponse extends Response {
 		}
 	}
 
-	public GetMetaNotificationsResponse metaNotifications (
-			List<MetaNotification> metaNotifications) {
-		this.metaNotifications = metaNotifications;
+	public GetMetaNotificationsResponse metas (List<MetaNotification> metas) {
+		this.metas = metas;
 		return this;
 	}
 
