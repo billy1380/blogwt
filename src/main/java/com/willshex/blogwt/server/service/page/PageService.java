@@ -177,7 +177,7 @@ final class PageService
 			Integer count, PageSortType sortBy,
 			SortDirectionType sortDirection) {
 		List<Page> pages = PersistenceHelper.pagedAndSorted(load(), start,
-				count, sortBy, this, sortDirection).list();
+				count, sortBy, this, sortDirection);
 
 		if (Boolean.TRUE.equals(includePostContents)) {
 			populatePostContents(pages);
@@ -262,15 +262,15 @@ final class PageService
 	public List<Page> getPartialSlugPages (String partialSlug,
 			Boolean includePostContents, Integer start, Integer count,
 			PageSortType sortBy, SortDirectionType sortDirection) {
-		Query<Page> query = PersistenceHelper.pagedAndSorted(load(), start,
-				count, sortBy, this, sortDirection);
-		
+		Query<Page> query = load();
+
 		if (partialSlug != null) {
 			query = SearchHelper.addStartsWith("slug",
 					partialSlug.toLowerCase(), query);
 		}
 
-		List<Page> pages = query.list();
+		List<Page> pages = PersistenceHelper.pagedAndSorted(query, start, count,
+				sortBy, this, sortDirection);
 
 		if (Boolean.TRUE.equals(includePostContents)) {
 			populatePostContents(pages);

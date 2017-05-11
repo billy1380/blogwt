@@ -95,7 +95,7 @@ final class ResourceService
 	public List<Resource> getResources (Integer start, Integer count,
 			ResourceSortType sortBy, SortDirectionType sortDirection) {
 		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
-				this, sortDirection).list();
+				this, sortDirection);
 	}
 
 	/* (non-Javadoc)

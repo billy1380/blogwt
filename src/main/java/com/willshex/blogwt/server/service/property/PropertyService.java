@@ -104,7 +104,7 @@ final class PropertyService
 	public List<Property> getProperties (Integer start, Integer count,
 			PropertySortType sortBy, SortDirectionType sortDirection) {
 		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
-				this, sortDirection).list();
+				this, sortDirection);
 	}
 
 	/* (non-Javadoc)

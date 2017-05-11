@@ -8,6 +8,7 @@
 
 package com.willshex.blogwt.server.service.metanotification;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.willshex.blogwt.shared.api.SortDirectionType;
@@ -55,5 +56,13 @@ public interface IMetaNotificationService extends IService {
 	public List<MetaNotification> getMetaNotifications (Integer start,
 			Integer count, MetaNotificationSortType sortBy,
 			SortDirectionType sortDirection);
+
+	/**
+	 * Get id meta notification batch
+	 * @param ids
+	 * @return
+	 */
+	public List<MetaNotification> getIdMetaNotificationBatch (
+			Collection<Long> ids);
 
 }

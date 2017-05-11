@@ -76,12 +76,9 @@ final class NotificationService
 	public List<Notification> getUserNotifications (User user, Integer start,
 			Integer count, NotificationSortType sortBy,
 			SortDirectionType sortDirection) {
-		return PersistenceHelper
-				.pagedAndSorted(load(), start, count, sortBy, this,
-						sortDirection)
-				.filter(map(NotificationSortType.NotificationSortTypeTarget),
-						user)
-				.list();
+		return PersistenceHelper.pagedAndSorted(load().filter(
+				map(NotificationSortType.NotificationSortTypeTarget), user),
+				start, count, sortBy, this, sortDirection);
 	}
 
 	/* (non-Javadoc)

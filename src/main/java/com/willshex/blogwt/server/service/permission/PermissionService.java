@@ -18,7 +18,6 @@ import java.util.List;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
-import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.ISortable;
@@ -72,7 +71,7 @@ final class PermissionService
 	public List<Permission> getPermissions (Integer start, Integer count,
 			PermissionSortType sortBy, SortDirectionType sortDirection) {
 		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
-				this, sortDirection).list();
+				this, sortDirection);
 	}
 
 	/* (non-Javadoc)
@@ -137,14 +136,11 @@ final class PermissionService
 	public List<Permission> getPartialNamePermissions (String partialName,
 			Integer start, Integer count, PermissionSortType sortBy,
 			SortDirectionType sortDirection) {
-		Query<Permission> query = PersistenceHelper.pagedAndSorted(load(),
+		return PersistenceHelper.pagedAndSorted(
+				SearchHelper.addStartsWith(
+						map(PermissionSortType.PermissionSortTypeCode),
+						partialName, load()),
 				start, count, sortBy, this, sortDirection);
-
-		query = SearchHelper.addStartsWith(
-				map(PermissionSortType.PermissionSortTypeCode), partialName,
-				query);
-
-		return query.list();
 	}
 
 	/* (non-Javadoc)

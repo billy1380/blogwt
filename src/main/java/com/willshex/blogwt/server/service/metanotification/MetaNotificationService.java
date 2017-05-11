@@ -10,6 +10,8 @@ package com.willshex.blogwt.server.service.metanotification;
 
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -74,7 +76,7 @@ final class MetaNotificationService implements IMetaNotificationService,
 			Integer count, MetaNotificationSortType sortBy,
 			SortDirectionType sortDirection) {
 		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
-				this, sortDirection).list();
+				this, sortDirection);
 	}
 
 	/* (non-Javadoc)
@@ -83,6 +85,17 @@ final class MetaNotificationService implements IMetaNotificationService,
 	@Override
 	public String map (MetaNotificationSortType sortBy) {
 		return sortBy.toString();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.metanotification.
+	 * IMetaNotificationService#getIdMetaNotificationBatch(java.util.
+	 * Collection) */
+	@Override
+	public List<MetaNotification> getIdMetaNotificationBatch (
+			Collection<Long> ids) {
+		return new ArrayList<MetaNotification>(load().ids(ids).values());
 	}
 
 }

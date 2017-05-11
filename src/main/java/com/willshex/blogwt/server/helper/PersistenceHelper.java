@@ -176,9 +176,9 @@ public class PersistenceHelper {
 	 * @param sortDirection
 	 * @return
 	 */
-	public static <T, E extends Enum<E>> Query<T> pagedAndSorted (
-			Query<T> query, Integer start, Integer count, E sortBy,
-			ISortable<E> sortable, SortDirectionType sortDirection) {
+	public static <T, E extends Enum<E>> List<T> pagedAndSorted (Query<T> query,
+			Integer start, Integer count, E sortBy, ISortable<E> sortable,
+			SortDirectionType sortDirection) {
 		if (start != null) {
 			query = query.offset(start.intValue());
 		}
@@ -192,7 +192,7 @@ public class PersistenceHelper {
 					.order(direction(sortDirection) + sortable.map(sortBy));
 		}
 
-		return query;
+		return query.list();
 	}
 
 	private static <T> Field key (Class<T> c) {

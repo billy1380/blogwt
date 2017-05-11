@@ -21,7 +21,9 @@ public final class SetPushTokenActionHandler
 
 	@Override
 	public void handle (SetPushTokenRequest input, SetPushTokenResponse output)
-			throws Exception {}
+			throws Exception {
+		
+	}
 
 	@Override
 	protected SetPushTokenResponse newOutput () {

@@ -67,7 +67,7 @@ final class RoleService implements IRoleService, ISortable<RoleSortType> {
 	public List<Role> getRoles (Integer start, Integer count,
 			RoleSortType sortBy, SortDirectionType sortDirection) {
 		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
-				this, sortDirection).list();
+				this, sortDirection);
 	}
 
 	/* (non-Javadoc)
@@ -111,11 +111,9 @@ final class RoleService implements IRoleService, ISortable<RoleSortType> {
 			Integer count, RoleSortType sortBy,
 			SortDirectionType sortDirection) {
 		// FIXME: this will not work because name is not indexed
-		return SearchHelper
-				.addStartsWith("name",
-						partialName, PersistenceHelper.pagedAndSorted(load(),
-								start, count, sortBy, this, sortDirection))
-				.list();
+		return PersistenceHelper.pagedAndSorted(
+				SearchHelper.addStartsWith("name", partialName, load()), start,
+				count, sortBy, this, sortDirection);
 	}
 
 	/* (non-Javadoc)

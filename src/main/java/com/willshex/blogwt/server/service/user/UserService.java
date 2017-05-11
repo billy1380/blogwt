@@ -137,7 +137,7 @@ final class UserService
 	public List<User> getUsers (Integer start, Integer count,
 			UserSortType sortBy, SortDirectionType sortDirection) {
 		return addAvatars(PersistenceHelper.pagedAndSorted(load(), start, count,
-				sortBy, this, sortDirection).list());
+				sortBy, this, sortDirection));
 	}
 
 	/* (non-Javadoc)
