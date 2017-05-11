@@ -10,6 +10,8 @@ package com.willshex.blogwt.server.service.notification;
 
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Notification;
+import com.willshex.blogwt.shared.api.datatype.NotificationSetting;
 import com.willshex.blogwt.shared.api.datatype.NotificationSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 
@@ -93,6 +96,29 @@ final class NotificationService
 		}
 
 		return mapped;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.notification.INotificationService#
+	 * updateNotificationSettings(java.util.Collection) */
+	@Override
+	public List<NotificationSetting> updateNotificationSettings (
+			Collection<NotificationSetting> notificationSettings) {
+		for (NotificationSetting setting : notificationSettings) {
+			if (setting.user != null) {
+				setting.userKey = Key.create(setting.user);
+			}
+
+			if (setting.meta != null) {
+				setting.metaKey = Key.create(setting.meta);
+			}
+		}
+		provide().save().entities(notificationSettings).now();
+		return notificationSettings instanceof List
+				? (List<NotificationSetting>) notificationSettings
+				: new ArrayList<>(notificationSettings);
 	}
 
 }

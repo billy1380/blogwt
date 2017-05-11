@@ -98,4 +98,15 @@ final class MetaNotificationService implements IMetaNotificationService,
 		return new ArrayList<MetaNotification>(load().ids(ids).values());
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.metanotification.
+	 * IMetaNotificationService#getCodeMetaNotification(java.lang.String) */
+	@Override
+	public MetaNotification getCodeMetaNotification (String code) {
+		return PersistenceHelper.one(load().filter(
+				map(MetaNotificationSortType.MetaNotificationSortTypeCode),
+				code));
+	}
+
 }

@@ -21,7 +21,6 @@ import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.datatype.Notification;
 import com.willshex.blogwt.shared.api.datatype.NotificationSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.api.notification.call.GetMetaNotificationsRequest;
 import com.willshex.blogwt.shared.api.notification.call.GetNotificationsRequest;
 import com.willshex.blogwt.shared.api.notification.call.GetNotificationsResponse;
 import com.willshex.blogwt.shared.helper.PagerHelper;
@@ -36,7 +35,7 @@ public final class GetNotificationsActionHandler extends
 	@Override
 	public void handle (GetNotificationsRequest input,
 			GetNotificationsResponse output) throws Exception {
-		ApiValidator.notNull(input, GetMetaNotificationsRequest.class, "input");
+		ApiValidator.notNull(input, GetNotificationsRequest.class, "input");
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

@@ -7,25 +7,22 @@
 // 
 package com.willshex.blogwt.server.api.notification.action;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
-import com.google.gwt.dev.util.collect.HashMap;
 import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
-import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.service.metanotification.MetaNotificationServiceProvider;
 import com.willshex.blogwt.server.service.notificationsetting.NotificationSettingServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
+import com.willshex.blogwt.shared.api.datatype.MetaNotificationSortType;
 import com.willshex.blogwt.shared.api.datatype.NotificationSetting;
-import com.willshex.blogwt.shared.api.datatype.NotificationSettingSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.api.notification.call.GetMetaNotificationsRequest;
 import com.willshex.blogwt.shared.api.notification.call.GetNotificationSettingsRequest;
 import com.willshex.blogwt.shared.api.notification.call.GetNotificationSettingsResponse;
 import com.willshex.blogwt.shared.helper.PagerHelper;
@@ -40,7 +37,8 @@ public final class GetNotificationSettingsActionHandler extends
 	@Override
 	public void handle (GetNotificationSettingsRequest input,
 			GetNotificationSettingsResponse output) throws Exception {
-		ApiValidator.notNull(input, GetMetaNotificationsRequest.class, "input");
+		ApiValidator.notNull(input, GetNotificationSettingsRequest.class,
+				"input");
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");
@@ -61,27 +59,29 @@ public final class GetNotificationSettingsActionHandler extends
 			input.pager = PagerHelper.createDefaultPager();
 		}
 
-		output.settings = NotificationSettingServiceProvider.provide()
-				.getUserNotificationSettings(input.user, input.pager.start,
-						input.pager.count, NotificationSettingSortType
-								.fromString(input.pager.sortBy),
+		List<MetaNotification> metas = MetaNotificationServiceProvider.provide()
+				.getMetaNotifications(input.pager.start, input.pager.count,
+						MetaNotificationSortType.fromString(input.pager.sortBy),
 						input.pager.sortDirection);
 
-		if (output.settings != null) {
-			Map<Long, NotificationSetting> notificationSettingLookup = new HashMap<>();
-			for (NotificationSetting setting : output.settings) {
-				notificationSettingLookup.put(
-						PersistenceHelper.keyToId(setting.metaKey), setting);
-				setting.user = PersistenceHelper.type(User.class,
-						setting.userKey);
-			}
-
-			List<MetaNotification> metas = MetaNotificationServiceProvider
-					.provide().getIdMetaNotificationBatch(
-							notificationSettingLookup.keySet());
+		if (metas != null && metas.size() > 0) {
+			output.settings = new ArrayList<>();
+			NotificationSetting setting;
+			User slimUser = (User) new User().id(input.user.id);
 
 			for (MetaNotification meta : metas) {
-				notificationSettingLookup.get(meta.id).meta = meta;
+				setting = NotificationSettingServiceProvider.provide()
+						.getMetaUserNotificationSetting(meta, input.user);
+
+				if (setting == null) {
+					setting = new NotificationSetting().meta(meta)
+							.user(input.user).selected(meta.defaults);
+					setting = NotificationSettingServiceProvider.provide()
+							.addNotificationSetting(setting);
+				}
+
+				setting.user = slimUser;
+				setting.meta = meta;
 			}
 		}
 

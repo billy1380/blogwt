@@ -65,4 +65,11 @@ public interface IMetaNotificationService extends IService {
 	public List<MetaNotification> getIdMetaNotificationBatch (
 			Collection<Long> ids);
 
+	/**
+	 * Get code meta notification
+	 * @param code
+	 * @return
+	 */
+	public MetaNotification getCodeMetaNotification (String code);
+
 }

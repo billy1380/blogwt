@@ -32,7 +32,8 @@ import com.willshex.gson.web.service.server.ServiceException;
  *
  */
 public class UserValidator extends ApiValidator {
-	private static final String TYPE = User.class.getSimpleName();
+	private static final Class<User> CLASS = User.class;
+	private static final String TYPE = CLASS.getSimpleName();
 
 	private static final Processor<User> VALIDATE = new Processor<User>() {
 
@@ -40,6 +41,15 @@ public class UserValidator extends ApiValidator {
 		public User process (User item, String name)
 				throws InputValidationException {
 			return validate(item, name);
+		}
+	};
+
+	private static final Processor<User> LOOKUP = new Processor<User>() {
+
+		@Override
+		public User process (User item, String name)
+				throws InputValidationException {
+			return lookup(item, name);
 		}
 	};
 
@@ -96,6 +106,11 @@ public class UserValidator extends ApiValidator {
 		return processAll(false, users, VALIDATE, TYPE, name);
 	}
 
+	public static <T extends Iterable<User>> T lookupAll (T users, String name)
+			throws ServiceException {
+		return processAll(false, users, LOOKUP, TYPE, name);
+	}
+
 	public static boolean isAdmin (User user) {
 		List<Role> roles = user.roles == null && user.roleKeys != null
 				? RoleServiceProvider.provide().getIdRoleBatch(
@@ -136,8 +151,7 @@ public class UserValidator extends ApiValidator {
 
 	public static User lookup (User user, String name)
 			throws InputValidationException {
-		if (user == null) throwServiceError(InputValidationException.class,
-				ApiError.InvalidValueNull, TYPE + ": " + name);
+		notNull(user, CLASS, name);
 
 		boolean isIdLookup = false, isNameLookup = false;
 

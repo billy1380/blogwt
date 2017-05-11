@@ -10,6 +10,8 @@ package com.willshex.blogwt.server.api.notification.action;
 import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.ActionHandler;
+import com.willshex.blogwt.server.api.validation.ApiValidator;
+import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.shared.api.notification.call.SetPushTokenRequest;
 import com.willshex.blogwt.shared.api.notification.call.SetPushTokenResponse;
 
@@ -22,6 +24,11 @@ public final class SetPushTokenActionHandler
 	@Override
 	public void handle (SetPushTokenRequest input, SetPushTokenResponse output)
 			throws Exception {
+		ApiValidator.notNull(input, SetPushTokenRequest.class, "input");
+		ApiValidator.accessCode(input.accessCode, "input.accessCode");
+		output.session = input.session = SessionValidator
+				.lookupCheckAndExtend(input.session, "input.session");
+		
 		
 	}
 
