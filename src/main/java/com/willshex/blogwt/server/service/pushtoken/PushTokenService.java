@@ -14,9 +14,14 @@ import java.util.Date;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.datatype.PushToken;
+import com.willshex.blogwt.shared.api.datatype.PushTokenSortType;
+import com.willshex.blogwt.shared.api.datatype.User;
 
-final class PushTokenService implements IPushTokenService {
+final class PushTokenService
+		implements IPushTokenService, ISortable<PushTokenSortType> {
 	public String getName () {
 		return NAME;
 	}
@@ -59,6 +64,33 @@ final class PushTokenService implements IPushTokenService {
 	@Override
 	public void deletePushToken (PushToken pushToken) {
 		throw new UnsupportedOperationException();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.pushtoken.IPushTokenService#
+	 * getUserPlatformPushToken(com.willshex.blogwt.shared.api.datatype.User,
+	 * java.lang.String) */
+	@Override
+	public PushToken getUserPlatformPushToken (User user, String platform) {
+		return PersistenceHelper.one(load()
+				.filter(map(PushTokenSortType.PushTokenSortTypeUser), user)
+				.filter(map(PushTokenSortType.PushTokenSortTypePlatform),
+						platform));
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
+	@Override
+	public String map (PushTokenSortType sortBy) {
+		String mapped = sortBy.toString();
+
+		if (sortBy == PushTokenSortType.PushTokenSortTypeUser) {
+			mapped += "Key";
+		}
+
+		return mapped;
 	}
 
 }

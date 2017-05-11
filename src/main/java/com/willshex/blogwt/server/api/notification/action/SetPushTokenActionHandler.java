@@ -11,7 +11,10 @@ import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
+import com.willshex.blogwt.server.api.validation.PushTokenValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
+import com.willshex.blogwt.server.service.pushtoken.PushTokenServiceProvider;
+import com.willshex.blogwt.shared.api.datatype.PushToken;
 import com.willshex.blogwt.shared.api.notification.call.SetPushTokenRequest;
 import com.willshex.blogwt.shared.api.notification.call.SetPushTokenResponse;
 
@@ -28,8 +31,19 @@ public final class SetPushTokenActionHandler
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");
-		
-		
+
+		input.token = PushTokenValidator.valiate(input.token, "input.token");
+
+		PushToken token = PushTokenServiceProvider.provide()
+				.getUserPlatformPushToken(input.token.user,
+						input.token.platform);
+
+		if (token == null) {
+			input.token = PushTokenServiceProvider.provide()
+					.addPushToken(input.token);
+		} else {
+			PushTokenServiceProvider.provide().updatePushToken(input.token);
+		}
 	}
 
 	@Override

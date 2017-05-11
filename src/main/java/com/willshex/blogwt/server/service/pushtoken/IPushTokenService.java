@@ -9,6 +9,7 @@
 package com.willshex.blogwt.server.service.pushtoken;
 
 import com.willshex.blogwt.shared.api.datatype.PushToken;
+import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.service.IService;
 
 public interface IPushTokenService extends IService {
@@ -37,5 +38,13 @@ public interface IPushTokenService extends IService {
 	* @param pushToken
 	*/
 	public void deletePushToken (PushToken pushToken);
+
+	/**
+	 * Get user platform push token
+	 * @param user
+	 * @param platform
+	 * @return
+	 */
+	public PushToken getUserPlatformPushToken (User user, String platform);
 
 }
