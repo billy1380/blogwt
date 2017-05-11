@@ -44,7 +44,7 @@ public class PermissionHelper {
 	public static final String MANAGE_POSTS_DESCRIPTION = "allows users to add and remove posts";
 	public static final String MANAGE_PAGES_DESCRIPTION = "allows users to add pages with links that appear in the header";
 	public static final String MANAGE_RESOURCES_DESCRIPTION = "allows users to edit and delete resources (images)";
-	public static final String MANAGER_NOTIFICATIONS_DESCRIPTION = "allows users to view and edit notifications and meta notifications";
+	public static final String MANAGE_NOTIFICATIONS_DESCRIPTION = "allows users to view and edit notifications and meta notifications";
 
 	public static Map<String, Permission> toLookup (
 			Collection<Permission> permissions) {
@@ -82,6 +82,8 @@ public class PermissionHelper {
 				MANAGE_PAGES_DESCRIPTION));
 		all.add(createFull(MANAGE_RESOURCES, MANAGE_RESOURCES_NAME,
 				MANAGE_RESOURCES_DESCRIPTION));
+		all.add(createFull(MANAGE_NOTIFICATIONS, MANAGE_NOTIFICATIONS_NAME,
+				MANAGE_NOTIFICATIONS_DESCRIPTION));
 
 		return all;
 	}
