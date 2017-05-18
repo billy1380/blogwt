@@ -10,6 +10,8 @@ package com.willshex.blogwt.server;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
@@ -47,6 +49,9 @@ import com.willshex.utility.JsonUtils;
 public class DevServlet extends ContextAwareServlet {
 
 	private static final long serialVersionUID = 8911904038164388255L;
+
+	private static final Logger LOG = Logger
+			.getLogger(DevServlet.class.getName());
 
 	/* (non-Javadoc)
 	 * 
@@ -124,7 +129,11 @@ public class DevServlet extends ContextAwareServlet {
 																"gs://", ""))));
 						ResourceServiceProvider.provide()
 								.updateResource(resource);
-					} catch (Throwable e) {}
+					} catch (Throwable e) {
+						if (LOG.isLoggable(Level.FINE)) {
+							LOG.fine("Could not update resource");
+						}
+					}
 				}
 			}
 		} else if ("fixmetanotifications".equals(action)) {
@@ -135,6 +144,11 @@ public class DevServlet extends ContextAwareServlet {
 						.getCodeMetaNotification(meta.code) == null) {
 					meta = MetaNotificationServiceProvider.provide()
 							.addMetaNotification(meta);
+					LOG.info("added meta notification [" + meta.code
+							+ "] with id [" + meta.id + "]");
+				} else {
+					LOG.info("Meta notification [" + meta.code
+							+ "] already exists");
 				}
 			}
 		}
