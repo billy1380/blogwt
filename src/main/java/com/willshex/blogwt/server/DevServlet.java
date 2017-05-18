@@ -19,6 +19,7 @@ import com.google.appengine.api.images.ServingUrlOptions;
 import com.willshex.blogwt.server.api.blog.action.GetPostsActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
+import com.willshex.blogwt.server.service.metanotification.MetaNotificationServiceProvider;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
@@ -28,9 +29,11 @@ import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
+import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.Role;
+import com.willshex.blogwt.shared.helper.MetaNotificationHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
@@ -122,7 +125,16 @@ public class DevServlet extends ContextAwareServlet {
 						ResourceServiceProvider.provide()
 								.updateResource(resource);
 					} catch (Throwable e) {}
+				}
+			}
+		} else if ("fixmetanotifications".equals(action)) {
+			List<MetaNotification> metas = MetaNotificationHelper.createAll();
 
+			for (MetaNotification meta : metas) {
+				if (MetaNotificationServiceProvider.provide()
+						.getCodeMetaNotification(meta.code) == null) {
+					meta = MetaNotificationServiceProvider.provide()
+							.addMetaNotification(meta);
 				}
 			}
 		}
