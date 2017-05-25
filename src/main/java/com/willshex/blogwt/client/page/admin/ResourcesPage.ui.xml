@@ -25,11 +25,11 @@
 			</g:Button>
 		</div>
 
-		<c:SimplePager ui:field="pgrTop" location="RIGHT" />
+		<p:SimplePager ui:field="pgrTop" styleName="text-right" />
 
 		<c:CellList ui:field="clResources" styleName="row {style.space}" />
 
-		<c:SimplePager ui:field="pgrBottom" location="LEFT" />
+		<p:SimplePager ui:field="pgrBottom" styleName="text-right" />
 
 		<p:LoadingPanel ui:field="pnlLoading" />
 

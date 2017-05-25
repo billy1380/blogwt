@@ -3,7 +3,7 @@
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:import field="com.willshex.blogwt.shared.page.PageType.*" />
 	<ui:style>
-
+	
 	</ui:style>
 	<g:HTMLPanel styleName="container">
 		<h2>Users</h2>
@@ -23,7 +23,7 @@
 		</div>
 
 		<c:CellTable ui:field="tblUsers" styleName="col-sm-12 table table-striped" />
-		<c:SimplePager ui:field="pgrUsers" location="LEFT" />
+		<p:SimplePager ui:field="pgrUsers" />
 
 		<p:LoadingPanel ui:field="pnlLoading" />
 

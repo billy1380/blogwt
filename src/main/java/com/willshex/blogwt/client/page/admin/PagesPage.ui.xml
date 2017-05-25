@@ -24,7 +24,7 @@
 		</div>
 
 		<c:CellTable ui:field="tblPages" styleName="col-sm-12 table table-striped" />
-		<c:SimplePager ui:field="pgrPages" location="LEFT" />
+		<p:SimplePager ui:field="pgrPages" />
 
 		<p:LoadingPanel ui:field="pnlLoading" />
 

@@ -8,11 +8,11 @@
 		<h2>Permissions</h2>
 
 		<c:CellTable ui:field="tblPermissions" styleName="col-sm-12 table table-striped" />
-		<c:SimplePager ui:field="pgrPermissions" location="LEFT" />
+		<p:SimplePager ui:field="pgrPermissions" />
 
 		<p:LoadingPanel ui:field="pnlLoading" />
-		
+
 		<p:NoneFoundPanel subject="permissions" ui:field="pnlNoPermissions" />
-	
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

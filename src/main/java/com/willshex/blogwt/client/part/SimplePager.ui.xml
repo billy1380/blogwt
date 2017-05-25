@@ -1,0 +1,40 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style gss="true">
+	.strong {
+		font-weight: bolder;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<ul ui:field="elList" class="pagination">
+			<li ui:field="elFirstPageItem" class="disabled">
+				<g:Anchor ui:field="btnFirstPage">
+					<span class="glyphicon glyphicon-fast-backward"></span>
+				</g:Anchor>
+			</li>
+			<li ui:field="elPrevPageItem" class="disabled">
+				<g:Anchor ui:field="btnPrevPage">
+					<span class="glyphicon glyphicon-step-backward"></span>
+				</g:Anchor>
+			</li>
+			<li class="disabled">
+				<span ui:field="elLabel" class="{style.strong}" />
+			</li>
+			<li ui:field="elNextPageItem" class="disabled">
+				<g:Anchor ui:field="btnNextPage">
+					<span class="glyphicon glyphicon-step-forward"></span>
+				</g:Anchor>
+			</li>
+			<li ui:field="elFastForwardItem" class="disabled">
+				<g:Anchor ui:field="btnFastForward">
+					<span class="glyphicon glyphicon-forward"></span>
+				</g:Anchor>
+			</li>
+			<li ui:field="elLastPageItem" class="disabled">
+				<g:Anchor ui:field="btnLastPage">
+					<span class="glyphicon glyphicon-fast-forward"></span>
+				</g:Anchor>
+			</li>
+		</ul>
+	</g:HTMLPanel>
+</ui:UiBinder> 

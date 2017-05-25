@@ -8,10 +8,10 @@
 		<h2>Roles</h2>
 
 		<c:CellTable ui:field="tblRoles" styleName="col-sm-12 table table-striped" />
-		<c:SimplePager ui:field="pgrRoles" location="LEFT" />
+		<p:SimplePager ui:field="pgrRoles" />
 
 		<p:LoadingPanel ui:field="pnlLoading" />
-		
+
 		<p:NoneFoundPanel ui:field="pnlNoRoles" subject="roles" />
 
 	</g:HTMLPanel>
