@@ -46,6 +46,7 @@ import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.GoogleAnalyticsHelper;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -600,6 +601,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		activateItem(current.getPage(), true);
 
 		btnNavExpand.hide();
+
+		GoogleAnalyticsHelper.sendPageView("#" + current.toString());
 	}
 
 	/* (non-Javadoc)
@@ -698,7 +701,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		if (one == null) {
 			one = new HeaderPart();
 		}
-		
+
 		return one;
 	}
 }

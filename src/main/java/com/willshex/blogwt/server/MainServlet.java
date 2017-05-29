@@ -110,8 +110,9 @@ public class MainServlet extends ContextAwareServlet {
 		}
 
 		String pageTitle = (title == null ? "Blogwt" : title.value);
-		String rssLink = "", faviconLink = null;
-		String rssPropertyValue = null, faviconPropertyValue = null;
+		String rssLink = "", faviconLink = null, googleAnalyticsSnippet = "";
+		String rssPropertyValue = null, faviconPropertyValue = null,
+				googleAnalyticsPropertyValue = null;
 
 		if (properties != null) {
 			propertyLookup = PropertyHelper.toLookup(properties);
@@ -121,6 +122,9 @@ public class MainServlet extends ContextAwareServlet {
 
 			faviconPropertyValue = PropertyHelper
 					.value(propertyLookup.get(PropertyHelper.FAVICON_URL));
+
+			googleAnalyticsPropertyValue = PropertyHelper.value(
+					propertyLookup.get(PropertyHelper.GOOGLE_ANALYTICS_KEY));
 		}
 
 		if (rssPropertyValue == null
@@ -135,8 +139,21 @@ public class MainServlet extends ContextAwareServlet {
 			faviconLink = String.format(FAVICON_FORMAT, faviconPropertyValue);
 		}
 
-		RESPONSE.get().getOutputStream().print(String.format(PAGE_FORMAT,
-				rssLink, faviconLink, pageTitle, scriptVariables.toString()));
+		if (googleAnalyticsPropertyValue != null && !PropertyHelper.NONE_VALUE
+				.equals(googleAnalyticsPropertyValue)) {
+			googleAnalyticsSnippet = "<!-- Google Analytics -->\n"
+					+ "<script>\n"
+					+ "window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;\n"
+					+ "ga('create', '" + googleAnalyticsPropertyValue
+					+ "', 'auto');\n" + "</script>\n"
+					+ "<script async src='https://www.google-analytics.com/analytics.js'></script>\n"
+					+ "<!-- End Google Analytics -->";
+		}
+
+		RESPONSE.get().getOutputStream()
+				.print(String.format(PAGE_FORMAT, googleAnalyticsSnippet,
+						rssLink, faviconLink, pageTitle,
+						scriptVariables.toString()));
 
 	}
 
