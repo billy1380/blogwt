@@ -23,19 +23,26 @@
 	.toolbar .btn-group {
 		float: none;
 	}
+	
+	.preview {
+		height: 300px;
+		overflow: auto;
+	}
+	
 	</ui:style>
-	<div class="col-sm-4">
-		<div class="{style.bottom}">
-			<h3>
-				<ui:text from="{name}" />
-			</h3>
-			<div class="text-muted {">
-				<ui:text from="{description}" />
+	<div class="col-sm-4 {style.bottom}">
+		<div class="{style.preview}">
+			<div class="{style.bottom}">
+				<h3>
+					<ui:text from="{name}" />
+				</h3>
+				<div class="text-muted">
+					<ui:text from="{description}" />
+				</div>
 			</div>
+
+			<ui:safehtml from="{preview}" />
 		</div>
-
-		<ui:safehtml from="{preview}" />
-
 		<div class="btn-toolbar {style.toolbar} {style.top}">
 			<div class="btn-group">
 				<ui:safehtml from="{edit}" />

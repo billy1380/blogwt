@@ -1,4 +1,4 @@
-//  
+// 
 //  ResourceSortType.java
 //  blogwt
 //
@@ -11,7 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ResourceSortType {
-	ResourceSortTypeId("id"), ;
+	ResourceSortTypeId("id"),
+	ResourceSortTypeCreated("created"),
+	ResourceSortTypeName("name"),;
 	private String value;
 	private static Map<String, ResourceSortType> valueLookup = null;
 

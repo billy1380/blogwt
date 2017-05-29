@@ -34,6 +34,7 @@ import com.willshex.blogwt.shared.api.blog.call.GetResourcesResponse;
 import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdateResourceResponse;
 import com.willshex.blogwt.shared.api.datatype.Resource;
+import com.willshex.blogwt.shared.api.datatype.ResourceSortType;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.gson.web.service.shared.StatusType;
 
@@ -53,7 +54,8 @@ public class ResourceController extends AsyncDataProvider<Resource> {
 		return one;
 	}
 
-	private Pager pager = PagerHelper.createDefaultPager();
+	private Pager pager = PagerHelper.createDefaultPager()
+			.sortBy(ResourceSortType.ResourceSortTypeCreated.toString());
 	private Request getResourcesRequest;
 
 	private void fetchResources () {
@@ -81,7 +83,8 @@ public class ResourceController extends AsyncDataProvider<Resource> {
 										input.pager.count == null ? 0
 												: input.pager.count.intValue(),
 										input.pager.count == null
-												|| input.pager.count.intValue() == 0);
+												|| input.pager.count
+														.intValue() == 0);
 								updateRowData(input.pager.start.intValue(),
 										output.resources);
 							} else {
@@ -117,15 +120,14 @@ public class ResourceController extends AsyncDataProvider<Resource> {
 	@Override
 	protected void onRangeChanged (HasData<Resource> display) {
 		Range range = display.getVisibleRange();
-		pager.start(Integer.valueOf(range.getStart())).count(
-				Integer.valueOf(range.getLength()));
+		pager.start(Integer.valueOf(range.getStart()))
+				.count(Integer.valueOf(range.getLength()));
 
 		fetchResources();
 	}
 
 	public void deleteResource (Resource resource) {
-		final DeleteResourceRequest input = SessionController
-				.get()
+		final DeleteResourceRequest input = SessionController.get()
 				.setSession(
 						ApiHelper.setAccessCode(new DeleteResourceRequest()))
 				.resource(resource);
@@ -184,8 +186,7 @@ public class ResourceController extends AsyncDataProvider<Resource> {
 	}
 
 	public void updateResource (Resource resource) {
-		final UpdateResourceRequest input = SessionController
-				.get()
+		final UpdateResourceRequest input = SessionController.get()
 				.setSession(
 						ApiHelper.setAccessCode(new UpdateResourceRequest()))
 				.resource(resource);

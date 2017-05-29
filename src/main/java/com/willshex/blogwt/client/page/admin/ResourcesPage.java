@@ -37,8 +37,8 @@ import com.willshex.gson.web.service.shared.StatusType;
  * @author William Shakour (billy1380)
  *
  */
-public class ResourcesPage extends Page implements GetResourcesEventHandler,
-		DeleteResourceEventHandler {
+public class ResourcesPage extends Page
+		implements GetResourcesEventHandler, DeleteResourceEventHandler {
 
 	private static ResourcesPageUiBinder uiBinder = GWT
 			.create(ResourcesPageUiBinder.class);
@@ -62,6 +62,8 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 		ResourceController.get().addDataDisplay(clResources);
 		pgrTop.setDisplay(clResources);
 		pgrBottom.setDisplay(clResources);
+		pgrTop.setPageSize(12);
+		pgrBottom.setPageSize(12);
 	}
 
 	@Override
@@ -70,9 +72,9 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetResourcesEventHandler.TYPE, ResourceController.get(), this));
-		register(DefaultEventBus.get()
-				.addHandlerToSource(DeleteResourceEventHandler.TYPE,
-						ResourceController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(
+				DeleteResourceEventHandler.TYPE, ResourceController.get(),
+				this));
 	}
 
 	/* (non-Javadoc)
@@ -122,7 +124,8 @@ public class ResourcesPage extends Page implements GetResourcesEventHandler,
 	 * (com.willshex.blogwt.shared.api.blog.call.GetResourcesRequest,
 	 * java.lang.Throwable) */
 	@Override
-	public void getResourcesFailure (GetResourcesRequest input, Throwable caught) {
+	public void getResourcesFailure (GetResourcesRequest input,
+			Throwable caught) {
 		GWT.log("Get resources failed", caught);
 	}
 

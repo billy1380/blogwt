@@ -16,6 +16,7 @@ import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.blog.call.GetResourcesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetResourcesResponse;
+import com.willshex.blogwt.shared.api.datatype.ResourceSortType;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 
 public final class GetResourcesActionHandler
@@ -42,7 +43,8 @@ public final class GetResourcesActionHandler
 		}
 
 		output.resources = ResourceServiceProvider.provide().getResources(
-				input.pager.start, input.pager.count, null,
+				input.pager.start, input.pager.count,
+				ResourceSortType.fromString(input.pager.sortBy),
 				SortDirectionType.SortDirectionTypeDescending);
 
 		output.pager = PagerHelper.moveForward(input.pager);
