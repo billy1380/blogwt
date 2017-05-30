@@ -87,22 +87,26 @@ public class PersistenceHelper {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> typeList (Class<T> t, Collection<?> ids) {
-		List<T> list = new ArrayList<T>();
+		List<T> list = null;
 
-		try {
-			Field f = key(t);
-			T i;
-			for (Object id : ids) {
-				if (id instanceof Key) {
-					list.add(type(t, (Key<T>) id, f));
-				} else if (id instanceof Long || id instanceof String) {
-					i = (T) t.newInstance();
-					f.set(i, id);
-					list.add(i);
+		if (ids != null) {
+			list = new ArrayList<T>();
+
+			try {
+				Field f = key(t);
+				T i;
+				for (Object id : ids) {
+					if (id instanceof Key) {
+						list.add(type(t, (Key<T>) id, f));
+					} else if (id instanceof Long || id instanceof String) {
+						i = (T) t.newInstance();
+						f.set(i, id);
+						list.add(i);
+					}
 				}
+			} catch (InstantiationException | IllegalAccessException e) {
+				throw new RuntimeException(e);
 			}
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
 		}
 
 		return list;
