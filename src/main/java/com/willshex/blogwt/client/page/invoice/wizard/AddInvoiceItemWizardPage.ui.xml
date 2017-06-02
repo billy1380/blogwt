@@ -1,0 +1,14 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:dp="urn:import:com.google.gwt.user.datepicker.client">
+	<ui:style gss="true">
+		
+	</ui:style>
+	<g:HTMLPanel styleName="form-group">
+		<g:TextBox ui:field="txtName" styleName="form-control" />
+		<dp:DateBox ui:field="dbxDate" styleName="form-control" />
+		<g:TextArea ui:field="txtDescription" styleName="form-control" visibleLines="3" />
+		<g:TextBox ui:field="txtPrice" styleName="form-control" />
+		<g:TextBox ui:field="txtQuantity" styleName="form-control" text="1" />
+		<g:ListBox ui:field="cboUnit" styleName="form-control" />
+	</g:HTMLPanel>
+</ui:UiBinder> 

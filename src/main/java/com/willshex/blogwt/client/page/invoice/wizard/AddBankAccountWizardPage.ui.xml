@@ -1,0 +1,12 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style gss="true">
+	
+	</ui:style>
+	   <g:HTMLPanel styleName="form-group">
+        <g:TextBox ui:field="txtName" styleName="form-control" />
+        <g:TextBox ui:field="txtBankName" styleName="form-control" />
+        <g:TextBox ui:field="txtAccountNumber" styleName="form-control" />
+        <g:TextBox ui:field="txtSortCode" styleName="form-control" />
+	</g:HTMLPanel>
+</ui:UiBinder> 

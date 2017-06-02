@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+	<ui:style gss="true">
+		
+	</ui:style>
+	<g:HTMLPanel styleName="form-group">
+		<g:TextBox ui:field="txtNameOrNumber" styleName="form-control"/>
+		<g:TextBox ui:field="txtFirstLine" styleName="form-control" />
+		<g:TextBox ui:field="txtSecondLine" styleName="form-control" />
+		<g:TextBox ui:field="txtLocality" enabled="false" styleName="form-control" />
+		<g:TextBox ui:field="txtCity" styleName="form-control" />
+		<g:TextBox ui:field="txtState" styleName="form-control" />
+		<g:TextBox ui:field="txtCountry" text="UK" enabled="false" styleName="form-control" />
+		<g:SuggestBox ui:field="txtPostalCode" styleName="form-control" />
+	</g:HTMLPanel>
+</ui:UiBinder> 

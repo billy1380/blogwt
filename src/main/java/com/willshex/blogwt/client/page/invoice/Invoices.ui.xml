@@ -1,0 +1,18 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+	<ui:import
+		field="com.willshex.blogwt.client.helper.invoice.PageTypeHelper.ADD_INVOICE_HREF" />
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel>
+		<h2>Invoices</h2>
+		<div class="btn-group" role="group" aria-label="Actions">
+			<a href="{ADD_INVOICE_HREF}" class="btn btn-default">Add</a>
+		</div>
+		<c:CellTable ui:field="invoiceTable" styleName="table table-condensed table-striped" />
+		<c:SimplePager ui:field="simplePager" rangeLimited="true"
+			location="LEFT" />
+	</g:HTMLPanel>
+</ui:UiBinder> 

@@ -1,0 +1,13 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel styleName="form-group">
+		<g:TextBox ui:field="txtName" styleName="form-control" />
+		<g:TextBox ui:field="txtCode" styleName="form-control" />
+		<g:TextBox ui:field="txtEmail" styleName="form-control" />
+		<g:TextBox ui:field="txtPhone" styleName="form-control" text="-" />
+		<g:TextArea ui:field="txtDescription" styleName="form-control" visibleLines="3" />
+	</g:HTMLPanel>
+</ui:UiBinder> 

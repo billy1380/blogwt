@@ -19,17 +19,17 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.Resources;
+import com.willshex.blogwt.client.page.Page;
 
 /**
  * @author billy1380
  * 
  */
-public class WizardDialog extends Composite {
+public class WizardDialog extends Page {
 
 	private PagePlan plan = null;
 	private int currentPage = 0;
@@ -136,7 +136,8 @@ public class WizardDialog extends Composite {
 										.getSafeUri()));
 				plan.finished();
 			} else {
-				while (plan.get(++currentPage) == SeparatorWizardPage.SEPARATOR) {}
+				while (plan
+						.get(++currentPage) == SeparatorWizardPage.SEPARATOR) {}
 				layout();
 			}
 		}
@@ -164,9 +165,8 @@ public class WizardDialog extends Composite {
 
 	private void layout () {
 		if (currentPage > 0) {
-			btnBack.getElement().setInnerSafeHtml(
-					WizardDialogTemplates.INSTANCE.backButton(plan.get(
-							currentPage - 1).getPageTitle()));
+			btnBack.getElement().setInnerSafeHtml(WizardDialogTemplates.INSTANCE
+					.backButton(plan.get(currentPage - 1).getPageTitle()));
 			btnBack.setVisible(true);
 		} else {
 			btnBack.setVisible(false);
@@ -192,9 +192,8 @@ public class WizardDialog extends Composite {
 		if (plan.count() - 1 == currentPage) {
 			btnNext.getElement().setInnerSafeHtml(FINISH_HTML);
 		} else {
-			btnNext.getElement().setInnerSafeHtml(
-					WizardDialogTemplates.INSTANCE.nextButton(plan.get(
-							currentPage + 1).getPageTitle()));
+			btnNext.getElement().setInnerSafeHtml(WizardDialogTemplates.INSTANCE
+					.nextButton(plan.get(currentPage + 1).getPageTitle()));
 		}
 
 		h3PageTitle.setInnerHTML(page.getPageTitle());

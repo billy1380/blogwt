@@ -1,0 +1,55 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:gu="urn:import:gwtupload.client">
+	<ui:import field="com.willshex.blogwt.client.Resources.RES" />
+	<ui:import field="com.willshex.blogwt.client.helper.ApiHelper.UPLOAD_END_POINT" />
+	<ui:style gss="true">
+	@external upld-drop-zone;
+	.upld-drop-zone {
+		color: #ccc;
+		border-style: dashed;
+		border-color: #ccc;
+		line-height: 120px;
+		text-align: center;
+		height: 120px;
+		border-width: 2px;
+		margin-bottom: 20px;
+		display: block;
+		width: 100%;
+		vertical-align: middle;
+		border-radius: 6px
+	}
+	
+	.parent {
+		position: relative;
+		overflow: hidden;
+		width: 160px;
+		height: 160px;
+		margin: auto;
+	}
+	
+	.image {
+		position: absolute;
+		top: -9999px;
+		bottom: -9999px;
+		left: -9999px;
+		right: -9999px;
+		margin: auto;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="form-group">
+		<g:HTMLPanel ui:field="pnlLogo" styleName="{style.parent} img-circle">
+			<g:Image ui:field="imgLogo" styleName="{style.image}" height="160px"
+				url="{RES.largeBrand.getSafeUri.asString}" />
+		</g:HTMLPanel>
+		<g:TextBox ui:field="txtName" styleName="form-control" />
+		<g:TextBox ui:field="txtCode" styleName="form-control" />
+		<g:TextArea ui:field="txtDescription" styleName="form-control"
+			visibleLines="3" />
+		<g:TextBox ui:field="txtEmail" styleName="form-control" />
+		<g:TextBox ui:field="txtPhone" styleName="form-control" text="-" />
+		<gu:SingleUploader ui:field="uplDragAndDrop" styleName="col-sm-12"
+			autoSubmit="true" avoidRepeatFiles="true" validExtensions="jpg,png"
+			servletPath="{UPLOAD_END_POINT}" />
+	</g:HTMLPanel>
+</ui:UiBinder> 

@@ -1,0 +1,13 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:dp="urn:import:com.google.gwt.user.datepicker.client">
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel styleName="form-group">
+		<g:ListBox ui:field="cboCustomer" styleName="form-control" />
+		<g:ListBox ui:field="cboCurrency" styleName="form-control" />
+		<g:TextBox ui:field="txtTax" styleName="form-control" text="20" />
+		<g:TextBox ui:field="txtDeposit" styleName="form-control" text="0" />
+		<dp:DateBox ui:field="dbxDate" styleName="form-control" />
+	</g:HTMLPanel>
+</ui:UiBinder> 

@@ -46,7 +46,17 @@ public enum PageType {
 	ChangeAccessPageType("access", true),
 	EditResourcePageType("resourceedit", PermissionHelper.MANAGE_RESOURCES),
 	WidgetTestPageType("widgettest", true),
-	AllPostsPageType("posts", PermissionHelper.MANAGE_POSTS),;
+	AllPostsPageType("posts", PermissionHelper.MANAGE_POSTS),
+
+	// invoice
+	InvoicesPageType("invoices"),
+	CustomersPageType("customers"),
+	AccountPageType("account"),
+	AddInvoicePageType("addinvoice"),
+	AddCustomerPageType("addcustomer"),
+	AddUserPageType("adduser"),
+	VendorPageType("vendor"),
+	SetupVendorPageType("setupvendor", false),;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
