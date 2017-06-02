@@ -93,8 +93,8 @@ final class CustomerService implements ICustomerService {
 	 * .shared.api.datatypes.CustomerSortType,
 	 * com.spacehopperstudios.quickinvoice.shared.api.SortDirectionType) */
 	@Override
-	public List<Customer> getVendorCustomers (Vendor vendor, Long start,
-			Long count, CustomerSortType sortBy,
+	public List<Customer> getVendorCustomers (Vendor vendor, Integer start,
+			Integer count, CustomerSortType sortBy,
 			SortDirectionType sortDirection) {
 		List<Customer> customers = null;
 

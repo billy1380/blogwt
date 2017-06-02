@@ -47,7 +47,7 @@ public interface ICurrencyService extends IService {
 	 * @param sortDirection
 	 * @return
 	 */
-	public List<Currency> getCurrencies (Long start, Long count,
+	public List<Currency> getCurrencies (Integer start, Integer count,
 			CurrencySortType sortBy, SortDirectionType sortDirection);
 
 	/**

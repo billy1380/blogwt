@@ -210,8 +210,8 @@ final class InvoiceService implements IInvoiceService {
 	 * com.spacehopperstudios.quickinvoice.shared.api.datatypes.InvoiceSortType,
 	 * com.spacehopperstudios.quickinvoice.shared.api.SortDirectionType) */
 	@Override
-	public List<Invoice> getVendorInvoices (Vendor vendor, Long start,
-			Long count, InvoiceSortType sortBy,
+	public List<Invoice> getVendorInvoices (Vendor vendor, Integer start,
+			Integer count, InvoiceSortType sortBy,
 			SortDirectionType sortDirection) {
 		Query<Invoice> query = provide().load().type(Invoice.class)
 				.filter("vendorKey", vendor);
@@ -344,7 +344,7 @@ final class InvoiceService implements IInvoiceService {
 	 * com.spacehopperstudios.quickinvoice.shared.api.SortDirectionType) */
 	@Override
 	public List<Invoice> getVendorOutstandingInvoices (Vendor vendor,
-			Long start, Long count, InvoiceSortType sortBy,
+			Integer start, Integer count, InvoiceSortType sortBy,
 			SortDirectionType sortDirection) {
 		Query<Invoice> query = provide().load().type(Invoice.class)
 				.filter("vendorKey", vendor);

@@ -69,13 +69,13 @@ final class CurrencyService implements ICurrencyService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see com.spacehopperstudios.quickinvoice.server.services.currency.
-	 * ICurrencyService#getCurrencies(java.lang.Long, java.lang.Long,
-	 * com.spacehopperstudios.quickinvoice.shared.api.datatypes.
-	 * CurrencySortType,
-	 * com.spacehopperstudios.quickinvoice.shared.api.SortDirectionType) */
+	 * @see
+	 * com.willshex.blogwt.server.service.invoice.currency.ICurrencyService#
+	 * getCurrencies(java.lang.Integer, java.lang.Integer,
+	 * com.willshex.blogwt.shared.api.datatype.invoice.CurrencySortType,
+	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
-	public List<Currency> getCurrencies (Long start, Long count,
+	public List<Currency> getCurrencies (Integer start, Integer count,
 			CurrencySortType sortBy, SortDirectionType sortDirection) {
 		Query<Currency> query = provide().load().type(Currency.class);
 

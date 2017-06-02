@@ -49,8 +49,8 @@ public interface ICustomerService extends IService {
 	 * @param sortDirection
 	 * @return
 	 */
-	public List<Customer> getVendorCustomers (Vendor currentVendor, Long start,
-			Long count, CustomerSortType sortBy,
+	public List<Customer> getVendorCustomers (Vendor currentVendor,
+			Integer start, Integer count, CustomerSortType sortBy,
 			SortDirectionType sortDirection);
 
 	/**

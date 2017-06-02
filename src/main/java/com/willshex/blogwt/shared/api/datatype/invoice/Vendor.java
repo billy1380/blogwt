@@ -22,12 +22,16 @@ import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.api.datatype.Resource;
+import com.willshex.blogwt.shared.api.datatype.User;
 
 @Entity
 @Cache
 public class Vendor extends DataType {
 	public Key<Address> addressKey;
 	@Ignore public Address address;
+
+	public List<Key<User>> usersKey;
+	public List<User> users;
 
 	@Index public String name;
 
@@ -46,43 +50,62 @@ public class Vendor extends DataType {
 	public Integer customerCount;
 
 	@Override
-	public JsonObject toJson() {
+	public JsonObject toJson () {
 		JsonObject object = super.toJson();
-		JsonElement jsonAddress = address == null ? JsonNull.INSTANCE : address.toJson();
+		JsonElement jsonAddress = address == null ? JsonNull.INSTANCE
+				: address.toJson();
 		object.add("address", jsonAddress);
-		JsonElement jsonName = name == null ? JsonNull.INSTANCE : new JsonPrimitive(name);
+		JsonElement jsonUsers = JsonNull.INSTANCE;
+		if (users != null) {
+			jsonUsers = new JsonArray();
+			for (int i = 0; i < users.size(); i++) {
+				JsonElement jsonUsersItem = users.get(i) == null
+						? JsonNull.INSTANCE : users.get(i).toJson();
+				((JsonArray) jsonUsers).add(jsonUsersItem);
+			}
+		}
+		object.add("users", jsonUsers);
+		JsonElement jsonName = name == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(name);
 		object.add("name", jsonName);
 		JsonElement jsonLogo = logo == null ? JsonNull.INSTANCE : logo.toJson();
 		object.add("logo", jsonLogo);
-		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
+		JsonElement jsonCode = code == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(code);
 		object.add("code", jsonCode);
-		JsonElement jsonDescription = description == null ? JsonNull.INSTANCE : new JsonPrimitive(description);
+		JsonElement jsonDescription = description == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(description);
 		object.add("description", jsonDescription);
-		JsonElement jsonPhone = phone == null ? JsonNull.INSTANCE : new JsonPrimitive(phone);
+		JsonElement jsonPhone = phone == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(phone);
 		object.add("phone", jsonPhone);
-		JsonElement jsonEmail = email == null ? JsonNull.INSTANCE : new JsonPrimitive(email);
+		JsonElement jsonEmail = email == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(email);
 		object.add("email", jsonEmail);
-		JsonElement jsonInvoiceCount = invoiceCount == null ? JsonNull.INSTANCE : new JsonPrimitive(invoiceCount);
-		object.add("invoiceCount", jsonInvoiceCount);
-		JsonElement jsonOutstandingCount = outstandingCount == null ? JsonNull.INSTANCE : new JsonPrimitive(outstandingCount);
-		object.add("outstandingCount", jsonOutstandingCount);
-		JsonElement jsonCustomerCount = customerCount == null ? JsonNull.INSTANCE : new JsonPrimitive(customerCount);
-		object.add("customerCount", jsonCustomerCount);
 		JsonElement jsonAccounts = JsonNull.INSTANCE;
 		if (accounts != null) {
 			jsonAccounts = new JsonArray();
 			for (int i = 0; i < accounts.size(); i++) {
-				JsonElement jsonAccountsItem = accounts.get(i) == null ? JsonNull.INSTANCE : accounts.get(i).toJson();
+				JsonElement jsonAccountsItem = accounts.get(i) == null
+						? JsonNull.INSTANCE : accounts.get(i).toJson();
 				((JsonArray) jsonAccounts).add(jsonAccountsItem);
 			}
 		}
 		object.add("accounts", jsonAccounts);
-
+		JsonElement jsonInvoiceCount = invoiceCount == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(invoiceCount);
+		object.add("invoiceCount", jsonInvoiceCount);
+		JsonElement jsonOutstandingCount = outstandingCount == null
+				? JsonNull.INSTANCE : new JsonPrimitive(outstandingCount);
+		object.add("outstandingCount", jsonOutstandingCount);
+		JsonElement jsonCustomerCount = customerCount == null
+				? JsonNull.INSTANCE : new JsonPrimitive(customerCount);
+		object.add("customerCount", jsonCustomerCount);
 		return object;
 	}
 
 	@Override
-	public void fromJson(JsonObject jsonObject) {
+	public void fromJson (JsonObject jsonObject) {
 		super.fromJson(jsonObject);
 		if (jsonObject.has("address")) {
 			JsonElement jsonAddress = jsonObject.get("address");
@@ -91,6 +114,21 @@ public class Vendor extends DataType {
 				address.fromJson(jsonAddress.getAsJsonObject());
 			}
 		}
+		if (jsonObject.has("users")) {
+			JsonElement jsonUsers = jsonObject.get("users");
+			if (jsonUsers != null) {
+				users = new ArrayList<User>();
+				User item = null;
+				for (int i = 0; i < jsonUsers.getAsJsonArray().size(); i++) {
+					if (jsonUsers.getAsJsonArray().get(i) != null) {
+						(item = new User()).fromJson(jsonUsers.getAsJsonArray()
+								.get(i).getAsJsonObject());
+						users.add(item);
+					}
+				}
+			}
+		}
+
 		if (jsonObject.has("name")) {
 			JsonElement jsonName = jsonObject.get("name");
 			if (jsonName != null) {
@@ -128,6 +166,21 @@ public class Vendor extends DataType {
 				email = jsonEmail.getAsString();
 			}
 		}
+		if (jsonObject.has("accounts")) {
+			JsonElement jsonAccounts = jsonObject.get("accounts");
+			if (jsonAccounts != null) {
+				accounts = new ArrayList<BankAccount>();
+				BankAccount item = null;
+				for (int i = 0; i < jsonAccounts.getAsJsonArray().size(); i++) {
+					if (jsonAccounts.getAsJsonArray().get(i) != null) {
+						(item = new BankAccount()).fromJson(jsonAccounts
+								.getAsJsonArray().get(i).getAsJsonObject());
+						accounts.add(item);
+					}
+				}
+			}
+		}
+
 		if (jsonObject.has("invoiceCount")) {
 			JsonElement jsonInvoiceCount = jsonObject.get("invoiceCount");
 			if (jsonInvoiceCount != null) {
@@ -135,9 +188,11 @@ public class Vendor extends DataType {
 			}
 		}
 		if (jsonObject.has("outstandingCount")) {
-			JsonElement jsonOutstandingCount = jsonObject.get("outstandingCount");
+			JsonElement jsonOutstandingCount = jsonObject
+					.get("outstandingCount");
 			if (jsonOutstandingCount != null) {
-				outstandingCount = Integer.valueOf(jsonOutstandingCount.getAsInt());
+				outstandingCount = Integer
+						.valueOf(jsonOutstandingCount.getAsInt());
 			}
 		}
 		if (jsonObject.has("customerCount")) {
@@ -146,68 +201,65 @@ public class Vendor extends DataType {
 				customerCount = Integer.valueOf(jsonCustomerCount.getAsInt());
 			}
 		}
-		if (jsonObject.has("accounts")) {
-			JsonElement jsonAccounts = jsonObject.get("accounts");
-			if (jsonAccounts != null) {
-				accounts = new ArrayList<BankAccount>();
-				BankAccount item = null;
-				for (int i = 0; i < jsonAccounts.getAsJsonArray().size(); i++) {
-					if (jsonAccounts.getAsJsonArray().get(i) != null) {
-						(item = new BankAccount()).fromJson(jsonAccounts.getAsJsonArray().get(i).getAsJsonObject());
-						accounts.add(item);
-					}
-				}
-			}
-		}
 	}
 
-	public Vendor address(Address address) {
+	public Vendor address (Address address) {
 		this.address = address;
 		return this;
 	}
 
-	public Vendor name(String name) {
+	public Vendor users (List<User> users) {
+		this.users = users;
+		return this;
+	}
+
+	public Vendor name (String name) {
 		this.name = name;
 		return this;
 	}
 
-	public Vendor code(String code) {
+	public Vendor logo (Resource logo) {
+		this.logo = logo;
+		return this;
+	}
+
+	public Vendor code (String code) {
 		this.code = code;
 		return this;
 	}
 
-	public Vendor description(String description) {
+	public Vendor description (String description) {
 		this.description = description;
 		return this;
 	}
 
-	public Vendor phone(String phone) {
+	public Vendor phone (String phone) {
 		this.phone = phone;
 		return this;
 	}
 
-	public Vendor email(String email) {
+	public Vendor email (String email) {
 		this.email = email;
 		return this;
 	}
 
-	public Vendor invoiceCount(Integer invoiceCount) {
+	public Vendor accounts (List<BankAccount> accounts) {
+		this.accounts = accounts;
+		return this;
+	}
+
+	public Vendor invoiceCount (Integer invoiceCount) {
 		this.invoiceCount = invoiceCount;
 		return this;
 	}
 
-	public Vendor outstandingCount(Integer outstandingCount) {
+	public Vendor outstandingCount (Integer outstandingCount) {
 		this.outstandingCount = outstandingCount;
 		return this;
 	}
 
-	public Vendor customerCount(Integer customerCount) {
+	public Vendor customerCount (Integer customerCount) {
 		this.customerCount = customerCount;
-		return this;
-	}
-
-	public Vendor accounts(List<BankAccount> accounts) {
-		this.accounts = accounts;
 		return this;
 	}
 }
