@@ -1,6 +1,6 @@
 //
 //  PrettyButtonCell.java
-//  com.willshex.loadtest
+//  blogwt
 //
 //  Created by William Shakour (billy1380) on 20 May 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
@@ -58,9 +58,6 @@ public class PrettyButtonCell extends ButtonCell {
 		buttons.put(name, button);
 	}
 
-	/**
-	 * 
-	 */
 	public PrettyButtonCell (Button... buttons) {
 		this();
 		for (Button button : buttons) {
@@ -70,9 +67,9 @@ public class PrettyButtonCell extends ButtonCell {
 
 	@Override
 	public void render (Context context, SafeHtml data, SafeHtmlBuilder sb) {
-		String buttonStyle = null, glyph = null;
-
 		if (data != null) {
+			String buttonStyle = null, glyph = null;
+
 			Button b = buttons.get(data.asString());
 
 			if (b != null) {
@@ -81,21 +78,20 @@ public class PrettyButtonCell extends ButtonCell {
 			} else {
 				buttonStyle = "btn-default";
 			}
-		}
 
-		sb.appendHtmlConstant("<button type=\"button\" class=\"btn btn-xs "
-				+ (buttonStyle == null || buttonStyle.length() == 0 ? ""
-						: buttonStyle)
-				+ "\" tabindex=\"-1\">");
-
-		if (glyph != null && glyph.length() > 0) {
 			sb.appendHtmlConstant(
-					"<span class=\"glyphicon " + glyph + "\"></span> ");
-		}
+					"<button type=\"button\" class=\"btn btn-xs "
+							+ (buttonStyle == null || buttonStyle.length() == 0
+									? "" : buttonStyle)
+							+ "\" tabindex=\"-1\">");
 
-		if (data != null) {
+			if (glyph != null && glyph.length() > 0) {
+				sb.appendHtmlConstant(
+						"<span class=\"glyphicon " + glyph + "\"></span> ");
+			}
+
 			sb.append(data);
+			sb.appendHtmlConstant("</button>");
 		}
-		sb.appendHtmlConstant("</button>");
 	}
 }
