@@ -32,6 +32,10 @@ public final class SetPushTokenActionHandler
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");
 
+		if (input.token != null && input.token.user == null) {
+			input.token.user = input.session.user;
+		}
+
 		input.token = PushTokenValidator.valiate(input.token, "input.token");
 
 		PushToken token = PushTokenServiceProvider.provide()
