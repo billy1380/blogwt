@@ -22,7 +22,7 @@ public class PushTokenValidator extends ApiValidator {
 			throws InputValidationException {
 		notNull(pushToken, CLASS, name);
 
-		pushToken.user = UserValidator.validate(pushToken.user, name + ".user");
+		pushToken.user = UserValidator.lookup(pushToken.user, name + ".user");
 
 		notNull(pushToken.platform, String.class, name + ".platform");
 
