@@ -32,6 +32,10 @@ public class MetaNotificationValidator extends ApiValidator {
 			isCodeLookup = true;
 		}
 
+		if (!(isIdLookup || isCodeLookup))
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNoLookup, TYPE + ": " + name);
+
 		MetaNotification lookupMetaNotification = null;
 		if (isIdLookup) {
 			metaNotification = MetaNotificationServiceProvider.provide()

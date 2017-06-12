@@ -53,6 +53,10 @@ public class NotificationSettingValidator extends ApiValidator {
 			isUserMetaNotificationLookup = true;
 		}
 
+		if (!(isIdLookup || isUserMetaNotificationLookup))
+			throwServiceError(InputValidationException.class,
+					ApiError.DataTypeNoLookup, TYPE + ": " + name);
+
 		NotificationSetting lookupNotificationSetting = null;
 		if (isIdLookup) {
 			notificationSetting = NotificationSettingServiceProvider.provide()
