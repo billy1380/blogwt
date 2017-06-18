@@ -28,15 +28,15 @@ import com.willshex.blogwt.shared.helper.PropertyHelper;
  *
  */
 public class EmailHelper {
-	private static final Logger LOG = Logger.getLogger(EmailHelper.class
-			.getName());
+	private static final Logger LOG = Logger
+			.getLogger(EmailHelper.class.getName());
 
 	public static boolean sendEmail (String to, String name, String subject,
 			String body, boolean isHtml) {
 		boolean sent = false;
 
-		Property email = PropertyServiceProvider.provide().getNamedProperty(
-				PropertyHelper.OUTGOING_EMAIL);
+		Property email = PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.OUTGOING_EMAIL);
 
 		if (!PropertyHelper.isEmpty(email)
 				&& !PropertyHelper.NONE_VALUE.equals(email.value)) {
@@ -47,12 +47,12 @@ public class EmailHelper {
 				Message msg = new MimeMessage(session);
 
 				InternetAddress address = new InternetAddress(email.value,
-						PropertyServiceProvider.provide().getNamedProperty(
-								PropertyHelper.TITLE).value);
+						PropertyServiceProvider.provide()
+								.getNamedProperty(PropertyHelper.TITLE).value);
 
 				msg.setFrom(address);
-				msg.addRecipient(Message.RecipientType.TO, new InternetAddress(
-						to, name));
+				msg.addRecipient(Message.RecipientType.TO,
+						new InternetAddress(to, name));
 
 				msg.setSubject(subject);
 
@@ -70,16 +70,18 @@ public class EmailHelper {
 
 				sent = true;
 			} catch (MessagingException | UnsupportedEncodingException e) {
-				LOG.log(Level.WARNING,
-						"Error sending email ["
-								+ content(to, name, subject, body) + "]", e);
+				LOG.log(Level.WARNING, "Error sending email ["
+						+ content(to, name, subject, body) + "]", e);
 			}
 		} else {
 			if (LOG.isLoggable(Level.INFO)) {
-				LOG.info("Property " + PropertyHelper.OUTGOING_EMAIL
-						+ " not configured. Email ["
-						+ content(to, name, subject, body) + "]");
+				LOG.info("Property [" + PropertyHelper.OUTGOING_EMAIL
+						+ "] not configured.");
 			}
+		}
+
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Email [" + content(to, name, subject, body) + "]");
 		}
 
 		return sent;

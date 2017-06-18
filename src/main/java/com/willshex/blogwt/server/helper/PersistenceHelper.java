@@ -234,4 +234,31 @@ public class PersistenceHelper {
 	public static <T> T one (Query<T> q) {
 		return q.limit(1).first().now();
 	}
+
+	/**
+	 * Creates a new instance of a type for serialisation with id only
+	 * @param c
+	 * @param t
+	 * @param k
+	 * @return
+	 */
+	public static <T> T slim (Class<T> c, T t, Key<T> k) {
+		T id = null;
+
+		try {
+			Field f = key(c);
+			if (t != null && f != null && f.get(t) != null) {
+				id = c.newInstance();
+				f.set(id, f.get(t));
+			} else if (k != null) {
+				id = type(c, k, f);
+			} else {
+				// something is not right
+			}
+		} catch (InstantiationException | IllegalAccessException ex) {
+			throw new RuntimeException(ex);
+		}
+
+		return id;
+	}
 }

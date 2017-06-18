@@ -11,6 +11,7 @@ package com.willshex.blogwt.server.service.pushtoken;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Date;
+import java.util.List;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
@@ -91,6 +92,16 @@ final class PushTokenService
 		}
 
 		return mapped;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.pushtoken.IPushTokenService#
+	 * getUserPushTokens(com.willshex.blogwt.shared.api.datatype.User) */
+	@Override
+	public List<PushToken> getUserPushTokens (User user) {
+		return load().filter(map(PushTokenSortType.PushTokenSortTypeUser), user)
+				.list();
 	}
 
 }

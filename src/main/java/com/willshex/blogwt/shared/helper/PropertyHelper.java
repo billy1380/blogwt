@@ -58,6 +58,7 @@ public class PropertyHelper {
 	public static final String FOOTER_SHOW_VERSION = "footer.show.site.version";
 
 	public static final String OUTGOING_EMAIL = "email.outgoing";
+	public static final String FIREBASE_API_KEY = "notification.firebase.key";
 
 	public static final String COOKIE_DETAILS_PAGE_SLUG = "cookie.details.slug";
 
@@ -110,6 +111,7 @@ public class PropertyHelper {
 
 	public static final String FOOTER_SHOW_VERSION_DESCRIPTION = "Shows the blogwt version on the site footer";
 	public static final String OUTGOING_EMAIL_DESCRIPTION = "Appengine outgoing email address";
+	public static final String FIREBASE_API_KEY_DESCRIPTION = "Firebase push notification api key";
 
 	public static final String ALLOW_USER_REGISTRATION_DESCRIPTION = "Allow users to register";
 	public static final String NEW_USER_PERMISSIONS_DESCRIPTION = "New user permissions";
@@ -319,6 +321,12 @@ public class PropertyHelper {
 				.type("string").value(value);
 	}
 
+	public static Property createFirebaseApiKey (String value) {
+		return new Property().name(FIREBASE_API_KEY).group("Functional")
+				.description(FIREBASE_API_KEY_DESCRIPTION).type("string")
+				.value(value);
+	}
+
 	public static Property createCookieDetailsPageSlug (String value) {
 		return new Property().name(COOKIE_DETAILS_PAGE_SLUG)
 				.description(COOKIE_DETAILS_PAGE_SLUG_DESCRIPTION)
@@ -366,7 +374,7 @@ public class PropertyHelper {
 					createAllowUserRegistration(null),
 					createNewUserPermissions(null), createNewUserRoles(null),
 					createEnableUserRelationships(null), createFaviconUrl(null),
-					createOutgoingEmail(null),
+					createOutgoingEmail(null), createFirebaseApiKey(null),
 					createCookieDetailsPageSlug(null),
 					createRatingEnabled(null));
 		}
@@ -388,7 +396,8 @@ public class PropertyHelper {
 	 */
 	public static boolean isSecretProperty (Property property) {
 		return PASSWORD_HASH_SALT.equals(property.name)
-				|| RECAPTCHA_API_KEY.equals(property.name);
+				|| RECAPTCHA_API_KEY.equals(property.name)
+				|| PropertyHelper.FIREBASE_API_KEY.equals(property.name);
 	}
 
 }

@@ -8,6 +8,8 @@
 
 package com.willshex.blogwt.server.service.pushtoken;
 
+import java.util.List;
+
 import com.willshex.blogwt.shared.api.datatype.PushToken;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.service.IService;
@@ -46,5 +48,12 @@ public interface IPushTokenService extends IService {
 	 * @return
 	 */
 	public PushToken getUserPlatformPushToken (User user, String platform);
+
+	/**
+	 * Get user push tokens
+	 * @param user
+	 * @return
+	 */
+	public List<PushToken> getUserPushTokens (User user);
 
 }

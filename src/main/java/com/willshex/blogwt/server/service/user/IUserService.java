@@ -10,6 +10,7 @@ package com.willshex.blogwt.server.service.user;
 import java.util.Collection;
 import java.util.List;
 
+import com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
@@ -17,7 +18,7 @@ import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
 import com.willshex.service.IService;
 
-public interface IUserService extends IService {
+public interface IUserService extends IService, BatchGetter<User> {
 	public static final String NAME = "blogwt.user";
 
 	/**

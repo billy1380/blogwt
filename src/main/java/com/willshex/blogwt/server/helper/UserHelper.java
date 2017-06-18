@@ -20,6 +20,7 @@ import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.server.ContextAwareServlet;
 import com.willshex.utility.StringUtils;
 
 /**
@@ -64,6 +65,13 @@ public class UserHelper extends com.willshex.blogwt.shared.helper.UserHelper {
 				+ StringUtils.md5Hash(email.trim().toLowerCase());
 	}
 
+	public static String ensureEmail (String email, String username) {
+		return email == null || email.trim().isEmpty()
+				? "user" + username + "@" + ServletHelper
+						.constructBaseAddress(ContextAwareServlet.REQUEST.get())
+				: email;
+	}
+
 	public static interface HasUser<T> {
 		Key<User> get (T t);
 
@@ -99,5 +107,4 @@ public class UserHelper extends com.willshex.blogwt.shared.helper.UserHelper {
 			}
 		}
 	}
-
 }
