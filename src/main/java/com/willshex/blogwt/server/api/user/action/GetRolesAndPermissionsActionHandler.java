@@ -46,12 +46,14 @@ public final class GetRolesAndPermissionsActionHandler extends
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");
 
-		UserValidator.authorisation(input.session.user,
-				Arrays.asList(PermissionServiceProvider.provide()
-						.getCodePermission(PermissionHelper.MANAGE_USERS)),
-				"input.session.user");
-
 		input.user = UserValidator.lookup(input.user, "input.user");
+
+		if (input.session.user.id.longValue() != input.user.id.longValue()) {
+			UserValidator.authorisation(input.session.user,
+					Arrays.asList(PermissionServiceProvider.provide()
+							.getCodePermission(PermissionHelper.MANAGE_USERS)),
+					"input.session.user");
+		}
 
 		boolean idsOnly = Boolean.TRUE.equals(input.idsOnly);
 		if (idsOnly) {
