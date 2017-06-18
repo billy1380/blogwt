@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.shared.api.validation;
 
+import com.willshex.blogwt.shared.helper.DateTimeHelper;
+
 /**
  * @author William Shakour (billy1380)
  *
@@ -37,7 +39,12 @@ public enum ApiError {
 	CannotRevealRelationshipUsers(100017,
 			"Cannot reveal [with] relationship users RelationshipTypeType: {0}"),
 	NotEnoughData(100018, "Not enough data provided {0}"),
-	UserSuspended(100019, "Unauthorised user suspended {0}"),;
+	UserSuspended(100019, "Unauthorised user suspended {0}"),
+	DataTypeExists(100020, "Data type already exists {0}"),
+	DataTypeRequired(100021, "Data type required, cannot be deleted {0}"),
+	InvalidDate(100022, "Invalid value (date format "
+			+ DateTimeHelper.DATE_FORMAT + ") {0}"),
+	;
 
 	private static final String PARAM_0 = "\\{0\\}";
 	private static final String PARAM_1 = "\\{1\\}";

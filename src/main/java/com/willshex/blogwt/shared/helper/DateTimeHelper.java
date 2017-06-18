@@ -14,11 +14,15 @@ import java.util.Date;
  *
  */
 public class DateTimeHelper {
-	// 2000 years
-	public static final long YEARS_2000 = 2000L * 365L * 24L * 60L * 60L
-			* 1000L;
-	public static final long YEARS_100 = 100L * 365L * 24L * 60L * 60L * 1000L;
-	public static final long MILLIS_PER_DAY = 24L * 60L * 60L * 1000L;
+	public static final String DATE_FORMAT = "yyyy-MM-dd";
+	public static final String CARD_DATE_FORMAT = "MM/yy";
+
+	public static final long MILLIS_PER_SEC = 1000L;
+	public static final long MILLIS_PER_MIN = 60L * MILLIS_PER_SEC;
+	public static final long MILLIS_PER_HOUR = 60L * MILLIS_PER_MIN;
+	public static final long MILLIS_PER_DAY = 24L * MILLIS_PER_HOUR;
+	public static final long YEARS_100 = 100L * 365L * MILLIS_PER_DAY;
+	public static final long YEARS_2000 = 2000L * 365L * MILLIS_PER_DAY;
 
 	public static String ago (Date date) {
 		return date == null ? "not yet" : ago(date, true);
@@ -81,5 +85,13 @@ public class DateTimeHelper {
 		long diff = date.getTime() - now().getTime();
 		return diff > YEARS_100 ? "indefintly"
 				: ("for " + (diff / MILLIS_PER_DAY) + " days");
+	}
+
+	/**
+	 * @param i
+	 * @return
+	 */
+	public static Date minutesfromNow (int minutes) {
+		return new Date(now().getTime() + ((long) minutes * MILLIS_PER_MIN));
 	}
 }

@@ -8,10 +8,14 @@
 package com.willshex.blogwt.server.api.validation;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.willshex.blogwt.shared.api.validation.ApiError;
+import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.gson.web.service.server.InputValidationException;
 import com.willshex.gson.web.service.server.ServiceException;
 import com.willshex.gson.web.service.shared.Request;
@@ -28,7 +32,11 @@ public class ApiValidator {
 
 	public static final String WEB_ACCESS_CODE = "2bfe5f0e-9138-401c-8619-9a66f6367c9a";
 	public static final String DEV_ACCESS_CODE = "d8d20842-a8f7-11e5-bf72-cf5f3bd13298";
+
 	public static final String STATIC_ACCESS_CODE = "ded02740-5e12-11e5-b0c2-7054d251af02";
+
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat(
+			DateTimeHelper.DATE_FORMAT);
 
 	private static final String[] ALLOWED_ACCESS_CODES = new String[] {
 			WEB_ACCESS_CODE, DEV_ACCESS_CODE, STATIC_ACCESS_CODE };
@@ -62,7 +70,7 @@ public class ApiValidator {
 	public static void validateLength (String value, int min, int max,
 			String field) throws InputValidationException {
 		if (value.length() < min || value.length() > max)
-			ApiValidator.throwServiceError(InputValidationException.class,
+			throwServiceError(InputValidationException.class,
 					ApiError.BadLength, Integer.valueOf(min),
 					Integer.valueOf(max), field);
 	}
@@ -78,6 +86,20 @@ public class ApiValidator {
 					ApiError.TokenNoMatch, name);
 
 		return token;
+	}
+
+	public static String validateDate (String date, String name)
+			throws InputValidationException {
+		notNull(date, String.class, name);
+
+		try {
+			DATE_FORMAT.parse(date);
+		} catch (ParseException e) {
+			throwServiceError(InputValidationException.class,
+					ApiError.InvalidDate, "String: " + name);
+		}
+
+		return date;
 	}
 
 	public static <R extends Request> R request (R input, Class<R> c)
@@ -135,7 +157,7 @@ public class ApiValidator {
 			T l, Processor<S> p, String type, String name)
 			throws ServiceException {
 		if (l == null && !nullable)
-			ApiValidator.throwServiceError(InputValidationException.class,
+			throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, type + "[]: " + name);
 
 		List<S> l1 = null;
