@@ -1,5 +1,3 @@
-@def selectionBorderWidth 0px;
-
 .cellTableWidget {
 	
 }
@@ -61,7 +59,7 @@
 }
 
 .cellTableHoveredRowCell {
-	
+	background-color: #ddd;
 }
 
 .cellTableKeyboardSelectedRow {
@@ -69,7 +67,7 @@
 }
 
 .cellTableKeyboardSelectedRowCell {
-	
+	background-color: #ddd;
 }
 
 .cellTableSelectedRow {
