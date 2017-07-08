@@ -267,9 +267,13 @@ public class PostController extends AsyncDataProvider<Post> {
 	 * @return
 	 */
 	public void getPost (String reference) {
+		getPost(setPostReference(new Post(), reference));
+	}
+
+	public void getPost (Post post) {
 		final GetPostRequest input = SessionController.get()
 				.setSession(ApiHelper.setAccessCode(new GetPostRequest()))
-				.post(setPostReference(new Post(), reference));
+				.post(post);
 
 		if (getPostRequest != null) {
 			getPostRequest.cancel();
@@ -282,13 +286,23 @@ public class PostController extends AsyncDataProvider<Post> {
 					public void onSuccess (GetPostResponse output) {
 						getPostRequest = null;
 
+						boolean retryingGetWithSlug = false;
 						if (output.status == StatusType.StatusTypeSuccess) {
 							if (output.post != null) {}
+						} else {
+							if (input.post.id != null) {
+								getPost(new Post()
+										.slug(input.post.id.toString()));
+
+								retryingGetWithSlug = true;
+							}
 						}
 
-						DefaultEventBus.get().fireEventFromSource(
-								new GetPostSuccess(input, output),
-								PostController.this);
+						if (!retryingGetWithSlug) {
+							DefaultEventBus.get().fireEventFromSource(
+									new GetPostSuccess(input, output),
+									PostController.this);
+						}
 					}
 
 					@Override
