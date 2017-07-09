@@ -20,7 +20,6 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -53,6 +52,7 @@ import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
+import com.willshex.blogwt.client.helper.UserHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.InlineBootstrapGwtCellList;
 import com.willshex.blogwt.client.part.LoadingPanel;
@@ -72,7 +72,6 @@ import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.TagHelper;
-import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
@@ -90,9 +89,8 @@ import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
  * @author William Shakour (billy1380)
  *
  */
-public class EditPostPage extends Page implements
-		NavigationChangedEventHandler, CreatePostEventHandler,
-		GetPostEventHandler, UpdatePostEventHandler {
+public class EditPostPage extends Page implements NavigationChangedEventHandler,
+		CreatePostEventHandler, GetPostEventHandler, UpdatePostEventHandler {
 
 	private static EditPostPageUiBinder uiBinder = GWT
 			.create(EditPostPageUiBinder.class);
@@ -213,8 +211,8 @@ public class EditPostPage extends Page implements
 
 						for (String url : uploader.getServerMessage()
 								.getUploadedFileUrls()) {
-							resource.data = url
-									.replace(ApiHelper.BASE_URL, "/");
+							resource.data = url.replace(ApiHelper.BASE_URL,
+									"/");
 							break;
 						}
 
@@ -239,8 +237,8 @@ public class EditPostPage extends Page implements
 
 		tagList.addDataDisplay(clTags);
 
-		String commentsEnabled = PropertyController.get().stringProperty(
-				PropertyHelper.POST_COMMENTS_ENABLED);
+		String commentsEnabled = PropertyController.get()
+				.stringProperty(PropertyHelper.POST_COMMENTS_ENABLED);
 		pnlComments.setVisible(commentsEnabled != null
 				&& !PropertyHelper.NONE_VALUE.equals(commentsEnabled));
 
@@ -338,16 +336,11 @@ public class EditPostPage extends Page implements
 		pnlPreview.getElement().appendChild(elDate);
 
 		DivElement elAuthor = d.createDivElement();
-		if (PropertyController.get().booleanProperty(
-				PropertyHelper.POST_SHOW_AUTHOR, false)) {
-			elAuthor.setInnerSafeHtml(PostSummaryCell.Templates.INSTANCE
-					.author(UriUtils
-							.fromString((post != null ? post.author.avatar
-									: user.avatar)
-									+ "?s="
-									+ UserHelper.AVATAR_HEADER_SIZE
-									+ "&default=retro"), UserHelper
-							.handle((post != null ? post.author : user))));
+		if (PropertyController.get()
+				.booleanProperty(PropertyHelper.POST_SHOW_AUTHOR, false)) {
+			elAuthor.setInnerSafeHtml(PostSummaryCell.Templates.INSTANCE.author(
+					UserHelper.avatar((post != null ? post.author : user)),
+					UserHelper.handle((post != null ? post.author : user))));
 		}
 
 		pnlPreview.getElement().appendChild(elAuthor);
@@ -385,20 +378,19 @@ public class EditPostPage extends Page implements
 	void onBtnSubmitClicked (ClickEvent e) {
 		if (isValid()) {
 			if (post == null) {
-				PostController.get().createPost(
-						txtTitle.getText(),
+				PostController.get().createPost(txtTitle.getText(),
 						cbxDirectOnly.getValue().booleanValue() ? Boolean.FALSE
-								: Boolean.TRUE, cbxComments.getValue(),
-						txtSummary.getText(), txtContent.getText(),
-						cbxPublish.getValue(), txtTags.getText());
+								: Boolean.TRUE,
+						cbxComments.getValue(), txtSummary.getText(),
+						txtContent.getText(), cbxPublish.getValue(),
+						txtTags.getText());
 			} else {
-				PostController.get().updatePost(
-						post,
-						txtTitle.getText(),
+				PostController.get().updatePost(post, txtTitle.getText(),
 						cbxDirectOnly.getValue().booleanValue() ? Boolean.FALSE
-								: Boolean.TRUE, cbxComments.getValue(),
-						txtSummary.getText(), txtContent.getText(),
-						cbxPublish.getValue(), txtTags.getText());
+								: Boolean.TRUE,
+						cbxComments.getValue(), txtSummary.getText(),
+						txtContent.getText(), cbxPublish.getValue(),
+						txtTags.getText());
 			}
 			submitting();
 		} else {
@@ -407,8 +399,8 @@ public class EditPostPage extends Page implements
 	}
 
 	private void ready () {
-		btnSubmit.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE
+		btnSubmit.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
 						.nextButton("Submit"));
 
 		txtTitle.setEnabled(true);
@@ -446,10 +438,10 @@ public class EditPostPage extends Page implements
 	private void submitting () {
 		loading();
 
-		btnSubmit.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
-						"Submitting... ", Resources.RES.primaryLoader()
-								.getSafeUri()));
+		btnSubmit.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
+						.loadingButton("Submitting... ",
+								Resources.RES.primaryLoader().getSafeUri()));
 	}
 
 	/* (non-Javadoc)
@@ -540,8 +532,8 @@ public class EditPostPage extends Page implements
 		txtSummary.setText(post.summary);
 		txtContent.setText(post.content.body);
 
-		cbxDirectOnly.setValue(Boolean.valueOf(post.listed != null
-				&& !post.listed.booleanValue()));
+		cbxDirectOnly.setValue(Boolean
+				.valueOf(post.listed != null && !post.listed.booleanValue()));
 		cbxComments.setValue(post.commentsEnabled == null ? Boolean.FALSE
 				: post.commentsEnabled);
 		cbxPublish.setValue(Boolean.valueOf(post.published != null));

@@ -634,8 +634,15 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 	private void showUserDetails (User user) {
 		imgAvatar.setAlt(user.username);
-		imgAvatar.setSrc(user.avatar + "?s=" + UserHelper.AVATAR_HEADER_SIZE
-				+ "&default=retro");
+		if (user.avatar != null) {
+			imgAvatar.setSrc(user.avatar);
+		} else {
+			imgAvatar.setSrc(Resources.RES.newUser().getSafeUri().asString());
+		}
+
+		imgAvatar.setWidth(UserHelper.AVATAR_HEADER_SIZE);
+		imgAvatar.setHeight(UserHelper.AVATAR_HEADER_SIZE);
+
 		elUserName.setInnerText(user.forename + " " + user.surname);
 	}
 

@@ -14,15 +14,14 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
-import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiRenderer;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
+import com.willshex.blogwt.client.helper.UserHelper;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
-import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
 
 /**
@@ -43,7 +42,9 @@ public class PostSummaryCell extends AbstractCell<Post> {
 		@Template("<span class=\"label label-warning\">Not visible</span>")
 		SafeHtml notVisible ();
 
-		@Template("by <img src=\"{0}\" class=\"img-circle\" /> {1}")
+		@Template("by <img height=\"" + UserHelper.AVATAR_HEADER_SIZE
+				+ "\" width=\"" + UserHelper.AVATAR_HEADER_SIZE
+				+ "\" src=\"{0}\" class=\"img-circle\" /> {1}")
 		SafeHtml author (SafeUri avatarUrl, String authorName);
 
 	}
@@ -61,12 +62,12 @@ public class PostSummaryCell extends AbstractCell<Post> {
 	public void render (Context context, Post value, SafeHtmlBuilder builder) {
 		SafeUri link = PageTypeHelper.asHref(PageType.PostDetailPageType,
 				PostHelper.getSlug(value));
-		SafeHtml published = Templates.INSTANCE.notPublished(DateTimeHelper
-				.ago(value.created));
+		SafeHtml published = Templates.INSTANCE
+				.notPublished(DateTimeHelper.ago(value.created));
 
 		if (value.published != null) {
-			published = Templates.INSTANCE.publishedDate(DateTimeHelper
-					.ago(value.published));
+			published = Templates.INSTANCE
+					.publishedDate(DateTimeHelper.ago(value.published));
 		}
 
 		String body = "Empty... :imp:";
@@ -80,16 +81,16 @@ public class PostSummaryCell extends AbstractCell<Post> {
 
 		SafeHtml author = SafeHtmlUtils.EMPTY_SAFE_HTML;
 
-		if (PropertyController.get().booleanProperty(
-				PropertyHelper.POST_SHOW_AUTHOR, false)) {
-			author = Templates.INSTANCE
-					.author(UriUtils.fromString(value.author.avatar + "?s="
-							+ UserHelper.AVATAR_HEADER_SIZE + "&default=retro"),
-							UserHelper.handle(value.author));
+		if (PropertyController.get()
+				.booleanProperty(PropertyHelper.POST_SHOW_AUTHOR, false)) {
+
+			author = Templates.INSTANCE.author(UserHelper.avatar(value.author),
+					UserHelper.handle(value.author));
 		}
 
-		RENDERER.render(builder, link, SafeHtmlUtils
-				.fromTrustedString(PostHelper.makeHeading2(value.title)),
+		RENDERER.render(builder, link,
+				SafeHtmlUtils.fromTrustedString(
+						PostHelper.makeHeading2(value.title)),
 				SafeHtmlUtils.fromTrustedString(PostHelper.makeMarkup(body)),
 				author, published,
 				value.listed.booleanValue() ? SafeHtmlUtils.EMPTY_SAFE_HTML

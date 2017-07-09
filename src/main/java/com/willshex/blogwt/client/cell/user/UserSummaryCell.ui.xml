@@ -4,6 +4,7 @@
 	<ui:with field="username" type="com.google.gwt.safehtml.shared.SafeHtml" />
 	<ui:with field="avatar" type="com.google.gwt.safehtml.shared.SafeUri" />
 	<ui:with field="summary" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:import field="com.willshex.blogwt.shared.helper.UserHelper.AVATAR_80_SIZE" />
 	<ui:style>
 	.smaller-top-margin {
 		margin-top: 0px;
@@ -19,7 +20,8 @@
 	</ui:style>
 	<div class="row {style.top}">
 		<div class="col-sm-3">
-			<img class="img-circle img-responsive center-block {style.right}" src="{avatar}" />
+			<img width="{AVATAR_80_SIZE.toString}px" height="{AVATAR_80_SIZE.toString}px"
+				class="img-circle img-responsive center-block {style.right}" src="{avatar}" />
 		</div>
 		<div class="col-sm-9">
 			<h3 class="{style.smaller-top-margin}">

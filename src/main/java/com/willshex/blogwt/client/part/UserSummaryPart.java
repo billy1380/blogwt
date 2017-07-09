@@ -15,8 +15,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.helper.PostHelper;
+import com.willshex.blogwt.client.helper.UserHelper;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.helper.UserHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -45,7 +45,7 @@ public class UserSummaryPart extends Composite {
 	private void show (User user) {
 		String username = "@" + user.username;
 		imgAvatar.setAltText(username);
-		imgAvatar.setUrl(user.avatar + "?s=80&default=retro");
+		imgAvatar.setUrl(UserHelper.avatar(user));
 		elName.setInnerHTML(UserHelper.name(user));
 		elUsername.setInnerHTML(username);
 

@@ -10,10 +10,12 @@ package com.willshex.blogwt.client.page.user;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -59,23 +61,20 @@ import com.willshex.gson.web.service.shared.StatusType;
  * @author William Shakour (billy1380)
  *
  */
-public class ChangeDetailsPage extends Page implements
-		NavigationChangedEventHandler, GetUserDetailsEventHandler,
+public class ChangeDetailsPage extends Page
+		implements NavigationChangedEventHandler, GetUserDetailsEventHandler,
 		ChangeUserDetailsEventHandler, GetEmailAvatarEventHandler,
 		RegisterUserEventHandler {
 
 	private static ChangeDetailsPageUiBinder uiBinder = GWT
 			.create(ChangeDetailsPageUiBinder.class);
 
-	interface ChangeDetailsPageUiBinder extends
-			UiBinder<Widget, ChangeDetailsPage> {}
+	interface ChangeDetailsPageUiBinder
+			extends UiBinder<Widget, ChangeDetailsPage> {}
 
 	public interface ChangeDetailsTemplates extends SafeHtmlTemplates {
 		ChangeDetailsTemplates INSTANCE = GWT
 				.create(ChangeDetailsTemplates.class);
-
-		@Template("{0} (<a href=\"https://en.gravatar.com/\" target=\"_blank\">Gravatar</a>)")
-		SafeHtml gravatarComment (String comment);
 
 		@Template("{0} <a href=\"{1}\"><span class=\"glyphicon glyphicon-user\"></span></a>")
 		SafeHtml rolesAndPermissions (String username, String accessHref);
@@ -89,7 +88,6 @@ public class ChangeDetailsPage extends Page implements
 	private static final String REGISTER_ACTION_TEXT = "Register";
 
 	@UiField Element elHeading;
-	@UiField Element elGravatar;
 	@UiField FormPanel frmDetails;
 
 	@UiField Image imgAvatar;
@@ -143,6 +141,7 @@ public class ChangeDetailsPage extends Page implements
 		UiHelper.addPlaceholder(txtSummary, "Summary");
 
 		actionText = UPDATE_ACTION_TEXT;
+		setDefaultAvatar();
 	}
 
 	/* (non-Javadoc)
@@ -158,7 +157,8 @@ public class ChangeDetailsPage extends Page implements
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetUserDetailsEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
-				ChangeUserDetailsEventHandler.TYPE, UserController.get(), this));
+				ChangeUserDetailsEventHandler.TYPE, UserController.get(),
+				this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetEmailAvatarEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
@@ -178,9 +178,8 @@ public class ChangeDetailsPage extends Page implements
 		if (PageType.ChangeDetailsPageType.equals(current.getPage())) {
 			if (current.getAction() == null) {
 				show(user = SessionController.get().user());
-				lnkChangePassword
-						.setTargetHistoryToken(PageType.ChangePasswordPageType
-								.asTargetHistoryToken());
+				lnkChangePassword.setTargetHistoryToken(
+						PageType.ChangePasswordPageType.asTargetHistoryToken());
 				lnkChangePassword.setVisible(true);
 				pnlPassword.setVisible(false);
 			} else if ("id".equals(current.getAction())
@@ -211,7 +210,6 @@ public class ChangeDetailsPage extends Page implements
 		}
 
 		elHeading.setInnerText(getHeadingText());
-		elGravatar.setInnerSafeHtml(getGravatarSafeHtml());
 
 		ready();
 	}
@@ -232,32 +230,40 @@ public class ChangeDetailsPage extends Page implements
 		if (user != null) {
 			String username = "@" + user.username;
 			imgAvatar.setAltText(username);
-			imgAvatar.setUrl(user.avatar + "?s=160&default=retro");
-			h3Username
-					.setInnerSafeHtml(UserHelper.isAdmin(user) ? ChangeDetailsTemplates.INSTANCE
-							.adminRolesAndPermissions(
-									username,
-									PageTypeHelper.asHref(
-											PageType.ChangeAccessPageType,
-											user.id.toString()).asString())
-							: ChangeDetailsTemplates.INSTANCE
-									.rolesAndPermissions(
-											username,
-											PageTypeHelper
-													.asHref(PageType.ChangeAccessPageType,
-															user.id.toString())
-													.asString()));
-			elDates.setInnerText("Added "
-					+ DateTimeHelper.ago(user.created)
-					+ " and last seen "
-					+ (user.lastLoggedIn == null ? "never" : DateTimeHelper
-							.ago(user.lastLoggedIn)));
+			if (user.avatar != null) {
+				imgAvatar.setUrl(user.avatar == null
+						? Resources.RES.newUser().getSafeUri()
+						: UriUtils.fromString(user.avatar));
+			} else {
+				setDefaultAvatar();
+			}
+			h3Username.setInnerSafeHtml(UserHelper.isAdmin(user)
+					? ChangeDetailsTemplates.INSTANCE.adminRolesAndPermissions(
+							username,
+							PageTypeHelper.asHref(PageType.ChangeAccessPageType,
+									user.id.toString()).asString())
+					: ChangeDetailsTemplates.INSTANCE.rolesAndPermissions(
+							username,
+							PageTypeHelper.asHref(PageType.ChangeAccessPageType,
+									user.id.toString()).asString()));
+			elDates.setInnerText("Added " + DateTimeHelper.ago(user.created)
+					+ " and last seen " + (user.lastLoggedIn == null ? "never"
+							: DateTimeHelper.ago(user.lastLoggedIn)));
 			txtUsername.setText(user.username);
 			txtForename.setText(user.forename);
 			txtSurname.setText(user.surname);
 			txtEmail.setText(user.email);
 			txtSummary.setText(user.summary);
 		}
+	}
+
+	private void setDefaultAvatar () {
+		imgAvatar.setUrl(Resources.RES.newUser().getSafeUri());
+		String width;
+		imgAvatar
+				.setWidth(width = Integer.toString(UserHelper.AVATAR_LARGE_SIZE)
+						+ Unit.PX);
+		imgAvatar.setHeight(width);
 	}
 
 	/* (non-Javadoc)
@@ -325,8 +331,8 @@ public class ChangeDetailsPage extends Page implements
 	}
 
 	private void ready () {
-		btnUpdate.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE
+		btnUpdate.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
 						.nextButton(actionText));
 
 		btnUpdate.setEnabled(true);
@@ -341,10 +347,10 @@ public class ChangeDetailsPage extends Page implements
 	}
 
 	private void loading () {
-		btnUpdate.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
-						getLoadingText(), Resources.RES.primaryLoader()
-								.getSafeUri()));
+		btnUpdate.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
+						.loadingButton(getLoadingText(),
+								Resources.RES.primaryLoader().getSafeUri()));
 
 		btnUpdate.setEnabled(false);
 		txtUsername.setEnabled(false);
@@ -400,30 +406,10 @@ public class ChangeDetailsPage extends Page implements
 		return headingText;
 	}
 
-	private SafeHtml getGravatarSafeHtml () {
-		SafeHtml gravatarSafeHtml = null;
-		switch (actionText) {
-		case UPDATE_ACTION_TEXT:
-			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE
-					.gravatarComment("Changing e-mail address will change your avatar");
-			break;
-		case CREATE_ACTION_TEXT:
-			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE
-					.gravatarComment("E-mail address will determine user's avatar");
-			break;
-		case REGISTER_ACTION_TEXT:
-			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE
-					.gravatarComment("Your e-mail address will determine your avatar");
-			break;
-		}
-
-		return gravatarSafeHtml;
-	}
-
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler
+	 * @see com.willshex.blogwt.shared.api.user.call.event.
+	 * ChangeUserDetailsEventHandler
 	 * #changeUserDetailsSuccess(com.willshex.blogwt.shared.api.user.call.
 	 * ChangeUserDetailsRequest,
 	 * com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse) */
@@ -439,8 +425,8 @@ public class ChangeDetailsPage extends Page implements
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler
+	 * @see com.willshex.blogwt.shared.api.user.call.event.
+	 * ChangeUserDetailsEventHandler
 	 * #changeUserDetailsFailure(com.willshex.blogwt.shared.api.user.call.
 	 * ChangeUserDetailsRequest, java.lang.Throwable) */
 	@Override
@@ -457,8 +443,7 @@ public class ChangeDetailsPage extends Page implements
 	@Override
 	protected void reset () {
 		frmDetails.reset();
-		imgAvatar.setAltText("");
-		imgAvatar.setUrl("");
+		setDefaultAvatar();
 		elDates.setInnerText("");
 		h3Username.setInnerText("");
 		actionText = UPDATE_ACTION_TEXT;
@@ -478,7 +463,7 @@ public class ChangeDetailsPage extends Page implements
 	public void getEmailAvatarSuccess (GetEmailAvatarRequest input,
 			GetEmailAvatarResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			imgAvatar.setUrl(output.avatar + "?s=160&default=retro");
+			// imgAvatar.setUrl(output.avatar + "?s=160&default=retro");
 		}
 	}
 
@@ -509,8 +494,8 @@ public class ChangeDetailsPage extends Page implements
 				PageTypeHelper.show(PageType.ChangeDetailsPageType, "id",
 						output.user.id.toString());
 			} else {
-				PageTypeHelper.show(PageType.LoginPageType, "username="
-						+ output.user.username.toString());
+				PageTypeHelper.show(PageType.LoginPageType,
+						"username=" + output.user.username.toString());
 			}
 		}
 
@@ -525,7 +510,8 @@ public class ChangeDetailsPage extends Page implements
 	 * (com.willshex.blogwt.shared.api.user.call.RegisterUserRequest,
 	 * java.lang.Throwable) */
 	@Override
-	public void registerUserFailure (RegisterUserRequest input, Throwable caught) {
+	public void registerUserFailure (RegisterUserRequest input,
+			Throwable caught) {
 		GWT.log("registerUserFailure", caught);
 
 		ready();

@@ -22,7 +22,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.willshex.blogwt.client.part.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
@@ -33,10 +32,12 @@ import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.cell.StyledImageCell;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
+import com.willshex.blogwt.client.helper.UserHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
+import com.willshex.blogwt.client.part.SimplePager;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
@@ -44,7 +45,6 @@ import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
-import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
 
 /**
@@ -66,7 +66,8 @@ public class UsersPage extends Page implements ChangeUserAccessEventHandler {
 		SafeHtml emailLink (String email, String emailDescription);
 	}
 
-	private static final StyledImageCell imagePrototype = new StyledImageCell();
+	private static final StyledImageCell imagePrototype = new StyledImageCell(
+			UserHelper.AVATAR_HEADER_SIZE, UserHelper.AVATAR_HEADER_SIZE);
 	private static final Cell<SafeHtml> safeHtmlPrototype = new SafeHtmlCell();
 	private static final ButtonCell actionButtonPrototype = new PrettyButtonCell();
 
@@ -98,8 +99,7 @@ public class UsersPage extends Page implements ChangeUserAccessEventHandler {
 
 			@Override
 			public String getValue (User object) {
-				return object.avatar + "?s=" + UserHelper.AVATAR_HEADER_SIZE
-						+ "&default=retro";
+				return UserHelper.avatar(object).asString();
 			}
 		};
 		tblUsers.setColumnWidth(avatar, 20.0, Unit.PX);

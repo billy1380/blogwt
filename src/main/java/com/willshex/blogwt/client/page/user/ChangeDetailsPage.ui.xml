@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:import field="com.willshex.blogwt.shared.page.PageType.*" />
+	<ui:import field="com.willshex.blogwt.shared.helper.UserHelper.AVATAR_LARGE_SIZE" />
 	<ui:style gss="true">
 	.account {
 		text-align: center;
@@ -9,8 +10,8 @@
 	.parent {
 		position: relative;
 		overflow: hidden;
-		width: 160px;
-		height: 160px;
+		width: 128px;
+		height: 128px;
 		margin: auto;
 	}
 	
@@ -46,7 +47,8 @@
 				<div class="{style.account}">
 					<h2 ui:field="elHeading">Account</h2>
 					<div class="{style.parent} img-circle">
-						<g:Image ui:field="imgAvatar" styleName="{style.image}" height="160px" />
+						<g:Image width="{AVATAR_LARGE_SIZE.toString}px" height="{AVATAR_LARGE_SIZE.toString}px"
+							ui:field="imgAvatar" styleName="{style.image}" />
 					</div>
 					<h3 ui:field="h3Username">-</h3>
 					<span class="text-muted" ui:field="elDates" />
@@ -96,13 +98,14 @@
 							<g:HTMLPanel styleName="control-label small" ui:field="pnlEmailNote"
 								visible="false" />
 						</g:HTMLPanel>
-						
-						  <g:HTMLPanel ui:field="pnlSummary" styleName="form-group">
-                            <label class="control-label">Summary</label>
-                            <g:TextArea ui:field="txtSummary" styleName="form-control" visibleLines="4" />
-                            <g:HTMLPanel styleName="control-label small" ui:field="pnlSummaryNote"
-                                visible="false" />
-                        </g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="pnlSummary" styleName="form-group">
+							<label class="control-label">Summary</label>
+							<g:TextArea ui:field="txtSummary" styleName="form-control"
+								visibleLines="4" />
+							<g:HTMLPanel styleName="control-label small" ui:field="pnlSummaryNote"
+								visible="false" />
+						</g:HTMLPanel>
 
 						<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary pull-right"
 							text="Update">

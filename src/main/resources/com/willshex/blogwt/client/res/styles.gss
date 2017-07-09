@@ -137,3 +137,7 @@ position: relative;
 .blink {
     @mixin blink(1s);
 }
+
+.newUser {
+    gwt-sprite: "newUser";
+}

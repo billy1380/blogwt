@@ -61,7 +61,7 @@ final class UserService
 	}
 
 	public User getUser (Long id) {
-		return addAvatar(load().id(id.longValue()).now());
+		return load().id(id.longValue()).now();
 	}
 
 	private LoadType<User> load () {
@@ -113,7 +113,7 @@ final class UserService
 
 		SearchHelper.queueToIndex(getName(), user.id);
 
-		return addAvatar(user);
+		return user;
 	}
 
 	/* (non-Javadoc)
@@ -136,8 +136,8 @@ final class UserService
 	@Override
 	public List<User> getUsers (Integer start, Integer count,
 			UserSortType sortBy, SortDirectionType sortDirection) {
-		return addAvatars(PersistenceHelper.pagedAndSorted(load(), start, count,
-				sortBy, this, sortDirection));
+		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
+				this, sortDirection);
 	}
 
 	/* (non-Javadoc)
@@ -153,7 +153,7 @@ final class UserService
 			user = null;
 		}
 
-		return addAvatar(user);
+		return user;
 	}
 
 	/* (non-Javadoc)
@@ -163,25 +163,6 @@ final class UserService
 	@Override
 	public void updateUserIdLastLoggedIn (Long userId) {
 		updateUser(getUser(userId).lastLoggedIn(new Date()));
-	}
-
-	private List<User> addAvatars (List<User> users) {
-		if (users != null) {
-			for (User user : users) {
-				if (user.avatar == null) {
-					addAvatar(user);
-				}
-			}
-		}
-		return users;
-	}
-
-	private User addAvatar (User user) {
-		if (user != null && user.email != null) {
-			user.avatar = UserHelper.emailAvatar(user.email);
-		}
-
-		return user;
 	}
 
 	@Override
@@ -218,8 +199,8 @@ final class UserService
 	 * (java.lang.String) */
 	@Override
 	public User getUsernameUser (String username) {
-		return addAvatar(PersistenceHelper.one(load()
-				.filter(map(UserSortType.UserSortTypeUsername), username)));
+		return PersistenceHelper.one(load()
+				.filter(map(UserSortType.UserSortTypeUsername), username));
 	}
 
 	/* (non-Javadoc)
@@ -428,8 +409,8 @@ final class UserService
 	 * (java.lang.String) */
 	@Override
 	public User getActionCodeUser (String actionCode) {
-		return addAvatar(PersistenceHelper.one(load()
-				.filter(map(UserSortType.UserSortTypeActionCode), actionCode)));
+		return PersistenceHelper.one(load()
+				.filter(map(UserSortType.UserSortTypeActionCode), actionCode));
 	}
 
 	/* (non-Javadoc)
@@ -439,8 +420,8 @@ final class UserService
 	 * .lang.String) */
 	@Override
 	public User getEmailUser (String email) {
-		return addAvatar(PersistenceHelper.one(
-				load().filter(map(UserSortType.UserSortTypeEmail), email)));
+		return PersistenceHelper
+				.one(load().filter(map(UserSortType.UserSortTypeEmail), email));
 	}
 
 	private String getSalt () {
@@ -529,7 +510,7 @@ final class UserService
 	 * util.Collection) */
 	@Override
 	public List<User> getIdUserBatch (Collection<Long> ids) {
-		return addAvatars(new ArrayList<User>(load().ids(ids).values()));
+		return new ArrayList<User>(load().ids(ids).values());
 	}
 
 	/* (non-Javadoc)
@@ -541,14 +522,13 @@ final class UserService
 		User user = getUser(id);
 
 		if (user.roleKeys != null) {
-			user.roles = RoleServiceProvider.provide()
-					.getIdRoleBatch(PersistenceHelper.keysToIds(user.roleKeys));
+			user.roles = PersistenceHelper
+					.batchLookup(RoleServiceProvider.provide(), user.roleKeys);
 		}
 
 		if (user.permissionKeys != null) {
-			user.permissions = PermissionServiceProvider.provide()
-					.getIdPermissionBatch(
-							PersistenceHelper.keysToIds(user.permissionKeys));
+			user.permissions = PersistenceHelper.batchLookup(
+					PermissionServiceProvider.provide(), user.permissionKeys);
 		}
 
 		SearchHelper.indexDocument(toDocument(user));

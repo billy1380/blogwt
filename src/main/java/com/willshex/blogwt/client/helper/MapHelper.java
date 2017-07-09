@@ -88,10 +88,19 @@ public class MapHelper {
 
 	private static native void showMap (Element element, float lat, float lng,
 			int zoom, String markerName) /*-{
-											var myLatlng = new google.maps.LatLng(lat,lng);
-											var mapOptions = {zoom:zoom,center:myLatlng};
-											var map = new google.maps.Map(element,mapOptions);
-											if (markerName !== undefined) {var marker = new google.maps.Marker({position: myLatlng,map: map,title:(markerName === "<nameless>" ? undefined : markerName)});}
-											}-*/;
+	var myLatlng = new google.maps.LatLng(lat, lng);
+	var mapOptions = {
+	    zoom : zoom,
+	    center : myLatlng
+	};
+	var map = new google.maps.Map(element, mapOptions);
+	if (markerName !== undefined) {
+	    var marker = new google.maps.Marker({
+		position : myLatlng,
+		map : map,
+		title : (markerName === "<nameless>" ? undefined : markerName)
+	    });
+	}
+	}-*/;
 
 }

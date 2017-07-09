@@ -44,6 +44,8 @@ public interface Resources extends ClientBundle {
 		String externalLink ();
 
 		String blink ();
+		
+		String newUser ();
 	}
 
 	public static final Resources RES = GWT.create(Resources.class);
@@ -77,5 +79,8 @@ public interface Resources extends ClientBundle {
 
 	@Source("res/large-brand.png")
 	ImageResource largeBrand ();
+	
+	@Source("res/new-user.png")
+	ImageResource newUser ();
 
 }

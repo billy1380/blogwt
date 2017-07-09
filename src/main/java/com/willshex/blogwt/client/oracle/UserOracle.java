@@ -13,15 +13,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeUri;
-import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.client.helper.UserHelper;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUsersResponse;
 import com.willshex.blogwt.shared.helper.PagerHelper;
-import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
@@ -93,10 +92,9 @@ public class UserOracle extends SuggestOracle<User> {
 	 * .lang.Object) */
 	@Override
 	protected String getDisplayString (User item) {
-		return Templates.INSTANCE.displayString(
-				UriUtils.fromString(item.avatar + "?s="
-						+ UserHelper.AVATAR_HEADER_SIZE + "&default=retro"),
-				UserHelper.name(item)).asString();
+		return Templates.INSTANCE
+				.displayString(UserHelper.avatar(item), UserHelper.name(item))
+				.asString();
 	}
 
 	/* (non-Javadoc)

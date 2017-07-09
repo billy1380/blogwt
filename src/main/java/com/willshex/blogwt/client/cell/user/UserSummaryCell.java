@@ -13,11 +13,10 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
-import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiRenderer;
 import com.willshex.blogwt.client.helper.PostHelper;
+import com.willshex.blogwt.client.helper.UserHelper;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.helper.UserHelper;
 
 /**
  * @author billy1380
@@ -54,7 +53,7 @@ public class UserSummaryCell extends AbstractCell<User> {
 
 		RENDERER.render(sb, SafeHtmlUtils.fromString(UserHelper.name(user)),
 				SafeHtmlUtils.fromString("@" + user.username),
-				UriUtils.fromString(user.avatar + "?s=80&default=retro"),
+				UserHelper.avatar(user),
 				SafeHtmlUtils.fromTrustedString(summary));
 
 	}

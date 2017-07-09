@@ -36,7 +36,7 @@ public class User extends DataType {
 
 	@Index public String forename;
 	@Index public String surname;
-	@Ignore public String avatar;
+	public String avatar;
 	public String group;
 	public String password;
 	public Date lastLoggedIn;
