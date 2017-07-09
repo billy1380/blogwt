@@ -124,4 +124,14 @@ final class RoleService implements IRoleService, ISortable<RoleSortType> {
 		return sortBy.toString();
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
+	 * get(java.util.Collection) */
+	@Override
+	public List<Role> get (Collection<Long> ids) {
+		return getIdRoleBatch(ids);
+	}
+
 }

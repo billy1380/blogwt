@@ -4,7 +4,8 @@
 	<ui:import field="com.willshex.blogwt.client.helper.ApiHelper.UPLOAD_END_POINT" />
 	<ui:style>
 	@external upld-drop-zone, GWTUpld;
-	.upld-drop-zone {
+	
+	.property .upld-drop-zone {
 		color: #ccc;
 		border-style: dashed;
 		border-color: #ccc;
@@ -17,12 +18,12 @@
 		border-radius: 6px
 	}
 	
-	.GWTUpld {
+	.property .GWTUpld {
 		width: 100%;
 		margin: 10px 0;
 	}
 	</ui:style>
-	<g:HTMLPanel styleName="form-group">
+	<g:HTMLPanel styleName="form-group {style.property}">
 		<label class="control-label" ui:field="elDescription" />
 		<label class="small text-muted" ui:field="elName" />
 		<div class="input-group">

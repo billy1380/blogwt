@@ -109,4 +109,14 @@ final class MetaNotificationService implements IMetaNotificationService,
 				code));
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
+	 * get(java.util.Collection) */
+	@Override
+	public List<MetaNotification> get (Collection<Long> ids) {
+		return getIdMetaNotificationBatch(ids);
+	}
+
 }

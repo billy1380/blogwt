@@ -121,8 +121,7 @@ final class PermissionService
 			role = RoleServiceProvider.provide().getRole(role.id);
 		}
 
-		return getIdPermissionBatch(
-				PersistenceHelper.keysToIds(role.permissionKeys));
+		return PersistenceHelper.batchLookup(this, role.permissionKeys);
 	}
 
 	/* (non-Javadoc)
@@ -149,6 +148,16 @@ final class PermissionService
 	@Override
 	public String map (PermissionSortType sortBy) {
 		return sortBy.toString();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
+	 * get(java.util.Collection) */
+	@Override
+	public List<Permission> get (Collection<Long> ids) {
+		return getIdPermissionBatch(ids);
 	}
 
 }

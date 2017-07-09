@@ -19,6 +19,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.service.ISortable;
+import com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 
 /**
@@ -260,5 +261,18 @@ public class PersistenceHelper {
 		}
 
 		return id;
+	}
+
+	public static <T> List<T> batchLookup (BatchGetter<T> batcher,
+			Collection<Key<T>> keys) {
+		Map<Object, T> map = PersistenceHelper
+				.typeMap(batcher.get(PersistenceHelper.keysToIds(keys)));
+		List<T> list = new ArrayList<>();
+
+		for (Key<T> key : keys) {
+			list.add(map.get(PersistenceHelper.keyToId(key)));
+		}
+
+		return list;
 	}
 }

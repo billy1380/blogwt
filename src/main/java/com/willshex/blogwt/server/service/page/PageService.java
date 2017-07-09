@@ -190,10 +190,11 @@ final class PageService
 		List<Post> posts = new ArrayList<Post>();
 
 		for (Page page : pages) {
-			posts.addAll(PostServiceProvider.provide().getIdPostBatch(
-					PersistenceHelper.keysToIds(page.postKeys)));
+			posts.addAll(PersistenceHelper
+					.batchLookup(PostServiceProvider.provide(), page.postKeys));
 		}
 
+		// FIXME: just load in one go (batcg)
 		for (Post post : posts) {
 			post.content = PostServiceProvider.provide().getPostContent(post);
 		}

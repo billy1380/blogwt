@@ -10,6 +10,7 @@ package com.willshex.blogwt.server.service.post;
 import java.util.Collection;
 import java.util.List;
 
+import com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
@@ -22,7 +23,7 @@ import com.willshex.service.IService;
  * @author William Shakour (billy1380)
  *
  */
-public interface IPostService extends IService {
+public interface IPostService extends IService, BatchGetter<Post> {
 	public static final String NAME = "blogwt.post";
 
 	/**

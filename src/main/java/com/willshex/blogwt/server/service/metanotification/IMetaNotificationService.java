@@ -11,12 +11,14 @@ package com.willshex.blogwt.server.service.metanotification;
 import java.util.Collection;
 import java.util.List;
 
+import com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.datatype.MetaNotificationSortType;
 import com.willshex.service.IService;
 
-public interface IMetaNotificationService extends IService {
+public interface IMetaNotificationService
+		extends IService, BatchGetter<MetaNotification> {
 
 	public static final String NAME = "blogwt.metanotification";
 

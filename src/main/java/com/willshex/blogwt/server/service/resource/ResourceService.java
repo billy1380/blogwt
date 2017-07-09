@@ -12,6 +12,7 @@ import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -101,9 +102,9 @@ final class ResourceService
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.resource.IResourceService#
-	 * getIdsResourceBatch(java.util.List) */
+	 * getIdsResourceBatch(java.util.Collection) */
 	@Override
-	public List<Resource> getIdsResourceBatch (List<Long> ids) {
+	public List<Resource> getIdResourceBatch (Collection<Long> ids) {
 		return new ArrayList<Resource>(load().ids(ids).values());
 	}
 
@@ -114,6 +115,16 @@ final class ResourceService
 	public String map (ResourceSortType sortBy) {
 		return sortBy == ResourceSortType.ResourceSortTypeId ? "__key__"
 				: sortBy.toString();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
+	 * get(java.util.Collection) */
+	@Override
+	public List<Resource> get (Collection<Long> ids) {
+		return getIdResourceBatch(ids);
 	}
 
 }

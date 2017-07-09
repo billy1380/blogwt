@@ -1,6 +1,6 @@
 //
 //  Batcher.java
-//  qure
+//  blogwt
 //
 //  Created by William Shakour (billy1380) on 1 Jun 2017.
 //  Copyright © 2017 WillShex Limited. All rights reserved.

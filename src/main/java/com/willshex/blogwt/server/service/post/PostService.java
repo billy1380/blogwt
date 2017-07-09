@@ -790,4 +790,14 @@ final class PostService implements IPostService, ISearch<Post> {
 		throw new UnsupportedOperationException();
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see
+	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
+	 * get(java.util.Collection) */
+	@Override
+	public List<Post> get (Collection<Long> ids) {
+		return getIdPostBatch(ids);
+	}
+
 }

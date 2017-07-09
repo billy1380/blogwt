@@ -7,14 +7,16 @@
 //
 package com.willshex.blogwt.server.service.resource;
 
+import java.util.Collection;
 import java.util.List;
 
+import com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceSortType;
 import com.willshex.service.IService;
 
-public interface IResourceService extends IService {
+public interface IResourceService extends IService, BatchGetter<Resource> {
 
 	public static final String NAME = "blogwt.resource";
 
@@ -56,6 +58,6 @@ public interface IResourceService extends IService {
 	 * @param ids
 	 * @return
 	 */
-	public List<Resource> getIdsResourceBatch (List<Long> ids);
+	public List<Resource> getIdResourceBatch (Collection<Long> ids);
 
 }
