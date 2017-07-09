@@ -1,6 +1,6 @@
 //
 //  PushHelper.java
-//  qure
+//  blogwt
 //
 //  Created by William Shakour (billy1380) on 15 Jun 2017.
 //  Copyright © 2017 WillShex Limited. All rights reserved.
@@ -19,6 +19,9 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.willshex.blogwt.server.helper.push.AndroidMessage;
 import com.willshex.blogwt.server.helper.push.IosMessage;
 import com.willshex.blogwt.server.helper.push.Message;
@@ -27,7 +30,6 @@ import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.PushToken;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.utility.JsonUtils;
-import com.willshex.utility.StringUtils;
 
 /**
  * @author William Shakour (billy1380)
@@ -80,8 +82,8 @@ public class PushHelper {
 				request.setHeader(authHeader);
 
 				String payloadString;
-				request.setPayload((payloadString = StringUtils.urlencode(
-						JsonUtils.cleanJson(payload.toJson().toString())))
+				request.setPayload((payloadString = JsonUtils
+						.cleanJson(payload.toJson().toString()))
 								.getBytes(UTF8));
 
 				URLFetchService client = URLFetchServiceFactory
@@ -93,26 +95,59 @@ public class PushHelper {
 				}
 
 				byte[] responseBytes;
-				String responseText;
+				String responseText = null;
+
+				if ((responseBytes = response.getContent()) != null) {
+					responseText = new String(responseBytes, UTF8);
+				}
+
 				if (response.getResponseCode() >= 200
 						&& response.getResponseCode() < 300
-						&& (responseBytes = response.getContent()) != null) {
-					responseText = new String(responseBytes, UTF8);
-
-					if (!"".equals(responseText)
-							&& !"null".equalsIgnoreCase(responseText)) {
+						&& responseText != null) {
+					if ("".equals(responseText)
+							|| "null".equalsIgnoreCase(responseText)) {
+						if (LOG.isLoggable(Level.WARNING)) {
+							LOG.warning("No push response text for payload");
+						}
+					} else {
 						if (LOG.isLoggable(Level.FINE)) {
 							LOG.fine("Push response [" + responseText + "]");
 						}
-					} else {
-						if (LOG.isLoggable(Level.WARNING)) {
-							LOG.warning("No push response text for payload");
+
+						try {
+							JsonElement el = (new JsonParser())
+									.parse(responseText);
+
+							if (el.isJsonObject()) {
+								JsonObject ro = el.getAsJsonObject();
+
+								if (ro.has("failure")) {
+									JsonElement fel = ro.get("failure");
+
+									if (fel.isJsonPrimitive()) {
+										if (fel.getAsInt() == 1) {
+											if (LOG.isLoggable(Level.WARNING)) {
+												LOG.log(Level.WARNING,
+														"Push failed: check response");
+											}
+										}
+									}
+								}
+							}
+						} catch (Exception e) {
+							if (LOG.isLoggable(Level.WARNING)) {
+								LOG.log(Level.WARNING,
+										"Could not parse response ["
+												+ responseText + "]",
+										e);
+							}
 						}
 					}
 				} else if (response.getResponseCode() >= 400) {
 					if (LOG.isLoggable(Level.SEVERE)) {
 						LOG.severe("Response error ["
-								+ response.getResponseCode() + "] for payload");
+								+ response.getResponseCode() + "] and body ["
+								+ responseText + "] for payload");
 					}
 				}
 			} catch (IOException e) {

@@ -1,14 +1,17 @@
 //
 //  NotificationHelper.java
-//  qure
+//  blogwt
 //
 //  Created by William Shakour (billy1380) on 15 Jun 2017.
 //  Copyright © 2017 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.server.helper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.service.metanotification.MetaNotificationServiceProvider;
 import com.willshex.blogwt.server.service.notification.NotificationServiceProvider;
@@ -22,6 +25,7 @@ import com.willshex.blogwt.shared.api.datatype.NotificationSetting;
 import com.willshex.blogwt.shared.api.datatype.PushToken;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.blogwt.shared.helper.JsonableHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -29,14 +33,26 @@ import com.willshex.blogwt.shared.helper.PropertyHelper;
  */
 public class NotificationHelper {
 
-	public static Notification sendNotification (String code, User user,
+	private static final Logger LOG = Logger
+			.getLogger(NotificationHelper.class.getName());
+
+	public static List<Notification> sendNotification (String code, User user) {
+		return sendNotification(code, user, null);
+	}
+
+	public static List<Notification> sendNotification (String code, User user,
 			Map<String, ?> values) {
-		Notification notification = null;
+		List<Notification> notifications = new ArrayList<>();
 
 		MetaNotification meta = MetaNotificationServiceProvider.provide()
 				.getCodeMetaNotification(code);
 
-		if (meta != null) {
+		if (meta == null) {
+			if (LOG.isLoggable(Level.WARNING)) {
+				LOG.warning(
+						"No meta notification found for code [" + code + "]");
+			}
+		} else {
 			NotificationSetting setting = NotificationSettingServiceProvider
 					.provide().getMetaUserNotificationSetting(meta, user);
 
@@ -47,39 +63,59 @@ public class NotificationHelper {
 			}
 
 			String content;
-			notification = new Notification().content(
+			final Notification template = new Notification().content(
 					content = InflatorHelper.inflate(values, meta.content))
 					.meta(meta).target(user);
-
-			notification = NotificationServiceProvider.provide()
-					.addNotification(notification);
+			Notification notification;
 
 			String title = "Message from "
 					+ PropertyHelper.value(PropertyServiceProvider.provide()
 							.getNamedProperty(PropertyHelper.TITLE));
 
-			for (NotificationModeType mode : setting.selected) {
-				switch (mode) {
-				case NotificationModeTypeEmail:
-					EmailHelper.sendEmail(user.email, UserHelper.name(user),
-							title, content, false);
-					break;
-				case NotificationModeTypePush:
-					List<PushToken> tokens = PushTokenServiceProvider.provide()
-							.getUserPushTokens(user);
+			if (setting.selected == null || setting.selected.size() == 0) {
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info("No notification modes found for [" + code
+							+ "] and user [" + user + "] adding template ["
+							+ template + "]");
+				}
 
-					for (PushToken pushToken : tokens) {
-						PushHelper.push(pushToken, meta.name, content);
+				notifications.add(NotificationServiceProvider.provide()
+						.addNotification(template));
+			} else {
+				for (NotificationModeType mode : setting.selected) {
+					notification = JsonableHelper
+							.copy(template, new Notification()).mode(mode);
+
+					switch (mode) {
+					case NotificationModeTypeEmail:
+						EmailHelper.sendEmail(user.email, UserHelper.name(user),
+								title, content, false);
+						break;
+					case NotificationModeTypePush:
+						List<PushToken> tokens = PushTokenServiceProvider
+								.provide().getUserPushTokens(user);
+
+						for (PushToken pushToken : tokens) {
+							PushHelper.push(pushToken, meta.name, content);
+						}
+
+						if (LOG.isLoggable(Level.FINE) && tokens.size() == 0) {
+							LOG.fine("Could not push because no tokens found ["
+									+ meta.name + "], [" + content + "]");
+						}
+
+						break;
+					case NotificationModeTypeSms:
+						break;
 					}
 
-					break;
-				case NotificationModeTypeSms:
-					break;
+					notifications.add(NotificationServiceProvider.provide()
+							.addNotification(notification));
 				}
 			}
 		}
 
-		return notification;
+		return notifications;
 	}
 
 }
