@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.helper;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -14,10 +16,13 @@ import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Property;
@@ -33,6 +38,11 @@ public class EmailHelper {
 
 	public static boolean sendEmail (String to, String name, String subject,
 			String body, boolean isHtml) {
+		return sendEmail(to, name, subject, body, isHtml, null);
+	}
+
+	public static boolean sendEmail (String to, String name, String subject,
+			String body, boolean isHtml, byte[] attachmentData) {
 		boolean sent = false;
 
 		Property email = PropertyServiceProvider.provide()
@@ -56,10 +66,32 @@ public class EmailHelper {
 
 				msg.setSubject(subject);
 
-				if (isHtml) {
-					msg.setContent(body, "text/html");
+				if (attachmentData == null || attachmentData.length == 0) {
+					if (isHtml) {
+						msg.setContent(body, "text/html");
+					} else {
+						msg.setText(body);
+					}
 				} else {
-					msg.setText(body);
+					Multipart mp = new MimeMultipart();
+
+					MimeBodyPart content = new MimeBodyPart();
+					if (isHtml) {
+						content.setContent(body, "text/html");
+					} else {
+						content.setText(body);
+					}
+					mp.addBodyPart(content);
+
+					MimeBodyPart attachment = new MimeBodyPart();
+					InputStream attachmentDataStream = new ByteArrayInputStream(
+							attachmentData);
+					attachment.setFileName("manual.pdf");
+					attachment.setContent(attachmentDataStream,
+							"application/pdf");
+					mp.addBodyPart(attachment);
+
+					msg.setContent(mp);
 				}
 
 				Transport.send(msg);
