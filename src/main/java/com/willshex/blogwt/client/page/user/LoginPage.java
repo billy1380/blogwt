@@ -23,9 +23,11 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.api.user.event.LoginEventHandler;
 import com.willshex.blogwt.client.controller.NavigationController;
+import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.wizard.WizardDialog;
@@ -39,8 +41,8 @@ import com.willshex.gson.web.service.shared.StatusType;
  * @author William Shakour (billy1380)
  *
  */
-public class LoginPage extends Page implements NavigationChangedEventHandler,
-		LoginEventHandler {
+public class LoginPage extends Page
+		implements NavigationChangedEventHandler, LoginEventHandler {
 
 	private static LoginPageUiBinder uiBinder = GWT
 			.create(LoginPageUiBinder.class);
@@ -73,8 +75,8 @@ public class LoginPage extends Page implements NavigationChangedEventHandler,
 	}
 
 	private void ready () {
-		btnSignIn.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE
+		btnSignIn.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
 						.nextButton("Sign in"));
 
 		btnSignIn.setEnabled(true);
@@ -87,10 +89,10 @@ public class LoginPage extends Page implements NavigationChangedEventHandler,
 	}
 
 	private void loading () {
-		btnSignIn.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
-						"Signing in... ", Resources.RES.primaryLoader()
-								.getSafeUri()));
+		btnSignIn.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
+						.loadingButton("Signing in... ",
+								Resources.RES.primaryLoader().getSafeUri()));
 
 		btnSignIn.setEnabled(false);
 		txtUsername.setEnabled(false);
@@ -133,14 +135,14 @@ public class LoginPage extends Page implements NavigationChangedEventHandler,
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler#loginSuccess
-	 * (com.willshex.blogwt.shared.api.user.call.LoginRequest,
+	 * @see com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler#
+	 * loginSuccess (com.willshex.blogwt.shared.api.user.call.LoginRequest,
 	 * com.willshex.blogwt.shared.api.user.call.LoginResponse) */
 	@Override
 	public void loginSuccess (LoginRequest input, LoginResponse output) {
 		if (output.status == StatusType.StatusTypeFailure) {
-			if (ApiHelper.isError(output.error, ApiError.AuthenticationFailed)) {
+			if (ApiHelper.isError(output.error,
+					ApiError.AuthenticationFailed)) {
 				pnlUsername.addStyleName("has-error");
 				pnlUsernameNote.getElement().setInnerText(output.error.message);
 				pnlUsernameNote.setVisible(true);
@@ -155,9 +157,8 @@ public class LoginPage extends Page implements NavigationChangedEventHandler,
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler#loginFailure
-	 * (com.willshex.blogwt.shared.api.user.call.LoginRequest,
+	 * @see com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler#
+	 * loginFailure (com.willshex.blogwt.shared.api.user.call.LoginRequest,
 	 * java.lang.Throwable) */
 	@Override
 	public void loginFailure (LoginRequest input, Throwable caught) {
@@ -172,13 +173,18 @@ public class LoginPage extends Page implements NavigationChangedEventHandler,
 	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
-		String action = current.getAction();
-		if (action != null) {
-			String[] parts = action.split("=");
+		if (SessionController.get().isValidSession()) {
+			PageTypeHelper
+					.show(PageController.get().homePageTargetHistoryToken());
+		} else {
+			String action = current.getAction();
+			if (action != null) {
+				String[] parts = action.split("=");
 
-			if (parts != null && parts.length > 1) {
-				if ("username".equals(parts[0])) {
-					txtUsername.setValue(parts[1]);
+				if (parts != null && parts.length > 1) {
+					if ("username".equals(parts[0])) {
+						txtUsername.setValue(parts[1]);
+					}
 				}
 			}
 		}
