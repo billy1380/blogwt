@@ -15,6 +15,7 @@ import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.gson.web.service.server.ServiceException;
+import com.willshex.server.ContextAwareServlet;
 
 /**
  * @author William Shakour (billy1380)
@@ -83,6 +84,15 @@ public class ServletHelper {
 		}
 
 		return userSession;
+	}
+
+	public static String constructBaseAddress () {
+		return constructBaseAddress(ContextAwareServlet.REQUEST.get());
+	}
+
+	public static String constructBaseUrl () {
+		HttpServletRequest request = ContextAwareServlet.REQUEST.get();
+		return request.getScheme() + "://" + constructBaseAddress(request);
 	}
 
 }

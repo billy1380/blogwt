@@ -1,13 +1,13 @@
 //
 //  QueueHelper.java
-//  qure
+//  blogwt
 //
 //  Created by William Shakour (billy1380) on 12 Jun 2017.
 //  Copyright © 2017 WillShex Limited. All rights reserved.
 //
 package com.willshex.blogwt.server.helper;
 
-import java.io.IOException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,8 +29,7 @@ import com.willshex.server.ContextAwareServlet;
 public class QueueHelper {
 
 	public static interface HasQueueAction {
-		void processAction (String action, JsonObject json)
-				throws ServiceException;
+		void processAction (String action, JsonObject json) throws Exception;
 	}
 
 	private static final Logger LOG = Logger
@@ -40,16 +39,20 @@ public class QueueHelper {
 	private static final String REQUEST_KEY = "request";
 
 	public static void enqueue (String url, String action, Request request) {
-		enqueue(url, action, request, 0);
+		enqueue(url, action, request, null);
 	}
 
 	public static void enqueue (String url, String action, Request request,
-			long eta) {
+			Date eta) {
 		Queue queue = QueueFactory.getDefaultQueue();
 
 		TaskOptions options = TaskOptions.Builder.withMethod(Method.POST)
 				.url(url).param(REQUEST_KEY, request.toString())
-				.param(ACTION_KEY, action).etaMillis(eta);
+				.param(ACTION_KEY, action);
+
+		if (eta != null) {
+			options.etaMillis(eta.getTime());
+		}
 
 		if (LOG.isLoggable(Level.FINE)) {
 			LOG.log(Level.FINE,
@@ -74,10 +77,10 @@ public class QueueHelper {
 
 	/**
 	 * @param appointmentSyncServlet
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
 	public static void processGet (HasQueueAction processor)
-			throws IOException {
+			throws Exception {
 		String appEngineQueue = ContextAwareServlet.REQUEST.get()
 				.getHeader("X-AppEngine-QueueName");
 

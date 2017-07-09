@@ -15,8 +15,10 @@ import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.helper.UserHelper;
-import com.willshex.blogwt.server.helper.UserHelper.HasUser;
+import com.willshex.blogwt.server.service.persistence.batch.Batcher;
+import com.willshex.blogwt.server.service.persistence.batch.Batcher.Has;
 import com.willshex.blogwt.server.service.rating.RatingServiceProvider;
+import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.GetRatingsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetRatingsResponse;
 import com.willshex.blogwt.shared.api.datatype.Rating;
@@ -31,6 +33,26 @@ public final class GetRatingsActionHandler
 
 	private static final Logger LOG = Logger
 			.getLogger(GetRatingsActionHandler.class.getName());
+
+	private static final Has<Rating, User> RATING_BY_LOOKUP = new Has<Rating, User>() {
+
+		@Override
+		public Key<User> get (Rating t) {
+			return t.byKey;
+		}
+
+		@Override
+		public void set (Rating t, User u) {
+			t.by = u;
+			UserHelper.stripPassword(u);
+		}
+
+		@Override
+		public Long id (User u) {
+			return u.id;
+		}
+
+	};
 
 	@Override
 	public void handle (GetRatingsRequest input, GetRatingsResponse output)
@@ -91,18 +113,8 @@ public final class GetRatingsActionHandler
 					RatingSortType.fromString(input.pager.sortBy),
 					input.pager.sortDirection);
 
-			UserHelper.lookupUsers(output.ratings, new HasUser<Rating>() {
-				@Override
-				public Key<User> get (Rating t) {
-					return t.byKey;
-				}
-
-				@Override
-				public void set (Rating t, User u) {
-					t.by = u;
-					UserHelper.stripPassword(u);
-				}
-			});
+			Batcher.lookup(output.ratings, RATING_BY_LOOKUP,
+					UserServiceProvider.provide());
 		}
 
 		output.pager = PagerHelper.moveForward(input.pager);

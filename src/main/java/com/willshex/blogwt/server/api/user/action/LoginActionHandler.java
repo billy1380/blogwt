@@ -100,15 +100,15 @@ public final class LoginActionHandler
 		}
 
 		if (output.session.user.roleKeys != null) {
-			output.session.user.roles = RoleServiceProvider.provide()
-					.getIdRoleBatch(PersistenceHelper
-							.keysToIds(output.session.user.roleKeys));
+			output.session.user.roles = PersistenceHelper.batchLookup(
+					RoleServiceProvider.provide(),
+					output.session.user.roleKeys);
 		}
 
 		if (output.session.user.permissionKeys != null) {
-			output.session.user.permissions = PermissionServiceProvider
-					.provide().getIdPermissionBatch(PersistenceHelper
-							.keysToIds(output.session.user.permissionKeys));
+			output.session.user.permissions = PersistenceHelper.batchLookup(
+					PermissionServiceProvider.provide(),
+					output.session.user.permissionKeys);
 		}
 	}
 

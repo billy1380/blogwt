@@ -21,6 +21,7 @@ import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PropertyValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.relationship.RelationshipServiceProvider;
@@ -165,8 +166,9 @@ public final class GetUsersActionHandler
 
 		if (userIds != null) {
 			// order might become important later for now, it is not
-			relatedUsers = UserServiceProvider.provide()
-					.getIdUserBatch(userIds);
+			relatedUsers = PersistenceHelper.batchLookup(
+					UserServiceProvider.provide(),
+					PersistenceHelper.idsToKeys(User.class, userIds));
 		}
 
 		return relatedUsers;

@@ -1,6 +1,6 @@
 //
 //  DateTimeHelper.java
-//  com.willshex.blogwt
+//  blogwt
 //
 //  Created by William Shakour (billy1380) on 15 May 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
@@ -88,10 +88,18 @@ public class DateTimeHelper {
 	}
 
 	/**
-	 * @param i
+	 * @param minutes
 	 * @return
 	 */
-	public static Date minutesfromNow (int minutes) {
-		return new Date(now().getTime() + ((long) minutes * MILLIS_PER_MIN));
+	public static Date minutesFromNow (int minutes) {
+		return minutesFrom(minutes, now());
+	}
+
+	public static Date minutesFrom (int minutes, Date from) {
+		return new Date(from.getTime() + ((long) minutes * MILLIS_PER_MIN));
+	}
+
+	public static boolean isLessThanMinutesAway (Date date, int minutes) {
+		return date.getTime() < minutesFromNow(minutes).getTime();
 	}
 }

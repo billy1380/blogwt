@@ -45,7 +45,7 @@ public final class GetEmailAvatarActionHandler
 
 		ApiValidator.notNull(input.email, String.class, "input.email");
 
-		output.avatar = UserHelper.emailAvatar(input.email);
+		output.avatar = UserHelper.emailGravatar(input.email);
 	}
 
 	/* (non-Javadoc)
