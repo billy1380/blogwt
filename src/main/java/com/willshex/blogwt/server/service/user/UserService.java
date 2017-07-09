@@ -178,7 +178,7 @@ final class UserService
 
 	private User addAvatar (User user) {
 		if (user != null && user.email != null) {
-			user.avatar = UserHelper.emailAvatar(user.email);
+			user.avatar = UserHelper.emailGravatar(user.email);
 		}
 
 		return user;
