@@ -227,7 +227,7 @@ public class ChangeAccessPage extends Page
 
 		User loggedIn = SessionController.get().user();
 		if (current.getAction() == null || (loggedIn != null
-				&& loggedIn.id.equals(current.getAction()))) {
+				&& loggedIn.id.equals(Long.valueOf(current.getAction())))) {
 			user = loggedIn;
 		} else {
 			user = null;
