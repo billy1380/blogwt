@@ -20,10 +20,12 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.willshex.blogwt.server.api.blog.action.GetPostsActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
+import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.metanotification.MetaNotificationServiceProvider;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
+import com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
@@ -40,6 +42,7 @@ import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.server.ContextAwareServlet;
+import com.willshex.service.ServiceDiscovery;
 import com.willshex.utility.JsonUtils;
 
 /**
@@ -68,12 +71,24 @@ public class DevServlet extends ContextAwareServlet {
 
 		if ("gentags".equals(action)) {
 			TagServiceProvider.provide().generateTags();
-		} else if ("indexposts".equals(action)) {
-			((ISearch<?>) PostServiceProvider.provide()).indexAll();
-		} else if ("indexpages".equals(action)) {
-			((ISearch<?>) PageServiceProvider.provide()).indexAll();
-		} else if ("indexusers".equals(action)) {
-			((ISearch<?>) UserServiceProvider.provide()).indexAll();
+		} else if (action != null && action.startsWith("index")) {
+			PageServiceProvider.provide();
+			PostServiceProvider.provide();
+			UserServiceProvider.provide();
+
+			((ISearch<?>) ServiceDiscovery
+					.getService("blogwt." + action.replace("index", "")))
+							.indexAll();
+		} else if ("clearsearch".equals(action)) {
+			PersistenceServiceProvider.provide();
+
+			String name = REQUEST.get().getParameter("index");
+			String ids = REQUEST.get().getParameter("ids");
+			String[] split = ids.split(",");
+
+			for (String id : split) {
+				SearchHelper.deleteSearch(name, id);
+			}
 		} else if ("linkall".equals(action)) {
 			PostServiceProvider.provide().linkAll();
 		} else if ("clearlinks".equals(action)) {
@@ -105,8 +120,8 @@ public class DevServlet extends ContextAwareServlet {
 				}
 			}
 		} else if ("getposts".equals(action)) {
-			RESPONSE.get().getOutputStream().print(
-					JsonUtils.beautifyJson((new GetPostsActionHandler())
+			RESPONSE.get().getOutputStream()
+					.print(JsonUtils.beautifyJson((new GetPostsActionHandler())
 							.handle((GetPostsRequest) new GetPostsRequest()
 									.showAll(Boolean.TRUE)
 									.pager(PagerHelper.createDefaultPager())
