@@ -10,6 +10,7 @@ package com.willshex.blogwt.server.helper;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +43,7 @@ public class EmailHelper {
 	}
 
 	public static boolean sendEmail (String to, String name, String subject,
-			String body, boolean isHtml, byte[] attachmentData) {
+			String body, boolean isHtml, Map<String, byte[]> attachments) {
 		boolean sent = false;
 
 		Property email = PropertyServiceProvider.provide()
@@ -66,7 +67,7 @@ public class EmailHelper {
 
 				msg.setSubject(subject);
 
-				if (attachmentData == null || attachmentData.length == 0) {
+				if (attachments == null || attachments.size() == 0) {
 					if (isHtml) {
 						msg.setContent(body, "text/html");
 					} else {
@@ -83,13 +84,15 @@ public class EmailHelper {
 					}
 					mp.addBodyPart(content);
 
-					MimeBodyPart attachment = new MimeBodyPart();
-					InputStream attachmentDataStream = new ByteArrayInputStream(
-							attachmentData);
-					attachment.setFileName("manual.pdf");
-					attachment.setContent(attachmentDataStream,
-							"application/pdf");
-					mp.addBodyPart(attachment);
+					for (String key : attachments.keySet()) {
+						MimeBodyPart attachment = new MimeBodyPart();
+						InputStream attachmentDataStream = new ByteArrayInputStream(
+								attachments.get(key));
+						attachment.setFileName(key);
+						attachment.setContent(attachmentDataStream,
+								"application/pdf");
+						mp.addBodyPart(attachment);
+					}
 
 					msg.setContent(mp);
 				}
