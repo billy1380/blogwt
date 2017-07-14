@@ -7,11 +7,11 @@
 // 
 package com.willshex.blogwt.server.api.notification.action;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.google.gwt.dev.util.collect.HashMap;
 import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.NotificationSettingValidator;
@@ -64,9 +64,10 @@ public final class UpdateNotificationSettingsActionHandler extends
 						setting.userKey);
 			}
 
-			List<MetaNotification> metas = MetaNotificationServiceProvider
-					.provide().getIdMetaNotificationBatch(
-							notificationSettingLookup.keySet());
+			List<MetaNotification> metas = PersistenceHelper.batchLookup(
+					MetaNotificationServiceProvider.provide(),
+					PersistenceHelper.idsToKeys(MetaNotification.class,
+							notificationSettingLookup.keySet()));
 
 			for (MetaNotification meta : metas) {
 				notificationSettingLookup.get(meta.id).meta = meta;

@@ -13,19 +13,23 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gson.JsonObject;
+import com.willshex.blogwt.server.helper.push.AndroidMessage;
 import com.willshex.blogwt.server.service.metanotification.MetaNotificationServiceProvider;
 import com.willshex.blogwt.server.service.notification.NotificationServiceProvider;
 import com.willshex.blogwt.server.service.notificationsetting.NotificationSettingServiceProvider;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.pushtoken.PushTokenServiceProvider;
+import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.datatype.Notification;
 import com.willshex.blogwt.shared.api.datatype.NotificationModeType;
 import com.willshex.blogwt.shared.api.datatype.NotificationSetting;
 import com.willshex.blogwt.shared.api.datatype.PushToken;
 import com.willshex.blogwt.shared.api.datatype.User;
-import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.JsonableHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.gson.shared.Jsonable;
 
 /**
  * @author William Shakour (billy1380)
@@ -41,10 +45,10 @@ public class NotificationHelper {
 	}
 
 	public static List<Notification> sendNotification (String code, User user,
-			Map<String, ?> values) {
+			final Map<String, ?> values) {
 		List<Notification> notifications = new ArrayList<>();
 
-		MetaNotification meta = MetaNotificationServiceProvider.provide()
+		final MetaNotification meta = MetaNotificationServiceProvider.provide()
 				.getCodeMetaNotification(code);
 
 		if (meta == null) {
@@ -95,13 +99,52 @@ public class NotificationHelper {
 						List<PushToken> tokens = PushTokenServiceProvider
 								.provide().getUserPushTokens(user);
 
+						Jsonable data = new Jsonable() {
+
+							@Override
+							public JsonObject toJson () {
+								JsonObject object = super.toJson();
+
+								object.addProperty("code", meta.code);
+
+								if (values != null) {
+									Object value;
+									DataType slim;
+									for (String key : values.keySet()) {
+										value = values.get(key);
+
+										if (value instanceof DataType) {
+											slim = PersistenceHelper.slim(
+													DataType.class,
+													(DataType) value, null);
+
+											object.add(key, slim.toJson());
+										}
+									}
+								}
+
+								return object;
+							}
+						};
+
 						for (PushToken pushToken : tokens) {
-							PushHelper.push(pushToken, meta.name, content);
+							PushHelper.push(pushToken, meta.name, content,
+									data);
 						}
 
 						if (LOG.isLoggable(Level.FINE) && tokens.size() == 0) {
 							LOG.fine("Could not push because no tokens found ["
-									+ meta.name + "], [" + content + "]");
+									+ meta.name + "], [" + content
+									+ "] payload approximation ["
+									+ PushHelper.buildPayload(
+											new PushToken().platform("android")
+													.user(user)
+													.value("approx-test-token"),
+											new AndroidMessage()
+													.title(meta.name)
+													.body(content),
+											data)
+									+ "]");
 						}
 
 						break;

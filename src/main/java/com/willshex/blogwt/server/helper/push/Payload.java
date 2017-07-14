@@ -14,7 +14,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.gson.shared.Jsonable;
 
 public class Payload extends Jsonable {
@@ -59,10 +58,12 @@ public class Payload extends Jsonable {
 				: new JsonPrimitive(priority.toString());
 		object.add("priority", jsonPriority);
 		JsonElement jsonContent_available = content_available == null
-				? JsonNull.INSTANCE : new JsonPrimitive(content_available);
+				? JsonNull.INSTANCE
+				: new JsonPrimitive(content_available);
 		object.add("content_available", jsonContent_available);
 		JsonElement jsonMutable_content = mutable_content == null
-				? JsonNull.INSTANCE : new JsonPrimitive(mutable_content);
+				? JsonNull.INSTANCE
+				: new JsonPrimitive(mutable_content);
 		object.add("mutable_content", jsonMutable_content);
 		JsonElement jsonTime_to_live = time_to_live == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(time_to_live);
@@ -132,7 +133,7 @@ public class Payload extends Jsonable {
 		return this;
 	}
 
-	public Payload data (DataType data) {
+	public Payload data (Jsonable data) {
 		this.data = data;
 		return this;
 	}
