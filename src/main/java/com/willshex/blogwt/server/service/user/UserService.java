@@ -541,14 +541,13 @@ final class UserService
 		User user = getUser(id);
 
 		if (user.roleKeys != null) {
-			user.roles = RoleServiceProvider.provide()
-					.getIdRoleBatch(PersistenceHelper.keysToIds(user.roleKeys));
+			user.roles = PersistenceHelper
+					.batchLookup(RoleServiceProvider.provide(), user.roleKeys);
 		}
 
 		if (user.permissionKeys != null) {
-			user.permissions = PermissionServiceProvider.provide()
-					.getIdPermissionBatch(
-							PersistenceHelper.keysToIds(user.permissionKeys));
+			user.permissions = PersistenceHelper.batchLookup(
+					PermissionServiceProvider.provide(), user.permissionKeys);
 		}
 
 		SearchHelper.indexDocument(toDocument(user));
