@@ -21,6 +21,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 public class StyledImageCell extends AbstractCell<String> {
 
 	private List<String> classNames = null;
+	private Double width, height;
 
 	public StyledImageCell addClassName (String className) {
 		if (className != null && className.length() > 0) {
@@ -29,6 +30,13 @@ public class StyledImageCell extends AbstractCell<String> {
 		}
 
 		return this;
+	}
+
+	public StyledImageCell () {}
+
+	public StyledImageCell (double width, double height) {
+		this.width = Double.valueOf(width);
+		this.height = Double.valueOf(height);
 	}
 
 	private List<String> ensureClassNames () {
@@ -59,6 +67,21 @@ public class StyledImageCell extends AbstractCell<String> {
 				}
 				sb.appendHtmlConstant("\" ");
 			}
+
+			if (width != null) {
+				sb.appendHtmlConstant("width=\"");
+				sb.appendEscaped(width.toString());
+				sb.appendEscaped("px");
+				sb.appendHtmlConstant("\" ");
+			}
+
+			if (height != null) {
+				sb.appendHtmlConstant("height=\"");
+				sb.appendEscaped(height.toString());
+				sb.appendEscaped("px");
+				sb.appendHtmlConstant("\" ");
+			}
+
 			sb.appendHtmlConstant("src=\"");
 			sb.append(SafeHtmlUtils.fromString(value));
 			sb.appendHtmlConstant("\">");

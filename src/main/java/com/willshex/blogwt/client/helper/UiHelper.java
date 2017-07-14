@@ -10,6 +10,7 @@ package com.willshex.blogwt.client.helper;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -20,6 +21,8 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 public class UiHelper {
+	public static final String HAS_ERROR_STYLE = "has-error";
+
 	/**
 	 * Swaps a TextBox with an element of the same type for remember password. The text box needs to be within an panel. The styles of the text box are also
 	 * copied
@@ -69,5 +72,11 @@ public class UiHelper {
 		} else {
 			e.getStyle().setDisplay(Display.NONE);
 		}
+	}
+
+	public static void showError (HTMLPanel pnl, HTMLPanel note, String error) {
+		pnl.addStyleName(HAS_ERROR_STYLE);
+		note.getElement().setInnerHTML(error);
+		note.setVisible(true);
 	}
 }
