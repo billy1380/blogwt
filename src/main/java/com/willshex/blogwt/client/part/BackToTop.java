@@ -117,7 +117,7 @@ public class BackToTop extends Composite {
 	protected void onAttach () {
 		super.onAttach();
 
-		registration = Window.addWindowScrollHandler( (event) -> {
+		registration = Window.addWindowScrollHandler(event -> {
 			toggleTop.cancel();
 			toggleTop.schedule(150);
 		});
