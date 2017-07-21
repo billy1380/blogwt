@@ -15,38 +15,38 @@ import com.willshex.blogwt.shared.page.Stack;
  * @author William Shakour (billy1380)
  *
  */
+@FunctionalInterface
 public interface NavigationChangedEventHandler extends EventHandler {
 	public static final GwtEvent.Type<NavigationChangedEventHandler> TYPE = new GwtEvent.Type<NavigationChangedEventHandler>();
 
-	public void navigationChanged(Stack previous, Stack current);
+	public void navigationChanged (Stack previous, Stack current);
 
-	public class NavigationChangedEvent extends GwtEvent<NavigationChangedEventHandler> {
+	public class NavigationChangedEvent
+			extends GwtEvent<NavigationChangedEventHandler> {
 
 		private Stack stack;
 		private Stack previous;
 
-		public NavigationChangedEvent(Stack previous, Stack current) {
+		public NavigationChangedEvent (Stack previous, Stack current) {
 			stack = current;
 			this.previous = previous;
 		}
 
-		/*
-		 * (non-Javadoc)
+		/* (non-Javadoc)
 		 * 
-		 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-		 */
+		 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
 		@Override
-		public com.google.gwt.event.shared.GwtEvent.Type<NavigationChangedEventHandler> getAssociatedType() {
+		public com.google.gwt.event.shared.GwtEvent.Type<NavigationChangedEventHandler> getAssociatedType () {
 			return TYPE;
 		}
 
-		/*
-		 * (non-Javadoc)
+		/* (non-Javadoc)
 		 * 
-		 * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-		 */
+		 * @see
+		 * com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.
+		 * shared.EventHandler) */
 		@Override
-		protected void dispatch(NavigationChangedEventHandler handler) {
+		protected void dispatch (NavigationChangedEventHandler handler) {
 			handler.navigationChanged(previous, stack);
 		}
 	}

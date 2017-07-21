@@ -34,15 +34,13 @@ import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.validation.ApiError;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class LoginPage extends Page
-		implements NavigationChangedEventHandler, LoginEventHandler {
+public class LoginPage extends Page implements LoginEventHandler {
 
 	private static LoginPageUiBinder uiBinder = GWT
 			.create(LoginPageUiBinder.class);
@@ -116,7 +114,23 @@ public class LoginPage extends Page
 				LoginEventHandler.TYPE, SessionController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					if (SessionController.get().isValidSession()) {
+						PageTypeHelper.show(PageController.get()
+								.homePageTargetHistoryToken());
+					} else {
+						String action = c.getAction();
+						if (action != null) {
+							String[] parts = action.split("=");
+
+							if (parts != null && parts.length > 1) {
+								if ("username".equals(parts[0])) {
+									txtUsername.setValue(parts[1]);
+								}
+							}
+						}
+					}
+				}));
 
 		ready();
 	}
@@ -163,31 +177,6 @@ public class LoginPage extends Page
 	@Override
 	public void loginFailure (LoginRequest input, Throwable caught) {
 		ready();
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged
-	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
-	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		if (SessionController.get().isValidSession()) {
-			PageTypeHelper
-					.show(PageController.get().homePageTargetHistoryToken());
-		} else {
-			String action = current.getAction();
-			if (action != null) {
-				String[] parts = action.split("=");
-
-				if (parts != null && parts.length > 1) {
-					if ("username".equals(parts[0])) {
-						txtUsername.setValue(parts[1]);
-					}
-				}
-			}
-		}
 	}
 
 	private boolean isValid () {

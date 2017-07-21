@@ -17,9 +17,6 @@ import com.willshex.blogwt.client.part.CookieNoticePart;
 import com.willshex.blogwt.client.part.FooterPart;
 import com.willshex.blogwt.client.part.HeaderPart;
 
-import emoji.gwt.emoji.Emoji;
-import emoji.gwt.emoji.Emoji.Ready;
-
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -30,12 +27,7 @@ public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
 	public void onModuleLoad () {
 		super.onModuleLoad();
 
-		Processor.init(new Ready() {
-			@Override
-			public void ready (Emoji emoji) {
-				start();
-			}
-		});
+		Processor.init(e -> start());
 	}
 
 	private void start () {

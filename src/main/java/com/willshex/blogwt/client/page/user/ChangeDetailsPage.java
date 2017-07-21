@@ -54,7 +54,6 @@ import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
@@ -62,9 +61,8 @@ import com.willshex.gson.web.service.shared.StatusType;
  *
  */
 public class ChangeDetailsPage extends Page
-		implements NavigationChangedEventHandler, GetUserDetailsEventHandler,
-		ChangeUserDetailsEventHandler, GetEmailAvatarEventHandler,
-		RegisterUserEventHandler {
+		implements GetUserDetailsEventHandler, ChangeUserDetailsEventHandler,
+		GetEmailAvatarEventHandler, RegisterUserEventHandler {
 
 	private static ChangeDetailsPageUiBinder uiBinder = GWT
 			.create(ChangeDetailsPageUiBinder.class);
@@ -153,7 +151,48 @@ public class ChangeDetailsPage extends Page
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					reset();
+
+					if (PageType.ChangeDetailsPageType.equals(c.getPage())) {
+						if (c.getAction() == null) {
+							show(user = SessionController.get().user());
+							lnkChangePassword.setTargetHistoryToken(
+									PageType.ChangePasswordPageType
+											.asTargetHistoryToken());
+							lnkChangePassword.setVisible(true);
+							pnlPassword.setVisible(false);
+						} else if ("id".equals(c.getAction())
+								&& c.getParameterCount() > 0) {
+							Long id = Long.valueOf(c.getParameter(0));
+							User user = new User();
+							user.id(id);
+
+							UserController.get().getUser(user);
+
+							lnkChangePassword.setVisible(false);
+							pnlPassword.setVisible(false);
+						} else if ("new".equals(c.getAction())) {
+							elDates.setInnerText("Enter user details");
+							lnkChangePassword.setVisible(false);
+							pnlPassword.setVisible(true);
+
+							if (SessionController.get().isAdmin()) {
+								actionText = CREATE_ACTION_TEXT;
+							}
+						}
+					} else if (PageType.RegisterPageType.equals(c.getPage())) {
+						elDates.setInnerText("Enter user details");
+						lnkChangePassword.setVisible(false);
+						pnlPassword.setVisible(true);
+
+						actionText = REGISTER_ACTION_TEXT;
+					}
+
+					elHeading.setInnerText(getHeadingText());
+
+					ready();
+				}));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetUserDetailsEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
@@ -163,55 +202,6 @@ public class ChangeDetailsPage extends Page
 				GetEmailAvatarEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				RegisterUserEventHandler.TYPE, UserController.get(), this));
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged
-	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
-	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		reset();
-
-		if (PageType.ChangeDetailsPageType.equals(current.getPage())) {
-			if (current.getAction() == null) {
-				show(user = SessionController.get().user());
-				lnkChangePassword.setTargetHistoryToken(
-						PageType.ChangePasswordPageType.asTargetHistoryToken());
-				lnkChangePassword.setVisible(true);
-				pnlPassword.setVisible(false);
-			} else if ("id".equals(current.getAction())
-					&& current.getParameterCount() > 0) {
-				Long id = Long.valueOf(current.getParameter(0));
-				User user = new User();
-				user.id(id);
-
-				UserController.get().getUser(user);
-
-				lnkChangePassword.setVisible(false);
-				pnlPassword.setVisible(false);
-			} else if ("new".equals(current.getAction())) {
-				elDates.setInnerText("Enter user details");
-				lnkChangePassword.setVisible(false);
-				pnlPassword.setVisible(true);
-
-				if (SessionController.get().isAdmin()) {
-					actionText = CREATE_ACTION_TEXT;
-				}
-			}
-		} else if (PageType.RegisterPageType.equals(current.getPage())) {
-			elDates.setInnerText("Enter user details");
-			lnkChangePassword.setVisible(false);
-			pnlPassword.setVisible(true);
-
-			actionText = REGISTER_ACTION_TEXT;
-		}
-
-		elHeading.setInnerText(getHeadingText());
-
-		ready();
 	}
 
 	@UiHandler("txtUsername")

@@ -26,13 +26,12 @@ import com.willshex.blogwt.client.part.BootstrapGwtCellList;
 import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
 import com.willshex.blogwt.shared.api.datatype.Post;
-import com.willshex.blogwt.shared.page.Stack;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class TagPage extends Page implements NavigationChangedEventHandler {
+public class TagPage extends Page {
 
 	private static TagPageUiBinder uiBinder = GWT.create(TagPageUiBinder.class);
 
@@ -56,7 +55,7 @@ public class TagPage extends Page implements NavigationChangedEventHandler {
 
 		pnlNoPosts.removeFromParent();
 		clPosts.setEmptyListWidget(pnlNoPosts);
-		
+
 		pnlLoading.removeFromParent();
 		clPosts.setLoadingIndicator(pnlLoading);
 
@@ -72,27 +71,19 @@ public class TagPage extends Page implements NavigationChangedEventHandler {
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					String tag;
+					if ((tag = c.getAction()) != null) {
+						elHeading.setInnerSafeHtml(
+								TagPageTemplates.INSTANCE.heading(tag));
+
+						PostController.get().setTag(tag);
+
+						refresh();
+					}
+				}));
 
 		super.onAttach();
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged
-	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
-	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		String tag;
-		if ((tag = current.getAction()) != null) {
-			elHeading.setInnerSafeHtml(TagPageTemplates.INSTANCE.heading(tag));
-
-			PostController.get().setTag(tag);
-
-			refresh();
-		}
 	}
 
 	private void refresh () {

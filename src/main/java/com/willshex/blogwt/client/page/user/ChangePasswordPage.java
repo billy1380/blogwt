@@ -32,21 +32,20 @@ import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class ChangePasswordPage extends Page implements
-		ChangePasswordEventHandler, NavigationChangedEventHandler {
+public class ChangePasswordPage extends Page
+		implements ChangePasswordEventHandler {
 
 	private static ChangePasswordPageUiBinder uiBinder = GWT
 			.create(ChangePasswordPageUiBinder.class);
 
-	interface ChangePasswordPageUiBinder extends
-			UiBinder<Widget, ChangePasswordPage> {}
+	interface ChangePasswordPageUiBinder
+			extends UiBinder<Widget, ChangePasswordPage> {}
 
 	@UiField FormPanel frmPasswords;
 
@@ -88,7 +87,31 @@ public class ChangePasswordPage extends Page implements
 				ChangePasswordEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					reset();
+
+					boolean reset = false;
+					if ("id".equals(c.getAction())
+							|| (reset = "reset".equals(c.getAction()))) {
+						if (c.getParameterCount() > 0) {
+							String value = c.getParameter(0);
+
+							pnlPassword.setVisible(false);
+
+							if (reset) {
+								actionCode = value;
+								elActionCode.setInnerText(actionCode);
+								pnlPassword.getElement().getParentElement()
+										.insertBefore(elReset,
+												pnlPassword.getElement());
+							} else {
+								userId = Long.valueOf(value);
+							}
+						}
+					}
+
+					ready();
+				}));
 
 		ready();
 	}
@@ -120,8 +143,8 @@ public class ChangePasswordPage extends Page implements
 	}
 
 	private void ready () {
-		btnChange.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE
+		btnChange.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
 						.nextButton("Change"));
 
 		btnChange.setEnabled(true);
@@ -176,10 +199,10 @@ public class ChangePasswordPage extends Page implements
 	}
 
 	private void loading () {
-		btnChange.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
-						"Changing... ", Resources.RES.primaryLoader()
-								.getSafeUri()));
+		btnChange.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
+						.loadingButton("Changing... ",
+								Resources.RES.primaryLoader().getSafeUri()));
 
 		btnChange.setEnabled(false);
 		txtPassword.setEnabled(false);
@@ -190,38 +213,6 @@ public class ChangePasswordPage extends Page implements
 		pnlPasswordNote.setVisible(false);
 		pnlNewPassword.removeStyleName("has-error");
 		pnlNewPasswordNote.setVisible(false);
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged
-	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
-	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		reset();
-
-		boolean reset = false;
-		if ("id".equals(current.getAction())
-				|| (reset = "reset".equals(current.getAction()))) {
-			if (current.getParameterCount() > 0) {
-				String value = current.getParameter(0);
-
-				pnlPassword.setVisible(false);
-
-				if (reset) {
-					actionCode = value;
-					elActionCode.setInnerText(actionCode);
-					pnlPassword.getElement().getParentElement()
-							.insertBefore(elReset, pnlPassword.getElement());
-				} else {
-					userId = Long.valueOf(value);
-				}
-			}
-		}
-
-		ready();
 	}
 
 	/* (non-Javadoc)

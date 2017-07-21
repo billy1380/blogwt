@@ -62,12 +62,10 @@ import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 public class HeaderPart extends Composite implements LoginEventHandler,
-		LogoutEventHandler, NavigationChangedEventHandler, ClickHandler,
-		ChangeUserDetailsEventHandler {
+		LogoutEventHandler, ClickHandler, ChangeUserDetailsEventHandler {
 
 	private static HeaderPartUiBinder uiBinder = GWT
 			.create(HeaderPartUiBinder.class);
@@ -339,7 +337,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		String key = href.asString().replaceFirst("#", "");
 		final Element got;
 		final Element element = (got = getOpenable(key)) == null
-				? Document.get().createLIElement() : got;
+				? Document.get().createLIElement()
+				: got;
 
 		element.setClassName("dropdown");
 		parent.appendChild(element);
@@ -391,7 +390,17 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 				LogoutEventHandler.TYPE, SessionController.get(), this));
 		registration.add(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					if (p != null) {
+						activateItem(p.getPage(), false);
+					}
+
+					activateItem(c.getPage(), true);
+
+					btnNavExpand.hide();
+
+					GoogleAnalyticsHelper.sendPageView("#" + c.toString());
+				}));
 		registration
 				.add(RootPanel.get().addDomHandler(this, ClickEvent.getType()));
 		registration.add(DefaultEventBus.get().addHandlerToSource(
@@ -584,25 +593,6 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	public void loginFailure (LoginRequest input, Throwable caught) {
 		GWT.log("loginFailure - input:"
 				+ (input == null ? null : input.toString()), caught);
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged
-	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
-	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		if (previous != null) {
-			activateItem(previous.getPage(), false);
-		}
-
-		activateItem(current.getPage(), true);
-
-		btnNavExpand.hide();
-
-		GoogleAnalyticsHelper.sendPageView("#" + current.toString());
 	}
 
 	/* (non-Javadoc)

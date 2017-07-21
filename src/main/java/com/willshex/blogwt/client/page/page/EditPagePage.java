@@ -34,16 +34,15 @@ import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.UpdatePageResponse;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class EditPagePage extends WizardDialogPage implements
-		NavigationChangedEventHandler, PagePlanFinishedHandler,
-		CreatePageEventHandler, GetPageEventHandler, UpdatePageEventHandler {
+public class EditPagePage extends WizardDialogPage
+		implements PagePlanFinishedHandler, CreatePageEventHandler,
+		GetPageEventHandler, UpdatePageEventHandler {
 
 	public EditPagePage () {
 		super(PageType.EditPagePageType);
@@ -56,7 +55,35 @@ public class EditPagePage extends WizardDialogPage implements
 	protected void onAttach () {
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					String action = c.getAction();
+					if (action != null && "new".equalsIgnoreCase(action)) {
+						setPlan((new PagePlanBuilder())
+								.addPage(new EditPageWizardPage())
+								.addPage(new SelectPostWizardPage())
+								.setName("New Page").addFinishedHandler(this)
+								.build());
+					} else {
+						Page page = null;
+						if (c.getParameterCount() >= 1) {
+							switch (c.getAction()) {
+							case "id":
+								(page = new Page())
+										.id(Long.valueOf(c.getParameter(0)));
+								break;
+							case "slug":
+								page = new Page().slug(c.getParameter(0));
+								break;
+							}
+						} else {
+							page = new Page().slug(c.getAction());
+						}
+
+						if (page != null) {
+							PageController.get().getPage(page, true);
+						}
+					}
+				}));
 		register(DefaultEventBus.get().addHandlerToSource(
 				CreatePageEventHandler.TYPE, PageController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
@@ -69,8 +96,7 @@ public class EditPagePage extends WizardDialogPage implements
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onfinished
+	 * @see com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onfinished
 	 * (java.util.List) */
 	@Override
 	public void onfinished (List<WizardPage<?>> pages) {
@@ -102,43 +128,9 @@ public class EditPagePage extends WizardDialogPage implements
 
 	/* (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged
-	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
-	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		String action = current.getAction();
-		if (action != null && "new".equalsIgnoreCase(action)) {
-			setPlan((new PagePlanBuilder()).addPage(new EditPageWizardPage())
-					.addPage(new SelectPostWizardPage()).setName("New Page")
-					.addFinishedHandler(this).build());
-		} else {
-			Page page = null;
-			if (current.getParameterCount() >= 1) {
-				switch (current.getAction()) {
-				case "id":
-					(page = new Page())
-							.id(Long.valueOf(current.getParameter(0)));
-					break;
-				case "slug":
-					page = new Page().slug(current.getParameter(0));
-					break;
-				}
-			} else {
-				page = new Page().slug(current.getAction());
-			}
-
-			if (page != null) {
-				PageController.get().getPage(page, true);
-			}
-		}
-	}
-
-	/* (non-Javadoc)
-	 * 
 	 * @see
-	 * com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onCancelled() */
+	 * com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onCancelled(
+	 * ) */
 	@Override
 	public void onCancelled () {}
 

@@ -14,6 +14,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -36,7 +37,6 @@ import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
-import com.willshex.blogwt.client.helper.UserHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.AddToAny;
 import com.willshex.blogwt.client.part.DisqusComments;
@@ -55,8 +55,8 @@ import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
@@ -64,8 +64,7 @@ import com.willshex.gson.web.service.shared.StatusType;
  *
  */
 public class PostDetailPage extends Page
-		implements NavigationChangedEventHandler, GetPostEventHandler,
-		DeletePostEventHandler {
+		implements GetPostEventHandler, DeletePostEventHandler {
 
 	private static PostDetailPageUiBinder uiBinder = GWT
 			.create(PostDetailPageUiBinder.class);
@@ -122,7 +121,22 @@ public class PostDetailPage extends Page
 	protected void onAttach () {
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					String slug;
+					if ((slug = c.getAction()) != null) {
+						PostController.get().getPost(slug);
+						pnlLoading.setVisible(true);
+						dsqComments.setVisible(false);
+						ataShare.setVisible(false);
+						coRelated.setVisible(false);
+					}
+
+					boolean canChange = SessionController.get()
+							.isAuthorised(Arrays.asList(PermissionHelper
+									.create(PermissionHelper.MANAGE_POSTS)));
+					lnkEditPost.setVisible(canChange);
+					btnDeletePost.setVisible(canChange);
+				}));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetPostEventHandler.TYPE, PostController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
@@ -154,7 +168,8 @@ public class PostDetailPage extends Page
 		if (PropertyController.get()
 				.booleanProperty(PropertyHelper.POST_SHOW_AUTHOR, false)) {
 			author = PostSummaryCell.Templates.INSTANCE.author(
-					UserHelper.avatar(post.author),
+					UriUtils.fromString(post.author.avatar + "?s="
+							+ UserHelper.AVATAR_HEADER_SIZE + "&default=retro"),
 					UserHelper.handle(post.author));
 		}
 
@@ -237,29 +252,6 @@ public class PostDetailPage extends Page
 	 * java.lang.Throwable) */
 	@Override
 	public void getPostFailure (GetPostRequest input, Throwable caught) {}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged
-	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
-	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		String slug;
-		if ((slug = current.getAction()) != null) {
-			PostController.get().getPost(slug);
-			pnlLoading.setVisible(true);
-			dsqComments.setVisible(false);
-			ataShare.setVisible(false);
-			coRelated.setVisible(false);
-		}
-
-		boolean canChange = SessionController.get().isAuthorised(Arrays.asList(
-				PermissionHelper.create(PermissionHelper.MANAGE_POSTS)));
-		lnkEditPost.setVisible(canChange);
-		btnDeletePost.setVisible(canChange);
-	}
 
 	@Override
 	public void deletePostSuccess (DeletePostRequest input,

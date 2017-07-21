@@ -40,7 +40,6 @@ import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageResponse;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
@@ -48,8 +47,7 @@ import com.willshex.gson.web.service.shared.StatusType;
  *
  */
 public class PageDetailPage extends com.willshex.blogwt.client.page.Page
-		implements NavigationChangedEventHandler, GetPageEventHandler,
-		DeletePageEventHandler {
+		implements GetPageEventHandler, DeletePageEventHandler {
 
 	private static PageDetailPageUiBinder uiBinder = GWT
 			.create(PageDetailPageUiBinder.class);
@@ -87,53 +85,43 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					String slug = null;
+					if (PageType
+							.fromString(c.getPage()) == PageType.PageDetailPageType) {
+						slug = c.getAction();
+					} else {
+						slug = c.getPageSlug();
+					}
+
+					if (slug == null) {
+						Page home;
+						if ((home = PageController.get().homePage()) != null) {
+							slug = home.slug;
+						}
+					}
+
+					if (slug == null) {
+						PageTypeHelper.show(PageType.PostsPageType);
+					} else {
+						PageController.get().getPage(new Page().slug(slug), true);
+					}
+
+					pnlLoading.setVisible(true);
+
+					boolean canChange = SessionController.get().isAuthorised(Arrays.asList(
+							PermissionHelper.create(PermissionHelper.MANAGE_PAGES)));
+					if (canChange) {
+						getElement().insertFirst(elToolbar);
+					} else {
+						elToolbar.removeFromParent();
+					}
+				}));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetPageEventHandler.TYPE, PageController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				DeletePageEventHandler.TYPE, PageController.get(), this));
 		register(PostHelper.handlePluginContentReady());
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged
-	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
-	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		String slug = null;
-		if (PageType
-				.fromString(current.getPage()) == PageType.PageDetailPageType) {
-			slug = current.getAction();
-		} else {
-			slug = current.getPageSlug();
-		}
-
-		if (slug == null) {
-			Page home;
-			if ((home = PageController.get().homePage()) != null) {
-				slug = home.slug;
-			}
-		}
-
-		if (slug == null) {
-			PageTypeHelper.show(PageType.PostsPageType);
-		} else {
-			PageController.get().getPage(new Page().slug(slug), true);
-		}
-
-		pnlLoading.setVisible(true);
-
-		boolean canChange = SessionController.get().isAuthorised(Arrays.asList(
-				PermissionHelper.create(PermissionHelper.MANAGE_PAGES)));
-		if (canChange) {
-			getElement().insertFirst(elToolbar);
-		} else {
-			elToolbar.removeFromParent();
-		}
-
 	}
 
 	/* (non-Javadoc)
