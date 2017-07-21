@@ -21,8 +21,27 @@ import com.willshex.gson.web.service.client.JsonService;
 public final class SearchService extends JsonService {
 	public static final String SearchMethodSearchAll = "SearchAll";
 
-	public Request searchAll (final SearchAllRequest input,
+	public Request searchAll (SearchAllRequest input) {
+		return searchAll(input, null, null);
+	}
+
+	public Request searchAll (SearchAllRequest input,
+			AsyncSuccess<SearchAllRequest, SearchAllResponse> onSuccess) {
+		return searchAll(input, onSuccess, null);
+	}
+
+	public Request searchAll (SearchAllRequest input,
 			final AsyncCallback<SearchAllResponse> callback) {
+		return searchAll(input, (i, o) -> {
+			callback.onSuccess(o);
+		}, (i, c) -> {
+			callback.onFailure(c);
+		});
+	}
+
+	public Request searchAll (SearchAllRequest input,
+			AsyncSuccess<SearchAllRequest, SearchAllResponse> onSuccess,
+			AsyncFailure<SearchAllRequest> onFailure) {
 		Request handle = null;
 		try {
 			handle = sendRequest(SearchMethodSearchAll, input,
@@ -33,21 +52,31 @@ public final class SearchService extends JsonService {
 							try {
 								SearchAllResponse outputParameter = new SearchAllResponse();
 								parseResponse(response, outputParameter);
-								callback.onSuccess(outputParameter);
+								if (onSuccess != null) {
+									onSuccess.call(input, outputParameter);
+								}
+
 								onCallSuccess(SearchService.this,
 										SearchMethodSearchAll, input,
 										outputParameter);
 							} catch (JSONException | HttpException exception) {
-								callback.onFailure(exception);
+								if (onFailure != null) {
+									onFailure.call(input, exception);
+								}
+
 								onCallFailure(SearchService.this,
-										SearchMethodSearchAll, input, exception);
+										SearchMethodSearchAll, input,
+										exception);
 							}
 						}
 
 						@Override
 						public void onError (Request request,
 								Throwable exception) {
-							callback.onFailure(exception);
+							if (onFailure != null) {
+								onFailure.call(input, exception);
+							}
+
 							onCallFailure(SearchService.this,
 									SearchMethodSearchAll, input, exception);
 						}
@@ -55,7 +84,10 @@ public final class SearchService extends JsonService {
 			onCallStart(SearchService.this, SearchMethodSearchAll, input,
 					handle);
 		} catch (RequestException exception) {
-			callback.onFailure(exception);
+			if (onFailure != null) {
+				onFailure.call(input, exception);
+			}
+
 			onCallFailure(SearchService.this, SearchMethodSearchAll, input,
 					exception);
 		}
