@@ -43,7 +43,6 @@ import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
@@ -51,7 +50,7 @@ import com.willshex.gson.web.service.shared.StatusType;
  *
  */
 public class ChangeAccessPage extends Page
-		implements NavigationChangedEventHandler, ChangeUserAccessEventHandler {
+		implements ChangeUserAccessEventHandler {
 
 	public interface Templates extends SafeHtmlTemplates {
 		Templates INSTANCE = GWT.create(Templates.class);
@@ -216,31 +215,30 @@ public class ChangeAccessPage extends Page
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					ready();
+
+					User loggedIn = SessionController.get().user();
+					if (c.getAction() == null
+							|| (loggedIn != null && loggedIn.id
+									.equals(Long.valueOf(c.getAction())))) {
+						user = loggedIn;
+					} else {
+						user = null;
+					}
+
+					if (user == null) {
+						(user = new User()).id(Long.valueOf(c.getAction()));
+					}
+
+					UserController.get().setUser(user);
+					tblRoles.setVisibleRangeAndClearData(
+							tblRoles.getVisibleRange(), true);
+					tblPermissions.setVisibleRangeAndClearData(
+							tblPermissions.getVisibleRange(), true);
+				}));
 		register(DefaultEventBus.get().addHandlerToSource(
 				ChangeUserAccessEventHandler.TYPE, UserController.get(), this));
-	}
-
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		ready();
-
-		User loggedIn = SessionController.get().user();
-		if (current.getAction() == null || (loggedIn != null
-				&& loggedIn.id.equals(Long.valueOf(current.getAction())))) {
-			user = loggedIn;
-		} else {
-			user = null;
-		}
-
-		if (user == null) {
-			(user = new User()).id(Long.valueOf(current.getAction()));
-		}
-
-		UserController.get().setUser(user);
-		tblRoles.setVisibleRangeAndClearData(tblRoles.getVisibleRange(), true);
-		tblPermissions.setVisibleRangeAndClearData(
-				tblPermissions.getVisibleRange(), true);
 	}
 
 	private void loading () {

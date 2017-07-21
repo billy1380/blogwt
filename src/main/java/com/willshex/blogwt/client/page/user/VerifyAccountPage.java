@@ -24,31 +24,29 @@ import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
 import com.willshex.blogwt.shared.api.user.call.VerifyAccountResponse;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class VerifyAccountPage extends Page implements
-		NavigationChangedEventHandler, VerifyAccountEventHandler {
+public class VerifyAccountPage extends Page
+		implements VerifyAccountEventHandler {
 
 	private static VerifyAccountPageUiBinder uiBinder = GWT
 			.create(VerifyAccountPageUiBinder.class);
 
-	interface VerifyAccountPageUiBinder extends
-			UiBinder<Widget, VerifyAccountPage> {}
+	interface VerifyAccountPageUiBinder
+			extends UiBinder<Widget, VerifyAccountPage> {}
 
 	@UiField Element elActionCode;
-	private Timer goHomeTimer = new Timer() {
-
+	
+	private static final Timer GO_HOME_TIMER = new Timer() {
 		@Override
 		public void run () {
-			PageTypeHelper.show(PageController.get()
-					.homePageTargetHistoryToken());
+			PageTypeHelper
+					.show(PageController.get().homePageTargetHistoryToken());
 		}
-
 	};
 
 	public VerifyAccountPage () {
@@ -64,25 +62,17 @@ public class VerifyAccountPage extends Page implements
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					String action;
+					if ((action = c.getAction()) != null
+							&& action.length() != 0) {
+						elActionCode.setInnerText(action);
+
+						UserController.get().verifyAccount(action);
+					}
+				}));
 		register(DefaultEventBus.get().addHandlerToSource(
 				VerifyAccountEventHandler.TYPE, UserController.get(), this));
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged
-	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
-	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		String action;
-		if ((action = current.getAction()) != null && action.length() != 0) {
-			elActionCode.setInnerText(action);
-
-			UserController.get().verifyAccount(action);
-		}
 	}
 
 	/* (non-Javadoc)
@@ -96,8 +86,8 @@ public class VerifyAccountPage extends Page implements
 	public void verifyAccountSuccess (VerifyAccountRequest input,
 			VerifyAccountResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			goHomeTimer.cancel();
-			goHomeTimer.schedule(2000);
+			GO_HOME_TIMER.cancel();
+			GO_HOME_TIMER.schedule(2000);
 		} else {
 			GWT.log("Could not verify account with error ["
 					+ (output.error == null ? "none" : output.error.toString())

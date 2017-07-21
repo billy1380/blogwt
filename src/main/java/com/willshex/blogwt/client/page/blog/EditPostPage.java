@@ -74,14 +74,12 @@ import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.TagHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 import gwtupload.client.BaseUploadStatus;
 import gwtupload.client.IFileInput.FileInputType;
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
-import gwtupload.client.IUploader.OnFinishUploaderHandler;
 import gwtupload.client.MultiUploader;
 import gwtupload.client.PreloadedImage;
 import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
@@ -90,8 +88,7 @@ import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
  * @author William Shakour (billy1380)
  *
  */
-public class EditPostPage extends Page implements
-		NavigationChangedEventHandler, CreatePostEventHandler,
+public class EditPostPage extends Page implements CreatePostEventHandler,
 		GetPostEventHandler, UpdatePostEventHandler {
 
 	private static EditPostPageUiBinder uiBinder = GWT
@@ -198,52 +195,50 @@ public class EditPostPage extends Page implements
 		uplDragAndDrop.setValidExtensions("jpg", "jpeg", "png");
 		uplDragAndDrop.setServletPath(ApiHelper.UPLOAD_END_POINT);
 
-		uplDragAndDrop.addOnFinishUploadHandler(new OnFinishUploaderHandler() {
-
-			@Override
-			public void onFinish (IUploader uploader) {
-				if (uploader.getStatus() == Status.SUCCESS) {
-					String msg = uploader.getServerMessage().getMessage();
-					if (msg != null && msg.startsWith("data:")) {
-						// NOTE: this does not happen
-						new PreloadedImage(msg, PRELOAD_HANDLER);
-					} else {
-						Resource resource = new Resource();
-						resource.type = ResourceTypeType.ResourceTypeTypeBlobStoreImage;
-
-						for (String url : uploader.getServerMessage()
-								.getUploadedFileUrls()) {
-							resource.data = url
-									.replace(ApiHelper.BASE_URL, "/");
-							break;
-						}
-
-						for (String name : uploader.getServerMessage()
-								.getUploadedFileNames()) {
-							resource.name = name;
-							break;
-						}
-
-						ensureResources().put(resource.name, resource);
-						uploader.getStatusWidget().setVisible(false);
-						new PreloadedImage(resource.data, PRELOAD_HANDLER);
-					}
-				} else {
-					// Failed :(
-				}
-			}
-		});
+		uplDragAndDrop.addOnFinishUploadHandler(
+				EditPostPage.this::finishedImageUpload);
 		uplDragAndDrop.setStatusWidget(new BaseUploadStatus());
 		tbrSummary.setText(txtSummary);
 		tbrContent.setText(txtContent);
 
 		tagList.addDataDisplay(clTags);
 
-		String commentsEnabled = PropertyController.get().stringProperty(
-				PropertyHelper.POST_COMMENTS_ENABLED);
+		String commentsEnabled = PropertyController.get()
+				.stringProperty(PropertyHelper.POST_COMMENTS_ENABLED);
 		pnlComments.setVisible(commentsEnabled != null
 				&& !PropertyHelper.NONE_VALUE.equals(commentsEnabled));
 
+	}
+
+	private void finishedImageUpload (IUploader uploader) {
+		if (uploader.getStatus() == Status.SUCCESS) {
+			String msg = uploader.getServerMessage().getMessage();
+			if (msg != null && msg.startsWith("data:")) {
+				// NOTE: this does not happen
+				new PreloadedImage(msg, PRELOAD_HANDLER);
+			} else {
+				Resource resource = new Resource();
+				resource.type = ResourceTypeType.ResourceTypeTypeBlobStoreImage;
+
+				for (String url : uploader.getServerMessage()
+						.getUploadedFileUrls()) {
+					resource.data = url.replace(ApiHelper.BASE_URL, "/");
+					break;
+				}
+
+				for (String name : uploader.getServerMessage()
+						.getUploadedFileNames()) {
+					resource.name = name;
+					break;
+				}
+
+				ensureResources().put(resource.name, resource);
+				uploader.getStatusWidget().setVisible(false);
+				new PreloadedImage(resource.data, PRELOAD_HANDLER);
+			}
+		} else {
+			// Failed :(
+		}
 	}
 
 	/* (non-Javadoc)
@@ -255,7 +250,21 @@ public class EditPostPage extends Page implements
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					boolean isNewPost = true;
+
+					if (c.getAction() != null && !"new".equals(c.getAction())) {
+						String postParam;
+						if ((postParam = c.getAction()) != null) {
+							PostController.get().getPost(postParam);
+							loading();
+							isNewPost = false;
+						}
+					}
+
+					elHeading
+							.setInnerText(isNewPost ? "New Post" : "Edit Post");
+				}));
 		register(DefaultEventBus.get().addHandlerToSource(
 				CreatePostEventHandler.TYPE, PostController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
@@ -338,16 +347,14 @@ public class EditPostPage extends Page implements
 		pnlPreview.getElement().appendChild(elDate);
 
 		DivElement elAuthor = d.createDivElement();
-		if (PropertyController.get().booleanProperty(
-				PropertyHelper.POST_SHOW_AUTHOR, false)) {
-			elAuthor.setInnerSafeHtml(PostSummaryCell.Templates.INSTANCE
-					.author(UriUtils
-							.fromString((post != null ? post.author.avatar
-									: user.avatar)
-									+ "?s="
-									+ UserHelper.AVATAR_HEADER_SIZE
-									+ "&default=retro"), UserHelper
-							.handle((post != null ? post.author : user))));
+		if (PropertyController.get()
+				.booleanProperty(PropertyHelper.POST_SHOW_AUTHOR, false)) {
+			elAuthor.setInnerSafeHtml(PostSummaryCell.Templates.INSTANCE.author(
+					UriUtils.fromString(
+							(post != null ? post.author.avatar : user.avatar)
+									+ "?s=" + UserHelper.AVATAR_HEADER_SIZE
+									+ "&default=retro"),
+					UserHelper.handle((post != null ? post.author : user))));
 		}
 
 		pnlPreview.getElement().appendChild(elAuthor);
@@ -385,20 +392,19 @@ public class EditPostPage extends Page implements
 	void onBtnSubmitClicked (ClickEvent e) {
 		if (isValid()) {
 			if (post == null) {
-				PostController.get().createPost(
-						txtTitle.getText(),
+				PostController.get().createPost(txtTitle.getText(),
 						cbxDirectOnly.getValue().booleanValue() ? Boolean.FALSE
-								: Boolean.TRUE, cbxComments.getValue(),
-						txtSummary.getText(), txtContent.getText(),
-						cbxPublish.getValue(), txtTags.getText());
+								: Boolean.TRUE,
+						cbxComments.getValue(), txtSummary.getText(),
+						txtContent.getText(), cbxPublish.getValue(),
+						txtTags.getText());
 			} else {
-				PostController.get().updatePost(
-						post,
-						txtTitle.getText(),
+				PostController.get().updatePost(post, txtTitle.getText(),
 						cbxDirectOnly.getValue().booleanValue() ? Boolean.FALSE
-								: Boolean.TRUE, cbxComments.getValue(),
-						txtSummary.getText(), txtContent.getText(),
-						cbxPublish.getValue(), txtTags.getText());
+								: Boolean.TRUE,
+						cbxComments.getValue(), txtSummary.getText(),
+						txtContent.getText(), cbxPublish.getValue(),
+						txtTags.getText());
 			}
 			submitting();
 		} else {
@@ -407,8 +413,8 @@ public class EditPostPage extends Page implements
 	}
 
 	private void ready () {
-		btnSubmit.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE
+		btnSubmit.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
 						.nextButton("Submit"));
 
 		txtTitle.setEnabled(true);
@@ -446,10 +452,10 @@ public class EditPostPage extends Page implements
 	private void submitting () {
 		loading();
 
-		btnSubmit.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
-						"Submitting... ", Resources.RES.primaryLoader()
-								.getSafeUri()));
+		btnSubmit.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
+						.loadingButton("Submitting... ",
+								Resources.RES.primaryLoader().getSafeUri()));
 	}
 
 	/* (non-Javadoc)
@@ -480,7 +486,9 @@ public class EditPostPage extends Page implements
 	 * (com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest,
 	 * java.lang.Throwable) */
 	@Override
-	public void updatePostFailure (UpdatePostRequest input, Throwable caught) {}
+	public void updatePostFailure (UpdatePostRequest input, Throwable caught) {
+		ready();
+	}
 
 	/* (non-Javadoc)
 	 * 
@@ -510,7 +518,9 @@ public class EditPostPage extends Page implements
 	 * (com.willshex.blogwt.shared.api.blog.call.CreatePostRequest,
 	 * java.lang.Throwable) */
 	@Override
-	public void createPostFailure (CreatePostRequest input, Throwable caught) {}
+	public void createPostFailure (CreatePostRequest input, Throwable caught) {
+		ready();
+	}
 
 	private boolean isValid () {
 		// do client validation
@@ -540,8 +550,8 @@ public class EditPostPage extends Page implements
 		txtSummary.setText(post.summary);
 		txtContent.setText(post.content.body);
 
-		cbxDirectOnly.setValue(Boolean.valueOf(post.listed != null
-				&& !post.listed.booleanValue()));
+		cbxDirectOnly.setValue(Boolean
+				.valueOf(post.listed != null && !post.listed.booleanValue()));
 		cbxComments.setValue(post.commentsEnabled == null ? Boolean.FALSE
 				: post.commentsEnabled);
 		cbxPublish.setValue(Boolean.valueOf(post.published != null));
@@ -561,21 +571,8 @@ public class EditPostPage extends Page implements
 	}
 
 	@Override
-	public void getPostFailure (GetPostRequest input, Throwable caught) {}
-
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		boolean isNewPost = true;
-
-		if (current.getAction() != null && !"new".equals(current.getAction())) {
-			String postParam;
-			if ((postParam = current.getAction()) != null) {
-				PostController.get().getPost(postParam);
-				loading();
-				isNewPost = false;
-			}
-		}
-		elHeading.setInnerText(isNewPost ? "New Post" : "Edit Post");
+	public void getPostFailure (GetPostRequest input, Throwable caught) {
+		ready();
 	}
 
 	private Map<String, Resource> ensureResources () {

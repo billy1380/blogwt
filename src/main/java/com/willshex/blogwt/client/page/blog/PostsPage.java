@@ -36,13 +36,12 @@ import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.blogwt.shared.page.Stack;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class PostsPage extends Page implements NavigationChangedEventHandler {
+public class PostsPage extends Page {
 
 	private static PostsPageUiBinder uiBinder = GWT
 			.create(PostsPageUiBinder.class);
@@ -68,8 +67,8 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 		elExtendedTitle.setInnerText(PropertyController.get().extendedTitle());
 		imgLargeBrand.setAltText(PropertyController.get().title());
 
-		String largeLogo = PropertyController.get().stringProperty(
-				PropertyHelper.LARGE_LOGO_URL);
+		String largeLogo = PropertyController.get()
+				.stringProperty(PropertyHelper.LARGE_LOGO_URL);
 		if (largeLogo != null && !PropertyHelper.NONE_VALUE.equals(largeLogo)) {
 			imgLargeBrand.getElement().removeAttribute("width");
 			imgLargeBrand.getElement().removeAttribute("height");
@@ -99,24 +98,21 @@ public class PostsPage extends Page implements NavigationChangedEventHandler {
 	protected void onAttach () {
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					if (PageType.LogoutPageType.equals(c.getPage())) {
+						SessionController.get().logout();
+					} else {
+						refresh();
+					}
+
+					lnkNewPost.setVisible(SessionController.get()
+							.isAuthorised(Arrays.asList(PermissionHelper
+									.create(PermissionHelper.MANAGE_POSTS))));
+				}));
 
 		register(PostHelper.handlePluginContentReady());
 
 		super.onAttach();
-	}
-
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		if (PageType.LogoutPageType.equals(current.getPage())) {
-			SessionController.get().logout();
-		} else {
-			refresh();
-		}
-
-		lnkNewPost.setVisible(SessionController.get().isAuthorised(
-				Arrays.asList(PermissionHelper
-						.create(PermissionHelper.MANAGE_POSTS))));
 	}
 
 	private void refresh () {

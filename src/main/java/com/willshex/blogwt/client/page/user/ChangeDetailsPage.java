@@ -52,23 +52,21 @@ import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class ChangeDetailsPage extends Page implements
-		NavigationChangedEventHandler, GetUserDetailsEventHandler,
-		ChangeUserDetailsEventHandler, GetEmailAvatarEventHandler,
-		RegisterUserEventHandler {
+public class ChangeDetailsPage extends Page
+		implements GetUserDetailsEventHandler, ChangeUserDetailsEventHandler,
+		GetEmailAvatarEventHandler, RegisterUserEventHandler {
 
 	private static ChangeDetailsPageUiBinder uiBinder = GWT
 			.create(ChangeDetailsPageUiBinder.class);
 
-	interface ChangeDetailsPageUiBinder extends
-			UiBinder<Widget, ChangeDetailsPage> {}
+	interface ChangeDetailsPageUiBinder
+			extends UiBinder<Widget, ChangeDetailsPage> {}
 
 	public interface ChangeDetailsTemplates extends SafeHtmlTemplates {
 		ChangeDetailsTemplates INSTANCE = GWT
@@ -154,66 +152,58 @@ public class ChangeDetailsPage extends Page implements
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					reset();
+
+					if (PageType.ChangeDetailsPageType.equals(c.getPage())) {
+						if (c.getAction() == null) {
+							show(user = SessionController.get().user());
+							lnkChangePassword.setTargetHistoryToken(
+									PageType.ChangePasswordPageType
+											.asTargetHistoryToken());
+							lnkChangePassword.setVisible(true);
+							pnlPassword.setVisible(false);
+						} else if ("id".equals(c.getAction())
+								&& c.getParameterCount() > 0) {
+							Long id = Long.valueOf(c.getParameter(0));
+							User user = new User();
+							user.id(id);
+
+							UserController.get().getUser(user);
+
+							lnkChangePassword.setVisible(false);
+							pnlPassword.setVisible(false);
+						} else if ("new".equals(c.getAction())) {
+							elDates.setInnerText("Enter user details");
+							lnkChangePassword.setVisible(false);
+							pnlPassword.setVisible(true);
+
+							if (SessionController.get().isAdmin()) {
+								actionText = CREATE_ACTION_TEXT;
+							}
+						}
+					} else if (PageType.RegisterPageType.equals(c.getPage())) {
+						elDates.setInnerText("Enter user details");
+						lnkChangePassword.setVisible(false);
+						pnlPassword.setVisible(true);
+
+						actionText = REGISTER_ACTION_TEXT;
+					}
+
+					elHeading.setInnerText(getHeadingText());
+					elGravatar.setInnerSafeHtml(getGravatarSafeHtml());
+
+					ready();
+				}));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetUserDetailsEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
-				ChangeUserDetailsEventHandler.TYPE, UserController.get(), this));
+				ChangeUserDetailsEventHandler.TYPE, UserController.get(),
+				this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetEmailAvatarEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				RegisterUserEventHandler.TYPE, UserController.get(), this));
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged
-	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
-	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		reset();
-
-		if (PageType.ChangeDetailsPageType.equals(current.getPage())) {
-			if (current.getAction() == null) {
-				show(user = SessionController.get().user());
-				lnkChangePassword
-						.setTargetHistoryToken(PageType.ChangePasswordPageType
-								.asTargetHistoryToken());
-				lnkChangePassword.setVisible(true);
-				pnlPassword.setVisible(false);
-			} else if ("id".equals(current.getAction())
-					&& current.getParameterCount() > 0) {
-				Long id = Long.valueOf(current.getParameter(0));
-				User user = new User();
-				user.id(id);
-
-				UserController.get().getUser(user);
-
-				lnkChangePassword.setVisible(false);
-				pnlPassword.setVisible(false);
-			} else if ("new".equals(current.getAction())) {
-				elDates.setInnerText("Enter user details");
-				lnkChangePassword.setVisible(false);
-				pnlPassword.setVisible(true);
-
-				if (SessionController.get().isAdmin()) {
-					actionText = CREATE_ACTION_TEXT;
-				}
-			}
-		} else if (PageType.RegisterPageType.equals(current.getPage())) {
-			elDates.setInnerText("Enter user details");
-			lnkChangePassword.setVisible(false);
-			pnlPassword.setVisible(true);
-
-			actionText = REGISTER_ACTION_TEXT;
-		}
-
-		elHeading.setInnerText(getHeadingText());
-		elGravatar.setInnerSafeHtml(getGravatarSafeHtml());
-
-		ready();
 	}
 
 	@UiHandler("txtUsername")
@@ -233,25 +223,18 @@ public class ChangeDetailsPage extends Page implements
 			String username = "@" + user.username;
 			imgAvatar.setAltText(username);
 			imgAvatar.setUrl(user.avatar + "?s=160&default=retro");
-			h3Username
-					.setInnerSafeHtml(UserHelper.isAdmin(user) ? ChangeDetailsTemplates.INSTANCE
-							.adminRolesAndPermissions(
-									username,
-									PageTypeHelper.asHref(
-											PageType.ChangeAccessPageType,
-											user.id.toString()).asString())
-							: ChangeDetailsTemplates.INSTANCE
-									.rolesAndPermissions(
-											username,
-											PageTypeHelper
-													.asHref(PageType.ChangeAccessPageType,
-															user.id.toString())
-													.asString()));
-			elDates.setInnerText("Added "
-					+ DateTimeHelper.ago(user.created)
-					+ " and last seen "
-					+ (user.lastLoggedIn == null ? "never" : DateTimeHelper
-							.ago(user.lastLoggedIn)));
+			h3Username.setInnerSafeHtml(UserHelper.isAdmin(user)
+					? ChangeDetailsTemplates.INSTANCE.adminRolesAndPermissions(
+							username,
+							PageTypeHelper.asHref(PageType.ChangeAccessPageType,
+									user.id.toString()).asString())
+					: ChangeDetailsTemplates.INSTANCE.rolesAndPermissions(
+							username,
+							PageTypeHelper.asHref(PageType.ChangeAccessPageType,
+									user.id.toString()).asString()));
+			elDates.setInnerText("Added " + DateTimeHelper.ago(user.created)
+					+ " and last seen " + (user.lastLoggedIn == null ? "never"
+							: DateTimeHelper.ago(user.lastLoggedIn)));
 			txtUsername.setText(user.username);
 			txtForename.setText(user.forename);
 			txtSurname.setText(user.surname);
@@ -325,8 +308,8 @@ public class ChangeDetailsPage extends Page implements
 	}
 
 	private void ready () {
-		btnUpdate.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE
+		btnUpdate.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
 						.nextButton(actionText));
 
 		btnUpdate.setEnabled(true);
@@ -341,10 +324,10 @@ public class ChangeDetailsPage extends Page implements
 	}
 
 	private void loading () {
-		btnUpdate.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
-						getLoadingText(), Resources.RES.primaryLoader()
-								.getSafeUri()));
+		btnUpdate.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
+						.loadingButton(getLoadingText(),
+								Resources.RES.primaryLoader().getSafeUri()));
 
 		btnUpdate.setEnabled(false);
 		txtUsername.setEnabled(false);
@@ -404,16 +387,16 @@ public class ChangeDetailsPage extends Page implements
 		SafeHtml gravatarSafeHtml = null;
 		switch (actionText) {
 		case UPDATE_ACTION_TEXT:
-			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE
-					.gravatarComment("Changing e-mail address will change your avatar");
+			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE.gravatarComment(
+					"Changing e-mail address will change your avatar");
 			break;
 		case CREATE_ACTION_TEXT:
-			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE
-					.gravatarComment("E-mail address will determine user's avatar");
+			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE.gravatarComment(
+					"E-mail address will determine user's avatar");
 			break;
 		case REGISTER_ACTION_TEXT:
-			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE
-					.gravatarComment("Your e-mail address will determine your avatar");
+			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE.gravatarComment(
+					"Your e-mail address will determine your avatar");
 			break;
 		}
 
@@ -422,8 +405,8 @@ public class ChangeDetailsPage extends Page implements
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler
+	 * @see com.willshex.blogwt.shared.api.user.call.event.
+	 * ChangeUserDetailsEventHandler
 	 * #changeUserDetailsSuccess(com.willshex.blogwt.shared.api.user.call.
 	 * ChangeUserDetailsRequest,
 	 * com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse) */
@@ -439,8 +422,8 @@ public class ChangeDetailsPage extends Page implements
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.ChangeUserDetailsEventHandler
+	 * @see com.willshex.blogwt.shared.api.user.call.event.
+	 * ChangeUserDetailsEventHandler
 	 * #changeUserDetailsFailure(com.willshex.blogwt.shared.api.user.call.
 	 * ChangeUserDetailsRequest, java.lang.Throwable) */
 	@Override
@@ -509,8 +492,8 @@ public class ChangeDetailsPage extends Page implements
 				PageTypeHelper.show(PageType.ChangeDetailsPageType, "id",
 						output.user.id.toString());
 			} else {
-				PageTypeHelper.show(PageType.LoginPageType, "username="
-						+ output.user.username.toString());
+				PageTypeHelper.show(PageType.LoginPageType,
+						"username=" + output.user.username.toString());
 			}
 		}
 
@@ -525,7 +508,8 @@ public class ChangeDetailsPage extends Page implements
 	 * (com.willshex.blogwt.shared.api.user.call.RegisterUserRequest,
 	 * java.lang.Throwable) */
 	@Override
-	public void registerUserFailure (RegisterUserRequest input, Throwable caught) {
+	public void registerUserFailure (RegisterUserRequest input,
+			Throwable caught) {
 		GWT.log("registerUserFailure", caught);
 
 		ready();

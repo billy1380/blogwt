@@ -32,7 +32,7 @@ import com.willshex.blogwt.shared.page.Stack;
  * @author William Shakour (billy1380)
  *
  */
-public class SearchPage extends Page implements NavigationChangedEventHandler {
+public class SearchPage extends Page {
 
 	private static SearchPageUiBinder uiBinder = GWT
 			.create(SearchPageUiBinder.class);
@@ -73,34 +73,26 @@ public class SearchPage extends Page implements NavigationChangedEventHandler {
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					String query;
+					if ((query = c.getAction()) == null) {
+						query = "";
+					}
+
+					elHeading.setInnerSafeHtml(
+							SearchPageTemplates.INSTANCE.heading(query));
+
+					SearchController.get().setQuery(query);
+
+					refresh();
+				}));
 
 		super.onAttach();
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged
-	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
-	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		String query;
-		if ((query = current.getAction()) == null) {
-			query = "";
-		}
-
-		elHeading.setInnerSafeHtml(SearchPageTemplates.INSTANCE.heading(query));
-
-		SearchController.get().setQuery(query);
-
-		refresh();
-	}
-
 	private void refresh () {
-		clResults
-				.setVisibleRangeAndClearData(clResults.getVisibleRange(), true);
+		clResults.setVisibleRangeAndClearData(clResults.getVisibleRange(),
+				true);
 	}
 
 }

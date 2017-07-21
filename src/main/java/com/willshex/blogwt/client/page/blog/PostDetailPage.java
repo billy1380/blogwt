@@ -57,16 +57,14 @@ import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class PostDetailPage extends Page implements
-		NavigationChangedEventHandler, GetPostEventHandler,
-		DeletePostEventHandler {
+public class PostDetailPage extends Page
+		implements GetPostEventHandler, DeletePostEventHandler {
 
 	private static PostDetailPageUiBinder uiBinder = GWT
 			.create(PostDetailPageUiBinder.class);
@@ -102,17 +100,16 @@ public class PostDetailPage extends Page implements
 
 		tagList.addDataDisplay(clTags);
 
-		if (!PropertyController.get().booleanProperty(
-				PropertyHelper.POST_SHOW_AUTHOR, false)) {
+		if (!PropertyController.get()
+				.booleanProperty(PropertyHelper.POST_SHOW_AUTHOR, false)) {
 			elAuthor.removeFromParent();
 		}
 	}
 
 	@UiHandler("btnDeletePost")
 	void onBtnDeletePost (ClickEvent event) {
-		if (post != null
-				&& Window.confirm("Are you sure you want to delete \""
-						+ post.title + "\"")) {
+		if (post != null && Window.confirm(
+				"Are you sure you want to delete \"" + post.title + "\"")) {
 			PostController.get().deletePost(post);
 		}
 	}
@@ -124,7 +121,22 @@ public class PostDetailPage extends Page implements
 	protected void onAttach () {
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				this));
+				(p, c) -> {
+					String slug;
+					if ((slug = c.getAction()) != null) {
+						PostController.get().getPost(slug);
+						pnlLoading.setVisible(true);
+						dsqComments.setVisible(false);
+						ataShare.setVisible(false);
+						coRelated.setVisible(false);
+					}
+
+					boolean canChange = SessionController.get()
+							.isAuthorised(Arrays.asList(PermissionHelper
+									.create(PermissionHelper.MANAGE_POSTS)));
+					lnkEditPost.setVisible(canChange);
+					btnDeletePost.setVisible(canChange);
+				}));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetPostEventHandler.TYPE, PostController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
@@ -153,12 +165,12 @@ public class PostDetailPage extends Page implements
 		elTitle.setInnerHTML(PostHelper.makeHeading(post.title));
 
 		SafeHtml author = SafeHtmlUtils.EMPTY_SAFE_HTML;
-		if (PropertyController.get().booleanProperty(
-				PropertyHelper.POST_SHOW_AUTHOR, false)) {
-			author = PostSummaryCell.Templates.INSTANCE
-					.author(UriUtils.fromString(post.author.avatar + "?s="
+		if (PropertyController.get()
+				.booleanProperty(PropertyHelper.POST_SHOW_AUTHOR, false)) {
+			author = PostSummaryCell.Templates.INSTANCE.author(
+					UriUtils.fromString(post.author.avatar + "?s="
 							+ UserHelper.AVATAR_HEADER_SIZE + "&default=retro"),
-							UserHelper.handle(post.author));
+					UserHelper.handle(post.author));
 		}
 
 		if (PropertyController.get().booleanProperty(
@@ -177,8 +189,8 @@ public class PostDetailPage extends Page implements
 					.notPublished(DateTimeHelper.ago(post.created)));
 		}
 
-		lnkEditPost.setTargetHistoryToken(PageType.EditPostPageType
-				.asTargetHistoryToken(post.slug));
+		lnkEditPost.setTargetHistoryToken(
+				PageType.EditPostPageType.asTargetHistoryToken(post.slug));
 
 		tagList.getList().clear();
 		coRelated.setVisible(Boolean.TRUE.equals(post.listed));
@@ -189,9 +201,8 @@ public class PostDetailPage extends Page implements
 			}
 		}
 
-		final String url = GWT.getHostPageBaseURL()
-				+ PageTypeHelper.asHref(PageType.PostDetailPageType, post.slug)
-						.asString();
+		final String url = GWT.getHostPageBaseURL() + PageTypeHelper
+				.asHref(PageType.PostDetailPageType, post.slug).asString();
 		final String title = post.title;
 
 		ataShare.setUrl(url);
@@ -204,14 +215,16 @@ public class PostDetailPage extends Page implements
 
 			pnlContent.getElement().setInnerHTML(markup);
 
-			String comments = PropertyController.get().stringProperty(
-					PropertyHelper.POST_COMMENTS_ENABLED);
+			String comments = PropertyController.get()
+					.stringProperty(PropertyHelper.POST_COMMENTS_ENABLED);
 
-			if (comments == null || comments.equals(PropertyHelper.NONE_VALUE)) {
+			if (comments == null
+					|| comments.equals(PropertyHelper.NONE_VALUE)) {
 				dsqComments.removeFromParent();
 			} else if (Boolean.TRUE.equals(post.commentsEnabled)) {
 				final String identifier = "post" + post.id.toString();
-				final String tag = post.tags == null || post.tags.size() == 0 ? "none"
+				final String tag = post.tags == null || post.tags.size() == 0
+						? "none"
 						: post.tags.get(0);
 
 				dsqComments.setUrl(url);
@@ -240,30 +253,6 @@ public class PostDetailPage extends Page implements
 	@Override
 	public void getPostFailure (GetPostRequest input, Throwable caught) {}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged
-	 * (com.willshex.blogwt.client.controller.NavigationController.Stack,
-	 * com.willshex.blogwt.client.controller.NavigationController.Stack) */
-	@Override
-	public void navigationChanged (Stack previous, Stack current) {
-		String slug;
-		if ((slug = current.getAction()) != null) {
-			PostController.get().getPost(slug);
-			pnlLoading.setVisible(true);
-			dsqComments.setVisible(false);
-			ataShare.setVisible(false);
-			coRelated.setVisible(false);
-		}
-
-		boolean canChange = SessionController.get().isAuthorised(
-				Arrays.asList(PermissionHelper
-						.create(PermissionHelper.MANAGE_POSTS)));
-		lnkEditPost.setVisible(canChange);
-		btnDeletePost.setVisible(canChange);
-	}
-
 	@Override
 	public void deletePostSuccess (DeletePostRequest input,
 			DeletePostResponse output) {
@@ -290,8 +279,8 @@ public class PostDetailPage extends Page implements
 
 		tagList.getList().clear();
 
-		lnkEditPost.setTargetHistoryToken(PageType.EditPostPageType
-				.asTargetHistoryToken(""));
+		lnkEditPost.setTargetHistoryToken(
+				PageType.EditPostPageType.asTargetHistoryToken(""));
 
 		pnlContent.getElement().setInnerHTML("");
 		pnlLoading.setVisible(true);
