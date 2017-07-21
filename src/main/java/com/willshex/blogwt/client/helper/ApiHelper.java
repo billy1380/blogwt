@@ -9,6 +9,7 @@ package com.willshex.blogwt.client.helper;
 
 import static com.google.gwt.user.client.Window.Location.getHost;
 
+import com.google.gwt.core.shared.GWT;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.BlogService;
 import com.willshex.blogwt.client.api.page.PageService;
@@ -17,6 +18,9 @@ import com.willshex.blogwt.client.api.user.UserService;
 import com.willshex.blogwt.shared.api.Request;
 import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.api.validation.ApiError;
+import com.willshex.gson.web.service.client.event.CallFailureEventHandler;
+import com.willshex.gson.web.service.client.event.CallStartEventHandler;
+import com.willshex.gson.web.service.client.event.CallSuccessEventHandler;
 import com.willshex.gson.web.service.shared.Error;
 
 /**
@@ -32,6 +36,26 @@ public class ApiHelper {
 	public static final String PAGE_END_POINT = BASE_URL + "page";
 	public static final String SEARCH_END_POINT = BASE_URL + "search";
 	public static final String UPLOAD_END_POINT = BASE_URL + "upload";
+
+	static {
+		DefaultEventBus.get().addHandler(CallStartEventHandler.TYPE,
+				(origin, name, i, handle) -> {
+					GWT.log("Calling " + origin.getUrl() + "." + name
+							+ " with input [" + i + "].");
+				});
+		DefaultEventBus.get().addHandler(CallSuccessEventHandler.TYPE,
+				(origin, name, i, o) -> {
+					GWT.log("Call to " + origin.getUrl() + "." + name
+							+ " with input [" + i + "] succeeded with output ["
+							+ o + "].");
+				});
+		DefaultEventBus.get()
+				.addHandler(CallFailureEventHandler.TYPE,
+						(origin, name, i, caught) -> GWT.log(
+								"Call to " + origin.getUrl() + "." + name
+										+ " with input [" + i + "] failed.",
+								caught));
+	}
 
 	public static BlogService createBlogClient () {
 		BlogService service = new BlogService();

@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.willshex.blogwt.client.DefaultEventBus;
@@ -35,8 +34,6 @@ import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.gson.web.service.client.event.CallFailureEventHandler;
-import com.willshex.gson.web.service.client.event.CallStartEventHandler;
 import com.willshex.gson.web.service.client.event.CallSuccessEventHandler;
 import com.willshex.gson.web.service.shared.StatusType;
 
@@ -69,10 +66,6 @@ public class SessionController {
 
 		DefaultEventBus.get().addHandler(CallSuccessEventHandler.TYPE,
 				(origin, name, i, o) -> {
-					GWT.log("Call to " + origin.getUrl() + "." + name
-							+ " with input [" + i + "] succeeded with output ["
-							+ o + "].");
-
 					if (o instanceof com.willshex.blogwt.shared.api.Response) {
 						if (i instanceof com.willshex.blogwt.shared.api.Request) {
 							if (((com.willshex.blogwt.shared.api.Response) o).session == null
@@ -82,17 +75,6 @@ public class SessionController {
 						}
 					}
 				});
-		DefaultEventBus.get().addHandler(CallStartEventHandler.TYPE,
-				(origin, name, i, handle) -> {
-					GWT.log("Calling " + origin.getUrl() + "." + name
-							+ " with input [" + i + "].");
-				});
-		DefaultEventBus.get()
-				.addHandler(CallFailureEventHandler.TYPE,
-						(origin, name, i, caught) -> GWT.log(
-								"Call to " + origin.getUrl() + "." + name
-										+ " with input [" + i + "] failed.",
-								caught));
 	}
 
 	public void login (String username, String password, boolean rememberMe) {
