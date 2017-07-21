@@ -8,21 +8,21 @@
 package com.willshex.blogwt.client.animation;
 
 import com.google.gwt.animation.client.Animation;
-import com.google.gwt.query.client.plugins.effects.PropertiesAnimation.Easing;
 import com.google.gwt.user.client.Window;
+import com.willshex.blogwt.client.animation.gdx.math.Interpolation;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
 public class ScrollWindow extends Animation {
-	private Easing easing;
+	private Interpolation easing;
 	private double startLeft;
 	private double distanceLeft;
 	private double startTop;
 	private double distanceTop;
 
-	public ScrollWindow (int left, int top, Easing easing) {
+	public ScrollWindow (int left, int top, Interpolation easing) {
 		this.easing = easing;
 		startLeft = Window.getScrollLeft();
 		startTop = Window.getScrollTop();
@@ -30,7 +30,7 @@ public class ScrollWindow extends Animation {
 		this.distanceTop = top - startTop;
 	}
 
-	public ScrollWindow (int top, Easing easing) {
+	public ScrollWindow (int top, Interpolation easing) {
 		this(Window.getScrollLeft(), top, easing);
 	}
 
@@ -40,7 +40,9 @@ public class ScrollWindow extends Animation {
 	@Override
 	protected void onUpdate (double progress) {
 		Window.scrollTo(
-				(int) (startLeft + (easing.interpolate(progress) * distanceLeft)),
-				(int) (startTop + (easing.interpolate(progress) * distanceTop)));
+				(int) (startLeft
+						+ (easing.apply((float) progress) * distanceLeft)),
+				(int) (startTop
+						+ (easing.apply((float) progress) * distanceTop)));
 	}
 }

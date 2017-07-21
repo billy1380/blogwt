@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
+import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.shared.page.PageType;
 
 /**
@@ -35,6 +36,8 @@ public class SearchPart extends Composite {
 
 	public SearchPart () {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		UiHelper.addPlaceholder(txtQuery, "Search...");
 	}
 
 	@UiHandler("frmSearch")

@@ -46,7 +46,11 @@ public final class SetPushTokenActionHandler
 			input.token = PushTokenServiceProvider.provide()
 					.addPushToken(input.token);
 		} else {
-			PushTokenServiceProvider.provide().updatePushToken(input.token);
+			if (input.token.value != null) {
+				token.value = input.token.value;
+			}
+
+			PushTokenServiceProvider.provide().updatePushToken(token);
 		}
 	}
 

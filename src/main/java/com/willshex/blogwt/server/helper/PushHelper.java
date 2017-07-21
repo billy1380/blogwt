@@ -29,6 +29,7 @@ import com.willshex.blogwt.server.helper.push.Payload;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.PushToken;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.gson.shared.Jsonable;
 import com.willshex.utility.JsonUtils;
 
 /**
@@ -44,7 +45,7 @@ public class PushHelper {
 	private static final Charset UTF8 = Charset.forName("UTF-8");
 
 	public static void push (PushToken pushToken, String subject,
-			String content) {
+			String content, Jsonable data) {
 		if (LOG.isLoggable(Level.FINE)) {
 			LOG.fine(
 					"Pushing notification to [" + pushToken + "] with subject ["
@@ -65,8 +66,7 @@ public class PushHelper {
 				break;
 			}
 
-			Payload payload = new Payload().to(pushToken.value)
-					.notification(message);
+			Payload payload = buildPayload(pushToken, message, data);
 
 			try {
 				URL endpoint = new URL(PUSH_ENDPOINT);
@@ -163,6 +163,12 @@ public class PushHelper {
 						+ "] has not been set");
 			}
 		}
+	}
+
+	public static Payload buildPayload (PushToken pushToken, Message message,
+			Jsonable data) {
+		return new Payload().to(pushToken.value).notification(message)
+				.data(data);
 	}
 
 }

@@ -120,6 +120,17 @@ public class UserValidator extends ApiValidator {
 				&& RoleHelper.toLookup(roles).containsKey(RoleHelper.ADMIN);
 	}
 
+	/**
+	 * Admin authorisation
+	 * @param user
+	 * @param name
+	 * @throws AuthorisationException
+	 */
+	public static void authorisation (User user, String name)
+			throws AuthorisationException {
+		authorisation(user, null, name);
+	}
+
 	public static void authorisation (User user,
 			Collection<Permission> requiredPermissions, String name)
 			throws AuthorisationException {
