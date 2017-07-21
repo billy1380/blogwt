@@ -35,15 +35,16 @@ import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.blogwt.shared.page.PageType;
-import com.willshex.gson.web.service.client.JsonService;
-import com.willshex.gson.web.service.client.JsonServiceCallEventHandler;
+import com.willshex.gson.web.service.client.event.CallFailureEventHandler;
+import com.willshex.gson.web.service.client.event.CallStartEventHandler;
+import com.willshex.gson.web.service.client.event.CallSuccessEventHandler;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class SessionController implements JsonServiceCallEventHandler {
+public class SessionController {
 	private static final String COOKIE_KEY_ID = "session.id";
 
 	private static SessionController one = null;
@@ -66,8 +67,32 @@ public class SessionController implements JsonServiceCallEventHandler {
 			removeSession();
 		}
 
-		DefaultEventBus.get().addHandler(JsonServiceCallEventHandler.TYPE,
-				this);
+		DefaultEventBus.get().addHandler(CallSuccessEventHandler.TYPE,
+				(origin, name, i, o) -> {
+					GWT.log("Call to " + origin.getUrl() + "." + name
+							+ " with input [" + i + "] succeeded with output ["
+							+ o + "].");
+
+					if (o instanceof com.willshex.blogwt.shared.api.Response) {
+						if (i instanceof com.willshex.blogwt.shared.api.Request) {
+							if (((com.willshex.blogwt.shared.api.Response) o).session == null
+									&& session != null) {
+								logout();
+							}
+						}
+					}
+				});
+		DefaultEventBus.get().addHandler(CallStartEventHandler.TYPE,
+				(origin, name, i, handle) -> {
+					GWT.log("Calling " + origin.getUrl() + "." + name
+							+ " with input [" + i + "].");
+				});
+		DefaultEventBus.get()
+				.addHandler(CallFailureEventHandler.TYPE,
+						(origin, name, i, caught) -> GWT.log(
+								"Call to " + origin.getUrl() + "." + name
+										+ " with input [" + i + "] failed.",
+								caught));
 	}
 
 	public void login (String username, String password, boolean rememberMe) {
@@ -254,62 +279,11 @@ public class SessionController implements JsonServiceCallEventHandler {
 
 	private static native String jsonSession ()
 	/*-{
-		return $wnd['session'];
+	return $wnd['session'];
 	}-*/;
 
 	private static native void removeJsonSession ()
 	/*-{
-		$wnd['session'] = null;
+	$wnd['session'] = null;
 	}-*/;
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.client.JsonServiceCallEventHandler#
-	 * jsonServiceCallStart(com.willshex.gson.web.service.client.JsonService,
-	 * java.lang.String, com.willshex.gson.web.service.shared.Request,
-	 * com.google.gwt.http.client.Request) */
-	@Override
-	public void jsonServiceCallStart (JsonService origin, String callName,
-			com.willshex.gson.web.service.shared.Request input,
-			com.google.gwt.http.client.Request handle) {
-		GWT.log("Calling " + origin.getUrl() + "." + callName + " with input ["
-				+ input + "].");
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.client.JsonServiceCallEventHandler#
-	 * jsonServiceCallSuccess(com.willshex.gson.web.service.client.JsonService,
-	 * java.lang.String, com.willshex.gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
-	@Override
-	public void jsonServiceCallSuccess (JsonService origin, String callName,
-			com.willshex.gson.web.service.shared.Request input,
-			com.willshex.gson.web.service.shared.Response output) {
-		GWT.log("Call to " + origin.getUrl() + "." + callName + " with input ["
-				+ input + "] succeeded with output [" + output + "].");
-
-		if (output instanceof com.willshex.blogwt.shared.api.Response) {
-			if (input instanceof com.willshex.blogwt.shared.api.Request) {
-				if (((com.willshex.blogwt.shared.api.Response) output).session == null
-						&& session != null) {
-					logout();
-				}
-			}
-		}
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.client.JsonServiceCallEventHandler#
-	 * jsonServiceCallFailure(com.willshex.gson.web.service.client.JsonService,
-	 * java.lang.String, com.willshex.gson.web.service.shared.Request,
-	 * java.lang.Throwable) */
-	@Override
-	public void jsonServiceCallFailure (JsonService origin, String callName,
-			com.willshex.gson.web.service.shared.Request input,
-			Throwable caught) {
-		GWT.log("Call to " + origin.getUrl() + "." + callName + " with input ["
-				+ input + "] failed.", caught);
-	}
 }
