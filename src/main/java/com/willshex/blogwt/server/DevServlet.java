@@ -52,7 +52,7 @@ import com.willshex.utility.JsonUtils;
  * @author William Shakour (billy1380)
  *
  */
-@WebServlet(name = "Dev", urlPatterns = "/dev")
+@WebServlet(name = "Dev", urlPatterns = { "/dev", "/dev/*" })
 @ServletSecurity(value = @HttpConstraint(rolesAllowed = "admin"))
 public class DevServlet extends ContextAwareServlet {
 
