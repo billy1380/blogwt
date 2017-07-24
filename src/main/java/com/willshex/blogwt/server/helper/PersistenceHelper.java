@@ -15,7 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.annotation.WebFilter;
+
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.service.ISortable;
@@ -27,6 +30,9 @@ import com.willshex.blogwt.shared.api.SortDirectionType;
  *
  */
 public class PersistenceHelper {
+
+	@WebFilter(filterName = "ObjectifyFilter", urlPatterns = "/*")
+	public static final class PersistenceFilter extends ObjectifyFilter {}
 
 	public static <T> Long keyToId (Key<T> key) {
 		return Long.valueOf(key.getId());
