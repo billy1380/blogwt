@@ -7,12 +7,15 @@
 //
 package com.willshex.blogwt.server.api.search;
 
+import javax.servlet.annotation.WebServlet;
+
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.server.api.search.action.SearchAllActionHandler;
 import com.willshex.blogwt.shared.api.search.call.SearchAllRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
+@WebServlet(name = "Search API", urlPatterns = "/search")
 public final class SearchJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {

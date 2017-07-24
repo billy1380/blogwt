@@ -7,6 +7,8 @@
 // 
 package com.willshex.blogwt.server.api.notification;
 
+import javax.servlet.annotation.WebServlet;
+
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.server.api.notification.action.GetMetaNotificationsActionHandler;
 import com.willshex.blogwt.server.api.notification.action.GetNotificationSettingsActionHandler;
@@ -23,6 +25,7 @@ import com.willshex.blogwt.shared.api.notification.call.UpdateNotificationSettin
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
+@WebServlet(name = "Notification API", urlPatterns = "/notification")
 public final class NotificationJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {

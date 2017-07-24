@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,6 +44,7 @@ import com.willshex.server.ContextAwareServlet;
  * @author William Shakour (billy1380)
  *
  */
+@WebServlet(name = "Site", urlPatterns = "/")
 public class MainServlet extends ContextAwareServlet {
 
 	private static final long serialVersionUID = 3007918530671674098L;
@@ -330,7 +332,8 @@ public class MainServlet extends ContextAwareServlet {
 		return (Property) (new Property().name(property.name)
 				.value(property.value)
 				.created(PropertyHelper.TITLE.equals(property.name)
-						? property.created : null));
+						? property.created
+						: null));
 	}
 
 	private Tag slim (Tag tag) {

@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.api.page;
 
+import javax.servlet.annotation.WebServlet;
+
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.server.api.page.action.CreatePageActionHandler;
 import com.willshex.blogwt.server.api.page.action.DeletePageActionHandler;
@@ -23,6 +25,7 @@ import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
+@WebServlet(name = "Page API", urlPatterns = "/page")
 public final class PageJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {

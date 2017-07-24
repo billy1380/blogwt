@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletResponse;
 
 import com.willshex.blogwt.server.helper.ServletHelper;
@@ -32,6 +33,7 @@ import com.willshex.server.ContextAwareServlet;
  * @author William Shakour (billy1380)
  *
  */
+@WebServlet(name = "Site Map", urlPatterns = "/sitemap")
 public class SiteMapServlet extends ContextAwareServlet {
 
 	private static final long serialVersionUID = 3133978953838954164L;
@@ -53,7 +55,8 @@ public class SiteMapServlet extends ContextAwareServlet {
 		response.setContentType(MIME_TYPE);
 
 		p.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		p.println("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
+		p.println(
+				"<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
 
 		printRoot(p, url);
 		printPages(p, url);
@@ -93,20 +96,17 @@ public class SiteMapServlet extends ContextAwareServlet {
 				PagerHelper.moveForward(pager);
 
 				for (Post post : posts) {
-					p.println(String.format(
-							LOC_FORMAT,
-							url,
-							"#"
-									+ PageType.PostDetailPageType
-											.asTargetHistoryToken(post.slug)));
+					p.println(String.format(LOC_FORMAT, url,
+							"#" + PageType.PostDetailPageType
+									.asTargetHistoryToken(post.slug)));
 				}
 			}
 		} while (posts != null && posts.size() >= pager.count.intValue());
 	}
 
 	private void printPages (PrintWriter p, String url) {
-		List<Page> pages = PageServiceProvider.provide().getPages(
-				Boolean.FALSE, Integer.valueOf(0), null, null, null);
+		List<Page> pages = PageServiceProvider.provide().getPages(Boolean.FALSE,
+				Integer.valueOf(0), null, null, null);
 
 		if (pages != null) {
 			for (Page page : pages) {
@@ -120,12 +120,9 @@ public class SiteMapServlet extends ContextAwareServlet {
 
 		if (tags.size() >= 0) {
 			for (Tag tag : tags) {
-				p.println(String.format(
-						LOC_FORMAT,
-						url,
-						"#"
-								+ PageType.TagPostsPageType
-										.asTargetHistoryToken(tag.slug)));
+				p.println(String.format(LOC_FORMAT, url,
+						"#" + PageType.TagPostsPageType
+								.asTargetHistoryToken(tag.slug)));
 			}
 		}
 

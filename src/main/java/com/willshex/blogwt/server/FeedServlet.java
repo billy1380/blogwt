@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,6 +45,8 @@ import com.willshex.server.ContextAwareServlet;
  *
  *	Based on https://rometools.github.io/rome/RssAndAtOMUtilitiEsROMEV0.5AndAboveTutorialsAndArticles/RssAndAtOMUtilitiEsROMEV0.5TutorialUsingROMEWithinAServletToCreateAndReturnAFeed.html
  */
+@WebServlet(name = "Feed", urlPatterns = "/feed", initParams = {
+		@WebInitParam(name = "default.feed.type", value = "rss_2.0") })
 public class FeedServlet extends ContextAwareServlet {
 
 	private static final long serialVersionUID = 3740371198321150900L;
@@ -87,23 +91,22 @@ public class FeedServlet extends ContextAwareServlet {
 				SyndFeedOutput output = new SyndFeedOutput();
 				output.output(feed, response.getWriter());
 			} catch (FeedException ex) {
-				response.sendError(
-						HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
 						"Could not generate feed");
 			}
 		}
 	}
 
-	protected SyndFeed getFeed (HttpServletRequest request) throws IOException,
-			FeedException {
+	protected SyndFeed getFeed (HttpServletRequest request)
+			throws IOException, FeedException {
 		SyndFeed feed = new SyndFeedImpl();
 		String url = ServletHelper.constructBaseUrl(request);
 
-		feed.setTitle(PropertyServiceProvider.provide().getNamedProperty(
-				PropertyHelper.TITLE).value);
+		feed.setTitle(PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.TITLE).value);
 		feed.setLink(url + "/feed");
-		feed.setDescription(PropertyServiceProvider.provide().getNamedProperty(
-				PropertyHelper.EXTENDED_TITLE).value);
+		feed.setDescription(PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.EXTENDED_TITLE).value);
 
 		List<Post> posts;
 		Pager pager = PagerHelper.createDefaultPager();
@@ -125,10 +128,8 @@ public class FeedServlet extends ContextAwareServlet {
 				for (Post post : posts) {
 					entry = new SyndEntryImpl();
 					entry.setTitle(post.title);
-					entry.setLink(url
-							+ "/#"
-							+ PageType.PostDetailPageType
-									.asTargetHistoryToken(post.slug));
+					entry.setLink(url + "/#" + PageType.PostDetailPageType
+							.asTargetHistoryToken(post.slug));
 					entry.setPublishedDate(post.published);
 					description = new SyndContentImpl();
 					description.setType("text/HTML");

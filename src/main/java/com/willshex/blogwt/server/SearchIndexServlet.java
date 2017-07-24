@@ -12,6 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.HttpConstraint;
+import javax.servlet.annotation.ServletSecurity;
+import javax.servlet.annotation.WebServlet;
 
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.search.ISearch;
@@ -23,6 +26,8 @@ import com.willshex.service.ServiceDiscovery;
  * @author billy1380
  *
  */
+@WebServlet(name = "Search Indexer", urlPatterns = "/searchindexer")
+@ServletSecurity(value = @HttpConstraint(rolesAllowed = "admin"))
 public class SearchIndexServlet extends ContextAwareServlet {
 
 	private static final long serialVersionUID = 7829996840917475240L;

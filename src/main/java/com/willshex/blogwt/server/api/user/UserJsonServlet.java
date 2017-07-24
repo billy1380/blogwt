@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.api.user;
 
+import javax.servlet.annotation.WebServlet;
+
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.server.api.user.action.BlockUsersActionHandler;
 import com.willshex.blogwt.server.api.user.action.ChangePasswordActionHandler;
@@ -49,6 +51,7 @@ import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
+@WebServlet(name = "User API", urlPatterns = "/user")
 public final class UserJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {

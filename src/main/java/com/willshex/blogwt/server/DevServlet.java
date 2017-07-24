@@ -14,6 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.HttpConstraint;
+import javax.servlet.annotation.ServletSecurity;
+import javax.servlet.annotation.WebServlet;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.images.ImagesServiceFactory;
@@ -49,6 +52,8 @@ import com.willshex.utility.JsonUtils;
  * @author William Shakour (billy1380)
  *
  */
+@WebServlet(name = "Dev", urlPatterns = "/dev")
+@ServletSecurity(value = @HttpConstraint(rolesAllowed = "admin"))
 public class DevServlet extends ContextAwareServlet {
 
 	private static final long serialVersionUID = 8911904038164388255L;

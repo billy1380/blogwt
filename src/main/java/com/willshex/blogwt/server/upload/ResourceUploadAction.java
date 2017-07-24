@@ -10,6 +10,7 @@ package com.willshex.blogwt.server.upload;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItem;
@@ -27,6 +28,7 @@ import gwtupload.server.gae.CloudStorageUploadAction;
  * @author William Shakour (billy1380)
  *
  */
+@WebServlet(name = "Upload", urlPatterns = "/upload")
 public class ResourceUploadAction extends CloudStorageUploadAction {
 	private static final long serialVersionUID = 4092355669644652816L;
 

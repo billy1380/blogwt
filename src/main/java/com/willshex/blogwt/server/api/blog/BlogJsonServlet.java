@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.api.blog;
 
+import javax.servlet.annotation.WebServlet;
+
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.server.api.blog.action.CreatePostActionHandler;
 import com.willshex.blogwt.server.api.blog.action.DeletePostActionHandler;
@@ -45,6 +47,7 @@ import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
+@WebServlet(name = "Blog API", urlPatterns = "/blog")
 public final class BlogJsonServlet extends JsonServlet {
 	@Override
 	protected String processAction (String action, JsonObject request) {
