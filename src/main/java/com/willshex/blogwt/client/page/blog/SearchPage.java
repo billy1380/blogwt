@@ -26,7 +26,6 @@ import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.BootstrapGwtCellList;
 import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
-import com.willshex.blogwt.shared.page.Stack;
 
 /**
  * @author William Shakour (billy1380)
