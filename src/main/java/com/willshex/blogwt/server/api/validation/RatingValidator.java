@@ -19,14 +19,6 @@ import com.willshex.gson.web.service.server.ServiceException;
  */
 public class RatingValidator extends ApiValidator {
 	private static final String TYPE = Rating.class.getSimpleName();
-	private static final Processor<Rating> LOOKUP = new Processor<Rating>() {
-
-		@Override
-		public Rating process (Rating item, String name)
-				throws InputValidationException {
-			return lookup(item, name);
-		}
-	};
 
 	public static Rating validate (Rating rating, String name)
 			throws InputValidationException {
@@ -83,6 +75,6 @@ public class RatingValidator extends ApiValidator {
 	 */
 	public static <T extends Iterable<Rating>> T lookupAll (T ratings,
 			String name) throws ServiceException {
-		return processAll(false, ratings, LOOKUP, TYPE, name);
+		return processAll(false, ratings, RatingValidator::lookup, TYPE, name);
 	}
 }

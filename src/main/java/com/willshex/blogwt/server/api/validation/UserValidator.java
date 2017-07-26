@@ -35,24 +35,6 @@ public class UserValidator extends ApiValidator {
 	private static final Class<User> CLASS = User.class;
 	private static final String TYPE = CLASS.getSimpleName();
 
-	private static final Processor<User> VALIDATE = new Processor<User>() {
-
-		@Override
-		public User process (User item, String name)
-				throws InputValidationException {
-			return validate(item, name);
-		}
-	};
-
-	private static final Processor<User> LOOKUP = new Processor<User>() {
-
-		@Override
-		public User process (User item, String name)
-				throws InputValidationException {
-			return lookup(item, name);
-		}
-	};
-
 	public static User validate (User user, String name)
 			throws InputValidationException {
 		boolean foundUsername = false, foundEmail = false;
@@ -103,12 +85,12 @@ public class UserValidator extends ApiValidator {
 
 	public static <T extends Iterable<User>> T validateAll (T users,
 			String name) throws ServiceException {
-		return processAll(false, users, VALIDATE, TYPE, name);
+		return processAll(false, users, UserValidator::validate, TYPE, name);
 	}
 
 	public static <T extends Iterable<User>> T lookupAll (T users, String name)
 			throws ServiceException {
-		return processAll(false, users, LOOKUP, TYPE, name);
+		return processAll(false, users, UserValidator::lookup, TYPE, name);
 	}
 
 	public static boolean isAdmin (User user) {

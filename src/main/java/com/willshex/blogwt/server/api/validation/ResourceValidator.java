@@ -19,14 +19,6 @@ import com.willshex.gson.web.service.server.ServiceException;
  */
 public class ResourceValidator extends ApiValidator {
 	private static final String TYPE = Resource.class.getSimpleName();
-	private static final Processor<Resource> LOOKUP = new Processor<Resource>() {
-
-		@Override
-		public Resource process (Resource item, String name)
-				throws InputValidationException {
-			return lookup(item, name);
-		}
-	};
 
 	public static Resource validate (Resource resource, String name)
 			throws InputValidationException {
@@ -70,7 +62,8 @@ public class ResourceValidator extends ApiValidator {
 	 */
 	public static <T extends Iterable<Resource>> T lookupAll (T resources,
 			String name) throws ServiceException {
-		return processAll(false, resources, LOOKUP, TYPE, name);
+		return processAll(false, resources, ResourceValidator::lookup, TYPE,
+				name);
 	}
 
 }

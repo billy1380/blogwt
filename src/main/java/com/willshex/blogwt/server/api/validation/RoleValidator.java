@@ -19,14 +19,6 @@ import com.willshex.gson.web.service.server.ServiceException;
  */
 public class RoleValidator extends ApiValidator {
 	private static final String TYPE = Role.class.getSimpleName();
-	private static final Processor<Role> LOOKUP = new Processor<Role>() {
-
-		@Override
-		public Role process (Role item, String name)
-				throws InputValidationException {
-			return lookup(item, name);
-		}
-	};
 
 	public static Role lookup (Role role, String name)
 			throws InputValidationException {
@@ -66,6 +58,6 @@ public class RoleValidator extends ApiValidator {
 	 */
 	public static <T extends Iterable<Role>> T lookupAll (T roles, String name)
 			throws ServiceException {
-		return processAll(false, roles, LOOKUP, TYPE, name);
+		return processAll(false, roles, RoleValidator::lookup, TYPE, name);
 	}
 }

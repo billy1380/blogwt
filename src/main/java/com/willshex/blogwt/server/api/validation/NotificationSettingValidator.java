@@ -21,24 +21,6 @@ public class NotificationSettingValidator extends ApiValidator {
 	public static final Class<NotificationSetting> CLASS = NotificationSetting.class;
 	public static final String TYPE = CLASS.getSimpleName();
 
-	private static final Processor<NotificationSetting> VALIDATE = new Processor<NotificationSetting>() {
-
-		@Override
-		public NotificationSetting process (NotificationSetting item,
-				String name) throws InputValidationException {
-			return validate(item, name);
-		}
-	};
-
-	private static final Processor<NotificationSetting> LOOKUP = new Processor<NotificationSetting>() {
-
-		@Override
-		public NotificationSetting process (NotificationSetting item,
-				String name) throws InputValidationException {
-			return lookup(item, name);
-		}
-	};
-
 	public static NotificationSetting lookup (
 			NotificationSetting notificationSetting, String name)
 			throws InputValidationException {
@@ -90,11 +72,13 @@ public class NotificationSettingValidator extends ApiValidator {
 
 	public static <T extends Iterable<NotificationSetting>> T validateAll (
 			T notificationSettings, String name) throws ServiceException {
-		return processAll(false, notificationSettings, VALIDATE, TYPE, name);
+		return processAll(false, notificationSettings,
+				NotificationSettingValidator::validate, TYPE, name);
 	}
 
 	public static <T extends Iterable<NotificationSetting>> T lookupAll (
 			T notificationSettings, String name) throws ServiceException {
-		return processAll(false, notificationSettings, LOOKUP, TYPE, name);
+		return processAll(false, notificationSettings,
+				NotificationSettingValidator::lookup, TYPE, name);
 	}
 }

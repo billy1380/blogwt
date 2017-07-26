@@ -26,6 +26,7 @@ import com.willshex.gson.web.service.shared.Request;
  */
 public class ApiValidator {
 
+	@FunctionalInterface
 	public static interface Processor<T> {
 		T process (T item, String name) throws ServiceException;
 	}

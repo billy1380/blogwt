@@ -19,14 +19,6 @@ import com.willshex.gson.web.service.server.ServiceException;
  */
 public class PermissionValidator extends ApiValidator {
 	private static final String TYPE = Permission.class.getSimpleName();
-	private static final Processor<Permission> LOOKUP = new Processor<Permission>() {
-
-		@Override
-		public Permission process (Permission item, String name)
-				throws InputValidationException {
-			return lookup(item, name);
-		}
-	};
 
 	public static Permission lookup (Permission permission, String name)
 			throws InputValidationException {
@@ -69,6 +61,7 @@ public class PermissionValidator extends ApiValidator {
 	 */
 	public static <T extends Iterable<Permission>> T lookupAll (T permissions,
 			String name) throws ServiceException {
-		return processAll(false, permissions, LOOKUP, TYPE, name);
+		return processAll(false, permissions, PermissionValidator::lookup, TYPE,
+				name);
 	}
 }

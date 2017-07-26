@@ -21,24 +21,6 @@ public class ArchiveEntryValidator extends ApiValidator {
 
 	private static final String TYPE = ArchiveEntry.class.getSimpleName();
 
-	private static final Processor<ArchiveEntry> VALIDATE = new Processor<ArchiveEntry>() {
-
-		@Override
-		public ArchiveEntry process (ArchiveEntry item, String name)
-				throws InputValidationException {
-			return validate(item, name);
-		}
-	};
-
-	private static final Processor<ArchiveEntry> LOOKUP = new Processor<ArchiveEntry>() {
-
-		@Override
-		public ArchiveEntry process (ArchiveEntry item, String name)
-				throws InputValidationException {
-			return lookup(item, name);
-		}
-	};
-
 	public static ArchiveEntry validate (ArchiveEntry archiveEntry, String name)
 			throws InputValidationException {
 		return archiveEntry;
@@ -46,7 +28,8 @@ public class ArchiveEntryValidator extends ApiValidator {
 
 	public static <T extends Iterable<ArchiveEntry>> T validateAll (
 			T archiveEntries, final String name) throws ServiceException {
-		return processAll(false, archiveEntries, VALIDATE, TYPE, name);
+		return processAll(false, archiveEntries,
+				ArchiveEntryValidator::validate, TYPE, name);
 	}
 
 	public static ArchiveEntry lookup (ArchiveEntry archiveEntry, String name)
@@ -86,6 +69,7 @@ public class ArchiveEntryValidator extends ApiValidator {
 
 	public static <T extends Iterable<ArchiveEntry>> T lookupAll (
 			T archiveEntries, final String name) throws ServiceException {
-		return processAll(false, archiveEntries, LOOKUP, TYPE, name);
+		return processAll(false, archiveEntries, ArchiveEntryValidator::lookup,
+				TYPE, name);
 	}
 }

@@ -16,14 +16,6 @@ import com.willshex.utility.StringUtils;
 
 public class PropertyValidator extends ApiValidator {
 	private static final String TYPE = Property.class.getSimpleName();
-	private static final Processor<Property> VALIDATE = new Processor<Property>() {
-
-		@Override
-		public Property process (Property item, String name)
-				throws InputValidationException {
-			return validate(item, name);
-		}
-	};
 
 	public static List<Property> setup (Collection<Property> properties,
 			String name) throws ServiceException {
@@ -64,7 +56,8 @@ public class PropertyValidator extends ApiValidator {
 
 	public static <T extends Iterable<Property>> T validateAll (T properties,
 			String name) throws ServiceException {
-		return processAll(true, properties, VALIDATE, TYPE, name);
+		return processAll(true, properties, PropertyValidator::validate, TYPE,
+				name);
 	}
 
 	public static Property validate (Property property, String name)

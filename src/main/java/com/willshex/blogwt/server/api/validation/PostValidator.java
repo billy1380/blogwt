@@ -20,14 +20,6 @@ import com.willshex.gson.web.service.server.ServiceException;
  */
 public class PostValidator extends ApiValidator {
 	private static final String TYPE = Post.class.getSimpleName();
-	private static final Processor<Post> LOOKUP = new Processor<Post>() {
-
-		@Override
-		public Post process (Post item, String name)
-				throws InputValidationException {
-			return lookup(item, name);
-		}
-	};
 
 	public static Post validate (Post post, String name)
 			throws InputValidationException {
@@ -75,7 +67,7 @@ public class PostValidator extends ApiValidator {
 	 */
 	public static <T extends Iterable<Post>> T lookupAll (T posts, String name)
 			throws ServiceException {
-		return processAll(false, posts, LOOKUP, TYPE, name);
+		return processAll(false, posts, PostValidator::lookup, TYPE, name);
 	}
 
 	public static Post viewable (Post post, Session session, String name)
