@@ -126,13 +126,13 @@ public class EmailHelper {
 			String body) {
 		StringBuffer buffer = new StringBuffer();
 
-		buffer.append("\nTo:\n");
+		buffer.append("\nTo: ");
 		buffer.append(to);
-		buffer.append("Name:\n");
+		buffer.append("\nName: ");
 		buffer.append(name);
-		buffer.append("Subject:\n");
+		buffer.append("\nSubject: ");
 		buffer.append(subject);
-		buffer.append("Body:\n");
+		buffer.append("\nBody:\n");
 		buffer.append(body);
 		buffer.append("\n");
 
