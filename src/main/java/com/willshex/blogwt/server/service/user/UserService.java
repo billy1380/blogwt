@@ -33,11 +33,9 @@ import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
-import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
-import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -50,8 +48,7 @@ import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.server.ContextAwareServlet;
 import com.willshex.utility.StringUtils;
 
-final class UserService
-		implements IUserService, ISearch<User>, ISortable<UserSortType> {
+final class UserService implements IUserService {
 
 	private static final String SALT = "af1d3250-f8d1-11e4-bbd2-7054d251af02";
 	private static final String ACTION_EMAIL_TEMPLATE = "Hi ${user.forename},\n\nPlease click the link below to ${action}:\n\n${link}\n\n${property.value}";
@@ -611,14 +608,6 @@ final class UserService
 			String next, Integer count, String sortBy,
 			SortDirectionType direction) {
 		throw new UnsupportedOperationException();
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
-	@Override
-	public String map (UserSortType sortBy) {
-		return sortBy.toString();
 	}
 
 	/* (non-Javadoc)

@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.annotation.WebFilter;
 
@@ -273,12 +274,8 @@ public class PersistenceHelper {
 			Collection<Key<T>> keys) {
 		Map<Object, T> map = PersistenceHelper
 				.typeMap(batcher.get(PersistenceHelper.keysToIds(keys)));
-		List<T> list = new ArrayList<>();
-
-		for (Key<T> key : keys) {
-			list.add(map.get(PersistenceHelper.keyToId(key)));
-		}
-
-		return list;
+		return keys.stream().map(i -> {
+			return map.get(PersistenceHelper.keyToId(i));
+		}).collect(Collectors.toList());
 	}
 }

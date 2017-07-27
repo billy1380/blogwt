@@ -19,6 +19,7 @@ import com.willshex.utility.StringUtils;
  */
 public class Filter {
 
+	@FunctionalInterface
 	public static interface Query {
 		String from (Filter filter);
 	}

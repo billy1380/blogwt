@@ -11,6 +11,7 @@ package com.willshex.blogwt.server.service.permission;
 import java.util.Collection;
 import java.util.List;
 
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -18,7 +19,8 @@ import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.service.IService;
 
-public interface IPermissionService extends IService, BatchGetter<Permission> {
+public interface IPermissionService extends IService, BatchGetter<Permission>,
+		ISortable<PermissionSortType> {
 
 	public static final String NAME = "blogwt.permission";
 

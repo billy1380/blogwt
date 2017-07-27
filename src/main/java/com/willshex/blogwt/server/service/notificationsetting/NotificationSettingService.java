@@ -16,15 +16,13 @@ import java.util.List;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
-import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.datatype.NotificationSetting;
 import com.willshex.blogwt.shared.api.datatype.NotificationSettingSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 
-final class NotificationSettingService implements INotificationSettingService,
-		ISortable<NotificationSettingSortType> {
+final class NotificationSettingService implements INotificationSettingService {
 	public String getName () {
 		return NAME;
 	}
@@ -75,21 +73,6 @@ final class NotificationSettingService implements INotificationSettingService,
 
 	/* (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
-	@Override
-	public String map (NotificationSettingSortType sortBy) {
-		String mapped = sortBy.toString();
-
-		if (sortBy == NotificationSettingSortType.NotificationSettingSortTypeMeta
-				|| sortBy == NotificationSettingSortType.NotificationSettingSortTypeUser) {
-			mapped += "Key";
-		}
-
-		return mapped;
-	}
-
-	/* (non-Javadoc)
-	 * 
 	 * @see com.willshex.blogwt.server.service.notificationsetting.
 	 * INotificationSettingService#getUserNotificationSettings(com.willshex.
 	 * blogwt.shared.api.datatype.User, java.lang.Integer, java.lang.Integer,
@@ -99,8 +82,8 @@ final class NotificationSettingService implements INotificationSettingService,
 	public List<NotificationSetting> getUserNotificationSettings (User user,
 			Integer start, Integer count, NotificationSettingSortType sortBy,
 			SortDirectionType sortDirection) {
-		return PersistenceHelper.pagedAndSorted(load().filter(
-				map(NotificationSettingSortType.NotificationSettingSortTypeUser),
+		return PersistenceHelper.pagedAndSorted(load().filter(map(
+				NotificationSettingSortType.NotificationSettingSortTypeUser),
 				user), start, count, sortBy, this, sortDirection);
 	}
 
@@ -113,10 +96,11 @@ final class NotificationSettingService implements INotificationSettingService,
 	@Override
 	public NotificationSetting getMetaUserNotificationSetting (
 			MetaNotification metaNotification, User user) {
-		return PersistenceHelper.one(load().filter(
-				map(NotificationSettingSortType.NotificationSettingSortTypeUser),
-				user).filter(
-						map(NotificationSettingSortType.NotificationSettingSortTypeMeta),
+		return PersistenceHelper.one(load().filter(map(
+				NotificationSettingSortType.NotificationSettingSortTypeUser),
+				user)
+				.filter(map(
+						NotificationSettingSortType.NotificationSettingSortTypeMeta),
 						metaNotification));
 	}
 

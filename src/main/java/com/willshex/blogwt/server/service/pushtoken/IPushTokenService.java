@@ -10,11 +10,14 @@ package com.willshex.blogwt.server.service.pushtoken;
 
 import java.util.List;
 
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.datatype.PushToken;
+import com.willshex.blogwt.shared.api.datatype.PushTokenSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.service.IService;
 
-public interface IPushTokenService extends IService {
+public interface IPushTokenService
+		extends IService, ISortable<PushTokenSortType> {
 
 	public static final String NAME = "blogwt.pushtoken";
 
@@ -55,5 +58,15 @@ public interface IPushTokenService extends IService {
 	 * @return
 	 */
 	public List<PushToken> getUserPushTokens (User user);
+
+	public default String map (PushTokenSortType sortBy) {
+		String mapped = sortBy.toString();
+
+		if (sortBy == PushTokenSortType.PushTokenSortTypeUser) {
+			mapped += "Key";
+		}
+
+		return mapped;
+	}
 
 }

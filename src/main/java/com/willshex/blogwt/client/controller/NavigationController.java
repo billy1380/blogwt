@@ -20,7 +20,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.willshex.blogwt.client.DefaultEventBus;
-import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler.NavigationChangedEvent;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.shared.page.PageType;
@@ -82,7 +81,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	private String intended = null;
 
-	private void attachPage (PageType type, final NavigationChangedEvent event) {
+	private void attachPage (PageType type,
+			final NavigationChangedEvent event) {
 		Composite page = null;
 
 		if ((page = getPageFromCache(type)) == null) {
@@ -121,9 +121,10 @@ public class NavigationController implements ValueChangeHandler<String> {
 	 * @param value
 	 */
 	public void addPage (String value) {
-		value = (value == null || value.trim().length() == 0 || value
-				.replace("!", "").trim().length() == 0) ? PageController.get()
-				.homePageTargetHistoryToken() : value;
+		value = (value == null || value.trim().length() == 0
+				|| value.replace("!", "").trim().length() == 0)
+						? PageController.get().homePageTargetHistoryToken()
+						: value;
 		Stack s = Stack.parse(value);
 		PageType p = s == null ? null : PageType.fromString(s.getPage());
 
@@ -133,20 +134,19 @@ public class NavigationController implements ValueChangeHandler<String> {
 		} else {
 			if (PropertyController.get().blog() != null
 					&& p == PageType.SetupBlogPageType) {
-				PageTypeHelper.show(PageController.get()
-						.homePageTargetHistoryToken());
+				PageTypeHelper.show(
+						PageController.get().homePageTargetHistoryToken());
 			} else if (p != null && p.requiresLogin()
 					&& !SessionController.get().isValidSession()) {
 				SessionController.get().logout(PageType.LoginPageType,
 						s.asNextParameter());
-			} else if (p != null
-					&& p.requiresLogin()
+			} else if (p != null && p.requiresLogin()
 					&& p.getRequiredPermissions() != null
 					&& p.getRequiredPermissions().size() > 0
-					&& !SessionController.get().isAuthorised(
-							p.getRequiredPermissions())) {
-				PageTypeHelper.show(PageController.get()
-						.homePageTargetHistoryToken());
+					&& !SessionController.get()
+							.isAuthorised(p.getRequiredPermissions())) {
+				PageTypeHelper.show(
+						PageController.get().homePageTargetHistoryToken());
 			} else {
 				if (intended != null && intended.equals(s.toString())) {
 					intended = null;
@@ -169,9 +169,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 		final Stack previous = stack;
 		stack = value;
 
-		attachPage(stackPage,
-				new NavigationChangedEventHandler.NavigationChangedEvent(
-						previous, stack));
+		attachPage(stackPage, new NavigationChangedEvent(previous, stack));
 	}
 
 	public PageType getCurrentPage () {
@@ -213,19 +211,20 @@ public class NavigationController implements ValueChangeHandler<String> {
 			PageTypeHelper.show(PageType.fromString(stack.getNext().getPage()),
 					stack.getNext().toString(1));
 		} else {
-			PageTypeHelper.show(PageController.get()
-					.homePageTargetHistoryToken());
+			PageTypeHelper
+					.show(PageController.get().homePageTargetHistoryToken());
 		}
 
 	}
 
 	public void showPrevious () {
 		if (stack.hasPrevious()) {
-			PageTypeHelper.show(PageType.fromString(stack.getPrevious()
-					.getPage()), stack.getPrevious().toString(1));
+			PageTypeHelper.show(
+					PageType.fromString(stack.getPrevious().getPage()),
+					stack.getPrevious().toString(1));
 		} else {
-			PageTypeHelper.show(PageController.get()
-					.homePageTargetHistoryToken());
+			PageTypeHelper
+					.show(PageController.get().homePageTargetHistoryToken());
 		}
 	}
 

@@ -12,5 +12,7 @@ package com.willshex.blogwt.server.service;
  *
  */
 public interface ISortable<T extends Enum<T>> {
-	public String map (T sortBy);
+	public default String map (T sortBy) {
+		return sortBy.toString();
+	}
 }

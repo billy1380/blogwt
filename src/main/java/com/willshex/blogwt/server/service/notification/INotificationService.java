@@ -11,6 +11,7 @@ package com.willshex.blogwt.server.service.notification;
 import java.util.Collection;
 import java.util.List;
 
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Notification;
 import com.willshex.blogwt.shared.api.datatype.NotificationSetting;
@@ -18,7 +19,8 @@ import com.willshex.blogwt.shared.api.datatype.NotificationSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.service.IService;
 
-public interface INotificationService extends IService {
+public interface INotificationService
+		extends IService, ISortable<NotificationSortType> {
 
 	public static final String NAME = "blogwt.notification";
 
@@ -65,5 +67,15 @@ public interface INotificationService extends IService {
 	 */
 	public List<NotificationSetting> updateNotificationSettings (
 			Collection<NotificationSetting> notificationSettings);
+
+	public default String map (NotificationSortType sortBy) {
+		String mapped = sortBy.toString();
+
+		if (sortBy == NotificationSortType.NotificationSortTypeTarget) {
+			mapped += "Key";
+		}
+
+		return mapped;
+	}
 
 }

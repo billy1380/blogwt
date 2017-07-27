@@ -11,13 +11,14 @@ package com.willshex.blogwt.server.service.role;
 import java.util.Collection;
 import java.util.List;
 
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.RoleSortType;
 import com.willshex.service.IService;
 
-public interface IRoleService extends IService, BatchGetter<Role> {
+public interface IRoleService extends IService, BatchGetter<Role>, ISortable<RoleSortType> {
 
 	public static final String NAME = "blogwt.role";
 

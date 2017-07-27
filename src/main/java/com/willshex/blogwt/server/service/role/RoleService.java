@@ -20,12 +20,11 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
-import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.RoleSortType;
 
-final class RoleService implements IRoleService, ISortable<RoleSortType> {
+final class RoleService implements IRoleService {
 
 	public String getName () {
 		return NAME;
@@ -114,14 +113,6 @@ final class RoleService implements IRoleService, ISortable<RoleSortType> {
 		return PersistenceHelper.pagedAndSorted(
 				SearchHelper.addStartsWith("name", partialName, load()), start,
 				count, sortBy, this, sortDirection);
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
-	@Override
-	public String map (RoleSortType sortBy) {
-		return sortBy.toString();
 	}
 
 	/* (non-Javadoc)

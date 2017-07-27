@@ -18,15 +18,13 @@ import java.util.List;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
-import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Notification;
 import com.willshex.blogwt.shared.api.datatype.NotificationSetting;
 import com.willshex.blogwt.shared.api.datatype.NotificationSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 
-final class NotificationService
-		implements INotificationService, ISortable<NotificationSortType> {
+final class NotificationService implements INotificationService {
 	public String getName () {
 		return NAME;
 	}
@@ -82,20 +80,6 @@ final class NotificationService
 		return PersistenceHelper.pagedAndSorted(load().filter(
 				map(NotificationSortType.NotificationSortTypeTarget), user),
 				start, count, sortBy, this, sortDirection);
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
-	@Override
-	public String map (NotificationSortType sortBy) {
-		String mapped = sortBy.toString();
-
-		if (sortBy == NotificationSortType.NotificationSortTypeTarget) {
-			mapped += "Key";
-		}
-
-		return mapped;
 	}
 
 	/* (non-Javadoc)

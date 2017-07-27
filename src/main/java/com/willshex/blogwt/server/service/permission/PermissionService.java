@@ -20,15 +20,13 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
-import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
 import com.willshex.blogwt.shared.api.datatype.Role;
 
-final class PermissionService
-		implements IPermissionService, ISortable<PermissionSortType> {
+final class PermissionService implements IPermissionService {
 	public String getName () {
 		return NAME;
 	}
@@ -140,14 +138,6 @@ final class PermissionService
 						map(PermissionSortType.PermissionSortTypeCode),
 						partialName, load()),
 				start, count, sortBy, this, sortDirection);
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
-	@Override
-	public String map (PermissionSortType sortBy) {
-		return sortBy.toString();
 	}
 
 	/* (non-Javadoc)

@@ -9,12 +9,15 @@ package com.willshex.blogwt.server.service.page;
 
 import java.util.List;
 
+import com.willshex.blogwt.server.service.ISortable;
+import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.service.IService;
 
-public interface IPageService extends IService {
+public interface IPageService
+		extends IService, ISortable<PageSortType>, ISearch<Page> {
 	public static final String NAME = "blogwt.page";
 
 	/**
@@ -80,5 +83,15 @@ public interface IPageService extends IService {
 	public List<Page> getPartialSlugPages (String partialSlug,
 			Boolean includePostContents, Integer start, Integer count,
 			PageSortType sortBy, SortDirectionType sortDirection);
+
+	public default String map (PageSortType sortBy) {
+		String mapped = sortBy.toString();
+
+		if (sortBy == PageSortType.PageSortTypeParent) {
+			mapped += "Key";
+		}
+
+		return mapped;
+	}
 
 }

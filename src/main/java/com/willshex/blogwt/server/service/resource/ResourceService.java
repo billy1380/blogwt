@@ -19,13 +19,12 @@ import java.util.List;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
-import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceSortType;
 
 final class ResourceService
-		implements IResourceService, ISortable<ResourceSortType> {
+		implements IResourceService {
 
 	/* (non-Javadoc)
 	 * 
@@ -106,15 +105,6 @@ final class ResourceService
 	@Override
 	public List<Resource> getIdResourceBatch (Collection<Long> ids) {
 		return new ArrayList<Resource>(load().ids(ids).values());
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
-	@Override
-	public String map (ResourceSortType sortBy) {
-		return sortBy == ResourceSortType.ResourceSortTypeId ? "__key__"
-				: sortBy.toString();
 	}
 
 	/* (non-Javadoc)

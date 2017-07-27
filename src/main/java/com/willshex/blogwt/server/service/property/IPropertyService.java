@@ -10,12 +10,14 @@ package com.willshex.blogwt.server.service.property;
 import java.util.Collection;
 import java.util.List;
 
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.PropertySortType;
 import com.willshex.service.IService;
 
-public interface IPropertyService extends IService {
+public interface IPropertyService
+		extends IService, ISortable<PropertySortType> {
 
 	public static final String NAME = "blogwt.property";
 

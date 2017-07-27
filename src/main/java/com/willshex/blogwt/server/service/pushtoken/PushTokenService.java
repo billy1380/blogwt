@@ -16,13 +16,11 @@ import java.util.List;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
-import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.datatype.PushToken;
 import com.willshex.blogwt.shared.api.datatype.PushTokenSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 
-final class PushTokenService
-		implements IPushTokenService, ISortable<PushTokenSortType> {
+final class PushTokenService implements IPushTokenService {
 	public String getName () {
 		return NAME;
 	}
@@ -78,20 +76,6 @@ final class PushTokenService
 				.filter(map(PushTokenSortType.PushTokenSortTypeUser), user)
 				.filter(map(PushTokenSortType.PushTokenSortTypePlatform),
 						platform));
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
-	@Override
-	public String map (PushTokenSortType sortBy) {
-		String mapped = sortBy.toString();
-
-		if (sortBy == PushTokenSortType.PushTokenSortTypeUser) {
-			mapped += "Key";
-		}
-
-		return mapped;
 	}
 
 	/* (non-Javadoc)

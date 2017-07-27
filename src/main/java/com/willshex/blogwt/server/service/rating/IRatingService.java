@@ -10,13 +10,14 @@ package com.willshex.blogwt.server.service.rating;
 
 import java.util.List;
 
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Rating;
 import com.willshex.blogwt.shared.api.datatype.RatingSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.service.IService;
 
-public interface IRatingService extends IService {
+public interface IRatingService extends IService, ISortable<RatingSortType> {
 
 	public static final String NAME = "blogwt.rating";
 
@@ -81,5 +82,15 @@ public interface IRatingService extends IService {
 	public List<Rating> getSubjectRatings (Long subjectId, String subjectType,
 			Integer start, Integer count, RatingSortType sortBy,
 			SortDirectionType sortDirection);
+
+	public default String map (RatingSortType sortBy) {
+		String mapped = sortBy.toString();
+
+		if (sortBy == RatingSortType.RatingSortTypeBy) {
+			mapped += "Key";
+		}
+
+		return mapped;
+	}
 
 }

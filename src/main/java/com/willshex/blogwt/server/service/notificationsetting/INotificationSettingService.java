@@ -10,6 +10,7 @@ package com.willshex.blogwt.server.service.notificationsetting;
 
 import java.util.List;
 
+import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.datatype.NotificationSetting;
@@ -17,7 +18,8 @@ import com.willshex.blogwt.shared.api.datatype.NotificationSettingSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.service.IService;
 
-public interface INotificationSettingService extends IService {
+public interface INotificationSettingService
+		extends IService, ISortable<NotificationSettingSortType> {
 
 	public static final String NAME = "blogwt.notificationsetting";
 
@@ -68,5 +70,16 @@ public interface INotificationSettingService extends IService {
 	 */
 	public NotificationSetting getMetaUserNotificationSetting (
 			MetaNotification metaNotification, User user);
+
+	public default String map (NotificationSettingSortType sortBy) {
+		String mapped = sortBy.toString();
+
+		if (sortBy == NotificationSettingSortType.NotificationSettingSortTypeMeta
+				|| sortBy == NotificationSettingSortType.NotificationSettingSortTypeUser) {
+			mapped += "Key";
+		}
+
+		return mapped;
+	}
 
 }

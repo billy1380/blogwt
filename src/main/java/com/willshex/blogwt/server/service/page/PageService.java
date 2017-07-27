@@ -28,9 +28,7 @@ import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
-import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
-import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
@@ -39,8 +37,7 @@ import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 
-final class PageService
-		implements IPageService, ISearch<Page>, ISortable<PageSortType> {
+final class PageService implements IPageService {
 	public String getName () {
 		return NAME;
 	}
@@ -338,20 +335,6 @@ final class PageService
 			String next, Integer count, String sortBy,
 			SortDirectionType direction) {
 		throw new UnsupportedOperationException();
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum) */
-	@Override
-	public String map (PageSortType sortBy) {
-		String mapped = sortBy.toString();
-
-		if (sortBy == PageSortType.PageSortTypeParent) {
-			mapped += "Key";
-		}
-
-		return mapped;
 	}
 
 }

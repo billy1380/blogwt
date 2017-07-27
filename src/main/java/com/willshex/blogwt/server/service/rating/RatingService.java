@@ -17,13 +17,12 @@ import java.util.List;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
-import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Rating;
 import com.willshex.blogwt.shared.api.datatype.RatingSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 
-final class RatingService implements IRatingService, ISortable<RatingSortType> {
+final class RatingService implements IRatingService {
 	public String getName () {
 		return NAME;
 	}
@@ -116,21 +115,6 @@ final class RatingService implements IRatingService, ISortable<RatingSortType> {
 						.filter(map(RatingSortType.RatingSortTypeSubjectType),
 								subjectType),
 				start, count, sortBy, this, sortDirection);
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.persistence.PersistenceService.
-	 * ISortable#map(java.lang.Enum) */
-	@Override
-	public String map (RatingSortType sortBy) {
-		String mapped = sortBy.toString();
-
-		if (sortBy == RatingSortType.RatingSortTypeBy) {
-			mapped += "Key";
-		}
-
-		return mapped;
 	}
 
 }
