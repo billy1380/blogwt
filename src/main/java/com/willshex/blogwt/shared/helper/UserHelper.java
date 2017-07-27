@@ -32,12 +32,21 @@ public class UserHelper {
 
 	/**
 	 * Returns email address as it is read eg. billy1380 @ server dot com
+	 * @param email
+	 * @return
+	 */
+	public static String emailDescription (String email) {
+		return email == null ? "empty"
+				: email.replace(".", " dot ").replace("@", " at ");
+	}
+
+	/**
+	 * Returns email address as it is read eg. billy1380 @ server dot com
 	 * @param user
 	 * @return
 	 */
 	public static String emailDescription (User user) {
-		return user.email == null ? "empty"
-				: user.email.replace(".", " dot ").replace("@", " at ");
+		return user == null ? "empty" : emailDescription(user.email);
 	}
 
 	public static User stripPassword (User user) {

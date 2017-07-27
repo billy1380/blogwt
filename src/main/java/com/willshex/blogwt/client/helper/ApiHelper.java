@@ -1,5 +1,5 @@
 //
-//  RemoteDataHelper.java
+//  ApiHelper.java
 //  blogwt
 //
 //  Created by billy1380 on 1 Aug 2013.

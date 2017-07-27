@@ -79,4 +79,9 @@ public class UiHelper {
 		note.getElement().setInnerHTML(error);
 		note.setVisible(true);
 	}
+
+	public static void removeError (HTMLPanel pnl, HTMLPanel note) {
+		pnl.removeStyleName(HAS_ERROR_STYLE);
+		note.setVisible(false);
+	}
 }

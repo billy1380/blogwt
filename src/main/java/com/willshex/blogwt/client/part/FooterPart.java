@@ -30,7 +30,7 @@ public class FooterPart extends Composite {
 	public interface FooterTemplates extends SafeHtmlTemplates {
 		FooterTemplates FOOTER_TEMPLATES = GWT.create(FooterTemplates.class);
 
-		@Template("Copyright &copy; <a href=\"{0}\" target=\"_blank\">{1}</a> {2}. All rights reserved - {3}.")
+		@Template("Copyright &copy; <a href=\"{0}\" target=\"_blank\" rel=\"noopener\">{1}</a> {2}. All rights reserved - {3}.")
 		SafeHtml copyrightNotice (SafeUri uri, String holder, String years,
 				String name);
 	}
@@ -71,12 +71,12 @@ public class FooterPart extends Composite {
 		if (one == null) {
 			one = new FooterPart();
 		}
-		
+
 		return one;
 	}
-	
-	public void scrollToTop() {
+
+	public void scrollToTop () {
 		btnBackToTop.go();
 	}
-	
+
 }

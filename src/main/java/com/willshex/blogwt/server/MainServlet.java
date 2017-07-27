@@ -10,6 +10,8 @@ package com.willshex.blogwt.server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +20,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.google.appengine.api.memcache.AsyncMemcacheService;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.google.appengine.api.urlfetch.HTTPRequest;
+import com.google.appengine.api.urlfetch.HTTPResponse;
+import com.google.appengine.api.urlfetch.URLFetchService;
+import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.page.PageMarkup;
@@ -50,6 +59,10 @@ public class MainServlet extends ContextAwareServlet {
 	private static final long serialVersionUID = 3007918530671674098L;
 
 	private static String PAGE_FORMAT = null;
+	private static final MemcacheService CACHE = MemcacheServiceFactory
+			.getMemcacheService();
+	private static final AsyncMemcacheService ASYNC_CACHE = MemcacheServiceFactory
+			.getAsyncMemcacheService();
 
 	//	private static final long TIMEOUT_MILLIS = 5000;
 	//	private static final long JS_TIMEOUT_MILLIS = 2000;
@@ -152,8 +165,12 @@ public class MainServlet extends ContextAwareServlet {
 					+ "<!-- End Google Analytics -->";
 		}
 
+		String css = css("https://fonts.googleapis.com/css?family=Noto+Sans")
+				+ "\n"
+				+ css("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css");
+
 		RESPONSE.get().getOutputStream()
-				.print(String.format(PAGE_FORMAT, googleAnalyticsSnippet,
+				.print(String.format(PAGE_FORMAT, googleAnalyticsSnippet, css,
 						rssLink, faviconLink, pageTitle,
 						scriptVariables.toString()));
 
@@ -303,8 +320,7 @@ public class MainServlet extends ContextAwareServlet {
 	 * @throws FailingHttpStatusCodeException 
 	 * 
 	 */
-	private void processStaticRequest ()
-			throws FailingHttpStatusCodeException, IOException {
+	private void processStaticRequest () throws IOException {
 		HttpServletRequest request = REQUEST.get();
 		String fragmentParameter = request.getParameter("_escaped_fragment_");
 
@@ -355,4 +371,53 @@ public class MainServlet extends ContextAwareServlet {
 	private Session slim (Session session) {
 		return new Session().expires(session.expires).user(session.user);
 	}
+
+	public static String css (String url) {
+		String css = (String) CACHE.get(url);
+
+		if (css == null) {
+			css = "";
+
+			try {
+				HTTPRequest request = new HTTPRequest(new URL(url),
+						HTTPMethod.GET);
+				URLFetchService client = URLFetchServiceFactory
+						.getURLFetchService();
+				HTTPResponse response = client.fetch(request);
+
+				byte[] responseBytes;
+				String responseText = null;
+
+				if ((responseBytes = response.getContent()) != null) {
+					responseText = new String(responseBytes, CHAR_ENCODING);
+				}
+
+				if (response.getResponseCode() >= 200
+						&& response.getResponseCode() < 300
+						&& responseText != null) {
+					css = "<style>" + fixRelativeUrls(responseText, url)
+							+ "</style>";
+					ASYNC_CACHE.put(url, css);
+				}
+			} catch (IOException ex) {
+				// could not get it on the server, let the browser sort it out
+				css = "<link rel=\"stylesheet\" href=\"" + url + "\">";
+			}
+		}
+
+		return css;
+	}
+
+	private static String fixRelativeUrls (String content, String url) {
+		java.util.Stack<String> p = pathStack(url);
+		p.pop();
+		return content.replace("url(.", "url(" + String.join("/", p) + "/.");
+	}
+
+	private static java.util.Stack<String> pathStack (String path) {
+		java.util.Stack<String> p = new java.util.Stack<>();
+		p.addAll(Arrays.asList(path.split("/")));
+		return p;
+	}
+
 }

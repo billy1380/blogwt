@@ -155,7 +155,7 @@ public class Processor extends MarkdownProcessor {
 				} else {
 					out.append(
 							" class=\"" + Resources.RES.styles().externalLink()
-									+ "\" target=\"_blank\" ");
+									+ "\" target=\"_blank\" rel=\"noopener\" ");
 				}
 			}
 		});

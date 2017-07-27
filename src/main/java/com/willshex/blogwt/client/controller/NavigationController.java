@@ -11,8 +11,6 @@ package com.willshex.blogwt.client.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -21,6 +19,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler.NavigationChangedEvent;
+import com.willshex.blogwt.client.gwt.RunAsync;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.blogwt.shared.page.Stack;
@@ -56,17 +55,11 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	public void createAsyncPage (final PageType pageType,
 			final NavigationChangedEvent event) {
-		GWT.runAsync(new RunAsyncCallback() {
-			public void onFailure (Throwable caught) {
-				GWT.log("Could not create page " + pageType, caught);
-			}
+		RunAsync.run( () -> {
+			pages.put(pageKeyForCache(pageType),
+					PageTypeHelper.createPage(pageType));
 
-			public void onSuccess () {
-				pages.put(pageKeyForCache(pageType),
-						PageTypeHelper.createPage(pageType));
-
-				attachPage(pageType, event);
-			}
+			attachPage(pageType, event);
 		});
 	}
 
