@@ -7,8 +7,8 @@
 //
 package com.willshex.blogwt.server.helper;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,9 +29,9 @@ import com.willshex.gson.web.service.client.HttpException;
  */
 public class RecaptchaHelper {
 
-	private static final Logger LOG = Logger.getLogger(RecaptchaHelper.class
-			.getName());
-	private static final Charset UTF8 = Charset.forName("UTF-8");
+	private static final Logger LOG = Logger
+			.getLogger(RecaptchaHelper.class.getName());
+
 	private static URLFetchService client = URLFetchServiceFactory
 			.getURLFetchService();
 
@@ -49,7 +49,7 @@ public class RecaptchaHelper {
 			HTTPHeader contentTypeHeader = new HTTPHeader("Content-Type",
 					"application/x-www-form-urlencoded");
 			request.setHeader(contentTypeHeader);
-			request.setPayload(requestData.getBytes(UTF8));
+			request.setPayload(requestData.getBytes(ServletHelper.UTF8));
 
 			String responseText = null;
 			HTTPResponse response = client.fetch(request);
@@ -79,7 +79,8 @@ public class RecaptchaHelper {
 		return isHuman;
 	}
 
-	private static String getResponseBody (HTTPResponse response) {
-		return new String(response.getContent(), UTF8);
+	private static String getResponseBody (HTTPResponse response)
+			throws UnsupportedEncodingException {
+		return new String(response.getContent(), ServletHelper.UTF8);
 	}
 }

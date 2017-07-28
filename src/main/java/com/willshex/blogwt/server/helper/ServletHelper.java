@@ -23,6 +23,8 @@ import com.willshex.server.ContextAwareServlet;
  */
 public class ServletHelper {
 
+	public static final String UTF8 = "UTF-8";
+
 	/**
 	 * @param request
 	 * @return

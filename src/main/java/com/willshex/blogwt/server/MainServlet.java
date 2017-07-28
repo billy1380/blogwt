@@ -10,8 +10,6 @@ package com.willshex.blogwt.server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -20,14 +18,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.memcache.AsyncMemcacheService;
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.api.urlfetch.HTTPRequest;
-import com.google.appengine.api.urlfetch.HTTPResponse;
-import com.google.appengine.api.urlfetch.URLFetchService;
-import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
+import com.willshex.blogwt.server.helper.InlineHelper;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.page.PageMarkup;
@@ -59,16 +50,11 @@ public class MainServlet extends ContextAwareServlet {
 	private static final long serialVersionUID = 3007918530671674098L;
 
 	private static String PAGE_FORMAT = null;
-	private static final MemcacheService CACHE = MemcacheServiceFactory
-			.getMemcacheService();
-	private static final AsyncMemcacheService ASYNC_CACHE = MemcacheServiceFactory
-			.getAsyncMemcacheService();
 
 	//	private static final long TIMEOUT_MILLIS = 5000;
 	//	private static final long JS_TIMEOUT_MILLIS = 2000;
 	//	private static final long PAGE_WAIT_MILLIS = 100;
 	//	private static final long MAX_LOOP_CHECKS = 2;
-	private static final String CHAR_ENCODING = "UTF-8";
 
 	private static final String RSS_LINK_FORMAT = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"%s\" href=\"/feed\" />";
 	private static final String FAVICON_FORMAT = "<link rel=\"icon\" href=\"%s\" type=\"image/x-icon\">";
@@ -165,9 +151,10 @@ public class MainServlet extends ContextAwareServlet {
 					+ "<!-- End Google Analytics -->";
 		}
 
-		String css = css("https://fonts.googleapis.com/css?family=Noto+Sans")
-				+ "\n"
-				+ css("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css");
+		String css = InlineHelper
+				.css("https://fonts.googleapis.com/css?family=Noto+Sans") + "\n"
+				+ InlineHelper.css(
+						"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css");
 
 		RESPONSE.get().getOutputStream()
 				.print(String.format(PAGE_FORMAT, googleAnalyticsSnippet, css,
@@ -329,9 +316,9 @@ public class MainServlet extends ContextAwareServlet {
 
 		HttpServletResponse response = RESPONSE.get();
 
-		response.setCharacterEncoding(CHAR_ENCODING);
+		response.setCharacterEncoding(ServletHelper.UTF8);
 		response.setHeader("Content-Type",
-				"text/html; charset=" + CHAR_ENCODING);
+				"text/html; charset=" + ServletHelper.UTF8);
 
 		if (p != null) {
 			response.getWriter().print(p.asString());
@@ -370,54 +357,6 @@ public class MainServlet extends ContextAwareServlet {
 
 	private Session slim (Session session) {
 		return new Session().expires(session.expires).user(session.user);
-	}
-
-	public static String css (String url) {
-		String css = (String) CACHE.get(url);
-
-		if (css == null) {
-			css = "";
-
-			try {
-				HTTPRequest request = new HTTPRequest(new URL(url),
-						HTTPMethod.GET);
-				URLFetchService client = URLFetchServiceFactory
-						.getURLFetchService();
-				HTTPResponse response = client.fetch(request);
-
-				byte[] responseBytes;
-				String responseText = null;
-
-				if ((responseBytes = response.getContent()) != null) {
-					responseText = new String(responseBytes, CHAR_ENCODING);
-				}
-
-				if (response.getResponseCode() >= 200
-						&& response.getResponseCode() < 300
-						&& responseText != null) {
-					css = "<style>" + fixRelativeUrls(responseText, url)
-							+ "</style>";
-					ASYNC_CACHE.put(url, css);
-				}
-			} catch (IOException ex) {
-				// could not get it on the server, let the browser sort it out
-				css = "<link rel=\"stylesheet\" href=\"" + url + "\">";
-			}
-		}
-
-		return css;
-	}
-
-	private static String fixRelativeUrls (String content, String url) {
-		java.util.Stack<String> p = pathStack(url);
-		p.pop();
-		return content.replace("url(.", "url(" + String.join("/", p) + "/.");
-	}
-
-	private static java.util.Stack<String> pathStack (String path) {
-		java.util.Stack<String> p = new java.util.Stack<>();
-		p.addAll(Arrays.asList(path.split("/")));
-		return p;
 	}
 
 }

@@ -9,7 +9,6 @@ package com.willshex.blogwt.server.helper;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,7 +41,6 @@ public class PushHelper {
 			.getLogger(PushHelper.class.getName());
 
 	private static final String PUSH_ENDPOINT = "https://fcm.googleapis.com/fcm/send";
-	private static final Charset UTF8 = Charset.forName("UTF-8");
 
 	public static void push (PushToken pushToken, String subject,
 			String content, Jsonable data) {
@@ -84,7 +82,7 @@ public class PushHelper {
 				String payloadString;
 				request.setPayload((payloadString = JsonUtils
 						.cleanJson(payload.toJson().toString()))
-								.getBytes(UTF8));
+								.getBytes(ServletHelper.UTF8));
 
 				URLFetchService client = URLFetchServiceFactory
 						.getURLFetchService();
@@ -98,7 +96,8 @@ public class PushHelper {
 				String responseText = null;
 
 				if ((responseBytes = response.getContent()) != null) {
-					responseText = new String(responseBytes, UTF8);
+					responseText = new String(responseBytes,
+							ServletHelper.UTF8);
 				}
 
 				if (response.getResponseCode() >= 200

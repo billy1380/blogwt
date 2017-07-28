@@ -12,6 +12,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.willshex.blogwt.client.controller.NavigationController;
+import com.willshex.blogwt.client.gwt.RunAsync;
 import com.willshex.blogwt.client.markdown.Processor;
 import com.willshex.blogwt.client.part.CookieNoticePart;
 import com.willshex.blogwt.client.part.FooterPart;
@@ -27,13 +28,13 @@ public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
 	public void onModuleLoad () {
 		super.onModuleLoad();
 
-		Processor.init(e -> start());
+		RunAsync.run(Blogwt.this::start);
 	}
 
 	private void start () {
 		History.addValueChangeHandler(NavigationController.get());
 		createContentAndPages();
-		History.fireCurrentHistoryState();
+		Processor.init(e -> History.fireCurrentHistoryState());
 	}
 
 	private void createContentAndPages () {
