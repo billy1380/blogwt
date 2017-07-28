@@ -8,7 +8,7 @@
 package com.willshex.blogwt.server.page;
 
 import java.io.IOException;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.markdown4j.server.IncludePlugin;
@@ -124,7 +124,7 @@ abstract class StaticTemplate implements PageMarkup {
 		markup.append("\" target=\"_blank\">");
 		markup.append(copyrightHolder);
 		markup.append("</a> ");
-		markup.append(Calendar.getInstance().get(Calendar.YEAR));
+		markup.append(LocalDateTime.now().getYear());
 		markup.append(". All rights reserved - ");
 		markup.append(title);
 		markup.append(".</div> </footer></div></div></body></html>");

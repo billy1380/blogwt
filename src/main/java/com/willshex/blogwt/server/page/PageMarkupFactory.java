@@ -40,7 +40,7 @@ public class PageMarkupFactory {
 			break;
 		}
 
-		return pageMarkup.canCreate() ? pageMarkup : POSTS;
+		return pageType != null && pageMarkup.canCreate() ? pageMarkup : POSTS;
 	}
 
 }
