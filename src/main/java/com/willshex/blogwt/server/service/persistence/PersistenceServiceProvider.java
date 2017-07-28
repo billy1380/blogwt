@@ -7,8 +7,11 @@
 //
 package com.willshex.blogwt.server.service.persistence;
 
+import javax.servlet.annotation.WebFilter;
+
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
+import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.impl.translate.Translators;
 import com.willshex.blogwt.server.service.persistence.translator.NotificationModeTypeTranslatorFactory;
@@ -38,6 +41,9 @@ import com.willshex.blogwt.shared.api.datatype.User;
  * 
  */
 public class PersistenceServiceProvider {
+
+	@WebFilter(filterName = "ObjectifyFilter", urlPatterns = "/*")
+	public static final class PersistenceFilter extends ObjectifyFilter {}
 
 	static {
 		Translators translators = factory().getTranslators();
