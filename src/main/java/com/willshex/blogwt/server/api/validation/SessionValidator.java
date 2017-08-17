@@ -42,9 +42,8 @@ public class SessionValidator extends ApiValidator {
 
 		if ((lookupSession.expires.getTime()
 				- now.getTime()) < ISessionService.MILLIS_MINUTES) {
-			lookupSession = SessionServiceProvider.provide().extendSession(
-					lookupSession,
-					Long.valueOf(ISessionService.MILLIS_MINUTES));
+			lookupSession = SessionServiceProvider.provide()
+					.extendSession(lookupSession);
 		}
 
 		return lookupSession;

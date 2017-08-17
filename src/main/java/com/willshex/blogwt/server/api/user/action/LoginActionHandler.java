@@ -90,8 +90,12 @@ public final class LoginActionHandler
 						input.longTerm);
 				UserServiceProvider.provide().updateUserIdLastLoggedIn(user.id);
 			} else {
-				output.session = SessionServiceProvider.provide().extendSession(
-						output.session, ISessionService.MILLIS_MINUTES);
+				if (input.longTerm != null) {
+					output.session.longTerm(input.longTerm);
+				}
+
+				output.session = SessionServiceProvider.provide()
+						.extendSession(output.session);
 				output.session.user = user;
 			}
 		} else {

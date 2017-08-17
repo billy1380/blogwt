@@ -18,6 +18,7 @@ import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.helper.DateTimeHelper;
 
 final class SessionService implements ISessionService {
 
@@ -45,8 +46,14 @@ final class SessionService implements ISessionService {
 
 		session.userKey = Key.create(session.user);
 
+		if (session.longTerm == null) {
+			session.longTerm = Boolean.FALSE;
+		}
+
 		if (session.expires == null) {
-			session.expires = afterMinutes();
+			session.expires = DateTimeHelper.millisFromNow(
+					Boolean.TRUE.equals(session.longTerm) ? MILLIS_DAYS
+							: MILLIS_MINUTES);
 		}
 
 		Key<Session> key = provide().save().entity(session).now();
@@ -65,22 +72,6 @@ final class SessionService implements ISessionService {
 		return session;
 	}
 
-	private Date afterMinutes () {
-		return afterMillis(MILLIS_MINUTES);
-	}
-
-	private Date afterDays () {
-		return afterMillis(MILLIS_DAYS);
-	}
-
-	private Date afterMillis (Long millis) {
-		return dateAfterMillis(new Date(), millis);
-	}
-
-	private Date dateAfterMillis (Date date, Long millis) {
-		return new Date(date.getTime() + millis.longValue());
-	}
-
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.services.session.ISessionService
@@ -97,10 +88,9 @@ final class SessionService implements ISessionService {
 	 * java.lang.Boolean) */
 	@Override
 	public Session createUserSession (User user, Boolean longTerm) {
-		return addSession(new Session().expires(
-				longTerm == null || !longTerm.booleanValue() ? afterMinutes()
-						: afterDays())
-				.user(user));
+		return addSession(new Session().expires(DateTimeHelper.millisFromNow(
+				Boolean.TRUE.equals(longTerm) ? MILLIS_DAYS : MILLIS_MINUTES))
+				.longTerm(longTerm).user(user));
 	}
 
 	/* (non-Javadoc)
@@ -120,18 +110,15 @@ final class SessionService implements ISessionService {
 		return session;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.session.ISessionService#extendSession
-	 * (com.willshex.blogwt.shared.api.datatype.Session, java.lang.Long) */
 	@Override
-	public Session extendSession (Session session, Long duration) {
-		if (duration == null) {
-			duration = MILLIS_MINUTES;
+	public Session extendSession (Session session) {
+		if (session.longTerm == null) {
+			session.longTerm = Boolean.FALSE;
 		}
 
-		session.expires = dateAfterMillis(new Date(), duration);
+		session.expires = DateTimeHelper.millisFromNow(
+				Boolean.TRUE.equals(session.longTerm) ? MILLIS_DAYS
+						: MILLIS_MINUTES);
 
 		updateSession(session);
 

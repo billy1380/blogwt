@@ -13,7 +13,7 @@ import com.willshex.service.IService;
 
 public interface ISessionService extends IService {
 	public static final String NAME = "blogwt.session";
-	
+
 	public static final long MILLIS_MINUTES = 20l * 60l * 1000l;
 	public static final long MILLIS_DAYS = 30l * 24l * 60l * 60l * 1000l;
 
@@ -21,24 +21,24 @@ public interface ISessionService extends IService {
 	 * @param id
 	 * @return
 	 */
-	public Session getSession(Long id);
+	public Session getSession (Long id);
 
 	/**
 	 * @param session
 	 * @return
 	 */
-	public Session addSession(Session session);
+	public Session addSession (Session session);
 
 	/**
 	 * @param session
 	 * @return
 	 */
-	public Session updateSession(Session session);
+	public Session updateSession (Session session);
 
 	/**
 	 * @param session
 	 */
-	public void deleteSession(Session session);
+	public void deleteSession (Session session);
 
 	/**
 	 * Create user session
@@ -47,7 +47,7 @@ public interface ISessionService extends IService {
 	 * @param longTerm
 	 * @return
 	 */
-	public Session createUserSession(User user, Boolean longTerm);
+	public Session createUserSession (User user, Boolean longTerm);
 
 	/**
 	 * Get user session
@@ -55,13 +55,12 @@ public interface ISessionService extends IService {
 	 * @param user
 	 * @return
 	 */
-	public Session getUserSession(User user);
+	public Session getUserSession (User user);
 
 	/**
 	 * @param session
-	 * @param duration in milliseconds
 	 * @return
 	 */
-	public Session extendSession(Session session, Long duration);
+	public Session extendSession (Session session);
 
 }

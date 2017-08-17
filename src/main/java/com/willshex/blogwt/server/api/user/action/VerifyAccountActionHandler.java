@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
-import com.willshex.blogwt.server.service.session.ISessionService;
 import com.willshex.blogwt.server.service.session.SessionServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.User;
@@ -68,8 +67,8 @@ public final class VerifyAccountActionHandler
 						"Unexpected blank session after creating user session.");
 			}
 		} else {
-			output.session = SessionServiceProvider.provide().extendSession(
-					output.session, ISessionService.MILLIS_MINUTES);
+			output.session = SessionServiceProvider.provide()
+					.extendSession(output.session);
 			output.session.user = user;
 		}
 	}

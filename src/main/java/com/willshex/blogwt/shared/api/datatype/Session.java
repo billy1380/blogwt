@@ -1,10 +1,10 @@
-//  
+// 
 //  Session.java
 //  blogwt
-//
+// 
 //  Created by William Shakour on May 11, 2015.
 //  Copyright © 2015 WillShex Limited. All rights reserved.
-//
+// 
 package com.willshex.blogwt.shared.api.datatype;
 
 import java.util.Date;
@@ -25,19 +25,24 @@ public class Session extends DataType {
 	public Date expires;
 	@Index public Key<User> userKey;
 	@Ignore public User user;
+	public Boolean longTerm;
 
 	@Override
-	public JsonObject toJson() {
+	public JsonObject toJson () {
 		JsonObject object = super.toJson();
-		JsonElement jsonExpires = expires == null ? JsonNull.INSTANCE : new JsonPrimitive(expires.getTime());
+		JsonElement jsonExpires = expires == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(expires.getTime());
 		object.add("expires", jsonExpires);
 		JsonElement jsonUser = user == null ? JsonNull.INSTANCE : user.toJson();
 		object.add("user", jsonUser);
+		JsonElement jsonLongTerm = longTerm == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(longTerm);
+		object.add("longTerm", jsonLongTerm);
 		return object;
 	}
 
 	@Override
-	public void fromJson(JsonObject jsonObject) {
+	public void fromJson (JsonObject jsonObject) {
 		super.fromJson(jsonObject);
 		if (jsonObject.has("expires")) {
 			JsonElement jsonExpires = jsonObject.get("expires");
@@ -52,15 +57,26 @@ public class Session extends DataType {
 				user.fromJson(jsonUser.getAsJsonObject());
 			}
 		}
+		if (jsonObject.has("longTerm")) {
+			JsonElement jsonLongTerm = jsonObject.get("longTerm");
+			if (jsonLongTerm != null) {
+				longTerm = Boolean.valueOf(jsonLongTerm.getAsBoolean());
+			}
+		}
 	}
 
-	public Session expires(Date expires) {
+	public Session expires (Date expires) {
 		this.expires = expires;
 		return this;
 	}
 
-	public Session user(User user) {
+	public Session user (User user) {
 		this.user = user;
+		return this;
+	}
+
+	public Session longTerm (Boolean longTerm) {
+		this.longTerm = longTerm;
 		return this;
 	}
 }
