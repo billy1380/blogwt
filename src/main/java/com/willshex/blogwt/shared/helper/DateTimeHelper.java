@@ -87,19 +87,32 @@ public class DateTimeHelper {
 				: ("for " + (diff / MILLIS_PER_DAY) + " days");
 	}
 
-	/**
-	 * @param minutes
-	 * @return
-	 */
 	public static Date minutesFromNow (int minutes) {
 		return minutesFrom(minutes, now());
 	}
 
 	public static Date minutesFrom (int minutes, Date from) {
-		return new Date(from.getTime() + ((long) minutes * MILLIS_PER_MIN));
+		return millisFrom((long) minutes * MILLIS_PER_MIN, from);
+	}
+
+	public static Date millisFromNow (long millis) {
+		return millisFrom(millis, now());
+	}
+
+	public static Date millisFrom (long millis, Date from) {
+		return new Date(from.getTime() + millis);
 	}
 
 	public static boolean isLessThanMinutesAway (Date date, int minutes) {
 		return date.getTime() < minutesFromNow(minutes).getTime();
 	}
+
+	public static Date daysFromNow (int days) {
+		return daysFrom(days, now());
+	}
+
+	public static Date daysFrom (int days, Date from) {
+		return millisFrom((long) days * MILLIS_PER_DAY, from);
+	}
+
 }

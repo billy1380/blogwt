@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.googlecode.objectify.Key;
 
@@ -22,6 +24,9 @@ import com.googlecode.objectify.Key;
  *
  */
 public class Batcher {
+
+	private static final Logger LOG = Logger.getLogger(Batcher.class.getName());
+
 	public static interface Has<T, U> {
 		Key<U> get (T t);
 
@@ -40,14 +45,23 @@ public class Batcher {
 			Map<Long, List<T>> lookup = new HashMap<>();
 			List<T> sub;
 			Long id;
+			Key<U> key;
 			for (T t : c) {
-				id = keyToId(h.get(t));
+				key = h.get(t);
 
-				if ((sub = lookup.get(id)) == null) {
-					lookup.put(id, sub = new ArrayList<>());
+				if (key == null) {
+					if (LOG.isLoggable(Level.FINE)) {
+						LOG.fine("Batch lookup for object found no key");
+					}
+				} else {
+					id = keyToId(key);
+
+					if ((sub = lookup.get(id)) == null) {
+						lookup.put(id, sub = new ArrayList<>());
+					}
+
+					sub.add(t);
 				}
-
-				sub.add(t);
 			}
 
 			List<U> us = b.get(lookup.keySet());

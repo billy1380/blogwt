@@ -1,5 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="com.willshex.blogwt.shared.helper.UserHelper.AVATAR_LARGE_SIZE" />
 	<ui:style>
 	
 	</ui:style>
@@ -7,7 +8,8 @@
 
 		<div class="row well">
 			<div class="col-sm-4">
-				<g:Image ui:field="imgAvatar" styleName="img-circle img-responsive center-block" />
+				<g:Image ui:field="imgAvatar" styleName="img-circle img-responsive center-block"
+					width="{AVATAR_LARGE_SIZE.toString}px" height="{AVATAR_LARGE_SIZE.toString}px" />
 				<h4 ui:field="elName" class="text-center" />
 				<p ui:field="elUsername" class="text-muted text-center" />
 			</div>

@@ -9,8 +9,8 @@
 	.parent {
 		position: relative;
 		overflow: hidden;
-		width: 160px;
-		height: 160px;
+		width: 128px;
+		height: 128px;
 		margin: auto;
 	}
 	
@@ -96,13 +96,14 @@
 							<g:HTMLPanel styleName="control-label small" ui:field="pnlEmailNote"
 								visible="false" />
 						</g:HTMLPanel>
-						
-						  <g:HTMLPanel ui:field="pnlSummary" styleName="form-group">
-                            <label class="control-label">Summary</label>
-                            <g:TextArea ui:field="txtSummary" styleName="form-control" visibleLines="4" />
-                            <g:HTMLPanel styleName="control-label small" ui:field="pnlSummaryNote"
-                                visible="false" />
-                        </g:HTMLPanel>
+
+						<g:HTMLPanel ui:field="pnlSummary" styleName="form-group">
+							<label class="control-label">Summary</label>
+							<g:TextArea ui:field="txtSummary" styleName="form-control"
+								visibleLines="4" />
+							<g:HTMLPanel styleName="control-label small" ui:field="pnlSummaryNote"
+								visible="false" />
+						</g:HTMLPanel>
 
 						<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary pull-right"
 							text="Update">

@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.shared.helper;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -355,28 +355,39 @@ public class PropertyHelper {
 	 */
 	public static List<Property> properties () {
 		if (properties == null) {
-			properties = Arrays.asList(createTitle(null),
-					createExtendedTitle(null), createCopyrightHolder(null),
-					createCopyrightUrl(null), createPasswordHashSalt(null),
-					createPostEnableEmoji(null),
-					createPostCommentsEnabled(null), createTitleInNavBar(null),
-					createMarkdownMapsApiKey(null), createDisqusId(null),
-					createRecaptchaApiKey(null),
-					createGoogleAnalyticsApiKey(null), createCategoryId(null),
-					createPostShareEnabled(null),
-					createMarkdownPrefechIncludes(null),
-					createPostShowAuthor(null),
-					createPostShowAuthorSummary(null),
-					createBlogHideEmptySidePanels(null),
-					createShortDescription(null), createShowSignIn(null),
-					createGenerateRssFeed(null), createSmallLogoUrl(null),
-					createLargeLogoUrl(null), createFooterShowVersion(null),
-					createAllowUserRegistration(null),
-					createNewUserPermissions(null), createNewUserRoles(null),
-					createEnableUserRelationships(null), createFaviconUrl(null),
-					createOutgoingEmail(null), createFirebaseApiKey(null),
-					createCookieDetailsPageSlug(null),
-					createRatingEnabled(null));
+			properties = new ArrayList<Property>();
+			properties.add(createTitle(null));
+			properties.add(createExtendedTitle(null));
+			properties.add(createCopyrightHolder(null));
+			properties.add(createCopyrightUrl(null));
+			properties.add(createPasswordHashSalt(null));
+			properties.add(createPostCommentsEnabled(null));
+			properties.add(createTitleInNavBar(null));
+			properties.add(createMarkdownMapsApiKey(null));
+			properties.add(createDisqusId(null));
+			properties.add(createRecaptchaApiKey(null));
+			properties.add(createGoogleAnalyticsApiKey(null));
+			properties.add(createCategoryId(null));
+			properties.add(createPostShareEnabled(null));
+			properties.add(createMarkdownPrefechIncludes(null));
+			properties.add(createPostShowAuthor(null));
+			properties.add(createPostShowAuthorSummary(null));
+			properties.add(createBlogHideEmptySidePanels(null));
+			properties.add(createShortDescription(null));
+			properties.add(createShowSignIn(null));
+			properties.add(createGenerateRssFeed(null));
+			properties.add(createSmallLogoUrl(null));
+			properties.add(createLargeLogoUrl(null));
+			properties.add(createFooterShowVersion(null));
+			properties.add(createAllowUserRegistration(null));
+			properties.add(createNewUserPermissions(null));
+			properties.add(createNewUserRoles(null));
+			properties.add(createEnableUserRelationships(null));
+			properties.add(createFaviconUrl(null));
+			properties.add(createOutgoingEmail(null));
+			properties.add(createFirebaseApiKey(null));
+			properties.add(createCookieDetailsPageSlug(null));
+			properties.add(createRatingEnabled(null));
 		}
 
 		return properties;
@@ -397,7 +408,7 @@ public class PropertyHelper {
 	public static boolean isSecretProperty (Property property) {
 		return PASSWORD_HASH_SALT.equals(property.name)
 				|| RECAPTCHA_API_KEY.equals(property.name)
-				|| PropertyHelper.FIREBASE_API_KEY.equals(property.name);
+				|| FIREBASE_API_KEY.equals(property.name);
 	}
 
 }

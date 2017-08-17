@@ -97,9 +97,9 @@ final class SessionService implements ISessionService {
 	 * java.lang.Boolean) */
 	@Override
 	public Session createUserSession (User user, Boolean longTerm) {
-		return addSession(new Session()
-				.expires(longTerm == null || !longTerm.booleanValue()
-						? afterMinutes() : afterDays())
+		return addSession(new Session().expires(
+				longTerm == null || !longTerm.booleanValue() ? afterMinutes()
+						: afterDays())
 				.user(user));
 	}
 
@@ -127,15 +127,11 @@ final class SessionService implements ISessionService {
 	 * (com.willshex.blogwt.shared.api.datatype.Session, java.lang.Long) */
 	@Override
 	public Session extendSession (Session session, Long duration) {
-		if (session.expires == null) {
-			session.expires = new Date();
-		}
-
 		if (duration == null) {
 			duration = MILLIS_MINUTES;
 		}
 
-		session.expires = dateAfterMillis(session.expires, duration);
+		session.expires = dateAfterMillis(new Date(), duration);
 
 		updateSession(session);
 
