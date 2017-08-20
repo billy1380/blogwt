@@ -41,7 +41,7 @@ public final class GetPagesActionHandler
 	protected void handle (GetPagesRequest input, GetPagesResponse output)
 			throws Exception {
 
-		ApiValidator.notNull(input, GetPagesRequest.class, "input");
+		ApiValidator.request(input, GetPagesRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

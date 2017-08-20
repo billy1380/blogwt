@@ -33,7 +33,7 @@ public final class DeleteResourceActionHandler
 	@Override
 	protected void handle (DeleteResourceRequest input,
 			DeleteResourceResponse output) throws Exception {
-		ApiValidator.notNull(input, DeleteResourceRequest.class, "input");
+		ApiValidator.request(input, DeleteResourceRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

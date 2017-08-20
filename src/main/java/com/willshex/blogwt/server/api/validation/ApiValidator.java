@@ -105,8 +105,7 @@ public class ApiValidator {
 
 	public static <R extends Request> R request (R input, Class<R> c)
 			throws InputValidationException {
-		if (input == null) throwServiceError(InputValidationException.class,
-				ApiError.InvalidValueNull, c.getSimpleName() + ": input");
+		notNull(input, c, "input");
 
 		return input;
 	}

@@ -35,7 +35,7 @@ public final class DeletePageActionHandler
 	@Override
 	protected void handle (DeletePageRequest input, DeletePageResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, DeletePageRequest.class, "input");
+		ApiValidator.request(input, DeletePageRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

@@ -29,7 +29,7 @@ public final class GetRelatedPostsActionHandler
 	@Override
 	protected void handle (GetRelatedPostsRequest input,
 			GetRelatedPostsResponse output) throws Exception {
-		ApiValidator.notNull(input, GetRelatedPostsRequest.class, "input");
+		ApiValidator.request(input, GetRelatedPostsRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

@@ -35,7 +35,7 @@ public final class GetNotificationsActionHandler extends
 	@Override
 	public void handle (GetNotificationsRequest input,
 			GetNotificationsResponse output) throws Exception {
-		ApiValidator.notNull(input, GetNotificationsRequest.class, "input");
+		ApiValidator.request(input, GetNotificationsRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

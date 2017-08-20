@@ -39,8 +39,7 @@ public final class GetRolesAndPermissionsActionHandler extends
 	@Override
 	protected void handle (GetRolesAndPermissionsRequest input,
 			GetRolesAndPermissionsResponse output) throws Exception {
-		ApiValidator.notNull(input, GetRolesAndPermissionsRequest.class,
-				"input");
+		ApiValidator.request(input, GetRolesAndPermissionsRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

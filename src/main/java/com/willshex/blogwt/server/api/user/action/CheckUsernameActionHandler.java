@@ -28,7 +28,7 @@ public final class CheckUsernameActionHandler
 	@Override
 	protected void handle (CheckUsernameRequest input,
 			CheckUsernameResponse output) throws Exception {
-		ApiValidator.notNull(input, CheckUsernameRequest.class, "input");
+		ApiValidator.request(input, CheckUsernameRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 	}

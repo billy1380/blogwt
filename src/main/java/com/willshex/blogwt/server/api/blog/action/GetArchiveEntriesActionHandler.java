@@ -29,7 +29,7 @@ public final class GetArchiveEntriesActionHandler extends
 	@Override
 	protected void handle (GetArchiveEntriesRequest input,
 			GetArchiveEntriesResponse output) throws Exception {
-		ApiValidator.notNull(input, GetArchiveEntriesRequest.class, "input");
+		ApiValidator.request(input, GetArchiveEntriesRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

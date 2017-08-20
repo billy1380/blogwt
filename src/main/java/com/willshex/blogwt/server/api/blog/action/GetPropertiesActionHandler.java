@@ -17,7 +17,6 @@ import com.willshex.blogwt.shared.api.blog.call.GetPropertiesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPropertiesResponse;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.PropertySortType;
-import com.willshex.blogwt.shared.api.user.call.GetUsersRequest;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
@@ -30,7 +29,7 @@ public final class GetPropertiesActionHandler
 	@Override
 	public void handle (GetPropertiesRequest input,
 			GetPropertiesResponse output) throws Exception {
-		ApiValidator.notNull(input, GetUsersRequest.class, "input");
+		ApiValidator.request(input, GetPropertiesRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		try {

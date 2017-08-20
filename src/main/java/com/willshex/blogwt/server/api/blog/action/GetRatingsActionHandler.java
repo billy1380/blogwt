@@ -57,7 +57,7 @@ public final class GetRatingsActionHandler
 	@Override
 	public void handle (GetRatingsRequest input, GetRatingsResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, GetRatingsRequest.class, "input");
+		ApiValidator.request(input, GetRatingsRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		if (input.session != null) {

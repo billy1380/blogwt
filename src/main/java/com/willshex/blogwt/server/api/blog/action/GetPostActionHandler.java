@@ -37,7 +37,7 @@ public final class GetPostActionHandler
 	@Override
 	protected void handle (GetPostRequest input, GetPostResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, GetPostRequest.class, "input");
+		ApiValidator.request(input, GetPostRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		if (input.session != null) {

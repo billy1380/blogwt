@@ -36,7 +36,7 @@ public final class ChangeUserDetailsActionHandler extends
 	@Override
 	protected void handle (ChangeUserDetailsRequest input,
 			ChangeUserDetailsResponse output) throws Exception {
-		ApiValidator.notNull(input, ChangeUserDetailsRequest.class, "input");
+		ApiValidator.request(input, ChangeUserDetailsRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

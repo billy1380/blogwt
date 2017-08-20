@@ -31,7 +31,7 @@ public final class GetEmailAvatarActionHandler
 	@Override
 	protected void handle (GetEmailAvatarRequest input,
 			GetEmailAvatarResponse output) throws Exception {
-		ApiValidator.notNull(input, GetEmailAvatarRequest.class, "input");
+		ApiValidator.request(input, GetEmailAvatarRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		if (input.session != null) {

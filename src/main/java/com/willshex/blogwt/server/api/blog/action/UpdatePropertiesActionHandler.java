@@ -36,7 +36,7 @@ public final class UpdatePropertiesActionHandler extends
 	@Override
 	protected void handle (UpdatePropertiesRequest input,
 			UpdatePropertiesResponse output) throws Exception {
-		ApiValidator.notNull(input, UpdatePropertiesRequest.class, "input");
+		ApiValidator.request(input, UpdatePropertiesRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

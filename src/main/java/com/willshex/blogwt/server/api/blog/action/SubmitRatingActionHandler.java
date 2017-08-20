@@ -29,7 +29,7 @@ public final class SubmitRatingActionHandler
 	@Override
 	protected void handle (SubmitRatingRequest input,
 			SubmitRatingResponse output) throws Exception {
-		ApiValidator.notNull(input, SubmitRatingRequest.class, "input");
+		ApiValidator.request(input, SubmitRatingRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

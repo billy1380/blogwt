@@ -30,7 +30,7 @@ public final class LogoutActionHandler
 	@Override
 	protected void handle (LogoutRequest input, LogoutResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, LogoutRequest.class, "input");
+		ApiValidator.request(input, LogoutRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		input.session = SessionValidator.lookup(input.session, "input.session");

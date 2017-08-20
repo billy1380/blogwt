@@ -29,7 +29,7 @@ public final class IsAuthorisedActionHandler
 	@Override
 	protected void handle (IsAuthorisedRequest input,
 			IsAuthorisedResponse output) throws Exception {
-		ApiValidator.notNull(input, IsAuthorisedRequest.class, "input");
+		ApiValidator.request(input, IsAuthorisedRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

@@ -34,7 +34,7 @@ public final class GetUserDetailsActionHandler
 	@Override
 	protected void handle (GetUserDetailsRequest input,
 			GetUserDetailsResponse output) throws Exception {
-		ApiValidator.notNull(input, GetUserDetailsRequest.class, "input");
+		ApiValidator.request(input, GetUserDetailsRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

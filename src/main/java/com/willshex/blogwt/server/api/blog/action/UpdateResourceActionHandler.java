@@ -36,7 +36,7 @@ public final class UpdateResourceActionHandler
 	@Override
 	protected void handle (UpdateResourceRequest input,
 			UpdateResourceResponse output) throws Exception {
-		ApiValidator.notNull(input, UpdateResourceRequest.class, "input");
+		ApiValidator.request(input, UpdateResourceRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

@@ -35,7 +35,7 @@ public final class GetPermissionsActionHandler
 	@Override
 	protected void handle (GetPermissionsRequest input,
 			GetPermissionsResponse output) throws Exception {
-		ApiValidator.notNull(input, GetPermissionsRequest.class, "input");
+		ApiValidator.request(input, GetPermissionsRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

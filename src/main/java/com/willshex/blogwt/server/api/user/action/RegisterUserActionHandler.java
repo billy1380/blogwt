@@ -47,7 +47,7 @@ public final class RegisterUserActionHandler
 	@Override
 	protected void handle (RegisterUserRequest input,
 			RegisterUserResponse output) throws Exception {
-		ApiValidator.notNull(input, RegisterUserRequest.class, "input");
+		ApiValidator.request(input, RegisterUserRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		if (input.session != null) {

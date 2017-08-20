@@ -36,7 +36,7 @@ public final class CreatePageActionHandler
 	@Override
 	protected void handle (CreatePageRequest input, CreatePageResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, CreatePageRequest.class, "input");
+		ApiValidator.request(input, CreatePageRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

@@ -27,7 +27,7 @@ public final class SetPushTokenActionHandler
 	@Override
 	public void handle (SetPushTokenRequest input, SetPushTokenResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, SetPushTokenRequest.class, "input");
+		ApiValidator.request(input, SetPushTokenRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

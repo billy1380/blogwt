@@ -39,7 +39,7 @@ public final class SubmitFormActionHandler
 	protected void handle (SubmitFormRequest input, SubmitFormResponse output)
 			throws Exception {
 		// send an email with the submitted fields
-		ApiValidator.notNull(input, SubmitFormRequest.class, "input");
+		ApiValidator.request(input, SubmitFormRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		if (input.session != null) {

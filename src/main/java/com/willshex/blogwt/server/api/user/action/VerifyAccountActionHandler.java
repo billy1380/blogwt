@@ -34,7 +34,7 @@ public final class VerifyAccountActionHandler
 	@Override
 	protected void handle (VerifyAccountRequest input,
 			VerifyAccountResponse output) throws Exception {
-		ApiValidator.notNull(input, VerifyAccountRequest.class, "input");
+		ApiValidator.request(input, VerifyAccountRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		ApiValidator.validateToken(input.actionCode, "input.actionCode");

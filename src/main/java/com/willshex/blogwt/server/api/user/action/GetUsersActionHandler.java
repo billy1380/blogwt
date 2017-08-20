@@ -53,7 +53,7 @@ public final class GetUsersActionHandler
 	@Override
 	protected void handle (GetUsersRequest input, GetUsersResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, GetUsersRequest.class, "input");
+		ApiValidator.request(input, GetUsersRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

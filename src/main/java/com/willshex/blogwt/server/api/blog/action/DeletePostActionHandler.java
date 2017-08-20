@@ -37,7 +37,7 @@ public final class DeletePostActionHandler
 	@Override
 	protected void handle (DeletePostRequest input, DeletePostResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, DeletePostRequest.class, "input");
+		ApiValidator.request(input, DeletePostRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

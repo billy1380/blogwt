@@ -44,7 +44,7 @@ public final class SetupBlogActionHandler
 	@Override
 	protected void handle (SetupBlogRequest input, SetupBlogResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, SetupBlogRequest.class, "input");
+		ApiValidator.request(input, SetupBlogRequest.class);
 
 		IPropertyService propertyService = PropertyServiceProvider.provide();
 		if (propertyService.getNamedProperty(PropertyHelper.TITLE) != null)

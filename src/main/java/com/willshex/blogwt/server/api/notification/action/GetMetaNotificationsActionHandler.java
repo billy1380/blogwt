@@ -31,7 +31,7 @@ public final class GetMetaNotificationsActionHandler extends
 	@Override
 	public void handle (GetMetaNotificationsRequest input,
 			GetMetaNotificationsResponse output) throws Exception {
-		ApiValidator.notNull(input, GetMetaNotificationsRequest.class, "input");
+		ApiValidator.request(input, GetMetaNotificationsRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

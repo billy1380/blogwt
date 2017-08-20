@@ -40,7 +40,7 @@ public final class CreatePostActionHandler
 	@Override
 	protected void handle (CreatePostRequest input, CreatePostResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, CreatePostRequest.class, "input");
+		ApiValidator.request(input, CreatePostRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

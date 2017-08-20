@@ -33,7 +33,7 @@ public final class ResetPasswordActionHandler
 	@Override
 	protected void handle (ResetPasswordRequest input,
 			ResetPasswordResponse output) throws Exception {
-		ApiValidator.notNull(input, ResetPasswordRequest.class, "input");
+		ApiValidator.request(input, ResetPasswordRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		if (input.session != null) {

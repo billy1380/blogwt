@@ -30,7 +30,7 @@ public final class GetResourceActionHandler
 	@Override
 	protected void handle (GetResourceRequest input, GetResourceResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, GetResourceRequest.class, "input");
+		ApiValidator.request(input, GetResourceRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

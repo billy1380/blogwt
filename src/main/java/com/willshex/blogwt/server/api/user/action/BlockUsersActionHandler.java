@@ -45,7 +45,7 @@ public final class BlockUsersActionHandler
 		PropertyValidator.ensureTrue(PropertyHelper.ALLOW_USER_REGISTRATION,
 				PropertyHelper.ENABLE_USER_RELATIONSHIPS);
 
-		ApiValidator.notNull(input, BlockUsersRequest.class, "input");
+		ApiValidator.request(input, BlockUsersRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

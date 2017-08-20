@@ -29,8 +29,7 @@ public final class SendAdhocNotificationActionHandler extends
 	@Override
 	public void handle (SendAdhocNotificationRequest input,
 			SendAdhocNotificationResponse output) throws Exception {
-		ApiValidator.notNull(input, SendAdhocNotificationRequest.class,
-				"input");
+		ApiValidator.request(input, SendAdhocNotificationRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");

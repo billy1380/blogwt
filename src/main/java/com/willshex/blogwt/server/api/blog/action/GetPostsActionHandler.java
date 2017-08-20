@@ -55,7 +55,7 @@ public final class GetPostsActionHandler
 	@Override
 	protected void handle (GetPostsRequest input, GetPostsResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, GetPostsRequest.class, "input");
+		ApiValidator.request(input, GetPostsRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		Boolean showAll = Boolean.TRUE.equals(input.showAll) ? Boolean.TRUE

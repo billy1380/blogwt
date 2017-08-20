@@ -29,7 +29,7 @@ public final class ForgotPasswordActionHandler
 	@Override
 	protected void handle (ForgotPasswordRequest input,
 			ForgotPasswordResponse output) throws Exception {
-		ApiValidator.notNull(input, ForgotPasswordRequest.class, "input");
+		ApiValidator.request(input, ForgotPasswordRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

@@ -39,7 +39,7 @@ public final class ChangeUserAccessActionHandler extends
 	@Override
 	protected void handle (ChangeUserAccessRequest input,
 			ChangeUserAccessResponse output) throws Exception {
-		ApiValidator.notNull(input, ChangeUserAccessRequest.class, "input");
+		ApiValidator.request(input, ChangeUserAccessRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		output.session = input.session = SessionValidator

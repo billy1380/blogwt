@@ -46,7 +46,7 @@ public final class SearchAllActionHandler
 	@Override
 	protected void handle (SearchAllRequest input, SearchAllResponse output)
 			throws Exception {
-		ApiValidator.notNull(input, SearchAllRequest.class, "input");
+		ApiValidator.request(input, SearchAllRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 		try {
 			output.session = input.session = SessionValidator

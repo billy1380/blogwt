@@ -34,7 +34,7 @@ public final class ChangePasswordActionHandler
 	@Override
 	protected void handle (ChangePasswordRequest input,
 			ChangePasswordResponse output) throws Exception {
-		ApiValidator.notNull(input, ChangePasswordRequest.class, "input");
+		ApiValidator.request(input, ChangePasswordRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 		ApiValidator.notNull(input.changedPassword, String.class,
