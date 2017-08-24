@@ -190,7 +190,8 @@ public class MainServlet extends ContextAwareServlet {
 		if (tags.size() >= 0) {
 			scriptVariables.append("var tags='[")
 					.append(String.join(",", tags.stream().map( (tag) -> {
-						PersistenceHelper.typeList(Post.class, tag.postKeys);
+						tag.posts = PersistenceHelper.typeList(Post.class,
+								tag.postKeys);
 						return jsonForJsVar(slim(tag));
 					}).collect(Collectors.toList()))).append("]';");
 		}
