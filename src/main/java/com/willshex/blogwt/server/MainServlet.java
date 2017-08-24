@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -170,27 +171,14 @@ public class MainServlet extends ContextAwareServlet {
 		List<Page> pages = PageServiceProvider.provide().getPages(Boolean.FALSE,
 				Integer.valueOf(0), null, PageSortType.PageSortTypePriority,
 				null);
-		if (pages != null) {
-			scriptVariables.append("var pages='[");
-
-			boolean first = true;
-			for (Page page : pages) {
-				if (first) {
-					first = false;
-				} else {
-					scriptVariables.append(",");
-				}
-
-				if (page.parentKey != null) {
-					page.parent = PersistenceHelper.type(Page.class,
-							page.parentKey);
-				}
-
-				scriptVariables.append(jsonForJsVar(slim(page)));
-			}
+		if (pages.size() >= 0) {
+			scriptVariables.append("var pages='[")
+					.append(String.join(",", pages.stream().map( (page) -> {
+						page.parent = PersistenceHelper.type(Page.class,
+								page.parentKey);
+						return jsonForJsVar(slim(page));
+					}).collect(Collectors.toList()))).append("]';");
 		}
-
-		scriptVariables.append("]';");
 	}
 
 	/**
@@ -200,24 +188,13 @@ public class MainServlet extends ContextAwareServlet {
 		List<Tag> tags = TagServiceProvider.provide().getTags();
 
 		if (tags.size() >= 0) {
-			scriptVariables.append("var tags='[");
-
-			boolean first = true;
-			for (Tag tag : tags) {
-				tag.posts = PersistenceHelper.typeList(Post.class,
-						tag.postKeys);
-
-				if (first) {
-					first = false;
-				} else {
-					scriptVariables.append(",");
-				}
-
-				scriptVariables.append(jsonForJsVar(slim(tag)));
-			}
-
-			scriptVariables.append("]';");
+			scriptVariables.append("var tags='[")
+					.append(String.join(",", tags.stream().map( (tag) -> {
+						PersistenceHelper.typeList(Post.class, tag.postKeys);
+						return jsonForJsVar(slim(tag));
+					}).collect(Collectors.toList()))).append("]';");
 		}
+
 	}
 
 	/**
@@ -228,23 +205,12 @@ public class MainServlet extends ContextAwareServlet {
 				.provide().getArchiveEntries();
 
 		if (archiveEntries.size() >= 0) {
-			scriptVariables.append("var archiveEntries='[");
-
-			boolean first = true;
-			for (ArchiveEntry archiveEntry : archiveEntries) {
-				archiveEntry.posts = PersistenceHelper.typeList(Post.class,
-						archiveEntry.postKeys);
-
-				if (first) {
-					first = false;
-				} else {
-					scriptVariables.append(",");
-				}
-
-				scriptVariables.append(jsonForJsVar(slim(archiveEntry)));
-			}
-
-			scriptVariables.append("]';");
+			scriptVariables.append("var archiveEntries='[").append(String
+					.join(",", archiveEntries.stream().map( (archiveEntry) -> {
+						archiveEntry.posts = PersistenceHelper
+								.typeList(Post.class, archiveEntry.postKeys);
+						return jsonForJsVar(slim(archiveEntry));
+					}).collect(Collectors.toList()))).append("]';");
 		}
 	}
 
@@ -257,22 +223,13 @@ public class MainServlet extends ContextAwareServlet {
 				.getProperties(0, 10000, null, null);
 
 		if (properties.size() >= 0) {
-			scriptVariables.append("var properties='[");
-
-			boolean first = true;
-			for (Property property : properties) {
-				if (PropertyHelper.isSecretProperty(property)) continue;
-
-				if (first) {
-					first = false;
-				} else {
-					scriptVariables.append(",");
-				}
-
-				scriptVariables.append(jsonForJsVar(slim(property)));
-			}
-
-			scriptVariables.append("]';");
+			scriptVariables.append("var properties='[")
+					.append(String.join(", ", properties.stream()
+							.filter( (property) -> !PropertyHelper
+									.isSecretProperty(property))
+							.map( (property) -> jsonForJsVar(slim(property)))
+							.collect(Collectors.toList())))
+					.append("]';");
 		}
 
 		return properties;
