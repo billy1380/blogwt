@@ -68,6 +68,8 @@ public class StyledImageCell extends AbstractCell<String> {
 				sb.appendHtmlConstant("\" ");
 			}
 
+			sb.appendHtmlConstant("style=\"object-fit: cover;\" ");
+
 			if (width != null) {
 				sb.appendHtmlConstant("width=\"");
 				sb.appendEscaped(width.toString());
@@ -86,5 +88,15 @@ public class StyledImageCell extends AbstractCell<String> {
 			sb.append(SafeHtmlUtils.fromString(value));
 			sb.appendHtmlConstant("\">");
 		}
+	}
+
+	public StyledImageCell width (double value) {
+		width = Double.valueOf(value);
+		return this;
+	}
+
+	public StyledImageCell height (double value) {
+		height = Double.valueOf(value);
+		return this;
 	}
 }
