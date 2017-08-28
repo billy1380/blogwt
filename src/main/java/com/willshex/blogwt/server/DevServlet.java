@@ -8,6 +8,7 @@
 package com.willshex.blogwt.server;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -40,6 +41,7 @@ import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.Role;
+import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.MetaNotificationHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
@@ -171,6 +173,13 @@ public class DevServlet extends ContextAwareServlet {
 							+ "] already exists");
 				}
 			}
+		} else if ("admin".equals(action)) {
+			User user = UserServiceProvider.provide()
+					.getUsernameUser(REQUEST.get().getParameter("user"));
+			UserServiceProvider.provide().addUserRolesAndPermissions(user,
+					Arrays.asList(RoleServiceProvider.provide()
+							.getCodeRole(RoleHelper.ADMIN)),
+					null);
 		}
 	}
 }
