@@ -68,4 +68,11 @@ public interface IPropertyService
 	public List<Property> getProperties (Integer start, Integer count,
 			PropertySortType sortBy, SortDirectionType sortDirection);
 
+	/**
+	 * Get value properties
+	 * @param string
+	 * @return
+	 */
+	public List<Property> getValueProperties (String value);
+
 }

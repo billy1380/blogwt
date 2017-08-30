@@ -173,7 +173,8 @@ public class PropertyController extends ListDataProvider<Property> {
 	 * @return
 	 */
 	public String stringProperty (String name) {
-		return PropertyHelper.value(propertyLookup.get(name));
+		return name == null ? null
+				: PropertyHelper.value(propertyLookup.get(name));
 	}
 
 	public boolean updateProperties (Collection<Property> properties) {
