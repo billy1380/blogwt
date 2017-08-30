@@ -157,10 +157,10 @@ public class MainServlet extends ContextAwareServlet {
 				+ InlineHelper.css(
 						"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css");
 
-		RESPONSE.get().getOutputStream()
-				.print(String.format(PAGE_FORMAT, googleAnalyticsSnippet, css,
-						rssLink, faviconLink, pageTitle,
-						scriptVariables.toString()));
+		RESPONSE.get().getOutputStream().write(String
+				.format(PAGE_FORMAT, googleAnalyticsSnippet, css, rssLink,
+						faviconLink, pageTitle, scriptVariables.toString())
+				.getBytes());
 
 	}
 
@@ -279,7 +279,7 @@ public class MainServlet extends ContextAwareServlet {
 				"text/html; charset=" + ServletHelper.UTF8);
 
 		if (p != null) {
-			response.getWriter().print(p.asString());
+			response.getOutputStream().write(p.asString().getBytes());
 		}
 	}
 
