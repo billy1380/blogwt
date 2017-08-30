@@ -8,11 +8,14 @@
 package com.willshex.blogwt.shared.helper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 
 /**
@@ -42,8 +45,15 @@ public class RoleHelper {
 		return lookup;
 	}
 
-	public static Role createFull (String code, String name, String description) {
-		return new Role().code(code).name(name).description(description);
+	public static Role createFull (String code, String name, String description,
+			String... permissionCodes) {
+		return new Role().code(code).name(name).description(description)
+				.permissions(
+						permissionCodes == null || permissionCodes.length == 0
+								? null
+								: Arrays.stream(permissionCodes)
+										.map(i -> new Permission().code(i))
+										.collect(Collectors.toList()));
 	}
 
 	public static Role create (String code) {

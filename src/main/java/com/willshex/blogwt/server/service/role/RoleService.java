@@ -21,6 +21,7 @@ import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.shared.api.SortDirectionType;
+import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.RoleSortType;
 
@@ -53,6 +54,14 @@ final class RoleService implements IRoleService {
 
 	@Override
 	public Role updateRole (Role role) {
+		if (role.permissions != null) {
+			role.permissionKeys = new ArrayList<>();
+
+			for (Permission permission : role.permissions) {
+				role.permissionKeys.add(Key.create(permission));
+			}
+		}
+
 		provide().save().entity(role).now();
 		return role;
 	}
