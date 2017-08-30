@@ -13,10 +13,11 @@ import java.util.List;
  * @author billy1380
  * 
  */
+@FunctionalInterface
 public interface PagePlanFinishedHandler {
 
-	void onfinished(List<WizardPage<?>> pages);
-	
-	void onCancelled();
+	void onfinished (List<WizardPage<?>> pages);
+
+	default void onCancelled () {};
 
 }
