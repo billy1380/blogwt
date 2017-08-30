@@ -90,7 +90,7 @@ public class SearchHelper {
 	}
 
 	public static void deleteSearch (String documentId) {
-		deleteSearch(ALL_INDEX_NAME);
+		deleteSearch(ALL_INDEX_NAME, documentId);
 	}
 
 	public static void deleteSearch (String name, String documentId) {
