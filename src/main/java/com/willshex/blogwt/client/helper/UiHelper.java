@@ -11,6 +11,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -83,5 +84,23 @@ public class UiHelper {
 	public static void removeError (HTMLPanel pnl, HTMLPanel note) {
 		pnl.removeStyleName(HAS_ERROR_STYLE);
 		note.setVisible(false);
+	}
+
+	public static <E extends Enum<E>> void add (ListBox cboPosition,
+			Class<E> e) {
+
+		for (E v : e.getEnumConstants()) {
+			cboPosition.addItem(v.toString());
+		}
+	}
+
+	public static <E extends Enum<E>> void select (ListBox cbo, E value) {
+		int count = cbo.getItemCount();
+		for (int i = 0; i < count; i++) {
+			if (cbo.getItemText(i).equals(value.toString())) {
+				cbo.setSelectedIndex(i);
+				break;
+			}
+		}
 	}
 }
