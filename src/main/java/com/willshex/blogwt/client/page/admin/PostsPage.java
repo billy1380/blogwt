@@ -7,9 +7,7 @@
 //
 package com.willshex.blogwt.client.page.admin;
 
-import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -19,22 +17,22 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.willshex.blogwt.client.part.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.event.DeletePostEventHandler;
-import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.controller.PostController;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
+import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.admin.PagesPage.PagesPageTemplates;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
+import com.willshex.blogwt.client.part.SimplePager;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostResponse;
 import com.willshex.blogwt.shared.api.datatype.Post;
@@ -62,9 +60,6 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 	@UiField NoneFoundPanel pnlNoPosts;
 	@UiField Button btnRefresh;
 	@UiField LoadingPanel pnlLoading;
-	
-	private static final SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
-	private static final ButtonCell actionButtonPrototype = new PrettyButtonCell();
 
 	public PostsPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -77,7 +72,7 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 
 	private void createColumns () {
 		Column<Post, SafeHtml> title = new Column<Post, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 
 			@Override
 			public SafeHtml getValue (Post object) {
@@ -106,7 +101,7 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 		};
 
 		Column<Post, SafeHtml> published = new Column<Post, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 
 			@Override
 			public SafeHtml getValue (Post object) {
@@ -118,7 +113,7 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 		};
 
 		Column<Post, SafeHtml> listed = new Column<Post, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 
 			@Override
 			public SafeHtml getValue (Post object) {
@@ -129,7 +124,7 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 		};
 
 		Column<Post, SafeHtml> commentsEnabled = new Column<Post, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 
 			@Override
 			public SafeHtml getValue (Post object) {
@@ -140,17 +135,17 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 		};
 
 		Column<Post, SafeHtml> edit = new Column<Post, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 
 			@Override
 			public SafeHtml getValue (Post object) {
-				return PagesPageTemplates.INSTANCE.edit(PageTypeHelper
+				return UiHelper.TEMPLATES.xsEdit(PageTypeHelper
 						.asHref(PageType.EditPostPageType, object.slug));
 			}
 		};
 
 		Column<Post, String> delete = new Column<Post, String>(
-				actionButtonPrototype) {
+				UiHelper.ACTION_PROTOTYPE) {
 
 			@Override
 			public String getValue (Post object) {

@@ -45,8 +45,8 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 	private static ImagePropertyPartUiBinder uiBinder = GWT
 			.create(ImagePropertyPartUiBinder.class);
 
-	interface ImagePropertyPartUiBinder extends
-			UiBinder<Widget, ImagePropertyPart> {}
+	interface ImagePropertyPartUiBinder
+			extends UiBinder<Widget, ImagePropertyPart> {}
 
 	@UiField Element elDescription;
 	@UiField Element elName;
@@ -96,8 +96,8 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 
 						for (String url : uploader.getServerMessage()
 								.getUploadedFileUrls()) {
-							resource.data = url
-									.replace(ApiHelper.BASE_URL, "/");
+							resource.data = url.replace(ApiHelper.BASE_URL,
+									"/");
 							break;
 						}
 
@@ -120,7 +120,7 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 		uplDragAndDrop.setStatusWidget(new BaseUploadStatus());
 
 		btnClear.getElement().setInnerHTML(
-				"<span class=\"glyphicon glyphicon-remove\"><span>");
+				"<span class=\"glyphicon glyphicon-remove\"></span>");
 	}
 
 	private Map<String, Resource> ensureResources () {

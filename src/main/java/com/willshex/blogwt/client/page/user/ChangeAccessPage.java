@@ -7,9 +7,7 @@
 //
 package com.willshex.blogwt.client.page.user;
 
-import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
@@ -26,13 +24,13 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.user.event.ChangeUserAccessEventHandler;
-import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.PermissionController;
 import com.willshex.blogwt.client.controller.RoleController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.BootstrapGwtSuggestBox;
@@ -82,8 +80,6 @@ public class ChangeAccessPage extends Page
 	@UiField LoadingPanel pnlPermissionsLoading;
 
 	private User user;
-	private SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
-	private ButtonCell actionButtonPrototype = new PrettyButtonCell();
 
 	public ChangeAccessPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -104,7 +100,7 @@ public class ChangeAccessPage extends Page
 
 	private void createRoleColumns () {
 		Column<Role, SafeHtml> code = new Column<Role, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 
 			@Override
 			public SafeHtml getValue (Role object) {
@@ -121,7 +117,7 @@ public class ChangeAccessPage extends Page
 		};
 
 		Column<Role, String> delete = new Column<Role, String>(
-				actionButtonPrototype) {
+				UiHelper.ACTION_PROTOTYPE) {
 
 			@Override
 			public String getValue (Role object) {
@@ -147,7 +143,7 @@ public class ChangeAccessPage extends Page
 
 	private void createPermissionColumns () {
 		Column<Permission, SafeHtml> code = new Column<Permission, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 
 			@Override
 			public SafeHtml getValue (Permission object) {
@@ -164,7 +160,7 @@ public class ChangeAccessPage extends Page
 		};
 
 		Column<Permission, String> delete = new Column<Permission, String>(
-				actionButtonPrototype) {
+				UiHelper.ACTION_PROTOTYPE) {
 
 			@Override
 			public String getValue (Permission object) {

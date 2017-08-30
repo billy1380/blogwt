@@ -7,36 +7,31 @@
 //
 package com.willshex.blogwt.client.page.admin;
 
-import com.google.gwt.cell.client.ButtonCell;
-import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.willshex.blogwt.client.part.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.user.event.ChangeUserAccessEventHandler;
-import com.willshex.blogwt.client.cell.PrettyButtonCell;
-import com.willshex.blogwt.client.cell.StyledImageCell;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
+import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
+import com.willshex.blogwt.client.part.SimplePager;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
@@ -66,10 +61,6 @@ public class UsersPage extends Page implements ChangeUserAccessEventHandler {
 		SafeHtml emailLink (String email, String emailDescription);
 	}
 
-	private static final StyledImageCell imagePrototype = new StyledImageCell();
-	private static final Cell<SafeHtml> safeHtmlPrototype = new SafeHtmlCell();
-	private static final ButtonCell actionButtonPrototype = new PrettyButtonCell();
-
 	@UiField(provided = true) CellTable<User> tblUsers = new CellTable<User>(
 			PagerHelper.DEFAULT_COUNT.intValue(),
 			BootstrapGwtCellTable.INSTANCE);
@@ -81,7 +72,6 @@ public class UsersPage extends Page implements ChangeUserAccessEventHandler {
 	public UsersPage () {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		imagePrototype.addClassName("img-rounded");
 		createColumns();
 
 		tblUsers.setEmptyTableWidget(pnlNoUsers);
@@ -94,7 +84,8 @@ public class UsersPage extends Page implements ChangeUserAccessEventHandler {
 	 * create columns
 	 */
 	private void createColumns () {
-		Column<User, String> avatar = new Column<User, String>(imagePrototype) {
+		Column<User, String> avatar = new Column<User, String>(
+				UiHelper.IMAGE_PROTOTYPE) {
 
 			@Override
 			public String getValue (User object) {
@@ -119,7 +110,7 @@ public class UsersPage extends Page implements ChangeUserAccessEventHandler {
 		};
 
 		Column<User, SafeHtml> email = new Column<User, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 			@Override
 			public SafeHtml getValue (User object) {
 				return UsersPageTemplates.INSTANCE.emailLink(object.email,
@@ -135,22 +126,18 @@ public class UsersPage extends Page implements ChangeUserAccessEventHandler {
 		};
 
 		Column<User, SafeHtml> edit = new Column<User, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 			@Override
 			public SafeHtml getValue (User object) {
-				return SafeHtmlUtils.fromSafeConstant(
-						"<a class=\"btn btn-default btn-xs\" href=\""
-								+ PageTypeHelper
-										.asHref(PageType.ChangeDetailsPageType,
-												"id", object.id.toString())
-										.asString()
-								+ "\" ><span class=\"glyphicon glyphicon-edit\"></span> edit<a>");
+				return UiHelper.TEMPLATES.xsEdit(
+						PageTypeHelper.asHref(PageType.ChangeDetailsPageType,
+								"id", object.id.toString()));
 			}
 		};
 		tblUsers.setColumnWidth(edit, 1.0, Unit.PX);
 
 		Column<User, String> suspend = new Column<User, String>(
-				actionButtonPrototype) {
+				UiHelper.ACTION_PROTOTYPE) {
 			@Override
 			public String getValue (User object) {
 				return UserHelper.isSuspended(object) ? "unsuspend" : "suspend";
@@ -174,7 +161,7 @@ public class UsersPage extends Page implements ChangeUserAccessEventHandler {
 		tblUsers.setColumnWidth(suspend, 1.0, Unit.PX);
 
 		Column<User, String> admin = new Column<User, String>(
-				actionButtonPrototype) {
+				UiHelper.ACTION_PROTOTYPE) {
 			@Override
 			public String getValue (User object) {
 				return "admin";

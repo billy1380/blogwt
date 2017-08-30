@@ -7,9 +7,7 @@
 //
 package com.willshex.blogwt.client.page.admin;
 
-import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
@@ -21,19 +19,19 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.willshex.blogwt.client.part.SimplePager;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.page.event.DeletePageEventHandler;
-import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
+import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
+import com.willshex.blogwt.client.part.SimplePager;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
 import com.willshex.blogwt.shared.api.page.call.DeletePageResponse;
@@ -63,14 +61,11 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 	@UiField Button btnRefresh;
 	@UiField LoadingPanel pnlLoading;
 
-	private static final SafeHtmlCell safeHtmlPrototype = new SafeHtmlCell();
-	private static final ButtonCell actionButtonPrototype = new PrettyButtonCell();
-
 	public interface PagesPageTemplates extends SafeHtmlTemplates {
 		public PagesPageTemplates INSTANCE = GWT
 				.create(PagesPageTemplates.class);
 
-		@Template("<a href=\"{0}\">{1}<a>")
+		@Template("<a href=\"{0}\">{1}</a>")
 		SafeHtml title (SafeUri slug, SafeHtml title);
 
 		@Template("<span class=\"glyphicon glyphicon-ok\"></span>")
@@ -78,9 +73,6 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 
 		@Template("<span class=\"glyphicon glyphicon-remove\"></span>")
 		SafeHtml no ();
-
-		@Template("<a class=\"btn btn-default btn-xs\" href=\"{0}\" ><span class=\"glyphicon glyphicon-edit\"></span> edit<a>")
-		SafeHtml edit (SafeUri href);
 
 	}
 
@@ -108,7 +100,7 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 
 	private void createColumns () {
 		Column<Page, SafeHtml> title = new Column<Page, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 
 			@Override
 			public SafeHtml getValue (Page object) {
@@ -127,7 +119,7 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 		};
 
 		Column<Page, SafeHtml> hasChildren = new Column<Page, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 
 			@Override
 			public SafeHtml getValue (Page object) {
@@ -139,7 +131,7 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 		};
 
 		Column<Page, SafeHtml> isInHeader = new Column<Page, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 
 			@Override
 			public SafeHtml getValue (Page object) {
@@ -167,17 +159,17 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 		};
 
 		Column<Page, SafeHtml> edit = new Column<Page, SafeHtml>(
-				safeHtmlPrototype) {
+				UiHelper.SAFE_HTML_PROTOTYPE) {
 
 			@Override
 			public SafeHtml getValue (Page object) {
-				return PagesPageTemplates.INSTANCE.edit(PageTypeHelper
+				return UiHelper.TEMPLATES.xsEdit(PageTypeHelper
 						.asHref(PageType.EditPagePageType, object.slug));
 			}
 		};
 
 		Column<Page, String> delete = new Column<Page, String>(
-				actionButtonPrototype) {
+				UiHelper.ACTION_PROTOTYPE) {
 
 			@Override
 			public String getValue (Page object) {

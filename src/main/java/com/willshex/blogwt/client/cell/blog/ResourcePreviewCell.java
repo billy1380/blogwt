@@ -17,12 +17,12 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiRenderer;
 import com.google.gwt.user.client.Window;
 import com.willshex.blogwt.client.controller.ResourceController;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
+import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.page.PageType;
 
@@ -38,7 +38,8 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 
 	interface ResourcePreviewCellRenderer extends UiRenderer {
 		void render (SafeHtmlBuilder sb, SafeHtml preview, SafeHtml download,
-				String name, String description, SafeHtml edit, SafeHtml delete);
+				String name, String description, SafeHtml edit,
+				SafeHtml delete);
 
 		void onBrowserEvent (ResourcePreviewCell resourcePreviewCell,
 				NativeEvent event, Element parent, Resource value);
@@ -53,9 +54,6 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 		@Template("<img class=\"img-rounded img-responsive center-block\" src=\"/upload?blob-key={0}\" alt=\"{1}\" title=\"{1}\">")
 		SafeHtml image (String key, String title);
 
-		@Template("<a class=\"btn btn-default\" href=\"{0}\" ><span class=\"glyphicon glyphicon-edit\"></span> edit</a>")
-		SafeHtml edit (SafeUri href);
-
 		@Template("<span class=\"glyphicon glyphicon-trash\"></span>")
 		SafeHtml delete ();
 	}
@@ -64,9 +62,8 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 			.create(ResourcePreviewCellRenderer.class);
 
 	@Override
-	public void onBrowserEvent (Context context, Element parent,
-			Resource value, NativeEvent event,
-			ValueUpdater<Resource> valueUpdater) {
+	public void onBrowserEvent (Context context, Element parent, Resource value,
+			NativeEvent event, ValueUpdater<Resource> valueUpdater) {
 		RENDERER.onBrowserEvent(this, event, parent, value);
 	}
 
@@ -80,13 +77,15 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 	public void render (com.google.gwt.cell.client.Cell.Context context,
 			Resource value, SafeHtmlBuilder sb) {
 
-		RENDERER.render(sb, Templates.INSTANCE.image(value.data.substring(5),
-				value.name), Templates.INSTANCE.download(
-				value.data.substring(5), value.name, value.data), value.name,
-				value.description, Templates.INSTANCE.edit(PageTypeHelper
-						.asHref(PageType.EditResourcePageType, "id",
-								value.id.toString())), Templates.INSTANCE
-						.delete());
+		RENDERER.render(sb,
+				Templates.INSTANCE.image(value.data.substring(5), value.name),
+				Templates.INSTANCE.download(
+						value.data.substring(5), value.name, value.data),
+				value.name, value.description,
+				UiHelper.TEMPLATES.edit(
+						PageTypeHelper.asHref(PageType.EditResourcePageType,
+								"id", value.id.toString())),
+				Templates.INSTANCE.delete());
 	}
 
 	@UiHandler("btnDelete")
