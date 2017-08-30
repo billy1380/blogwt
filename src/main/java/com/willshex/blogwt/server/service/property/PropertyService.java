@@ -105,4 +105,14 @@ final class PropertyService implements IPropertyService {
 				this, sortDirection);
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.property.IPropertyService#
+	 * getValueProperties(java.lang.String) */
+	@Override
+	public List<Property> getValueProperties (String value) {
+		return load().filter(map(PropertySortType.PropertySortTypeValue), value)
+				.list();
+	}
+
 }
