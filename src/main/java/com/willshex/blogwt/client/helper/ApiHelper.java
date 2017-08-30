@@ -30,7 +30,8 @@ import com.willshex.gson.web.service.shared.Error;
 public class ApiHelper {
 
 	public static final String ACCESS_CODE = "2bfe5f0e-9138-401c-8619-9a66f6367c9a";
-	public static final String BASE_URL = "//" + getHost() + "/";
+	public static final String HOST = getHost();
+	public static final String BASE_URL = "//" + HOST + "/";
 	public static final String BLOG_END_POINT = BASE_URL + "blog";
 	public static final String USER_END_POINT = BASE_URL + "user";
 	public static final String PAGE_END_POINT = BASE_URL + "page";
