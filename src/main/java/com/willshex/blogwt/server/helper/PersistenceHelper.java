@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Id;
@@ -22,6 +23,7 @@ import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter;
 import com.willshex.blogwt.shared.api.SortDirectionType;
+import com.willshex.blogwt.shared.api.datatype.DataType;
 
 /**
  * @author William Shakour (billy1380)
@@ -37,7 +39,7 @@ public class PersistenceHelper {
 		return Key.create(kindClass, id.longValue());
 	}
 
-	public static <T> List<Long> keysToIds (Collection<Key<T>> keys) {
+	public static <T> List<Long> keysToIds (Iterable<Key<T>> keys) {
 		List<Long> collection = null;
 		if (keys != null) {
 			collection = new ArrayList<Long>();
@@ -88,7 +90,7 @@ public class PersistenceHelper {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> typeList (Class<T> t, Collection<?> ids) {
+	public static <T> List<T> typeList (Class<T> t, Iterable<?> ids) {
 		List<T> list = null;
 
 		if (ids != null) {
@@ -137,15 +139,14 @@ public class PersistenceHelper {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <LS, T> List<LS> typeCollectionToIds (
-			Collection<T> collection) {
+	public static <LS, T> List<LS> typeCollectionToIds (Iterable<T> iterable) {
 		List<LS> ids = null;
 
-		if (collection != null && collection.size() > 0) {
+		if (iterable != null && iterable.iterator().hasNext()) {
 			ids = new ArrayList<>();
-			Field f = key(collection.iterator().next().getClass());
+			Field f = key(iterable.iterator().next().getClass());
 
-			for (T type : collection) {
+			for (T type : iterable) {
 				try {
 					ids.add((LS) f.get(type));
 				} catch (IllegalArgumentException | IllegalAccessException e) {
@@ -264,11 +265,25 @@ public class PersistenceHelper {
 		return id;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <S, T> S id (T t) {
+		try {
+			return t == null ? null : (S) key(t.getClass()).get(t);
+		} catch (IllegalArgumentException | IllegalAccessException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public static Long id (DataType t) {
+		return t.id;
+	}
+
 	public static <T> List<T> batchLookup (BatchGetter<T> batcher,
-			Collection<Key<T>> keys) {
+			Iterable<Key<T>> keys) {
 		Map<Object, T> map = PersistenceHelper
 				.typeMap(batcher.get(PersistenceHelper.keysToIds(keys)));
-		return keys.stream().map(i -> {
+
+		return StreamSupport.stream(keys.spliterator(), false).map(i -> {
 			return map.get(PersistenceHelper.keyToId(i));
 		}).collect(Collectors.toList());
 	}
