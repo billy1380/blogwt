@@ -46,9 +46,8 @@ public class ReCaptchaPart extends Composite implements FormField {
 		super.onLoad();
 		if (SCRIPT == null) {
 			exposeMethod(this);
-			SCRIPT = ScriptInjector
-					.fromUrl(
-							"https://www.google.com/recaptcha/api.js?onload=call_65fd7992_9064_11e5_aeca_fbe3616fc7e4&render=explicit")
+			SCRIPT = ScriptInjector.fromUrl(
+					"https://www.google.com/recaptcha/api.js?onload=call_65fd7992_9064_11e5_aeca_fbe3616fc7e4&render=explicit")
 					.setWindow(ScriptInjector.TOP_WINDOW).inject().cast();
 		} else {
 			render();
@@ -56,18 +55,20 @@ public class ReCaptchaPart extends Composite implements FormField {
 	}
 
 	private native void exposeMethod (ReCaptchaPart widget) /*-{
-																	$wnd.call_65fd7992_9064_11e5_aeca_fbe3616fc7e4 = function() {
-																	widget.@com.willshex.blogwt.client.part.form.ReCaptchaPart::render()();
-																	};
-																	}-*/;
+	$wnd.call_65fd7992_9064_11e5_aeca_fbe3616fc7e4 = function() {
+	    widget.@com.willshex.blogwt.client.part.form.ReCaptchaPart::render()();
+	};
+	}-*/;
 
 	private void render () {
 		id = render(getWidget().getElement(), key);
 	}
 
 	private native String render (Object element, String key) /*-{
-																return $wnd.grecaptcha.render(element, {'sitekey' : key}) ;
-																}-*/;
+	return $wnd.grecaptcha.render(element, {
+	    'sitekey' : key
+	});
+	}-*/;
 
 	public void reset () {
 		reset(id);
@@ -78,12 +79,13 @@ public class ReCaptchaPart extends Composite implements FormField {
 	}
 
 	private native void remove (String id) /*-{
-											$wnd.grecaptcha.remove(id);
-											}-*/;
+	$wnd.grecaptcha.remove(id);
+	}-*/;
 
-	public native void reset (String id) /*-{
-																				$wnd.grecaptcha.reset(id);
-																				}-*/;
+	public native void reset (
+			String id) /*-{
+	$wnd.grecaptcha.reset(id);
+	}-*/;
 
 	/* (non-Javadoc)
 	 * 

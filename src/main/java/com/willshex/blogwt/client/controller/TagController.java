@@ -14,6 +14,7 @@ import java.util.Map;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gwt.view.client.ListDataProvider;
+import com.willshex.blogwt.client.gwt.Window;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 
 /**
@@ -34,7 +35,7 @@ public class TagController extends ListDataProvider<Tag> {
 	private Map<String, Tag> tagLookup = new HashMap<String, Tag>();
 
 	public TagController () {
-		String tagsJson = tags();
+		String tagsJson = Window.get().getTags();
 
 		if (tagsJson != null) {
 			JsonArray jsonTagArray = (new JsonParser()).parse(tagsJson)
@@ -48,18 +49,13 @@ public class TagController extends ListDataProvider<Tag> {
 			Tag item = null;
 			for (int i = 0; i < jsonTagArray.size(); i++) {
 				if (jsonTagArray.get(i).isJsonObject()) {
-					(item = new Tag()).fromJson(jsonTagArray.get(i)
-							.getAsJsonObject());
+					(item = new Tag())
+							.fromJson(jsonTagArray.get(i).getAsJsonObject());
 					tagLookup.put(item.slug, item);
 					getList().add(item);
 				}
 			}
 		}
 	}
-
-	private static native String tags ()
-	/*-{
-		return $wnd['tags'];
-	}-*/;
 
 }

@@ -42,8 +42,8 @@ public class AddToAny extends Composite {
 	public AddToAny () {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		String share = PropertyController.get().stringProperty(
-				PropertyHelper.POST_SHARE_ENABLED);
+		String share = PropertyController.get()
+				.stringProperty(PropertyHelper.POST_SHARE_ENABLED);
 		if (share != null && !PropertyHelper.NONE_VALUE.equals(share)) {
 			List<String> shareWith = TagHelper.convertToTagList(share);
 
@@ -79,17 +79,18 @@ public class AddToAny extends Composite {
 		installAddToAny(url, title);
 	}
 
-	private static native void configureAddToAny (String url, String title) /*-{
-																			$wnd.a2a_config = $wnd.a2a_config || {};
-																			$wnd.a2a_config.linkname = title;
-																			$wnd.a2a_config.linkurl = url;
-																			}-*/;
+	private static native void configureAddToAny (String url,
+			String title) /*-{
+	$wnd.a2a_config = $wnd.a2a_config || {};
+	$wnd.a2a_config.linkname = title;
+	$wnd.a2a_config.linkurl = url;
+	}-*/;
 
 	private void installAddToAny (String url, String title) {
 		removeAddToAny();
 
-		lnkAddToAny.setHref("https://www.addtoany.com/share_save?linkurl="
-				+ url + "&linkname=" + title + "");
+		lnkAddToAny.setHref("https://www.addtoany.com/share_save?linkurl=" + url
+				+ "&linkname=" + title + "");
 
 		elAddToAnyScript = Document.get().createScriptElement();
 		elAddToAnyScript.setType("text/javascript");

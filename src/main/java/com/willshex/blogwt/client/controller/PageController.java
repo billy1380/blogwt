@@ -31,6 +31,7 @@ import com.willshex.blogwt.client.api.page.event.GetPagesEventHandler.GetPagesFa
 import com.willshex.blogwt.client.api.page.event.GetPagesEventHandler.GetPagesSuccess;
 import com.willshex.blogwt.client.api.page.event.UpdatePageEventHandler.UpdatePageFailure;
 import com.willshex.blogwt.client.api.page.event.UpdatePageEventHandler.UpdatePageSuccess;
+import com.willshex.blogwt.client.gwt.Window;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.oracle.PageOracle;
@@ -76,7 +77,7 @@ public class PageController extends AsyncDataProvider<Page> {
 	private Page home;
 
 	private PageController () {
-		String pagesJson = headerPages();
+		String pagesJson = Window.get().getPages();
 
 		if (pagesJson != null) {
 			JsonArray jsonPageArray = (new JsonParser()).parse(pagesJson)
@@ -90,8 +91,8 @@ public class PageController extends AsyncDataProvider<Page> {
 			Page item = null;
 			for (int i = 0; i < jsonPageArray.size(); i++) {
 				if (jsonPageArray.get(i).isJsonObject()) {
-					(item = new Page()).fromJson(jsonPageArray.get(i)
-							.getAsJsonObject());
+					(item = new Page())
+							.fromJson(jsonPageArray.get(i).getAsJsonObject());
 					headerPages.add(item);
 					if (item.priority != null
 							&& item.priority.floatValue() == 0.0f) {
@@ -121,13 +122,15 @@ public class PageController extends AsyncDataProvider<Page> {
 						getPagesRequest = null;
 
 						if (output.status == StatusType.StatusTypeSuccess) {
-							if (output.pages != null && output.pages.size() > 0) {
+							if (output.pages != null
+									&& output.pages.size() > 0) {
 								pager = output.pager;
 								updateRowCount(
 										input.pager.count == null ? 0
 												: input.pager.count.intValue(),
 										input.pager.count == null
-												|| input.pager.count.intValue() == 0);
+												|| input.pager.count
+														.intValue() == 0);
 								updateRowData(input.pager.start.intValue(),
 										output.pages);
 							} else {
@@ -163,8 +166,8 @@ public class PageController extends AsyncDataProvider<Page> {
 	@Override
 	protected void onRangeChanged (HasData<Page> display) {
 		Range range = display.getVisibleRange();
-		pager.start(Integer.valueOf(range.getStart())).count(
-				Integer.valueOf(range.getLength()));
+		pager.start(Integer.valueOf(range.getStart()))
+				.count(Integer.valueOf(range.getLength()));
 
 		fetchPages();
 	}
@@ -252,7 +255,7 @@ public class PageController extends AsyncDataProvider<Page> {
 
 						if (output.status == StatusType.StatusTypeSuccess) {
 
-						}
+				}
 
 						DefaultEventBus.get().fireEventFromSource(
 								new GetPageSuccess(input, output),
@@ -320,11 +323,6 @@ public class PageController extends AsyncDataProvider<Page> {
 	public List<Page> getHeaderPages () {
 		return headerPages;
 	}
-
-	private static native String headerPages ()
-	/*-{
-		return $wnd['pages'];
-	}-*/;
 
 	public SuggestOracle oracle () {
 		if (oracle == null) {

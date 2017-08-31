@@ -16,6 +16,7 @@ import java.util.Map;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gwt.view.client.ListDataProvider;
+import com.willshex.blogwt.client.gwt.Window;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 
 /**
@@ -37,19 +38,19 @@ public class ArchiveEntryController extends ListDataProvider<ArchiveEntry> {
 	private Map<Integer, Integer> yearPostCount = new HashMap<Integer, Integer>();
 
 	public ArchiveEntryController () {
-		String archiveEntriesJson = archiveEntries();
+		String archiveEntriesJson = Window.get().getArchiveEntries();
 
 		if (archiveEntriesJson != null) {
-			JsonArray jsonArchiveEntryArray = (new JsonParser()).parse(
-					archiveEntriesJson).getAsJsonArray();
+			JsonArray jsonArchiveEntryArray = (new JsonParser())
+					.parse(archiveEntriesJson).getAsJsonArray();
 			getList().clear();
 
 			ArchiveEntry item = null;
 			List<ArchiveEntry> yearArchiveEntries;
 			for (int i = 0; i < jsonArchiveEntryArray.size(); i++) {
 				if (jsonArchiveEntryArray.get(i).isJsonObject()) {
-					(item = new ArchiveEntry()).fromJson(jsonArchiveEntryArray
-							.get(i).getAsJsonObject());
+					(item = new ArchiveEntry()).fromJson(
+							jsonArchiveEntryArray.get(i).getAsJsonObject());
 					getList().add(item);
 
 					// manage the groups and the count
@@ -62,20 +63,15 @@ public class ArchiveEntryController extends ListDataProvider<ArchiveEntry> {
 					}
 
 					yearArchiveEntries.add(item);
-					yearPostCount.put(
-							item.year,
-							Integer.valueOf(yearPostCount.get(item.year)
-									.intValue() + item.posts.size()));
+					yearPostCount.put(item.year,
+							Integer.valueOf(
+									yearPostCount.get(item.year).intValue()
+											+ item.posts.size()));
 
 				}
 			}
 		}
 	}
-
-	private static native String archiveEntries ()
-	/*-{
-		return $wnd['archiveEntries'];
-	}-*/;
 
 	/**
 	 * @return

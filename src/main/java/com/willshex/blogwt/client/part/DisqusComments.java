@@ -67,39 +67,38 @@ public class DisqusComments extends Composite {
 	private static native void installDisqus (String discusShortName,
 			String categoryId, String postId, String url, String title,
 			String category) /*-{
-								$wnd.disqus_shortname = discusShortName;
+	$wnd.disqus_shortname = discusShortName;
 
-								// $wnd.disqus_identifier = postId;
-								$wnd.disqus_url = url;
-								$wnd.disqus_title = title;
-								$wnd.disqus_category_id = categoryId;
+	// $wnd.disqus_identifier = postId;
+	$wnd.disqus_url = url;
+	$wnd.disqus_title = title;
+	$wnd.disqus_category_id = categoryId;
 
-								($wnd.installDisqus = function() {
-								var dsq = $wnd.document.createElement('script');
-								dsq.type = 'text/javascript';
-								dsq.async = true;
-								dsq.src = '//' + $wnd.disqus_shortname + '.disqus.com/embed.js';
-								($wnd.document.getElementsByTagName('head')[0] || $wnd.document
-								.getElementsByTagName('body')[0]).appendChild(dsq);
-								})();
+	($wnd.installDisqus = function() {
+	    var dsq = $wnd.document.createElement('script');
+	    dsq.type = 'text/javascript';
+	    dsq.async = true;
+	    dsq.src = '//' + $wnd.disqus_shortname + '.disqus.com/embed.js';
+	    ($wnd.document.getElementsByTagName('head')[0] || $wnd.document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
 
-								$wnd.reset = function(resetPostId, resetUrl, resetTitle, categoryId) {
-								$wnd.DISQUS.reset({
-								reload : true,
-								config : function() {
-								// this.page.identifier = resetPostId;
-								this.page.url = resetUrl;
-								this.page.title = resetTitle;
-								this.page.category_id = categoryId;
-								}
-								});
-								};
-								}-*/;
+	$wnd.reset = function(resetPostId, resetUrl, resetTitle, categoryId) {
+	    $wnd.DISQUS.reset({
+		reload : true,
+		config : function() {
+		    // this.page.identifier = resetPostId;
+		    this.page.url = resetUrl;
+		    this.page.title = resetTitle;
+		    this.page.category_id = categoryId;
+		}
+	    });
+	};
+	}-*/;
 
 	private static native void resetDisqus (String postId, String url,
 			String title, String categoryId) /*-{
-												$wnd.reset(postId, url, title, categoryId);
-												}-*/;
+	$wnd.reset(postId, url, title, categoryId);
+	}-*/;
 
 	/**
 	 * @param identifier the identifier to set

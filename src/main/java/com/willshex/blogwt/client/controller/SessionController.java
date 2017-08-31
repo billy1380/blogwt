@@ -19,6 +19,7 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.user.UserService;
 import com.willshex.blogwt.client.api.user.event.LoginEventHandler.LoginFailure;
 import com.willshex.blogwt.client.api.user.event.LoginEventHandler.LoginSuccess;
+import com.willshex.blogwt.client.gwt.Window;
 import com.willshex.blogwt.client.api.user.event.LogoutEventHandler;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
@@ -56,7 +57,7 @@ public class SessionController {
 	private Session session;
 
 	private SessionController () {
-		String sessionJson = jsonSession();
+		String sessionJson = Window.get().getSession();
 
 		if (sessionJson != null) {
 			(session = new Session()).fromJson(sessionJson);
@@ -254,18 +255,8 @@ public class SessionController {
 	 * 
 	 */
 	public void removeSession () {
-		removeJsonSession();
+		Window.get().setSession(null);
 		session = null;
 		Cookies.removeCookie(COOKIE_KEY_ID);
 	}
-
-	private static native String jsonSession ()
-	/*-{
-	return $wnd['session'];
-	}-*/;
-
-	private static native void removeJsonSession ()
-	/*-{
-	$wnd['session'] = null;
-	}-*/;
 }

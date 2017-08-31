@@ -24,6 +24,8 @@
 	<inherits name="org.Markdown4j" />
 	<inherits name='emoji.gwt.Emoji' />
 	<inherits name="gwtupload.GWTUpload" />
+	<inherits name="elemental2.dom.Dom" />
+	<inherits name="jsinterop.base.Base" />
 
 	<add-linker name="xsiframe" />
 	<!-- <set-configuration-property name="xsiframe.failIfScriptTag" value="false" /> -->

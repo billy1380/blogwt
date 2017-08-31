@@ -30,6 +30,7 @@ import com.willshex.blogwt.client.api.blog.event.SetupBlogEventHandler.SetupBlog
 import com.willshex.blogwt.client.api.blog.event.SetupBlogEventHandler.SetupBlogSuccess;
 import com.willshex.blogwt.client.api.blog.event.UpdatePropertiesEventHandler.UpdatePropertiesFailure;
 import com.willshex.blogwt.client.api.blog.event.UpdatePropertiesEventHandler.UpdatePropertiesSuccess;
+import com.willshex.blogwt.client.gwt.Window;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.blog.call.GetPropertiesRequest;
@@ -68,7 +69,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	private Request getPropertiesRequest;
 
 	private PropertyController () {
-		String propertiesJson = properties();
+		String propertiesJson = Window.get().getProperties();
 
 		if (propertiesJson != null) {
 			JsonArray jsonPropertyArray = (new JsonParser())
@@ -100,8 +101,9 @@ public class PropertyController extends ListDataProvider<Property> {
 	 */
 	public SafeUri copyrightHolderUrl () {
 		Property p = propertyLookup.get(PropertyHelper.COPYRIGHT_URL);
-		return UriUtils.fromSafeConstant(PropertyHelper.isEmpty(p)
-				? "https://www.willshex.com" : p.value);
+		return UriUtils.fromSafeConstant(
+				PropertyHelper.isEmpty(p) ? "https://www.willshex.com"
+						: p.value);
 	}
 
 	/**
@@ -135,14 +137,6 @@ public class PropertyController extends ListDataProvider<Property> {
 		Property p = propertyLookup.get(PropertyHelper.TITLE);
 		return PropertyHelper.isEmpty(p) ? new Date(1199188800000L) : p.created;
 	}
-
-	private static native String properties () /*-{
-	return $wnd['properties'];
-	}-*/;
-
-	private static native String set (String properties) /*-{
-	$wnd['properties'] = properties;
-	}-*/;
 
 	public void setupBlog (List<Property> properties, List<User> users) {
 		final SetupBlogRequest input = ApiHelper
@@ -272,7 +266,8 @@ public class PropertyController extends ListDataProvider<Property> {
 									propertyArray.add(p.toJson());
 								}
 
-								set(propertyArray.toString());
+								Window.get().setProperties(
+										propertyArray.toString());
 							}
 						}
 
