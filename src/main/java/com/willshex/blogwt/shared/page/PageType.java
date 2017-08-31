@@ -46,7 +46,8 @@ public enum PageType {
 	ChangeAccessPageType("access", true),
 	EditResourcePageType("resourceedit", PermissionHelper.MANAGE_RESOURCES),
 	WidgetTestPageType("widgettest", true),
-	AllPostsPageType("posts", PermissionHelper.MANAGE_POSTS),;
+	AllPostsPageType("posts", PermissionHelper.MANAGE_POSTS),
+	DownloadsPageType("downloads", true),;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;

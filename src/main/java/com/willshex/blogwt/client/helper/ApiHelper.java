@@ -12,6 +12,7 @@ import static com.google.gwt.user.client.Window.Location.getHost;
 import com.google.gwt.core.shared.GWT;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.BlogService;
+import com.willshex.blogwt.client.api.download.DownloadService;
 import com.willshex.blogwt.client.api.page.PageService;
 import com.willshex.blogwt.client.api.search.SearchService;
 import com.willshex.blogwt.client.api.user.UserService;
@@ -37,6 +38,7 @@ public class ApiHelper {
 	public static final String PAGE_END_POINT = BASE_URL + "page";
 	public static final String SEARCH_END_POINT = BASE_URL + "search";
 	public static final String UPLOAD_END_POINT = BASE_URL + "upload";
+	public static final String DOWNLOAD_END_POINT = BASE_URL + "download";
 
 	static {
 		DefaultEventBus.get().addHandler(CallStartEventHandler.TYPE,
@@ -82,6 +84,13 @@ public class ApiHelper {
 	public static SearchService createSearchClient () {
 		SearchService service = new SearchService();
 		service.setUrl(SEARCH_END_POINT);
+		service.setBus(DefaultEventBus.get());
+		return service;
+	}
+
+	public static DownloadService createDownloadClient () {
+		DownloadService service = new DownloadService();
+		service.setUrl(DOWNLOAD_END_POINT);
 		service.setBus(DefaultEventBus.get());
 		return service;
 	}

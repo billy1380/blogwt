@@ -19,6 +19,7 @@ import com.willshex.blogwt.server.service.persistence.translator.PermissionTypeT
 import com.willshex.blogwt.server.service.persistence.translator.RelationshipTypeTypeTranslatorFactory;
 import com.willshex.blogwt.server.service.persistence.translator.ResourceTypeTypeTranslatorFactory;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
+import com.willshex.blogwt.shared.api.datatype.GeneratedDownload;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.datatype.Notification;
 import com.willshex.blogwt.shared.api.datatype.NotificationSetting;
@@ -69,6 +70,7 @@ public class PersistenceServiceProvider {
 		factory().register(NotificationSetting.class);
 		factory().register(Relationship.class);
 		factory().register(Rating.class);
+		factory().register(GeneratedDownload.class);
 	}
 
 	public static Objectify provide () {

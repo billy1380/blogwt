@@ -35,6 +35,7 @@ import com.willshex.blogwt.client.page.user.ChangePasswordPage;
 import com.willshex.blogwt.client.page.user.LoginPage;
 import com.willshex.blogwt.client.page.user.ResetPasswordPage;
 import com.willshex.blogwt.client.page.user.VerifyAccountPage;
+import com.willshex.blogwt.client.page.user.downloads.DownloadsPage;
 import com.willshex.blogwt.shared.page.PageType;
 
 /**
@@ -135,6 +136,9 @@ public class PageTypeHelper {
 			break;
 		case AllPostsPageType:
 			page = new com.willshex.blogwt.client.page.admin.PostsPage();
+			break;
+		case DownloadsPageType:
+			page = new DownloadsPage();
 			break;
 		case PageDetailPageType:
 		default:
