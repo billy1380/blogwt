@@ -54,14 +54,16 @@ import com.willshex.utility.JsonUtils;
  * @author William Shakour (billy1380)
  *
  */
-@WebServlet(name = "Dev", urlPatterns = { "/dev", "/dev/*" })
+@SuppressWarnings("serial")
+@WebServlet(name = "Dev", urlPatterns = { DevServlet.URL,
+		DevServlet.URL + "/*" })
 @ServletSecurity(value = @HttpConstraint(rolesAllowed = "admin"))
 public class DevServlet extends ContextAwareServlet {
 
-	private static final long serialVersionUID = 8911904038164388255L;
-
 	private static final Logger LOG = Logger
 			.getLogger(DevServlet.class.getName());
+
+	public static final String URL = "/dev";
 
 	/* (non-Javadoc)
 	 * 

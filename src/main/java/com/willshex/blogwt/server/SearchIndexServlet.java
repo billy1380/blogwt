@@ -26,11 +26,13 @@ import com.willshex.service.ServiceDiscovery;
  * @author billy1380
  *
  */
-@WebServlet(name = "Search Indexer", urlPatterns = "/searchindexer")
+@SuppressWarnings("serial")
+@WebServlet(name = "Search Indexer", urlPatterns = SearchIndexServlet.URL)
 @ServletSecurity(value = @HttpConstraint(rolesAllowed = "admin"))
 public class SearchIndexServlet extends ContextAwareServlet {
 
-	private static final long serialVersionUID = 7829996840917475240L;
+	public static final String URL = "/searchindexer";
+
 	private static final Logger LOG = Logger
 			.getLogger(SearchIndexServlet.class.getName());
 

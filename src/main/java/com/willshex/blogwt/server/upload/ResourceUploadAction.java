@@ -28,9 +28,11 @@ import gwtupload.server.gae.CloudStorageUploadAction;
  * @author William Shakour (billy1380)
  *
  */
-@WebServlet(name = "Upload", urlPatterns = "/upload")
+@SuppressWarnings("serial")
+@WebServlet(name = "Upload", urlPatterns = ResourceUploadAction.URL)
 public class ResourceUploadAction extends CloudStorageUploadAction {
-	private static final long serialVersionUID = 4092355669644652816L;
+
+	public static final String URL = "/upload";
 
 	/* (non-Javadoc)
 	 * 

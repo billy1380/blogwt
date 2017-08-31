@@ -47,8 +47,10 @@ import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
-@WebServlet(name = "Blog API", urlPatterns = "/blog")
+@WebServlet(name = "Blog API", urlPatterns = BlogJsonServlet.URL)
 public final class BlogJsonServlet extends JsonServlet {
+	public static final String URL = "/blog";
+
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";

@@ -25,8 +25,11 @@ import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
-@WebServlet(name = "Page API", urlPatterns = "/page")
+@WebServlet(name = "Page API", urlPatterns = PageJsonServlet.URL)
 public final class PageJsonServlet extends JsonServlet {
+
+	public static final String URL = "/page";
+
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";

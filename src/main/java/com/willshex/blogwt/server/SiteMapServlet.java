@@ -33,10 +33,11 @@ import com.willshex.server.ContextAwareServlet;
  * @author William Shakour (billy1380)
  *
  */
-@WebServlet(name = "Site Map", urlPatterns = "/sitemap")
+@SuppressWarnings("serial")
+@WebServlet(name = "Site Map", urlPatterns = SiteMapServlet.URL)
 public class SiteMapServlet extends ContextAwareServlet {
+	public static final String URL = "/sitemap";
 
-	private static final long serialVersionUID = 3133978953838954164L;
 	private static final String MIME_TYPE = "application/xml; charset=UTF-8";
 	private static final String LOC_FORMAT = "    <url><loc>%s/%s</loc></url>";
 

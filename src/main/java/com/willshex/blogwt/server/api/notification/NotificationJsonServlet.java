@@ -25,8 +25,11 @@ import com.willshex.blogwt.shared.api.notification.call.UpdateNotificationSettin
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
-@WebServlet(name = "Notification API", urlPatterns = "/notification")
+@WebServlet(name = "Notification API", urlPatterns = NotificationJsonServlet.URL)
 public final class NotificationJsonServlet extends JsonServlet {
+
+	public static final String URL = "/notification";
+
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";

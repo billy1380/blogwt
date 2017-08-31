@@ -45,10 +45,11 @@ import com.willshex.server.ContextAwareServlet;
  * @author William Shakour (billy1380)
  *
  */
-@WebServlet(name = "Site", urlPatterns = "/")
+@SuppressWarnings("serial")
+@WebServlet(name = "Site", urlPatterns = MainServlet.URL)
 public class MainServlet extends ContextAwareServlet {
 
-	private static final long serialVersionUID = 3007918530671674098L;
+	public static final String URL = "/";
 
 	private static String PAGE_FORMAT = null;
 

@@ -45,11 +45,12 @@ import com.willshex.server.ContextAwareServlet;
  *
  *	Based on https://rometools.github.io/rome/RssAndAtOMUtilitiEsROMEV0.5AndAboveTutorialsAndArticles/RssAndAtOMUtilitiEsROMEV0.5TutorialUsingROMEWithinAServletToCreateAndReturnAFeed.html
  */
-@WebServlet(name = "Feed", urlPatterns = "/feed", initParams = {
+@SuppressWarnings("serial")
+@WebServlet(name = "Feed", urlPatterns = FeedServlet.URL, initParams = {
 		@WebInitParam(name = "default.feed.type", value = "rss_2.0") })
 public class FeedServlet extends ContextAwareServlet {
 
-	private static final long serialVersionUID = 3740371198321150900L;
+	public static final String URL = "/feed";
 
 	private static final String DEFAULT_FEED_TYPE = "default.feed.type";
 	private static final String FEED_TYPE = "type";

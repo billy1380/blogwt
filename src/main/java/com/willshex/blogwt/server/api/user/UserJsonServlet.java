@@ -51,8 +51,11 @@ import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
-@WebServlet(name = "User API", urlPatterns = "/user")
+@WebServlet(name = "User API", urlPatterns = UserJsonServlet.URL)
 public final class UserJsonServlet extends JsonServlet {
+
+	public static final String URL = "/user";
+
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";

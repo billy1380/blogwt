@@ -15,8 +15,11 @@ import com.willshex.blogwt.shared.api.search.call.SearchAllRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
-@WebServlet(name = "Search API", urlPatterns = "/search")
+@WebServlet(name = "Search API", urlPatterns = SearchJsonServlet.URL)
 public final class SearchJsonServlet extends JsonServlet {
+
+	public static final String URL = "/search";
+
 	@Override
 	protected String processAction (String action, JsonObject request) {
 		String output = "null";
