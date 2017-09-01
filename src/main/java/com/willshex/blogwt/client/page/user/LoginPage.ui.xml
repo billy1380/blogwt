@@ -3,7 +3,6 @@
 	<ui:import field="com.willshex.blogwt.shared.page.PageType.ResetPasswordPageType" />
 	<ui:style>
 	@external checkbox;
-	
 	.checkbox input[type=checkbox] {
 		margin-left: 0px;
 	}
@@ -14,7 +13,8 @@
 	</ui:style>
 	<g:HTMLPanel styleName="container">
 		<g:HTMLPanel styleName="row">
-			<g:FormPanel ui:field="frmLogin" styleName="{style.form-signin} col-sm-4 col-sm-offset-4">
+			<g:FormPanel ui:field="frmLogin"
+				styleName="{style.form-signin} col-sm-4 col-sm-offset-4">
 				<g:HTMLPanel>
 					<h2>Sign in</h2>
 					<g:HTMLPanel ui:field="pnlUsername" styleName="form-group">
@@ -23,20 +23,25 @@
 							<span class="input-group-addon">@</span>
 							<g:TextBox ui:field="txtUsername" styleName="form-control" />
 						</g:HTMLPanel>
-						<g:HTMLPanel styleName="control-label small" ui:field="pnlUsernameNote" visible="false" />
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlUsernameNote"
+							visible="false" />
 					</g:HTMLPanel>
 					<g:HTMLPanel ui:field="pnlPassword" styleName="form-group">
 						<label class="control-label">Password</label>
 						<g:PasswordTextBox ui:field="txtPassword" styleName="form-control" />
-						<g:HTMLPanel styleName="control-label small" ui:field="pnlPasswordNote" visible="false" />
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlPasswordNote"
+							visible="false" />
 						<div class="text-right">
-							<g:InlineHyperlink text="Forgot password" targetHistoryToken="{ResetPasswordPageType.asTargetHistoryToken}" />
+							<g:InlineHyperlink text="Forgot password"
+								targetHistoryToken="{ResetPasswordPageType.asTargetHistoryToken}" />
 						</div>
 					</g:HTMLPanel>
 					<g:HTMLPanel styleName="checkbox">
-						<g:CheckBox text="remember me" ui:field="cbxRememberMe" />
+						<g:CheckBox text="remember me" ui:field="cbxRememberMe"
+							checked="true" />
 					</g:HTMLPanel>
-					<g:SubmitButton ui:field="btnSignIn" styleName="{style.btn} btn btn-primary pull-right" text="Sign in">
+					<g:SubmitButton ui:field="btnSignIn"
+						styleName="{style.btn} btn btn-primary pull-right" text="Sign in">
 						Login
 					</g:SubmitButton>
 				</g:HTMLPanel>
