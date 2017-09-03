@@ -28,6 +28,7 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SubmitButton;
@@ -101,6 +102,16 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	//		String dropZone ();
 	//	}
 
+	private static final int IMAGES_PER_ROW = 4;
+	private static final String CARET_BEFORE = " \\_\\:\\_this\\_is\\_the\\_tracking\\_cursor\\_\\:\\_ ";
+	private static final String CARET_AFTER = "_:_this_is_the_tracking_cursor_:_";
+	// private static final String CARET = " <span class=\"glyphicon glyphicon-pencil\"></span> ";
+	private static final String CARET_FINALLY = "<span class=\""
+			+ Resources.RES.styles().blink()
+			+ "\"><strong> &#9724; </strong></span>";
+	private static final int SAVE_EVERY = 2
+			* (int) DateTimeHelper.MILLIS_PER_MIN;
+
 	private Post post;
 
 	@UiField HTMLPanel pnlTitle;
@@ -117,7 +128,8 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	@UiField HTMLPanel pnlComments;
 	@UiField CheckBox cbxComments;
 	@UiField CheckBox cbxPublish;
-	@UiField SubmitButton btnSubmit;
+	@UiField SubmitButton btnSave;
+	@UiField SubmitButton btnSaveAndShow;
 	@UiField Element elHeading;
 	@UiField HTMLPanel pnlPreview;
 	@UiField LoadingPanel pnlLoading;
@@ -145,15 +157,9 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 
 	private Map<String, Resource> resources;
 	private HTMLPanel currentResourceRow;
+	private Focusable current;
 	private boolean stop;
-
-	private static final int IMAGES_PER_ROW = 4;
-	private static final String CARET_BEFORE = " \\_\\:\\_this\\_is\\_the\\_tracking\\_cursor\\_\\:\\_ ";
-	private static final String CARET_AFTER = "_:_this_is_the_tracking_cursor_:_";
-	// private static final String CARET = " <span class=\"glyphicon glyphicon-pencil\"></span> ";
-	private static final String CARET_FINALLY = "<span class=\""
-			+ Resources.RES.styles().blink()
-			+ "\"><strong> &#9724; </strong></span>";
+	private boolean saveAndShow = false;
 
 	private final OnLoadPreloadedImageHandler PRELOAD_HANDLER = new OnLoadPreloadedImageHandler() {
 
@@ -173,12 +179,22 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		}
 	};
 
-	private Timer updateTimer = new Timer() {
+	private final Timer updateTimer = new Timer() {
 		@Override
 		public void run () {
 			updatePreview();
 		}
 	};
+
+	private final Timer saveTimer = new Timer() {
+		@Override
+		public void run () {
+			save(btnSave);
+		}
+
+	};
+	private int changes;
+	private int changesAtSave;
 
 	public EditPostPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -276,29 +292,39 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 
 		post = null;
 
-		deferRefresh();
+		deferUpdate();
 
 		ready();
 	}
 
-	/**
-	 * 
-	 */
-	private void deferRefresh () {
+	private void deferUpdate () {
 		if (!stop) {
 			updateTimer.cancel();
-			updateTimer.schedule(250);
+			updateTimer.schedule(1000);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#onDetach() */
+	@Override
+	protected void onDetach () {
+		updateTimer.cancel();
+		saveTimer.cancel();
+
+		super.onDetach();
 	}
 
 	@UiHandler({ "txtTitle", "txtSummary", "txtContent", "txtTags" })
 	void onTxtKeyUp (KeyUpEvent e) {
-		deferRefresh();
+		deferUpdate();
+		changes++;
 	}
 
-	@UiHandler({ "txtSummary", "txtContent" })
+	@UiHandler({ "txtTitle", "txtSummary", "txtContent", "txtTags" })
 	void onClick (ClickEvent e) {
-		deferRefresh();
+		deferUpdate();
+		this.current = (Focusable) e.getSource();
 	}
 
 	@UiHandler({ "btnLiveUpdate" })
@@ -325,7 +351,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		Document d = Document.get();
 		HeadingElement title = d.createHElement(1);
 
-		title.setInnerHTML(PostHelper.makeHeading(txtTitle.getText()));
+		title.setInnerHTML(PostHelper.makeHeading(txtTitle.getValue()));
 		pnlPreview.getElement().appendChild(title);
 
 		User user = SessionController.get().user();
@@ -381,39 +407,69 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	 * @return
 	 */
 	private String markup (ValueBoxBase<String> valueBox) {
-		StringBuffer markdown = new StringBuffer(valueBox.getText());
+		StringBuffer markdown = new StringBuffer(valueBox.getValue());
 		markdown.insert(valueBox.getCursorPos(), CARET_BEFORE);
 		return PostHelper.makeMarkup(markdown.toString())
 				.replace(CARET_BEFORE, CARET_FINALLY)
 				.replace(CARET_AFTER, CARET_FINALLY);
 	}
 
-	@UiHandler("btnSubmit")
+	@UiHandler({ "btnSaveAndShow", "btnSave" })
 	void onBtnSubmitClicked (ClickEvent e) {
+		save((SubmitButton) e.getSource());
+	}
+
+	private void save (SubmitButton source) {
 		if (isValid()) {
-			if (post == null) {
-				PostController.get().createPost(txtTitle.getText(),
-						cbxDirectOnly.getValue().booleanValue() ? Boolean.FALSE
-								: Boolean.TRUE,
-						cbxComments.getValue(), txtSummary.getText(),
-						txtContent.getText(), cbxPublish.getValue(),
-						txtTags.getText());
+			saveAndShow = (source == btnSaveAndShow);
+
+			if (changes > 0) {
+				changesAtSave = changes;
+
+				if (post == null) {
+					PostController.get().createPost(txtTitle.getValue(),
+							cbxDirectOnly.getValue().booleanValue()
+									? Boolean.FALSE
+									: Boolean.TRUE,
+							cbxComments.getValue(), txtSummary.getValue(),
+							txtContent.getValue(), cbxPublish.getValue(),
+							txtTags.getValue());
+				} else {
+					PostController.get().updatePost(post, txtTitle.getValue(),
+							cbxDirectOnly.getValue().booleanValue()
+									? Boolean.FALSE
+									: Boolean.TRUE,
+							cbxComments.getValue(), txtSummary.getValue(),
+							txtContent.getValue(), cbxPublish.getValue(),
+							txtTags.getValue());
+				}
+
+				submitting();
 			} else {
-				PostController.get().updatePost(post, txtTitle.getText(),
-						cbxDirectOnly.getValue().booleanValue() ? Boolean.FALSE
-								: Boolean.TRUE,
-						cbxComments.getValue(), txtSummary.getText(),
-						txtContent.getText(), cbxPublish.getValue(),
-						txtTags.getText());
+				restoreFocus();
+
+				if (saveAndShow) {
+					PageTypeHelper.show(PageType.PostDetailPageType,
+							PostHelper.slugify(txtTitle.getValue()));
+				}
 			}
-			submitting();
 		} else {
 			showErrors();
 		}
 	}
 
+	private void restoreFocus () {
+		if (current == null) {
+			current = txtTitle;
+		}
+
+		current.setFocus(true);
+	}
+
 	private void ready () {
-		btnSubmit.getElement()
+		saveTimer.scheduleRepeating(SAVE_EVERY);
+
+		btnSaveAndShow.getElement()
 				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
 						.nextButton("Submit"));
 
@@ -424,12 +480,17 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		cbxDirectOnly.setEnabled(true);
 		cbxComments.setEnabled(true);
 		cbxPublish.setEnabled(true);
-		btnSubmit.setEnabled(true);
+		btnSaveAndShow.setEnabled(true);
+		btnSave.setEnabled(true);
 
 		pnlLoading.setVisible(false);
+
+		restoreFocus();
 	}
 
 	private void loading () {
+		saveTimer.cancel();
+
 		txtTitle.setEnabled(false);
 		txtSummary.setEnabled(false);
 		txtContent.setEnabled(false);
@@ -437,7 +498,8 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		cbxDirectOnly.setEnabled(false);
 		cbxComments.setEnabled(false);
 		cbxPublish.setEnabled(false);
-		btnSubmit.setEnabled(false);
+		btnSaveAndShow.setEnabled(false);
+		btnSave.setEnabled(false);
 
 		pnlTitle.removeStyleName("has-error");
 		pnlTitleNote.setVisible(false);
@@ -452,7 +514,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	private void submitting () {
 		loading();
 
-		btnSubmit.getElement()
+		btnSaveAndShow.getElement()
 				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
 						.loadingButton("Submitting... ",
 								Resources.RES.primaryLoader().getSafeUri()));
@@ -471,8 +533,12 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		if (output.status == StatusType.StatusTypeFailure) {
 
 		} else {
-			PageTypeHelper.show(PageType.PostDetailPageType,
-					PostHelper.slugify(input.post.title));
+			if (saveAndShow) {
+				PageTypeHelper.show(PageType.PostDetailPageType,
+						PostHelper.slugify(input.post.title));
+			}
+
+			changes -= changesAtSave;
 		}
 
 		ready();
@@ -503,8 +569,12 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		if (output.status == StatusType.StatusTypeFailure) {
 
 		} else {
-			PageTypeHelper.show(PageType.PostDetailPageType,
-					PostHelper.slugify(input.post.title));
+			if (saveAndShow) {
+				PageTypeHelper.show(PageType.PostDetailPageType,
+						PostHelper.slugify(input.post.title));
+			}
+
+			changes -= changesAtSave;
 		}
 
 		ready();
@@ -524,7 +594,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 
 	private boolean isValid () {
 		// do client validation
-		return true;
+		return txtTitle.getValue().trim().length() > 0;
 	}
 
 	private void showErrors () {

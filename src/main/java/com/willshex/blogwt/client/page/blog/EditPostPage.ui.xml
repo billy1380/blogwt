@@ -4,33 +4,33 @@
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<!-- <ui:style gss="true" type="com.willshex.blogwt.client.page.blog.EditPostPage.Style"> -->
 	<ui:style gss="true">
-		@external checkbox;
-		.checkbox input[type=checkbox] {
+	@external checkbox;
+	.checkbox input[type=checkbox] {
 		margin-left: 0px;
-		}
-
-		.form-post .btn {
+	}
+	
+	.form-post .btn {
 		margin-bottom: 10px;
-		}
-
-		/* .drop-zone {
-		color:
-		#ccc;
-		border-style: dashed;
-		border-color: #ccc;
-		line-height: 120px;
-		text-align:
-		center;
-		height: 120px;
-		border-width: 2px;
-		display: block;
-		vertical-align: middle;
-		border-radius: 6px;
-		margin-top: 5px;
-		} */
-		.tags {
+	}
+	
+	/* .drop-zone {
+															color:
+															#ccc;
+															border-style: dashed;
+															border-color: #ccc;
+															line-height: 120px;
+															text-align:
+															center;
+															height: 120px;
+															border-width: 2px;
+															display: block;
+															vertical-align: middle;
+															border-radius: 6px;
+															margin-top: 5px;
+															} */
+	.tags {
 		margin: 20px 0 10px 0;
-		}
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="container-fluid">
 		<g:HTMLPanel styleName="row">
@@ -92,10 +92,17 @@
 						<g:CheckBox ui:field="cbxPublish" checked="false">publish on submit</g:CheckBox>
 					</g:HTMLPanel>
 
-					<g:SubmitButton ui:field="btnSubmit"
-						styleName="{style.btn} btn btn-primary pull-right" text="Submit">
-						Submit
-					</g:SubmitButton>
+					<div class="btn-toolbar">
+						<g:SubmitButton ui:field="btnSaveAndShow"
+							styleName="{style.btn} btn btn-primary pull-right" text="Save &amp; Show">
+							Save &amp; Show
+						</g:SubmitButton>
+						<g:SubmitButton ui:field="btnSave"
+							styleName="{style.btn} btn btn-default pull-right">
+							<span class="glyphicon glyphicon-save" />
+							Save
+						</g:SubmitButton>
+					</div>
 				</g:HTMLPanel>
 			</g:FormPanel>
 			<div class="col-sm-8">
