@@ -221,6 +221,13 @@
 			<version>${gwt.version}</version>
 		</dependency>
 
+		<!-- elemental 2 -->
+		<dependency>
+			<groupId>com.google.elemental2</groupId>
+			<artifactId>elemental2-dom</artifactId>
+			<version>1.0.0-beta-1</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.commonjava.googlecode.markdown4j</groupId>
 			<artifactId>markdown4j-gwt</artifactId>
@@ -327,12 +334,5 @@
 			<artifactId>willshex-service</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
-		<!-- elemental 2 -->
-		<dependency>
-			<groupId>com.google.elemental2</groupId>
-			<artifactId>elemental2-dom</artifactId>
-			<version>1.0.0-beta-1</version>
-		</dependency>
-
 	</dependencies>
 </project>
