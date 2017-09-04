@@ -288,6 +288,6 @@ public class PersistenceHelper {
 
 		return StreamSupport.stream(keys.spliterator(), false).map(i -> {
 			return map.get(PersistenceHelper.keyToId(i));
-		}).collect(Collectors.toList());
+		}).filter(i -> i != null).collect(Collectors.toList());
 	}
 }

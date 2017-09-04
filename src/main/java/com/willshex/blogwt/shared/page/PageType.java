@@ -7,14 +7,23 @@
 //
 package com.willshex.blogwt.shared.page;
 
+import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_PAGES;
+import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_PERMISSIONS;
+import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_POSTS;
+import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_RESOURCES;
+import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_ROLES;
+import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_USERS;
+
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
-import com.willshex.blogwt.shared.helper.RoleHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.utility.StringUtils;
 
 /**
@@ -23,60 +32,92 @@ import com.willshex.utility.StringUtils;
  */
 public enum PageType {
 	SetupBlogPageType("setup", false),
-	EditPostPageType("postedit", PermissionHelper.MANAGE_POSTS),
+	EditPostPageType("postedit", PermissionHelper.create(MANAGE_POSTS)),
 	PostsPageType("blog", false),
 	PostDetailPageType("post", false),
 	ChangeDetailsPageType("user", true),
 	ChangePasswordPageType("changepassword", false),
 	ResetPasswordPageType("resetpassword", false),
 	RegisterPageType("register", false),
-	LoginPageType("login", false),
+	LoginPageType("login"),
 	LogoutPageType("logout", true),
-	PermissionsPageType("permissions", PermissionHelper.MANAGE_PERMISSIONS),
-	RolesPageType("roles", PermissionHelper.MANAGE_ROLES),
-	UsersPageType("users", PermissionHelper.MANAGE_USERS),
-	PropertiesPageType("properties", RoleHelper.ADMIN),
-	EditPagePageType("pageedit", PermissionHelper.MANAGE_PAGES),
+	PermissionsPageType("permissions",
+			PermissionHelper.create(MANAGE_PERMISSIONS)),
+	RolesPageType("roles", PermissionHelper.create(MANAGE_ROLES)),
+	UsersPageType("users", PermissionHelper.create(MANAGE_USERS)),
+	PropertiesPageType("properties", true, true),
+	EditPagePageType("pageedit", PermissionHelper.create(MANAGE_PAGES)),
 	PageDetailPageType("page", false),
-	PagesPageType("pages", PermissionHelper.MANAGE_PAGES),
+	PagesPageType("pages", PermissionHelper.create(MANAGE_PAGES)),
 	TagPostsPageType("tag", false),
-	ResourcesPageType("resources", PermissionHelper.MANAGE_RESOURCES),
+	ResourcesPageType("resources", PermissionHelper.create(MANAGE_RESOURCES)),
 	SearchPostsPageType("search", false),
 	VerifyAccountPageType("verifyaccount", false),
 	ChangeAccessPageType("access", true),
-	EditResourcePageType("resourceedit", PermissionHelper.MANAGE_RESOURCES),
+	EditResourcePageType("resourceedit",
+			PermissionHelper.create(MANAGE_RESOURCES)),
 	WidgetTestPageType("widgettest", true),
-	AllPostsPageType("posts", PermissionHelper.MANAGE_POSTS),
-	DownloadsPageType("downloads", true),;
+	AllPostsPageType("posts", PermissionHelper.create(MANAGE_POSTS)),
+	DownloadsPageType("downloads",
+			new Property().name(PropertyHelper.DOWNLOAD_ENABLED)
+					.value(Boolean.toString(true))),;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
 	private Map<String, Permission> requiredPermissions;
+	private Map<String, Property> requiredProperties;
 	private boolean requiresAuthentication;
-
-	private PageType (String value, boolean requiresAuthentication) {
-		this.value = value;
-		this.requiresAuthentication = requiresAuthentication;
-	}
+	private boolean requiresSystemAdmin;
 
 	private PageType (String value) {
-		this.value = value;
-		this.requiresAuthentication = false;
+		this(value, false, false);
 	}
 
-	private PageType (String value, String... requiredPermissionCode) {
+	private PageType (String value, boolean requiresAuthentication,
+			boolean requiresSystemAdmin) {
 		this.value = value;
-		this.requiresAuthentication = true;
+		this.requiresAuthentication = requiresAuthentication;
+		this.requiresSystemAdmin = requiresSystemAdmin;
+	}
 
-		if (requiredPermissionCode != null
-				&& requiredPermissionCode.length > 0) {
+	private PageType (String value, Collection<Permission> requiresPermission) {
+		this(value, true, requiresPermission, null);
+	}
+
+	private PageType (String value, Permission... requiresPermission) {
+		this(value, true, Arrays.asList(requiresPermission), null);
+	}
+
+	private PageType (String value, boolean requiresAuthentication,
+			Property... requiredProperty) {
+		this(value, requiresAuthentication, null, requiredProperty);
+	}
+
+	private PageType (String value, Property... requiredProperty) {
+		this(value, false, null, requiredProperty);
+	}
+
+	private PageType (String value, boolean requiresAuthentication,
+			Collection<Permission> requiredPermission,
+			Property[] requiredProperty) {
+		this(value,
+				(requiredPermission != null && !requiredPermission.isEmpty())
+						|| requiresAuthentication,
+				false);
+
+		if (requiredPermission != null && !requiredPermission.isEmpty()) {
 			requiredPermissions = new HashMap<String, Permission>();
 
-			Permission p;
-			for (String code : requiredPermissionCode) {
-				p = new Permission();
-				p.code = code;
-				requiredPermissions.put(code, p);
+			for (Permission p : requiredPermission) {
+				requiredPermissions.put(p.code, p);
+			}
+		}
+
+		if (requiredProperty != null && requiredProperty.length > 0) {
+			requiredProperties = new HashMap<String, Property>();
+
+			for (Property p : requiredProperty) {
+				requiredProperties.put(p.name, p);
 			}
 		}
 	}
@@ -124,14 +165,20 @@ public enum PageType {
 		return requiresAuthentication;
 	}
 
-	public Collection<Permission> getRequiredPermissions () {
-		return requiredPermissions == null ? null
-				: requiredPermissions.values();
+	public boolean requiresAdmin () {
+		return requiresSystemAdmin;
 	}
 
-	public Collection<String> getRequiredPermissionCodes () {
-		return requiredPermissions == null ? null
-				: requiredPermissions.keySet();
+	private <T> Map<String, T> readonly (Map<String, T> t) {
+		return t == null ? null : Collections.unmodifiableMap(t);
+	}
+
+	public Map<String, Permission> getRequiredPermissions () {
+		return readonly(requiredPermissions);
+	}
+
+	public Map<String, Property> getRequiredProperties () {
+		return readonly(requiredProperties);
 	}
 
 	public boolean equals (String value) {

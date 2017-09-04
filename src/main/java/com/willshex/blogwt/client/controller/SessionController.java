@@ -19,8 +19,8 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.user.UserService;
 import com.willshex.blogwt.client.api.user.event.LoginEventHandler.LoginFailure;
 import com.willshex.blogwt.client.api.user.event.LoginEventHandler.LoginSuccess;
-import com.willshex.blogwt.client.gwt.Window;
 import com.willshex.blogwt.client.api.user.event.LogoutEventHandler;
+import com.willshex.blogwt.client.gwt.Window;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.shared.api.Request;
@@ -32,6 +32,7 @@ import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
 import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
+import com.willshex.blogwt.shared.helper.JsonableHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
 import com.willshex.blogwt.shared.page.PageType;
@@ -220,20 +221,31 @@ public class SessionController {
 	}
 
 	/**
-	 * @param requiredPermissions
+	 * @param p
 	 * @return
 	 */
-	public boolean isAuthorised (Permission... requiredPermissions) {
-		return isAuthorised(Arrays.asList(requiredPermissions));
+	public boolean isAuthorised (PageType p) {
+		boolean authorised = isAdmin();
+
+		if (!authorised && !p.requiresAdmin()) {
+			authorised = isAuthorised(
+					JsonableHelper.values(p.getRequiredPermissions()), true);
+		}
+
+		return authorised;
 	}
 
 	public boolean isAuthorised (Collection<Permission> requiredPermissions) {
-		boolean authorised = isAdmin();
+		return isAuthorised(requiredPermissions, false);
+	}
+
+	public boolean isAuthorised (Collection<Permission> requiredPermissions,
+			boolean skip) {
+		boolean authorised = skip ? false : isAdmin();
 
 		if (!authorised && isValidSession() && user() != null
 				&& permissions() != null) {
-			if (requiredPermissions == null
-					|| requiredPermissions.size() == 0) {
+			if (requiredPermissions == null || requiredPermissions.isEmpty()) {
 				authorised = true;
 			} else {
 				Map<String, Permission> lookup = PermissionHelper
@@ -249,6 +261,15 @@ public class SessionController {
 		}
 
 		return authorised;
+	}
+
+	/**
+	 * @param requiredPermissions
+	 * @return
+	 */
+	public boolean isAuthorised (Permission... requiredPermissions) {
+		return requiredPermissions == null ? true
+				: isAuthorised(Arrays.asList(requiredPermissions));
 	}
 
 	/**

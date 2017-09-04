@@ -21,6 +21,7 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler.NavigationChangedEvent;
 import com.willshex.blogwt.client.gwt.RunAsync;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
+import com.willshex.blogwt.shared.helper.JsonableHelper;
 import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.blogwt.shared.page.Stack;
 
@@ -134,10 +135,11 @@ public class NavigationController implements ValueChangeHandler<String> {
 				SessionController.get().logout(PageType.LoginPageType,
 						s.asNextParameter());
 			} else if (p != null && p.requiresLogin()
-					&& p.getRequiredPermissions() != null
-					&& p.getRequiredPermissions().size() > 0
-					&& !SessionController.get()
-							.isAuthorised(p.getRequiredPermissions())) {
+					&& !SessionController.get().isAuthorised(p)
+					|| !PropertyController.get()
+							.isConfigured(p == null ? null
+									: JsonableHelper.values(
+											p.getRequiredProperties()))) {
 				PageTypeHelper.show(
 						PageController.get().homePageTargetHistoryToken());
 			} else {

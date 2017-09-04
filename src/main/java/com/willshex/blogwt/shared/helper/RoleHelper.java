@@ -10,6 +10,7 @@ package com.willshex.blogwt.shared.helper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,9 @@ public class RoleHelper {
 	public static final String ADMIN = "ADM";
 	public static final String ADMIN_NAME = "System Administrator";
 	public static final String ADMIN_DESCRIPTION = "allows users to perform any action (implicitly contains all permissions)";
+
+	public static final Collection<Permission> ADMIN_PERMISSIONS = Collections
+			.unmodifiableCollection(new ArrayList<>());
 
 	public static Role createAdmin () {
 		return create(ADMIN);
