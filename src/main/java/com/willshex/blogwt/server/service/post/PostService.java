@@ -341,9 +341,12 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * @param post
 	 */
 	private void deleteFromArchive (Post post) {
-		ArchiveEntryServiceProvider.provide()
-				.deleteArchiveEntryPost(ArchiveEntryServiceProvider.provide()
-						.getDateArchiveEntry(post.published), post);
+		if (post.published != null) {
+			ArchiveEntryServiceProvider.provide()
+					.deleteArchiveEntryPost(ArchiveEntryServiceProvider
+							.provide().getDateArchiveEntry(post.published),
+							post);
+		}
 	}
 
 	/* (non-Javadoc)

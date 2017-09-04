@@ -23,6 +23,7 @@ import com.willshex.blogwt.client.markdown.plugin.CachedIncludePlugin;
 import com.willshex.blogwt.client.markdown.plugin.FormPlugin;
 import com.willshex.blogwt.client.markdown.plugin.GalleryPlugin;
 import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
+import com.willshex.blogwt.client.markdown.plugin.PostsPlugin;
 import com.willshex.blogwt.client.markdown.plugin.YoutubePlugin;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
@@ -113,7 +114,8 @@ public class Processor extends MarkdownProcessor {
 				new GalleryPlugin(ensureManager()),
 				mapsApiKey == null ? null
 						: new MapPlugin(mapsApiKey, ensureManager()),
-				new YoutubePlugin(), new FormPlugin(ensureManager()));
+				new YoutubePlugin(), new FormPlugin(ensureManager()),
+				new PostsPlugin(ensureManager()));
 	}
 
 	public Processor () {

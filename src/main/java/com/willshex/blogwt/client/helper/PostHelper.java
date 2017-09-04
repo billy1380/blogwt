@@ -7,13 +7,8 @@
 //
 package com.willshex.blogwt.client.helper;
 
-import java.util.List;
-import java.util.Map;
-
-import org.markdown4j.Plugin;
 import org.markdown4j.client.IncludePlugin;
 import org.markdown4j.client.MarkdownProcessor;
-import org.markdown4j.client.event.PluginContentReadyEventHandler;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -23,6 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.markdown.Processor;
 import com.willshex.blogwt.client.markdown.plugin.FormPlugin;
 import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
+import com.willshex.blogwt.client.markdown.plugin.PostsPlugin;
 
 /**
  * @author William Shakour (billy1380)
@@ -31,37 +27,6 @@ import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
 public class PostHelper extends com.willshex.blogwt.shared.helper.PostHelper {
 
 	private static MarkdownProcessor processor;
-	private static final PluginContentReadyEventHandler DEFAULT_PLUGIN_READY_HANDLER = new PluginContentReadyEventHandler() {
-
-		@Override
-		public void ready (PluginContentReadyEvent event, Plugin plugin,
-				List<String> lines, Map<String, String> params, String id,
-				String content) {
-			Element el = Document.get().getElementById(id);
-
-			if (plugin instanceof IncludePlugin) {
-				if (el != null && content != null) {
-					el.setInnerHTML(content);
-				}
-			} else if (plugin instanceof MapPlugin) {
-
-				if (el != null) {
-					MapHelper.showMap(el, lines, params);
-				}
-			} else if (plugin instanceof FormPlugin) {
-				if (el != null && content != null) {
-					el.removeAllChildren();
-
-					// FIXME: we are probably leaking this
-					// on unload never seems to get called
-					Widget form = ((FormPlugin) plugin).createWidget(lines,
-							params);
-					RootPanel.get().add(form);
-					el.appendChild(form.getElement());
-				}
-			}
-		}
-	};
 
 	private static MarkdownProcessor processor () {
 		if (processor == null) {
@@ -96,7 +61,31 @@ public class PostHelper extends com.willshex.blogwt.shared.helper.PostHelper {
 	 */
 	public static HandlerRegistration handlePluginContentReady () {
 		return processor().addPluginContentReadyHandler(
-				DEFAULT_PLUGIN_READY_HANDLER);
+				(event, plugin, lines, params, id, content) -> {
+					Element el = Document.get().getElementById(id);
+
+					if (plugin instanceof IncludePlugin
+							|| plugin instanceof PostsPlugin) {
+						if (el != null && content != null) {
+							el.setInnerHTML(content);
+						}
+					} else if (plugin instanceof MapPlugin) {
+						if (el != null) {
+							MapHelper.showMap(el, lines, params);
+						}
+					} else if (plugin instanceof FormPlugin) {
+						if (el != null && content != null) {
+							el.removeAllChildren();
+
+							// FIXME: probably leaking this
+							// on unload never seems to get called
+							Widget form = FormPlugin.createWidget(lines,
+									params);
+							RootPanel.get().add(form);
+							el.appendChild(form.getElement());
+						}
+					}
+				});
 	}
 
 }

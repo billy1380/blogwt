@@ -17,7 +17,6 @@ import org.markdown4j.client.event.PluginContentReadyEventHandler.PluginContentR
 
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -27,6 +26,11 @@ import com.google.gwt.user.client.ui.HTMLPanel;
  *
  */
 public class MapPlugin extends AbstractAsyncPlugin {
+
+	private static final Callback<Void, Exception> EMPTY = new Callback<Void, Exception>() {
+		public void onFailure (Exception reason) {}
+		public void onSuccess (Void result) {}
+	};
 
 	private String apiKey;
 
@@ -74,15 +78,10 @@ public class MapPlugin extends AbstractAsyncPlugin {
 		if (!added) {
 			added = true;
 
-			ScriptInjector
-					.fromUrl(
-							"https://maps.googleapis.com/maps/api/js?callback=mapsInitialised&key="
-									+ apiKey)
-					.setCallback(new Callback<Void, Exception>() {
-						public void onFailure (Exception reason) {}
-
-						public void onSuccess (Void result) {}
-					}).inject();
+			ScriptInjector.fromUrl(
+					"https://maps.googleapis.com/maps/api/js?callback=mapsInitialised&key="
+							+ apiKey)
+					.setCallback(EMPTY).inject();
 		}
 
 		if (initialised) {
@@ -108,21 +107,16 @@ public class MapPlugin extends AbstractAsyncPlugin {
 	}
 
 	public static native void registerMapsInitialisedMethod () /*-{
-																window.mapsInitialised = 
-																$entry(@com.willshex.blogwt.client.markdown.plugin.MapPlugin::mapsInitialised());
-																}-*/;
+	window.mapsInitialised = $entry(@com.willshex.blogwt.client.markdown.plugin.MapPlugin::mapsInitialised());
+	}-*/;
 
 	private static void readyToLoad (final HandlerManager manager,
-			final MapPlugin instance, final String id,
-			final List<String> lines, final Map<String, String> params) {
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-			@Override
-			public void execute () {
-				if (manager != null) {
-					manager.fireEvent(new PluginContentReadyEvent(instance,
-							lines, params, id, null));
-				}
+			final MapPlugin instance, final String id, final List<String> lines,
+			final Map<String, String> params) {
+		Scheduler.get().scheduleDeferred( () -> {
+			if (manager != null) {
+				manager.fireEvent(new PluginContentReadyEvent(instance, lines,
+						params, id, null));
 			}
 		});
 	}

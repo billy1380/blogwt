@@ -14,7 +14,6 @@ import org.markdown4j.client.AbstractAsyncPlugin;
 import org.markdown4j.client.event.PluginContentReadyEventHandler.PluginContentReadyEvent;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,19 +42,15 @@ public class FormPlugin extends AbstractAsyncPlugin {
 		out.append(id);
 		out.append("\"> Loading form...</div>");
 
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-			@Override
-			public void execute () {
-				if (manager != null) {
-					manager.fireEvent(new PluginContentReadyEvent(
-							FormPlugin.this, lines, params, id, "None"));
-				}
+		Scheduler.get().scheduleDeferred( () -> {
+			if (manager != null) {
+				manager.fireEvent(new PluginContentReadyEvent(FormPlugin.this,
+						lines, params, id, "None"));
 			}
 		});
 	}
 
-	public Widget createWidget (List<String> lines,
+	public static Widget createWidget (List<String> lines,
 			final Map<String, String> params) {
 		FormPart form = new FormPart();
 
