@@ -440,9 +440,14 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	private void configureNavBar (boolean login) {
 		if (login) {
 			elNavRight.appendChild(elAccount);
-			elNavRight.appendChild(elDownloads);
 		} else {
 			elAccount.removeFromParent();
+		}
+
+		if (PropertyController.get().booleanProperty(
+				PropertyHelper.DOWNLOAD_ENABLED, false) && login) {
+			elNavRight.appendChild(elDownloads);
+		} else {
 			elDownloads.removeFromParent();
 		}
 

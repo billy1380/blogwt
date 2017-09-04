@@ -65,6 +65,7 @@ public class PropertyHelper {
 	public static final String TITLE_IN_NAVBAR = "heading.title";
 
 	public static final String RATING_ENABLED = "rating.enabled";
+	public static final String DOWNLOAD_ENABLED = "download.enabled";
 
 	// user properties
 	public static final String ALLOW_USER_REGISTRATION = "user.allow.registration";
@@ -124,6 +125,8 @@ public class PropertyHelper {
 	public static final String ENABLE_USER_RELATIONSHIPS_DESCRIPTION = "Enable user following and blocking";
 
 	public static final String RATING_ENABLED_DESCRIPTION = "Enable ratings";
+
+	public static final String DOWNLOAD_ENABLED_DESCRIPTION = "Enable downloads";
 
 	public static final String NONE_VALUE = "none";
 	public static final String APPLE_VALUE = "apple";
@@ -350,6 +353,12 @@ public class PropertyHelper {
 				.group("Functional").type("boolean");
 	}
 
+	public static Property createDownloadEnabled (String value) {
+		return new Property().name(DOWNLOAD_ENABLED)
+				.description(DOWNLOAD_ENABLED_DESCRIPTION).value(value)
+				.group("Functional").type("boolean");
+	}
+
 	/**
 	 * @return
 	 */
@@ -388,6 +397,7 @@ public class PropertyHelper {
 			properties.add(createFirebaseApiKey(null));
 			properties.add(createCookieDetailsPageSlug(null));
 			properties.add(createRatingEnabled(null));
+			properties.add(createDownloadEnabled(null));
 		}
 
 		return properties;
