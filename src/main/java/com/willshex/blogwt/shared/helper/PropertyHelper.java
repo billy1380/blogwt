@@ -370,6 +370,7 @@ public class PropertyHelper {
 			properties.add(createCopyrightHolder(null));
 			properties.add(createCopyrightUrl(null));
 			properties.add(createPasswordHashSalt(null));
+			properties.add(createPostEnableEmoji(null));
 			properties.add(createPostCommentsEnabled(null));
 			properties.add(createTitleInNavBar(null));
 			properties.add(createMarkdownMapsApiKey(null));
