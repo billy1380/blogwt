@@ -7,6 +7,9 @@
 //
 package com.willshex.blogwt.shared.helper;
 
+import java.util.Collection;
+import java.util.Map;
+
 import com.willshex.gson.shared.Jsonable;
 import com.willshex.utility.JsonUtils;
 
@@ -19,6 +22,11 @@ public class JsonableHelper {
 	public static <T extends Jsonable> T copy (T from, T to) {
 		to.fromJson(JsonUtils.cleanJson(from.toJson().toString()));
 		return to;
+	}
+
+	public static <T extends Jsonable> Collection<T> values (
+			Map<String, T> map) {
+		return map == null ? null : map.values();
 	}
 
 }
