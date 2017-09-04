@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import com.googlecode.objectify.Key;
 import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
+import com.willshex.blogwt.server.api.validation.PropertyValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.helper.UserHelper;
@@ -25,6 +26,7 @@ import com.willshex.blogwt.shared.api.datatype.RatingSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.gson.web.service.server.InputValidationException;
 
 public final class GetRatingsActionHandler
@@ -50,6 +52,8 @@ public final class GetRatingsActionHandler
 				output.session = input.session = null;
 			}
 		}
+
+		PropertyValidator.ensureTrue(PropertyHelper.RATING_ENABLED);
 
 		if (input.pager == null) {
 			input.pager = PagerHelper.createDefaultPager();

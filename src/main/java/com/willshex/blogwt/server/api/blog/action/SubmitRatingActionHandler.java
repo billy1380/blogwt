@@ -35,8 +35,7 @@ public final class SubmitRatingActionHandler
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");
 
-		PropertyValidator.ensureTrue(PropertyHelper.RATING_ENABLED,
-				PropertyHelper.RATING_ENABLED);
+		PropertyValidator.ensureTrue(PropertyHelper.RATING_ENABLED);
 
 		if (input.rating != null && input.rating.by == null) {
 			input.rating.by = input.session.user;
