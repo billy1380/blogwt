@@ -303,4 +303,28 @@ public class PropertyController extends ListDataProvider<Property> {
 
 		return value;
 	}
+
+	/**
+	 * @param values
+	 * @return
+	 */
+	public boolean isConfigured (Collection<Property> values) {
+		boolean configured = true;
+
+		if (values != null) {
+			String ev, v;
+
+			for (Property property : values) {
+				ev = PropertyHelper.value(propertyLookup.get(property.name));
+				v = PropertyHelper.value(property);
+
+				if (ev != v || (v != null && ev != null && !ev.equals(v))) {
+					configured = false;
+					break;
+				}
+			}
+		}
+
+		return configured;
+	}
 }
