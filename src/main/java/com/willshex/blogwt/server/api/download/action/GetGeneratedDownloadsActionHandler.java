@@ -11,12 +11,14 @@ import java.util.logging.Logger;
 
 import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
+import com.willshex.blogwt.server.api.validation.PropertyValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.service.generateddownload.GeneratedDownloadServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownloadSortType;
 import com.willshex.blogwt.shared.api.download.call.GetGeneratedDownloadsRequest;
 import com.willshex.blogwt.shared.api.download.call.GetGeneratedDownloadsResponse;
 import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 public final class GetGeneratedDownloadsActionHandler extends
 		ActionHandler<GetGeneratedDownloadsRequest, GetGeneratedDownloadsResponse> {
@@ -33,6 +35,8 @@ public final class GetGeneratedDownloadsActionHandler extends
 
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");
+
+		PropertyValidator.ensureTrue(PropertyHelper.DOWNLOAD_ENABLED);
 
 		if (input.pager == null) {
 			input.pager = PagerHelper.createDefaultPager();

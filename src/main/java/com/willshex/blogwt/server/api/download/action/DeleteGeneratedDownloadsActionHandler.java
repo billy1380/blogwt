@@ -13,12 +13,14 @@ import java.util.logging.Logger;
 import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.GeneratedDownloadValidator;
+import com.willshex.blogwt.server.api.validation.PropertyValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.service.generateddownload.GeneratedDownloadServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownload;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownloadStatusType;
 import com.willshex.blogwt.shared.api.download.call.DeleteGeneratedDownloadsRequest;
 import com.willshex.blogwt.shared.api.download.call.DeleteGeneratedDownloadsResponse;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 public final class DeleteGeneratedDownloadsActionHandler extends
 		ActionHandler<DeleteGeneratedDownloadsRequest, DeleteGeneratedDownloadsResponse> {
@@ -35,6 +37,8 @@ public final class DeleteGeneratedDownloadsActionHandler extends
 
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");
+
+		PropertyValidator.ensureTrue(PropertyHelper.DOWNLOAD_ENABLED);
 
 		input.downloads = GeneratedDownloadValidator.lookupAll(input.downloads,
 				"input.downloads");
