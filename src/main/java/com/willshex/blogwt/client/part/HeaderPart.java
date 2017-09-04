@@ -100,6 +100,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	@UiField Element elPermissions;
 	@UiField Element elUsers;
 	@UiField Element elAccount;
+	@UiField Element elDownloads;
 	@UiField InlineHyperlink btnAccount;
 	@UiField Element elUserName;
 	@UiField ImageElement imgAvatar;
@@ -439,8 +440,10 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	private void configureNavBar (boolean login) {
 		if (login) {
 			elNavRight.appendChild(elAccount);
+			elNavRight.appendChild(elDownloads);
 		} else {
 			elAccount.removeFromParent();
+			elDownloads.removeFromParent();
 		}
 
 		SafeUri href;

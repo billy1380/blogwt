@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import com.willshex.blogwt.server.api.download.action.DeleteGeneratedDownloadsActionHandler;
 import com.willshex.blogwt.server.api.download.action.GenerateDownloadActionHandler;
 import com.willshex.blogwt.server.api.download.action.GetGeneratedDownloadsActionHandler;
+import com.willshex.blogwt.server.background.generatedownload.generator.DownloadGeneratorProvider;
 import com.willshex.blogwt.server.helper.GcsHelper;
 import com.willshex.blogwt.server.helper.GeneratedDownloadHelper;
 import com.willshex.blogwt.server.helper.ServletHelper;
@@ -80,18 +81,19 @@ public final class DownloadJsonServlet extends JsonServlet {
 
 					if (generatedDownload.userKey.getId() == userSession.userKey
 							.getId()) {
-						Stack stack = Stack.parse(generatedDownload.parameters);
-						Filter filter = Filter.fromStack(stack);
+						Filter filter = Filter.fromStack(
+								Stack.parse(generatedDownload.parameters));
 
 						String fileName = StringUtils
 								.urldecode(generatedDownload.parameters)
+								.replace(Filter.QUERY + "/", "")
 								.replace("/", "_").replace("&", "_")
 								.replace(" ", "_") + "."
-								+ GeneratedDownloadHelper
-										.extension(filter.type);
+								+ DownloadGeneratorProvider
+										.extension(filter.type).get();
 
-						RESPONSE.get().setContentType(GeneratedDownloadHelper
-								.contentType(filter.type));
+						RESPONSE.get().setContentType(DownloadGeneratorProvider
+								.contentType(filter.type).get());
 						RESPONSE.get().setHeader("content-disposition",
 								"inline; filename=\"" + fileName + "\"");
 						RESPONSE.get().getOutputStream()

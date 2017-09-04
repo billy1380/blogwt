@@ -8,6 +8,7 @@
 package com.willshex.blogwt.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.willshex.blogwt.server.api.blog.action.GetPostsActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
+import com.willshex.blogwt.server.service.generateddownload.GeneratedDownloadServiceProvider;
 import com.willshex.blogwt.server.service.metanotification.MetaNotificationServiceProvider;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
@@ -37,6 +39,7 @@ import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
+import com.willshex.blogwt.shared.api.datatype.GeneratedDownload;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Resource;
@@ -46,6 +49,8 @@ import com.willshex.blogwt.shared.helper.MetaNotificationHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
+import com.willshex.blogwt.shared.page.Stack;
+import com.willshex.blogwt.shared.page.search.Filter;
 import com.willshex.server.ContextAwareServlet;
 import com.willshex.service.ServiceDiscovery;
 import com.willshex.utility.JsonUtils;
@@ -64,6 +69,14 @@ public class DevServlet extends ContextAwareServlet {
 			.getLogger(DevServlet.class.getName());
 
 	public static final String URL = "/dev";
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.server.ContextAwareServlet#doPost() */
+	@Override
+	protected void doPost () throws ServletException, IOException {
+		doGet();
+	}
 
 	/* (non-Javadoc)
 	 * 
@@ -106,15 +119,37 @@ public class DevServlet extends ContextAwareServlet {
 			ArchiveEntryServiceProvider.provide().generateArchive();
 		} else if ("fixroles".equals(action)) {
 			Collection<Role> all = RoleHelper.createAll();
-
-			Role loaded;
-			for (Role role : all) {
-				loaded = RoleServiceProvider.provide().getCodeRole(role.code);
+			all.stream().forEach(role -> {
+				Role loaded = RoleServiceProvider.provide()
+						.getCodeRole(role.code);
 
 				if (loaded == null || loaded.id == null) {
 					RoleServiceProvider.provide().addRole(role);
 				}
-			}
+
+				if (role.permissions != null) {
+					role.permissions.stream().forEach(i -> {
+						Permission lp = PermissionServiceProvider.provide()
+								.getCodePermission(i.code);
+
+						if (lp == null) {
+							if (LOG.isLoggable(Level.WARNING)) {
+								LOG.warning(
+										"Could not find permission with code ["
+												+ i.code
+												+ "], might want to run [fixpermissions] action");
+							}
+						} else {
+							if (loaded.permissions == null) {
+								loaded.permissions = new ArrayList<>();
+							}
+
+							loaded.permissions.add(lp);
+						}
+					});
+					RoleServiceProvider.provide().updateRole(loaded);
+				}
+			});
 		} else if ("fixpermissions".equals(action)) {
 			Collection<Permission> all = PermissionHelper.createAll();
 
@@ -182,6 +217,17 @@ public class DevServlet extends ContextAwareServlet {
 					Arrays.asList(RoleServiceProvider.provide()
 							.getCodeRole(RoleHelper.ADMIN)),
 					null);
+		} else if ("genandshowdownload".equals(action)) {
+			String idParam = REQUEST.get().getParameter("id");
+			Long id = Long.valueOf(idParam);
+			GeneratedDownload d = GeneratedDownloadServiceProvider.provide()
+					.getGeneratedDownload(id);
+			Stack stack = Stack.parse(d.parameters);
+			Filter filter = Filter.fromStack(stack);
+			switch (filter.type) {
+			default:
+				break;
+			}
 		}
 	}
 }

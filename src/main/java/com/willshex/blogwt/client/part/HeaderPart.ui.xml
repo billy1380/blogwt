@@ -11,6 +11,10 @@
 	.pad-top {
 		padding-top: 20px;
 	}
+	
+	.fit {
+		object-fit: cover;
+	}
 	</ui:style>
 
 	<g:HTMLPanel styleName="container {style.pad-top}">
@@ -21,7 +25,7 @@
 					<a class="navbar-brand" ui:field="btnHome">
 						<span>
 							<g:Image altText="Blogwt" title="Blogwt" ui:field="imgLogo"
-								styleName="img-rounded {style.bottom}" width="20px" height="20px" />
+								styleName="{style.fit} img-rounded {style.bottom}" width="20px" height="20px" />
 						</span>
 						<span ui:field="elName" class="text-capitalize">Blogwt</span>
 					</a>
@@ -67,6 +71,11 @@
 								<span ui:field="elUserName">-</span>
 								<img ui:field="imgAvatar" class="img-circle" />
 							</g:InlineHyperlink>
+						</li>
+						<li ui:field="elDownloads">
+							<a href="{DOWNLOADS_PAGE_HREF}">
+								<span class="glyphicon glyphicon-download-alt"></span>
+							</a>
 						</li>
 					</ul>
 				</g:HTMLPanel>

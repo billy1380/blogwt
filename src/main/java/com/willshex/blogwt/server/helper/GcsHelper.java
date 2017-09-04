@@ -12,6 +12,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.channels.Channels;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,14 +47,14 @@ public class GcsHelper {
 		}
 	}
 
-	public static void save (byte[] data, String mime, String path) {
+	public static void save (byte[] data, Supplier<String> mime, String path) {
 		if (LOG.isLoggable(Level.FINER)) {
 			LOG.finer("Saving data with mime type [" + mime + "] to [" + path
 					+ "]");
 		}
 
-		GcsFileOptions instance = new GcsFileOptions.Builder().mimeType(mime)
-				.build();
+		GcsFileOptions instance = new GcsFileOptions.Builder()
+				.mimeType(mime.get()).build();
 		GcsFilename fileName = new GcsFilename(
 				System.getProperty(BUCKET_NAME_PROPERTY_KEY), path);
 

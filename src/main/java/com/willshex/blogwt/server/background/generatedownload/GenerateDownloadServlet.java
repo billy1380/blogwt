@@ -13,13 +13,20 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 
 import com.google.gson.JsonObject;
+import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.GeneratedDownloadValidator;
+import com.willshex.blogwt.server.background.generatedownload.generator.DownloadGeneratorProvider;
+import com.willshex.blogwt.server.background.generatedownload.generator.IGenerator;
 import com.willshex.blogwt.server.background.generatedownload.input.GenerateDownloadAction;
+import com.willshex.blogwt.server.helper.GeneratedDownloadHelper;
 import com.willshex.blogwt.server.helper.QueueHelper;
 import com.willshex.blogwt.server.helper.QueueHelper.HasQueueAction;
 import com.willshex.blogwt.server.service.generateddownload.GeneratedDownloadServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownload;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownloadStatusType;
+import com.willshex.blogwt.shared.api.validation.ApiError;
+import com.willshex.blogwt.shared.page.Stack;
+import com.willshex.blogwt.shared.page.search.Filter;
 import com.willshex.gson.web.service.server.InputValidationException;
 import com.willshex.gson.web.service.server.ServiceException;
 import com.willshex.server.ContextAwareServlet;
@@ -78,7 +85,7 @@ public class GenerateDownloadServlet extends ContextAwareServlet
 	 * @throws InputValidationException 
 	 */
 	private void processGenerateDownload (GenerateDownloadAction input)
-			throws InputValidationException {
+			throws ServiceException {
 		GeneratedDownload generatedDownload = GeneratedDownloadValidator
 				.lookup(input.download, "input.download");
 
@@ -87,12 +94,22 @@ public class GenerateDownloadServlet extends ContextAwareServlet
 			GeneratedDownloadServiceProvider.provide()
 					.updateGeneratedDownload(generatedDownload);
 
-			//			Stack stack = Stack.parse(generatedDownload.parameters);
-			//			Filter filter = Filter.fromStack(stack);
+			Stack stack = Stack.parse(generatedDownload.parameters);
+			Filter filter = Filter.fromStack(stack);
 
-			// TODO: find generator
-			// TODO: resolve filter data
-			// TODO: generate with filter data
+			IGenerator generator = DownloadGeneratorProvider.generator(filter.type);
+
+			if (generator == null)
+				ApiValidator.throwServiceError(ServiceException.class,
+						ApiError.NoGeneratorFound, filter.type);
+
+			byte[] bytes = generator.generate(generatedDownload, filter);
+
+			if (bytes != null
+					&& generatedDownload.parameters.endsWith("send")) {
+				GeneratedDownloadHelper.sendEmail(generatedDownload, filter,
+						bytes);
+			}
 
 			generatedDownload.status = GeneratedDownloadStatusType.GeneratedDownloadStatusTypeReady;
 			generatedDownload.url = "/download?action=download&id="

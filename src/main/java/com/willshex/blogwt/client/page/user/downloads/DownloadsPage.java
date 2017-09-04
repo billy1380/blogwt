@@ -53,6 +53,7 @@ import com.willshex.blogwt.shared.api.download.call.GetGeneratedDownloadsRespons
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.page.Stack;
+import com.willshex.blogwt.shared.page.search.Filter;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
@@ -140,7 +141,8 @@ public class DownloadsPage extends Page implements
 			public SafeHtml getValue (GeneratedDownload object) {
 				String parameters = object.parameters.replace("/send", "");
 
-				String label = parameters.replace("/", " > ");
+				String label = parameters.replace(Filter.QUERY + "/", "")
+						.replace("/", " > ");
 				label = URL.decodeQueryString(label);
 
 				return parameters.startsWith("proforma")
@@ -207,7 +209,7 @@ public class DownloadsPage extends Page implements
 		});
 		tblDownloads.setColumnWidth(delete, 1.0, Unit.PX);
 
-		tblDownloads.addColumn(name, "Search criteria");
+		tblDownloads.addColumn(name, "Type");
 		tblDownloads.addColumn(date, "Date");
 		tblDownloads.addColumn(status, "Completion");
 

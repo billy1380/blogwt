@@ -19,11 +19,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
+import com.willshex.blogwt.server.background.generatedownload.generator.DownloadGeneratorProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.DataType;
@@ -47,15 +46,11 @@ public class GeneratedDownloadHelper {
 
 	private static final String COMMA = ",";
 
-	private static final String CSV_CONTENT_TYPE = "text/csv";
-	private static final String CSV_EXTENSION = "csv";
+	public static final String CSV_CONTENT_TYPE = "text/csv";
+	public static final String CSV_EXTENSION = "csv";
 
-	private static final String PDF_CONTENT_TYPE = "application/pdf";
-	private static final String PDF_EXTENSION = "pdf";
-
-	private static final String HTML_PDF_SERVICE_PROPERTY_KEY = "html.to.pdf.endpoint";
-	private static final String DEV_HTML_PDF_SERVICE_PROPERTY_KEY = "dev."
-			+ HTML_PDF_SERVICE_PROPERTY_KEY;
+	public static final String PDF_CONTENT_TYPE = "application/pdf";
+	public static final String PDF_EXTENSION = "pdf";
 
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
 			"d MMM yyyy");
@@ -132,55 +127,10 @@ public class GeneratedDownloadHelper {
 				Query toQuery, Pager p);
 
 		protected void processResults (List<T> results) {}
-	}
 
-	@FunctionalInterface
-	public interface PdfSaver {
-
-		public static byte[] save (GeneratedDownload generatedDownload,
-				Filter filter, PdfSaver saver) {
-			byte[] data = null;
-
-			if (generatedDownload != null && generatedDownload.url == null) {
-				String htmlData = saver.createDocument(generatedDownload,
-						filter, loadTemplate(generatedDownload, filter));
-
-				//				if (LOG.isLoggable(Level.FINE)) {
-				//					LOG.fine("Html document created [" + htmlData + "]");
-				//				}
-				//
-				//				GcsHelper.save(htmlData.getBytes(), "text/html",
-				//						generatedDownload.id.toString() + ".html");
-
-				StringBuffer buffer = new StringBuffer();
-				String htmlPdfEndPoint = System
-						.getProperty(SystemProperty.environment
-								.value() == SystemProperty.Environment.Value.Production
-										? HTML_PDF_SERVICE_PROPERTY_KEY
-										: DEV_HTML_PDF_SERVICE_PROPERTY_KEY);
-
-				buffer.append("name=");
-				buffer.append(filter.type);
-				buffer.append(StringUtils.urlencode(" "));
-				buffer.append(filter.query);
-				buffer.append(".pdf&document=");
-				buffer.append(StringUtils.urlencode(htmlData));
-				buffer.append("&settings=");
-				buffer.append(StringUtils.urlencode(
-						"{\"margin-top\":10,\"margin-right\":20,\"margin-bottom\":10,\"margin-left\":20}"));
-
-				data = HttpHelper.curl(htmlPdfEndPoint,
-						buffer.toString().getBytes(), HTTPMethod.POST);
-
-				GcsHelper.save(data, "application/pdf",
-						path(generatedDownload));
-			}
-
-			return data;
+		public static String extension () {
+			return CSV_EXTENSION;
 		}
-
-		public String createDocument (GeneratedDownload generatedDownload,
-				Filter filter, String template);
 	}
 
 	public static String loadTemplate (GeneratedDownload generatedDownload,
@@ -270,36 +220,6 @@ public class GeneratedDownloadHelper {
 	}
 
 	/**
-	 * @param type
-	 * @return
-	 */
-	public static String extension (String type) {
-		String extension = CSV_EXTENSION;
-
-		// resolve filter type extension
-		if (test()) {
-			extension = PDF_EXTENSION;
-		}
-
-		return extension;
-	}
-
-	/**
-	 * @param type
-	 * @return
-	 */
-	public static String contentType (String type) {
-		String contentType = CSV_CONTENT_TYPE;
-
-		// TODO: resolve filter type content type
-		if (test()) {
-			contentType = PDF_CONTENT_TYPE;
-		}
-
-		return contentType;
-	}
-
-	/**
 	 * @param generatedDownload
 	 * @return
 	 */
@@ -311,7 +231,7 @@ public class GeneratedDownloadHelper {
 		}
 
 		return filter.type + "/" + generatedDownload.id + "."
-				+ extension(filter.type);
+				+ DownloadGeneratorProvider.extension(filter.type).get();
 	}
 
 	public static String path (GeneratedDownload generatedDownload) {
@@ -366,10 +286,6 @@ public class GeneratedDownloadHelper {
 			Filter filter) {
 		return StringUtils.urldecode(generatedDownload.parameters)
 				.replace("/", "_").replace("&", "_").replace(" ", "_") + "."
-				+ GeneratedDownloadHelper.extension(filter.type);
-	}
-
-	private static boolean test () {
-		return false;
+				+ DownloadGeneratorProvider.extension(filter.type).get();
 	}
 }

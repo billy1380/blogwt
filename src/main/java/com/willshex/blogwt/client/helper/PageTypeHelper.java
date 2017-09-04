@@ -59,6 +59,8 @@ public class PageTypeHelper {
 			PageType.ResourcesPageType);
 	public static final SafeUri POSTS_PAGE_HREF = asHref(
 			PageType.AllPostsPageType);
+	public static final SafeUri DOWNLOADS_PAGE_HREF = asHref(
+			PageType.DownloadsPageType);
 
 	/**
 	 * 
