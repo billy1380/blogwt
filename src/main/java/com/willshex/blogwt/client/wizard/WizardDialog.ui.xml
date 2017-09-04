@@ -8,18 +8,16 @@
 	</ui:style>
 	<g:HTMLPanel styleName="container">
 		<g:HTMLPanel styleName="row" visible="false" ui:field="pnlLayout">
-			<g:FormPanel styleName="{style.form-wizard} col-sm-4 col-sm-offset-4">
-				<g:HTMLPanel>
+			<g:FormPanel styleName="{style.form-wizard}">
+				<g:HTMLPanel styleName="container">
 					<h2 ui:field="h2WizardTitle">Title</h2>
 					<h3 ui:field="h3PageTitle">Title</h3>
+					<div ui:field="elDescription" class="small">Description</div>
+					<hr />
 
 					<g:HTMLPanel ui:field="pnlContents" />
 
 					<div class="btn-toolbar">
-						<div class="btn-group">
-							<g:Button ui:field="btnBack" styleName="{style.btn} btn btn-default"
-								text="Back" visible="false" />
-						</div>
 
 						<div class="pull-right btn-group">
 							<g:Button ui:field="btnNext" styleName="{style.btn} btn btn-primary"
@@ -32,10 +30,12 @@
 							<g:Button ui:field="btnAddChild" styleName="{style.btn} btn btn-default"
 								text="+" />
 						</g:HTMLPanel>
-					</div>
 
-					<hr />
-					<div ui:field="elDescription" class="small">Description</div>
+						<div class="pull-right btn-group">
+							<g:Button ui:field="btnBack" styleName="{style.btn} btn btn-default"
+								text="Back" visible="false" />
+						</div>
+					</div>
 				</g:HTMLPanel>
 			</g:FormPanel>
 		</g:HTMLPanel>
