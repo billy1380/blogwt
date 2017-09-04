@@ -97,7 +97,8 @@ public class HttpHelper {
 		if (LOG.isLoggable(Level.FINE)) {
 			LOG.log(Level.FINE, String.format(
 					"calling endpoint [%s] with payload [%s] using method [%s]",
-					endpoint, new String(payload), method.toString()));
+					endpoint, payload == null ? null : new String(payload),
+					method.toString()));
 		}
 
 		try {
