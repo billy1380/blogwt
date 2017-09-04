@@ -131,9 +131,13 @@ public class UiHelper {
 	}
 
 	public static <E extends Enum<E>> void select (ListBox cbo, E value) {
+		select(cbo, value.toString());
+	}
+
+	public static void select (ListBox cbo, String value) {
 		int count = cbo.getItemCount();
 		for (int i = 0; i < count; i++) {
-			if (cbo.getItemText(i).equals(value.toString())) {
+			if (cbo.getValue(i).equals(value)) {
 				cbo.setSelectedIndex(i);
 				break;
 			}
