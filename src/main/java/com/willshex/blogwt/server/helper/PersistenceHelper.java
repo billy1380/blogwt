@@ -117,17 +117,20 @@ public class PersistenceHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <LS, T> Map<LS, T> typeMap (List<T> items) {
+	public static <LS, T> Map<LS, T> typeMap (Iterable<T> items) {
 		Map<LS, T> lookup = new HashMap<>();
 
-		if (items.size() > 0) {
-			Field f = key(items.get(0).getClass());
-			for (T item : items) {
-				try {
-					lookup.put((LS) f.get(item), item);
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					throw new RuntimeException(e);
-				}
+		Field f = null;
+
+		for (T item : items) {
+			if (f == null) {
+				f = key(item.getClass());
+			}
+
+			try {
+				lookup.put((LS) f.get(item), item);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				throw new RuntimeException(e);
 			}
 		}
 
