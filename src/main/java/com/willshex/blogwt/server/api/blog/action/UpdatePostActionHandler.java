@@ -85,7 +85,8 @@ public final class UpdatePostActionHandler
 			input.post.published = new Date();
 		}
 
-		PostServiceProvider.provide().updatePost(input.post, removedTags);
+		output.post = PostServiceProvider.provide().updatePost(input.post,
+				removedTags);
 	}
 
 	/* (non-Javadoc)
