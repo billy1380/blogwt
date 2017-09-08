@@ -84,15 +84,15 @@ public class RelatedPart extends Composite implements GetPostEventHandler {
 	 * com.willshex.blogwt.shared.api.blog.call.GetPostResponse) */
 	@Override
 	public void getPostSuccess (GetPostRequest input, GetPostResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess
-				&& output.post != null && output.post.tags != null) {
+		if (output.status == StatusType.StatusTypeSuccess && output.post != null
+				&& output.post.tags != null) {
 			StringBuffer query = new StringBuffer();
 			for (String tag : output.post.tags) {
 				if (query.length() > 0) {
 					query.append(" OR ");
 				}
 
-				query.append("tag:" + tag);
+				query.append("tag:\"" + tag + "\"");
 			}
 
 			if (query.length() > 0) {
