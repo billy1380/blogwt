@@ -531,7 +531,9 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	public void updatePostSuccess (UpdatePostRequest input,
 			UpdatePostResponse output) {
 		if (output.status == StatusType.StatusTypeFailure) {
-
+			if (output.post != null) {
+				post = output.post;	
+			}
 		} else {
 			if (saveAndShow) {
 				PageTypeHelper.show(PageType.PostDetailPageType,
@@ -567,7 +569,9 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	public void createPostSuccess (CreatePostRequest input,
 			CreatePostResponse output) {
 		if (output.status == StatusType.StatusTypeFailure) {
-
+			if (output.post != null) {
+				post = output.post;	
+			}
 		} else {
 			if (saveAndShow) {
 				PageTypeHelper.show(PageType.PostDetailPageType,
