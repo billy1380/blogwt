@@ -19,7 +19,7 @@ public class UserHelper {
 
 	public static final int AVATAR_HEADER_SIZE = 18;
 	public static final int AVATAR_SIZE = 35;
-	public static final int AVATAR_LARGE_SIZE = 128;
+	public static final int AVATAR_LARGE_SIZE = 80;
 
 	/**
 	 * Returns user forname and surname

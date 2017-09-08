@@ -28,7 +28,7 @@ public class UserSummaryPart extends Composite {
 			.create(UserSummaryPartUiBinder.class);
 
 	interface UserSummaryPartUiBinder extends UiBinder<Widget, UserSummaryPart> {}
-
+ 
 	@UiField Image imgAvatar;
 	@UiField Element elName;
 	@UiField Element elUsername;
