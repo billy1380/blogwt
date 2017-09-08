@@ -37,6 +37,7 @@ import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.oracle.PageOracle;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.Page;
+import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.CreatePageResponse;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
@@ -68,7 +69,8 @@ public class PageController extends AsyncDataProvider<Page> {
 	}
 
 	private PageOracle oracle;
-	private Pager pager = PagerHelper.createDefaultPager();
+	private Pager pager = PagerHelper.createDefaultPager()
+			.sortBy(PageSortType.PageSortTypeCreated.toString());
 
 	private Request getPagesRequest;
 	private Request getPageRequest;

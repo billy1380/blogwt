@@ -11,9 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum PageSortType {
+	PageSortTypeId("id"),
+	PageSortTypeCreated("created"),
 	PageSortTypeSlug("slug"),
 	PageSortTypeParent("parent"),
-	PageSortTypePriority("priority"), ;
+	PageSortTypePriority("priority"),;
 	private String value;
 	private static Map<String, PageSortType> valueLookup = null;
 
