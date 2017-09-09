@@ -532,7 +532,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 			UpdatePostResponse output) {
 		if (output.status == StatusType.StatusTypeFailure) {
 			if (output.post != null) {
-				post = output.post;	
+				post = output.post;
 			}
 		} else {
 			if (saveAndShow) {
@@ -570,7 +570,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 			CreatePostResponse output) {
 		if (output.status == StatusType.StatusTypeFailure) {
 			if (output.post != null) {
-				post = output.post;	
+				post = output.post;
 			}
 		} else {
 			if (saveAndShow) {
@@ -640,7 +640,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		if (output.status == StatusType.StatusTypeSuccess) {
 			show(post = output.post);
 		} else {
-			PageTypeHelper.show(PageType.PostsPageType);
+			NavigationController.get().lost();
 		}
 	}
 

@@ -10,7 +10,6 @@ package com.willshex.blogwt.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 
 /**
  * @author billy1380
@@ -23,17 +22,7 @@ public abstract class ErrorHandlingEntryPoint implements EntryPoint {
 	 * @see com.google.gwt.core.client.EntryPoint#onModuleLoad() */
 	@Override
 	public void onModuleLoad () {
-		handleUncaughtExceptions();
+		GWT.setUncaughtExceptionHandler(
+				e -> GWT.log("An unhandled exception was caugth!", e));
 	}
-
-	private void handleUncaughtExceptions () {
-		GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-
-			@Override
-			public void onUncaughtException (Throwable e) {
-				GWT.log("An unhandled GWT exception was caugth!", e);
-			}
-		});
-	}
-
 }

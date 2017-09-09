@@ -157,7 +157,7 @@ public class PostDetailPage extends Page
 		if (output.status == StatusType.StatusTypeSuccess) {
 			show(post = output.post);
 		} else {
-			PageTypeHelper.show(PageType.PostsPageType);
+			NavigationController.get().lost();
 		}
 	}
 

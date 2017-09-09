@@ -12,15 +12,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler.NavigationChangedEvent;
 import com.willshex.blogwt.client.gwt.RunAsync;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
+import com.willshex.blogwt.client.page.blog.notfound.NotFoundPage;
 import com.willshex.blogwt.shared.helper.JsonableHelper;
 import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.blogwt.shared.page.Stack;
@@ -32,8 +33,6 @@ import com.willshex.blogwt.shared.page.Stack;
 public class NavigationController implements ValueChangeHandler<String> {
 	private static NavigationController one = null;
 
-	private HTMLPanel pageHolder = null;
-
 	/**
 	 * @return
 	 */
@@ -44,6 +43,9 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 		return one;
 	}
+
+	private HTMLPanel pageHolder = null;
+	private static final Widget NOT_FOUND = new NotFoundPage();
 
 	/**
 	 * 
@@ -89,13 +91,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 				pageHolder.add(page);
 			}
 
-			Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-				@Override
-				public void execute () {
-					DefaultEventBus.get().fireEventFromSource(event,
-							NavigationController.this);
-				}
-			});
+			Scheduler.get().scheduleDeferred( () -> DefaultEventBus.get()
+					.fireEventFromSource(event, NavigationController.this));
 		}
 	}
 
@@ -140,8 +137,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 							.isConfigured(p == null ? null
 									: JsonableHelper.values(
 											p.getRequiredProperties()))) {
-				PageTypeHelper.show(
-						PageController.get().homePageTargetHistoryToken());
+				lost();
 			} else {
 				if (intended != null && intended.equals(s.toString())) {
 					intended = null;
@@ -228,5 +224,10 @@ public class NavigationController implements ValueChangeHandler<String> {
 	 */
 	public void purgeAllPages () {
 		pages.clear();
+	}
+
+	public void lost () {
+		pageHolder.clear();
+		pageHolder.add(NOT_FOUND);
 	}
 }

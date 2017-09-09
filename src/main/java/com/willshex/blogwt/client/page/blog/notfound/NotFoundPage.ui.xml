@@ -1,0 +1,27 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	.jumbo {
+		position: relative;
+		z-index: -1;
+		top: -9095px;
+		padding-top: 9150px;
+		margin-bottom: -9095px;
+		font-family: Courier New, monospace;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<div ui:field="elJumbotron" class="jumbotron text-center {style.jumbo}">
+			<div class="container">
+				<h1>-404-</h1>
+				<p class="small">Not found!</p>
+			</div>
+		</div>
+
+		<div class="container">
+			<h2>
+				Are you lost?</h2>
+			<a ui:field="elHome" title="Go home">¯\_(ツ)_/¯ Go home.</a>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

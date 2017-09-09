@@ -8,7 +8,6 @@
 package com.willshex.blogwt.client.helper;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.History;
@@ -27,6 +26,7 @@ import com.willshex.blogwt.client.page.blog.PostsPage;
 import com.willshex.blogwt.client.page.blog.SearchPage;
 import com.willshex.blogwt.client.page.blog.SetupBlogPage;
 import com.willshex.blogwt.client.page.blog.TagPage;
+import com.willshex.blogwt.client.page.blog.notfound.NotFoundPage;
 import com.willshex.blogwt.client.page.page.EditPagePage;
 import com.willshex.blogwt.client.page.page.PageDetailPage;
 import com.willshex.blogwt.client.page.user.ChangeAccessPage;
@@ -73,6 +73,9 @@ public class PageTypeHelper {
 		switch (pageType) {
 		case UsersPageType:
 			page = new UsersPage();
+			break;
+		case NotFoundPageType:
+			page = new NotFoundPage();
 			break;
 		case LoginPageType:
 			page = new LoginPage();
@@ -163,12 +166,8 @@ public class PageTypeHelper {
 	}
 
 	public static void show (final String targetHistoryToken) {
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-			@Override
-			public void execute () {
-				History.newItem(targetHistoryToken);
-			}
-		});
+		Scheduler.get()
+				.scheduleDeferred( () -> History.newItem(targetHistoryToken));
 	}
 
 	public static SafeUri asHref (PageType pageType) {

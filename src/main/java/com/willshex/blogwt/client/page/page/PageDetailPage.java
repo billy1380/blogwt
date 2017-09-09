@@ -87,8 +87,8 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				(p, c) -> {
 					String slug = null;
-					if (PageType
-							.fromString(c.getPage()) == PageType.PageDetailPageType) {
+					if (PageType.fromString(
+							c.getPage()) == PageType.PageDetailPageType) {
 						slug = c.getAction();
 					} else {
 						slug = c.getPageSlug();
@@ -102,15 +102,17 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 					}
 
 					if (slug == null) {
-						PageTypeHelper.show(PageType.PostsPageType);
+						NavigationController.get().lost();
 					} else {
-						PageController.get().getPage(new Page().slug(slug), true);
+						PageController.get().getPage(new Page().slug(slug),
+								true);
 					}
 
 					pnlLoading.setVisible(true);
 
-					boolean canChange = SessionController.get().isAuthorised(Arrays.asList(
-							PermissionHelper.create(PermissionHelper.MANAGE_PAGES)));
+					boolean canChange = SessionController.get()
+							.isAuthorised(Arrays.asList(PermissionHelper
+									.create(PermissionHelper.MANAGE_PAGES)));
 					if (canChange) {
 						getElement().insertFirst(elToolbar);
 					} else {
@@ -161,7 +163,7 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 		if (output.status == StatusType.StatusTypeSuccess) {
 			show(page = output.page);
 		} else {
-			PageTypeHelper.show(PageType.PostsPageType);
+			NavigationController.get().lost();
 		}
 	}
 

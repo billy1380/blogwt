@@ -3,12 +3,6 @@
 	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:import field="com.willshex.blogwt.shared.page.PageType.EditPostPageType" />
 	<ui:style>
-	.inline, .inline p {
-		display: inline;
-		padding: 0;
-		margin: 0;
-	}
-	
 	.jumbo {
 		position: relative;
 		z-index: -1;
@@ -33,7 +27,7 @@
 				<div class="btn-group">
 					<g:InlineHyperlink ui:field="lnkNewPost" styleName="btn btn-default"
 						targetHistoryToken="{EditPostPageType.asTargetHistoryToken}/new">
-						<span class="glyphicon glyphicon-plus"></span>
+						<span class="glyphicon glyphicon-plus" />
 						New Post
 					</g:InlineHyperlink>
 				</div>
