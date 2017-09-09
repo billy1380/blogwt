@@ -32,7 +32,6 @@ import com.willshex.utility.StringUtils;
  */
 public enum PageType {
 	SetupBlogPageType("setup"),
-	NotFoundPageType("404"),
 	EditPostPageType("postedit", PermissionHelper.create(MANAGE_POSTS)),
 	PostsPageType("blog"),
 	PostDetailPageType("post"),

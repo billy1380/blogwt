@@ -26,7 +26,6 @@ import com.willshex.blogwt.client.page.blog.PostsPage;
 import com.willshex.blogwt.client.page.blog.SearchPage;
 import com.willshex.blogwt.client.page.blog.SetupBlogPage;
 import com.willshex.blogwt.client.page.blog.TagPage;
-import com.willshex.blogwt.client.page.blog.notfound.NotFoundPage;
 import com.willshex.blogwt.client.page.page.EditPagePage;
 import com.willshex.blogwt.client.page.page.PageDetailPage;
 import com.willshex.blogwt.client.page.user.ChangeAccessPage;
@@ -73,9 +72,6 @@ public class PageTypeHelper {
 		switch (pageType) {
 		case UsersPageType:
 			page = new UsersPage();
-			break;
-		case NotFoundPageType:
-			page = new NotFoundPage();
 			break;
 		case LoginPageType:
 			page = new LoginPage();
