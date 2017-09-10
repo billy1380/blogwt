@@ -274,14 +274,11 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	}
 
 	@Override
-	public void deleteArchiveEntryPost (final ArchiveEntry archiveEntry,
-			final Post post) {
-		provide().transact(new Work<ArchiveEntry>() {
+	public void deleteArchiveEntryPost (ArchiveEntry archiveEntry, Post post) {
+		provide().transact( () -> {
+			ArchiveEntry latest = getArchiveEntry(archiveEntry.id);
 
-			@Override
-			public ArchiveEntry run () {
-				ArchiveEntry latest = getArchiveEntry(archiveEntry.id);
-
+			if (latest != null) {
 				latest.postKeys.remove(Key.create(post));
 
 				if (latest.postKeys.size() == 0) {
@@ -289,9 +286,9 @@ final class ArchiveEntryService implements IArchiveEntryService {
 				} else {
 					provide().save().entities(latest).now();
 				}
-
-				return latest;
 			}
+
+			return latest;
 		});
 	}
 

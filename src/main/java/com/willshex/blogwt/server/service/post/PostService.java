@@ -33,6 +33,7 @@ import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
+import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
@@ -342,10 +343,13 @@ final class PostService implements IPostService, ISearch<Post> {
 	 */
 	private void deleteFromArchive (Post post) {
 		if (post.published != null) {
-			ArchiveEntryServiceProvider.provide()
-					.deleteArchiveEntryPost(ArchiveEntryServiceProvider
-							.provide().getDateArchiveEntry(post.published),
-							post);
+			ArchiveEntry archiveEntry = ArchiveEntryServiceProvider.provide()
+					.getDateArchiveEntry(post.published);
+
+			if (archiveEntry != null) {
+				ArchiveEntryServiceProvider.provide()
+						.deleteArchiveEntryPost(archiveEntry, post);
+			}
 		}
 	}
 
