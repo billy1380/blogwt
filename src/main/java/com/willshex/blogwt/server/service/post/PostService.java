@@ -8,6 +8,7 @@
 //
 package com.willshex.blogwt.server.service.post;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.id;
 import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
@@ -65,7 +66,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * .Long) */
 	@Override
 	public Post getPost (Long id) {
-		return load().id(id.longValue()).now();
+		return id(load(), id);
 	}
 
 	/* (non-Javadoc)
@@ -294,6 +295,10 @@ final class PostService implements IPostService, ISearch<Post> {
 		return provide().load().type(Post.class);
 	}
 
+	private LoadType<PostContent> loadContent () {
+		return provide().load().type(PostContent.class);
+	}
+
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.post.IPostService#deletePost(com.
@@ -411,8 +416,7 @@ final class PostService implements IPostService, ISearch<Post> {
 				postContentIds.add(keyToId(post.contentKey));
 			}
 
-			Map<Long, PostContent> contents = provide().load()
-					.type(PostContent.class).ids(postContentIds);
+			Map<Long, PostContent> contents = loadContent().ids(postContentIds);
 
 			for (Post post : posts) {
 				post.content = contents.get(keyToId(post.contentKey));
@@ -474,8 +478,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * com.willshex.blogwt.shared.api.datatype.Post) */
 	@Override
 	public PostContent getPostContent (Post post) {
-		return provide().load().type(PostContent.class)
-				.id(post.contentKey.getId()).now();
+		return loadContent().id(post.contentKey.getId()).now();
 	}
 
 	/* (non-Javadoc)
@@ -629,8 +632,7 @@ final class PostService implements IPostService, ISearch<Post> {
 				postContentIds.add(keyToId(post.contentKey));
 			}
 
-			Map<Long, PostContent> contents = provide().load()
-					.type(PostContent.class).ids(postContentIds);
+			Map<Long, PostContent> contents = loadContent().ids(postContentIds);
 
 			for (Post post : posts) {
 				post.content = contents.get(keyToId(post.contentKey));
@@ -746,8 +748,7 @@ final class PostService implements IPostService, ISearch<Post> {
 		}
 
 		if (post.contentKey != null) {
-			post.content = provide().load().type(PostContent.class)
-					.id(keyToId(post.contentKey)).now();
+			post.content = loadContent().id(keyToId(post.contentKey)).now();
 		}
 
 		SearchHelper.indexDocument(toDocument(post));

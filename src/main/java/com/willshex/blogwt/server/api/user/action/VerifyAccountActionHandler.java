@@ -58,7 +58,7 @@ public final class VerifyAccountActionHandler
 			}
 
 			output.session = SessionServiceProvider.provide()
-					.createUserSession(user, false);
+					.createUserSession(user, Boolean.FALSE);
 
 			if (output.session != null) {
 				output.session.user = user;

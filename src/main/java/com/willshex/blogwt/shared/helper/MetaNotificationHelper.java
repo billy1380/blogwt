@@ -7,7 +7,7 @@
 //
 package com.willshex.blogwt.shared.helper;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
@@ -23,7 +23,7 @@ public class MetaNotificationHelper {
 	 * @return
 	 */
 	public static List<MetaNotification> createAll () {
-		return Arrays.asList();
+		return new ArrayList<>();
 	}
 
 	public static MetaNotification createFull (String code, String name,
@@ -33,7 +33,11 @@ public class MetaNotificationHelper {
 	}
 
 	public static List<NotificationModeType> allModes () {
-		return Arrays.asList(NotificationModeType.values());
+		List<NotificationModeType> allModes = new ArrayList<>();
+		for (NotificationModeType type : NotificationModeType.values()) {
+			allModes.add(type);
+		}
+		return allModes;
 	}
 
 }

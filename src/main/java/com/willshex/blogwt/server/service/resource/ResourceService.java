@@ -8,6 +8,7 @@
 
 package com.willshex.blogwt.server.service.resource;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.id;
 import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
@@ -23,8 +24,7 @@ import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceSortType;
 
-final class ResourceService
-		implements IResourceService {
+final class ResourceService implements IResourceService {
 
 	/* (non-Javadoc)
 	 * 
@@ -41,7 +41,7 @@ final class ResourceService
 	 * (java.lang.Long) */
 	@Override
 	public Resource getResource (Long id) {
-		return load().id(id.longValue()).now();
+		return id(load(), id);
 	}
 
 	private LoadType<Resource> load () {

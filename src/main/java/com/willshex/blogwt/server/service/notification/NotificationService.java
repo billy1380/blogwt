@@ -8,6 +8,7 @@
 
 package com.willshex.blogwt.server.service.notification;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.id;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ final class NotificationService implements INotificationService {
 
 	@Override
 	public Notification getNotification (Long id) {
-		return load().id(id.longValue()).now();
+		return id(load(), id);
 	}
 
 	private LoadType<Notification> load () {

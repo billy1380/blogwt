@@ -24,6 +24,7 @@ import com.willshex.blogwt.shared.api.datatype.RelationshipTypeType;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.FollowUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.FollowUsersResponse;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.gson.web.service.server.InputValidationException;
@@ -57,7 +58,7 @@ public final class FollowUsersActionHandler
 			user = input.user;
 			UserValidator.validate(user, "input.user");
 
-			if (!user.id.equals(input.session.user.id)) {
+			if (!DataTypeHelper.<User> same(user, input.session.user)) {
 				UserValidator.authorisation(input.session.user,
 						Arrays.asList(PermissionServiceProvider.provide()
 								.getCodePermission(

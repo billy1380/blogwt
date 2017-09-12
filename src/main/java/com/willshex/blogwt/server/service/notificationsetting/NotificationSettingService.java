@@ -8,6 +8,7 @@
 
 package com.willshex.blogwt.server.service.notificationsetting;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.id;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Date;
@@ -29,7 +30,7 @@ final class NotificationSettingService implements INotificationSettingService {
 
 	@Override
 	public NotificationSetting getNotificationSetting (Long id) {
-		return load().id(id.longValue()).now();
+		return id(load(), id);
 	}
 
 	private LoadType<NotificationSetting> load () {

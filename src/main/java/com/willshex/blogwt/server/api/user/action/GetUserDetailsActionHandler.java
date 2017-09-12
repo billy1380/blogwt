@@ -16,8 +16,10 @@ import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
+import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 
 public final class GetUserDetailsActionHandler
@@ -41,7 +43,7 @@ public final class GetUserDetailsActionHandler
 				.lookupCheckAndExtend(input.session, "input.session");
 
 		// if the not logged in user
-		if (input.user.id.longValue() != input.session.user.id.longValue()) {
+		if (!DataTypeHelper.<User> same(input.user, input.session.user)) {
 			UserValidator.authorisation(input.session.user,
 					Arrays.asList(PermissionServiceProvider.provide()
 							.getCodePermission(PermissionHelper.MANAGE_USERS)),

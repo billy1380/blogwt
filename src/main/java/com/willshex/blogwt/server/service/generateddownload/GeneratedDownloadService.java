@@ -7,6 +7,7 @@
 // 
 package com.willshex.blogwt.server.service.generateddownload;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.id;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.Date;
@@ -33,7 +34,7 @@ final class GeneratedDownloadService implements IGeneratedDownloadService,
 
 	@Override
 	public GeneratedDownload getGeneratedDownload (Long id) {
-		return load().id(id.longValue()).now();
+		return id(load(), id);
 	}
 
 	/**

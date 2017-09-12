@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.service.page;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.id;
 import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
@@ -44,7 +45,7 @@ final class PageService implements IPageService {
 
 	@Override
 	public Page getPage (Long id) {
-		return load().id(id).now();
+		return id(load(), id);
 	}
 
 	/**

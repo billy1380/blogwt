@@ -1,4 +1,4 @@
-# ![Blogwt](https://raw.githubusercontent.com/billy1380/blogwt/master/src/main/resources/com/willshex/blogwt/client/res/brand.png "Blogwt") BloGWT
+# ![Blogwt](https://raw.githubusercontent.com/billy1380/blogwt/master/src/main/resources/com/willshex/blogwt/client/res/brand.png "Blogwt") Blo(gG)WT
 
 Looking for a better name! Let me know if you have one :wink:.
 

@@ -8,6 +8,7 @@
 //
 package com.willshex.blogwt.server.service.role;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.id;
 import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
@@ -33,7 +34,7 @@ final class RoleService implements IRoleService {
 
 	@Override
 	public Role getRole (Long id) {
-		return load().id(id.longValue()).now();
+		return id(load(), id);
 	}
 
 	private LoadType<Role> load () {

@@ -8,6 +8,7 @@
 
 package com.willshex.blogwt.server.service.archiveentry;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.id;
 import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
@@ -31,6 +32,7 @@ import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 
 final class ArchiveEntryService implements IArchiveEntryService {
@@ -47,7 +49,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	 * #getArchiveEntry(java.lang.Long) */
 	@Override
 	public ArchiveEntry getArchiveEntry (Long id) {
-		return load().id(id).now();
+		return id(load(), id);
 	}
 
 	/**
@@ -253,7 +255,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 
 					boolean found = false;
 					for (Key<Post> key : latest.postKeys) {
-						if (post.id.longValue() == key.getId()) {
+						if (DataTypeHelper.<Post> same(key, post)) {
 							found = true;
 							break;
 						}

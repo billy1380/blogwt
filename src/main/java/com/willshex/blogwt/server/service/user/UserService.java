@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.service.user;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.id;
 import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
@@ -58,7 +59,7 @@ final class UserService implements IUserService {
 	}
 
 	public User getUser (Long id) {
-		return addAvatar(load().id(id.longValue()).now());
+		return id(load(), id);
 	}
 
 	private LoadType<User> load () {

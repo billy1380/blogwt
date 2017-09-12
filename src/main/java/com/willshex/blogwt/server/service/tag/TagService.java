@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.service.tag;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.id;
 import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
@@ -27,6 +28,7 @@ import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Tag;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PostHelper;
 
@@ -37,7 +39,7 @@ final class TagService implements ITagService {
 
 	@Override
 	public Tag getTag (Long id) {
-		return load().id(id.longValue()).now();
+		return id(load(), id);
 	}
 
 	private LoadType<Tag> load () {
@@ -182,7 +184,7 @@ final class TagService implements ITagService {
 
 				boolean found = false;
 				for (Key<Post> key : latest.postKeys) {
-					if (post.id.longValue() == key.getId()) {
+					if (DataTypeHelper.<Post> same(key, post)) {
 						found = true;
 						break;
 					}
@@ -218,7 +220,7 @@ final class TagService implements ITagService {
 
 				Key<Post> foundKey = null;
 				for (Key<Post> key : latest.postKeys) {
-					if (post.id.longValue() == key.getId()) {
+					if (DataTypeHelper.<Post> same(key, post)) {
 						foundKey = key;
 						break;
 					}

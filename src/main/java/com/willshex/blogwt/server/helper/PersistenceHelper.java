@@ -19,6 +19,7 @@ import java.util.stream.StreamSupport;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter;
@@ -289,5 +290,14 @@ public class PersistenceHelper {
 		return StreamSupport.stream(keys.spliterator(), false).map(i -> {
 			return map.get(PersistenceHelper.keyToId(i));
 		}).filter(i -> i != null).collect(Collectors.toList());
+	}
+
+	/**
+	 * @param load
+	 * @param id
+	 * @return
+	 */
+	public static <T> T id (LoadType<T> load, Long id) {
+		return load.id(id.longValue()).now();
 	}
 }

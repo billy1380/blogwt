@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.server.service.session;
 
+import static com.willshex.blogwt.server.helper.PersistenceHelper.id;
 import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
@@ -27,7 +28,7 @@ final class SessionService implements ISessionService {
 	}
 
 	public Session getSession (Long id) {
-		return load().id(id.longValue()).now();
+		return id(load(), id);
 	}
 
 	private LoadType<Session> load () {

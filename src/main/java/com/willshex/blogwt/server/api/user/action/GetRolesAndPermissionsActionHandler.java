@@ -21,8 +21,10 @@ import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
+import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetRolesAndPermissionsResponse;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 
 public final class GetRolesAndPermissionsActionHandler extends
@@ -47,7 +49,7 @@ public final class GetRolesAndPermissionsActionHandler extends
 
 		input.user = UserValidator.lookup(input.user, "input.user");
 
-		if (input.session.user.id.longValue() != input.user.id.longValue()) {
+		if (!DataTypeHelper.<User> same(input.user, input.session.user)) {
 			UserValidator.authorisation(input.session.user,
 					Arrays.asList(PermissionServiceProvider.provide()
 							.getCodePermission(PermissionHelper.MANAGE_USERS)),

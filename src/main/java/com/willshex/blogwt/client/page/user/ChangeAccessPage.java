@@ -41,6 +41,7 @@ import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
@@ -264,8 +265,7 @@ public class ChangeAccessPage extends Page
 	@Override
 	public void changeUserAccessSuccess (ChangeUserAccessRequest input,
 			ChangeUserAccessResponse output) {
-		if (input.user.id != null && user != null
-				&& input.user.id.equals(user.id)) {
+		if (DataTypeHelper.<User> same(input.user, user)) {
 			if (output.status == StatusType.StatusTypeSuccess) {
 				if (input.roles == null) {
 					tblPermissions.setVisibleRangeAndClearData(
@@ -291,8 +291,7 @@ public class ChangeAccessPage extends Page
 	@Override
 	public void changeUserAccessFailure (ChangeUserAccessRequest input,
 			Throwable caught) {
-		if (input.user.id != null && user != null
-				&& input.user.id.equals(user.id)) {
+		if (DataTypeHelper.same(input.user, user)) {
 			GWT.log("Error changing user access", caught);
 
 			ready();

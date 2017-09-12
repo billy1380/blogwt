@@ -18,8 +18,10 @@ import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.service.generateddownload.GeneratedDownloadServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownload;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownloadStatusType;
+import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.download.call.DeleteGeneratedDownloadsRequest;
 import com.willshex.blogwt.shared.api.download.call.DeleteGeneratedDownloadsResponse;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 public final class DeleteGeneratedDownloadsActionHandler extends
@@ -52,8 +54,8 @@ public final class DeleteGeneratedDownloadsActionHandler extends
 									+ "] while it is generating. Skipping deletion.");
 				}
 			} else {
-				if (download.userKey.getId() == input.session.user.id
-						.longValue()) {
+				if (DataTypeHelper.<User> same(download.userKey,
+						input.session.user)) {
 					GeneratedDownloadServiceProvider.provide()
 							.deleteGeneratedDownload(download);
 				} else {

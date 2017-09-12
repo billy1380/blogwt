@@ -20,6 +20,7 @@ import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 
 public final class ChangeUserDetailsActionHandler extends
@@ -47,7 +48,7 @@ public final class ChangeUserDetailsActionHandler extends
 		input.user = UserValidator.lookup(input.user, "input.user");
 
 		// if the not logged in user
-		if (input.user.id.longValue() != input.session.user.id.longValue()) {
+		if (!DataTypeHelper.<User> same(input.user, input.session.user)) {
 			UserValidator.authorisation(input.session.user,
 					Arrays.asList(PermissionServiceProvider.provide()
 							.getCodePermission(PermissionHelper.MANAGE_USERS)),

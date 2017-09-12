@@ -50,7 +50,7 @@ public final class ChangePasswordActionHandler
 		}
 
 		//			// if not the logged in user
-		//			if (input.user.id.longValue() != input.session.userKey.getId()) {
+		//			if (!DataTypeHelper.<User> same(input.user, input.session.user)) {
 		//				List<Role> roles = new ArrayList<Role>();
 		//				roles.add(RoleHelper.createAdmin());
 		//

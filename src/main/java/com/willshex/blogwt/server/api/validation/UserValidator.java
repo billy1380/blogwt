@@ -21,6 +21,7 @@ import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
@@ -32,6 +33,7 @@ import com.willshex.gson.web.service.server.ServiceException;
  *
  */
 public class UserValidator extends ApiValidator {
+
 	private static final Class<User> CLASS = User.class;
 	private static final String TYPE = CLASS.getSimpleName();
 
@@ -57,8 +59,7 @@ public class UserValidator extends ApiValidator {
 					.getUsernameUser(user.username);
 
 			if (existingUsernameUser != null
-					&& (user.id == null || (user.id != null
-							&& !user.id.equals(existingUsernameUser.id))))
+					&& !DataTypeHelper.<User> same(user, existingUsernameUser))
 				throwServiceError(InputValidationException.class,
 						ApiError.UsernameInUse,
 						"String: " + name + ".username");
@@ -69,8 +70,7 @@ public class UserValidator extends ApiValidator {
 					.getEmailUser(user.email);
 
 			if (existingEmailUser != null
-					&& (user.id == null || (user.id != null
-							&& !user.id.equals(existingEmailUser.id))))
+					&& !DataTypeHelper.<User> same(user, existingEmailUser))
 				throwServiceError(InputValidationException.class,
 						ApiError.EmailInUse, "String: " + name + ".email");
 		}

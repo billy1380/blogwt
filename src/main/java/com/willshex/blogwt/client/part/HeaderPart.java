@@ -58,6 +58,7 @@ import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
 import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
@@ -650,7 +651,7 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		if (output.status == StatusType.StatusTypeSuccess) {
 			User user = SessionController.get().user();
 
-			if (user != null && user.id.equals(output.user.id)) {
+			if (DataTypeHelper.<User> same(output.user, user)) {
 				showUserDetails(output.user);
 			}
 		}
