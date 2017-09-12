@@ -59,7 +59,7 @@ final class UserService implements IUserService {
 	}
 
 	public User getUser (Long id) {
-		return id(load(), id);
+		return addAvatar(id(load(), id));
 	}
 
 	private LoadType<User> load () {
