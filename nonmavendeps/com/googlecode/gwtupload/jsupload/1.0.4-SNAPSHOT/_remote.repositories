@@ -1,7 +1,0 @@
-#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
-#Thu Sep 10 11:19:50 BST 2015
-jsupload-1.0.4-SNAPSHOT.jar>=
-jsupload-1.0.4-20150113.173236-1.jar>sonatype-nexus-snapshots=
-jsupload-1.0.4-SNAPSHOT.zip>=
-jsupload-1.0.4-SNAPSHOT.pom>=
-jsupload-1.0.4-20150113.173236-1.pom>sonatype-nexus-snapshots=

@@ -1,9 +1,5 @@
 *.class
 
-# Package Files #
-*.jar
-*.war
-
 # gwt caches and compiled units #
 war/gwt_bree/
 gwt-unitCache/
@@ -37,3 +33,4 @@ www-test/
 .externalToolBuilders/
 
 /src/main/java/META-INF/persistence.xml
+/deps/
