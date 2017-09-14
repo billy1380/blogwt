@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.googlecode.gwtupload</groupId>
+  <artifactId>gwtupload-project</artifactId>
+  <versioning>
+    <versions>
+      <version>1.0.4-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20150910101915</lastUpdated>
+  </versioning>
+</metadata>
