@@ -1,0 +1,169 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.googlecode.gwtquery</groupId>
+        <artifactId>gwtquery-project</artifactId>
+        <version>1.5-beta1</version>
+    </parent>
+
+
+    <properties>
+        <!--  valid emulations are FF17 IE8 IE9 Chrome, but only FF17 works. -->
+        <gwt.test.htmlunit>FF17</gwt.test.htmlunit>
+        <gwt.test.default>-ea -out ${basedir}/target/gwt-junit -checkAssertions</gwt.test.default>
+        <gwt.args />
+    </properties>
+    <profiles>
+        <profile>
+           <!-- example:
+                  $ mvn clean test -Ptest-prod
+                  $ mvn clean test -Ptest-prod -Dgwt.test.htmlunit=FF17
+             -->
+           <id>test-prod</id>
+           <properties>
+              <gwt.args>-prod -runStyle HtmlUnit:${gwt.test.htmlunit}</gwt.args>
+           </properties>
+        </profile>
+        <profile>
+           <id>test-browser</id>
+           <properties>
+              <gwt.args>-draftCompile -style PRETTY -optimize 9 -prod -runStyle Manual:1 -XjsInteropMode JS</gwt.args>
+           </properties>
+        </profile>
+    </profiles>
+
+    <artifactId>gwtquery</artifactId>
+    <packaging>jar</packaging>
+    <name>Gwt Query Core API</name>
+    <url>http://gquery.org</url>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwtversion}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${gwtversion}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-elemental</artifactId>
+            <version>${gwtversion}</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/java</directory>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/super</directory>
+            </resource>
+            <resource>
+                <directory>${project.build.directory}/generated-resources</directory>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>${basedir}/src/test/java</directory>
+            </testResource>
+            <testResource>
+                <directory>${basedir}/src/test/resources</directory>
+            </testResource>
+        </testResources>
+        <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>emma-maven-plugin</artifactId>
+                <version>1.0-alpha-1</version>
+            </plugin>
+
+            <!-- We use standard surefire plugin to run gwt tests instead of
+                 gwt-maven so as we can run coverage analysis with emma:emma -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <additionalClasspathElements>
+                        <additionalClasspathElement>${basedir}/src/main/java</additionalClasspathElement>
+                        <additionalClasspathElement>${basedir}/src/test/java</additionalClasspathElement>
+                    </additionalClasspathElements>
+                    <systemPropertyVariables>
+                        <java.awt.headless>true</java.awt.headless>
+                        <gwt.args>${gwt.test.default} ${gwt.args}</gwt.args>
+                    </systemPropertyVariables>
+                    <forkMode>always</forkMode>
+                    <includes>
+                        <include>**/*SuiteTest.class</include>
+                    </includes>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
+            </plugin>
+
+            <!-- We include elemental json implementation for JVM so as people
+                 using GQuery json builders and ajax in server side don't have
+                 to include that dependency -->
+            <plugin>
+              <artifactId>maven-dependency-plugin</artifactId>
+              <executions>
+                <execution>
+                  <goals>
+                    <goal>unpack-dependencies</goal>
+                  </goals>
+                  <phase>generate-resources</phase>
+                  <configuration>
+                    <includeGroupIds>com.google.gwt</includeGroupIds>
+                    <includeArtifactIds>gwt-elemental</includeArtifactIds>
+                    <excludeTransitive>true</excludeTransitive>
+                    <includes>elemental/json/**/*</includes>
+                    <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+            <!-- mvn java-formatter:format -->
+            <plugin>
+              <groupId>com.googlecode.maven-java-formatter-plugin</groupId>
+              <artifactId>maven-java-formatter-plugin</artifactId>
+              <version>0.4</version>
+              <configuration>
+                <configFile>src/main/code-style/gwt-format.xml</configFile>
+                <directories>
+                  <directory>src/main/java</directory>
+                </directories>
+              </configuration>
+            </plugin>
+            <!-- mvn checkstyle:checkstyle -->
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-checkstyle-plugin</artifactId>
+              <configuration>
+                <configLocation>src/main/code-style/gwt-checkstyle.xml</configLocation>
+              </configuration>
+              <executions>
+                <execution>
+                  <id>checkstyle</id>
+                  <phase>validate</phase>
+                  <goals>
+                    <goal>check</goal>
+                  </goals>
+                  <configuration>
+                    <failOnViolation>true</failOnViolation>
+                  </configuration>
+                 </execution>
+               </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

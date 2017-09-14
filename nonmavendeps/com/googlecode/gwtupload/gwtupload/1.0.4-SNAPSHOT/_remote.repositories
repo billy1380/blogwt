@@ -1,0 +1,6 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Thu Sep 10 11:19:18 BST 2015
+gwtupload-1.0.4-SNAPSHOT.pom>=
+gwtupload-1.0.4-20150113.173204-1.jar>sonatype-nexus-snapshots=
+gwtupload-1.0.4-SNAPSHOT.jar>=
+gwtupload-1.0.4-20150113.173204-1.pom>sonatype-nexus-snapshots=

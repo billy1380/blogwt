@@ -1,0 +1,16 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Thu Sep 10 11:17:05 BST 2015
+http\://maven.seasar.org/maven2/.error=
+https\://oss.sonatype.org/content/repositories/snapshots/.error=
+http\://gwtchismes.googlecode.com/svn/mavenrepo/.lastUpdated=1441880220667
+http\://maven.seasar.org/maven2/.lastUpdated=1441880223816
+http\://timefire-repository.googlecode.com/svn/mavenrepo/.lastUpdated=1441880221664
+http\://gwtupload.googlecode.com/svn/mavenrepo/.error=
+https\://oss.sonatype.org/content/repositories/snapshots/.lastUpdated=1441880225136
+http\://timefire-repository.googlecode.com/svn/mavenrepo/.error=
+http\://repo1.maven.org/maven2/.lastUpdated=1441880218204
+http\://gwtchismes.googlecode.com/svn/mavenrepo/.error=
+http\://repo1.maven.org/maven2/.error=
+http\://gwtupload.googlecode.com/svn/mavenrepo/.lastUpdated=1441880219668
+http\://gwtquery-plugins.googlecode.com/svn/mavenrepo/.error=
+http\://gwtquery-plugins.googlecode.com/svn/mavenrepo/.lastUpdated=1441880224665
