@@ -30,6 +30,3 @@ __Note:__ To change the gwt code on the fly the code server has to be running. T
 
 ## Demo
 I have previously had issues with discrepancies between the appengine sdk behaviour and production so to use for testing and also for demo purposes I there is a relatively up to date version of the project running __[here](http://blogwtproject.appspot.com "Blogwt demo")__ so go have a look.
-
-## Dependencies
-The [issue](https://github.com/billy1380/blogwt/issues/21) with the missing dependencies has now been resolved - in that they are all now on github. I will put some instructions together shortly.
