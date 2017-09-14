@@ -12,6 +12,22 @@ I am also adding things that I think I might need as I go along, so if you think
 
 I will put a road map shortly on the wiki, maybe even with a "how to".
 
+## Setup
+Make sure that you have __git__ and __maven__ installed before you start.
+
+- cd to a new folder where you are happy to install the project
+- run `git clone https://github.com/billy1380/blogwt.git`
+- cd to the folder created `cd blogwt`
+- allow the install install depenencies script to run by setting the executable flag on the file `chmod +x installdeps.sh`
+- run the installation script using `./installdeps.sh`. This script assumes that the maven files are stored under `~/.m2/repository` so if this is not the case, you might want to edit the file to reflect your setup
+- build and install the package using `mvn install`
+- build the gwt part using `mvn gwt:compile`
+- run the dev server using `mvn appengine:devserver`
+
+The site should now appear under `http://localhost:8888`
+
+__Note:__ To change the gwt code on the fly the code server has to be running. To start the code server run `mvn gwt:run-codeserver`.
+
 ## Demo
 I have previously had issues with discrepancies between the appengine sdk behaviour and production so to use for testing and also for demo purposes I there is a relatively up to date version of the project running __[here](http://blogwtproject.appspot.com "Blogwt demo")__ so go have a look.
 
