@@ -275,7 +275,7 @@
 			<version>2.2.4</version>
 		</dependency>
 		<dependency>
-			<groupId>gson</groupId>
+			<groupId>gson-gwt</groupId>
 			<artifactId>gson-gwt</artifactId>
 			<version>1.0</version>
 		</dependency>
