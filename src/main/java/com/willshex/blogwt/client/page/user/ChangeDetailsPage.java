@@ -222,7 +222,8 @@ public class ChangeDetailsPage extends Page
 		if (user != null) {
 			String username = "@" + user.username;
 			imgAvatar.setAltText(username);
-			imgAvatar.setUrl(user.avatar + "?s=160&default=retro");
+			imgAvatar.setUrl(user.avatar + "?s=" + UserHelper.AVATAR_LARGE_SIZE
+					+ "&default=retro");
 			h3Username.setInnerSafeHtml(UserHelper.isAdmin(user)
 					? ChangeDetailsTemplates.INSTANCE.adminRolesAndPermissions(
 							username,
@@ -461,7 +462,8 @@ public class ChangeDetailsPage extends Page
 	public void getEmailAvatarSuccess (GetEmailAvatarRequest input,
 			GetEmailAvatarResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			imgAvatar.setUrl(output.avatar + "?s=160&default=retro");
+			imgAvatar.setUrl(output.avatar + "?s="
+					+ UserHelper.AVATAR_LARGE_SIZE + "&default=retro");
 		}
 	}
 
