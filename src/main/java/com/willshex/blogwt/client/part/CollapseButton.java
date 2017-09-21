@@ -9,6 +9,7 @@ package com.willshex.blogwt.client.part;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -100,9 +101,13 @@ public class CollapseButton extends Composite {
 			btnTrigger.removeStyleName("collapsed");
 
 			Scheduler.get().scheduleDeferred( () -> {
-				pnlTarget.getElement().getStyle().setHeight(pnlTarget
-						.getElement().getFirstChildElement().getScrollHeight(),
-						Unit.PX);
+				Element el = pnlTarget.getElement().getFirstChildElement();
+				double height = (double) (el.getScrollHeight() + 9.0);
+				while ((el = el.getNextSiblingElement()) != null) {
+					height += (double) el.getScrollHeight() + 15.0;
+				}
+
+				pnlTarget.getElement().getStyle().setHeight(height, Unit.PX);
 			});
 
 			transitioning = true;
