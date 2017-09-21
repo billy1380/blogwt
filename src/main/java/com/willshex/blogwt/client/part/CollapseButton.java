@@ -8,6 +8,8 @@
 package com.willshex.blogwt.client.part;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -51,22 +53,22 @@ public class CollapseButton extends Composite {
 			transitioning = false;
 			pnlTarget.removeStyleName("collapsing");
 			pnlTarget.addStyleName("collapse");
+			pnlTarget.getElement().getStyle().clearHeight();
 		}
 
 		private void show () {
 			pnlTarget.removeStyleName("collapsing");
 			pnlTarget.addStyleName("collapse in");
 			transitioning = false;
+
 		}
 	};
 
 	public CollapseButton () {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		btnTrigger
-				.getElement()
-				.setInnerHTML(
-						"<span class=\"sr-only\">Toggle navigation</span><span class=\"icon-bar\"></span><span class=\"icon-bar\"></span><span class=\"icon-bar\"></span>");
+		btnTrigger.getElement().setInnerHTML(
+				"<span class=\"sr-only\">Toggle navigation</span><span class=\"icon-bar\"></span><span class=\"icon-bar\"></span><span class=\"icon-bar\"></span>");
 	}
 
 	/**
@@ -97,6 +99,12 @@ public class CollapseButton extends Composite {
 
 			btnTrigger.removeStyleName("collapsed");
 
+			Scheduler.get().scheduleDeferred( () -> {
+				pnlTarget.getElement().getStyle().setHeight(pnlTarget
+						.getElement().getFirstChildElement().getScrollHeight(),
+						Unit.PX);
+			});
+
 			transitioning = true;
 
 			complete.schedule(TRANSITION_DURATION);
@@ -109,6 +117,10 @@ public class CollapseButton extends Composite {
 			pnlTarget.removeStyleName("collapse in");
 
 			btnTrigger.addStyleName("collapsed");
+
+			Scheduler.get().scheduleDeferred( () -> {
+				pnlTarget.getElement().getStyle().setHeight(1.0, Unit.PX);
+			});
 
 			transitioning = true;
 
