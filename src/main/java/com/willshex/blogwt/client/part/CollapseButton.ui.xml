@@ -4,6 +4,11 @@
 	
 	</ui:style>
 	<g:HTMLPanel>
-		<g:Button ui:field="btnTrigger" styleName="navbar-toggle collapsed" />
+		<g:Button ui:field="btnTrigger" styleName="navbar-toggle collapsed">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</g:Button>
 	</g:HTMLPanel>
 </ui:UiBinder>

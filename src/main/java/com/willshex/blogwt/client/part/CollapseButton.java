@@ -11,10 +11,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -37,6 +39,7 @@ public class CollapseButton extends Composite {
 	private HTMLPanel pnlTarget = null;
 	private boolean collapsed = true;
 	private boolean transitioning = false;
+	private HandlerRegistration h;
 
 	private Timer complete = new Timer() {
 		public void run () {
@@ -66,9 +69,6 @@ public class CollapseButton extends Composite {
 
 	public CollapseButton () {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		btnTrigger.getElement().setInnerHTML(
-				"<span class=\"sr-only\">Toggle navigation</span><span class=\"icon-bar\"></span><span class=\"icon-bar\"></span><span class=\"icon-bar\"></span>");
 	}
 
 	/**
@@ -125,6 +125,38 @@ public class CollapseButton extends Composite {
 			transitioning = true;
 
 			complete.schedule(TRANSITION_DURATION);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
+	@Override
+	protected void onAttach () {
+		super.onAttach();
+
+		h = Window.addResizeHandler( (e) -> {
+			if (e.getWidth() > 768) {
+				transitioning = false;
+				collapsed = true;
+				btnTrigger.addStyleName("collapsed");
+				pnlTarget.removeStyleName("collapsing");
+				pnlTarget.removeStyleName("collapse in");
+				pnlTarget.addStyleName("collapse");
+				pnlTarget.getElement().getStyle().clearHeight();
+			}
+		});
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
+	@Override
+	protected void onDetach () {
+		super.onDetach();
+
+		if (h != null) {
+			h.removeHandler();
 		}
 	}
 }
