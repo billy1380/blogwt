@@ -107,7 +107,7 @@ public class BackToTop extends Composite {
 	}
 
 	public void go () {
-		new ScrollWindow(0, Interpolation.exp10).run(300);
+		new ScrollWindow(0, Interpolation.pow4).run(300);
 	}
 
 	/* (non-Javadoc)
