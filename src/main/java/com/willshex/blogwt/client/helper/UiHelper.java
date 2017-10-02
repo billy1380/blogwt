@@ -7,6 +7,9 @@
 //
 package com.willshex.blogwt.client.helper;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -122,11 +125,26 @@ public class UiHelper {
 		note.setVisible(false);
 	}
 
-	public static <E extends Enum<E>> void add (ListBox cboPosition,
-			Class<E> e) {
+	@SafeVarargs
+	public static <E extends Enum<E>> void add (ListBox cboPosition, Class<E> e,
+			E... exclude) {
+		add(false, cboPosition, e, exclude);
+	}
+
+	@SafeVarargs
+	public static <E extends Enum<E>> void add (boolean allowNone,
+			ListBox cboPosition, Class<E> e, E... exclude) {
+
+		HashSet<E> s = new HashSet<>(Arrays.asList(exclude));
+
+		if (allowNone) {
+			cboPosition.addItem("None", "");
+		}
 
 		for (E v : e.getEnumConstants()) {
-			cboPosition.addItem(v.toString());
+			if (!s.contains(v)) {
+				cboPosition.addItem(v.toString());
+			}
 		}
 	}
 
