@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.cell.PrettyButtonCell;
 import com.willshex.blogwt.client.cell.StyledImageCell;
+import com.willshex.blogwt.client.controller.PropertyController;
 
 /**
  * @author William Shakour (billy1380)
@@ -160,5 +161,13 @@ public class UiHelper {
 				break;
 			}
 		}
+	}
+
+	/**
+	 * @param string
+	 * @return
+	 */
+	public static String pageTitle (String title) {
+		return PropertyController.get().title() + ": " + title;
 	}
 }

@@ -202,4 +202,12 @@ public class LoginPage extends Page implements LoginEventHandler {
 
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
+	@Override
+	public String getTitle () {
+		return UiHelper.pageTitle("Sign in");
+	}
+
 }

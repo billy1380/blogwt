@@ -29,6 +29,7 @@ import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.PostHelper;
+import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.part.FooterPart;
 import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.SectionPart;
@@ -192,6 +193,8 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 		pnlLoading.setVisible(false);
 
 		FooterPart.get().scrollToTop();
+
+		refreshTitle();
 	}
 
 	/* (non-Javadoc)
@@ -206,6 +209,14 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 
 		pnlContent.clear();
 		pnlLoading.setVisible(true);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
+	@Override
+	public String getTitle () {
+		return page == null ? super.getTitle() : UiHelper.pageTitle(page.title);
 	}
 
 }

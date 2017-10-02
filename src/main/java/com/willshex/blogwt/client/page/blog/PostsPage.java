@@ -27,6 +27,7 @@ import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PostHelper;
+import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.BootstrapGwtCellList;
 import com.willshex.blogwt.client.part.LoadingPanel;
@@ -118,6 +119,14 @@ public class PostsPage extends Page {
 	private void refresh () {
 		PostController.get().clearTag();
 		clPosts.setVisibleRangeAndClearData(clPosts.getVisibleRange(), true);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
+	@Override
+	public String getTitle () {
+		return UiHelper.pageTitle("Blog");
 	}
 
 }

@@ -194,6 +194,7 @@ public class ChangeDetailsPage extends Page
 					elGravatar.setInnerSafeHtml(getGravatarSafeHtml());
 
 					ready();
+					refreshTitle();
 				}));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetUserDetailsEventHandler.TYPE, UserController.get(), this));
@@ -515,6 +516,14 @@ public class ChangeDetailsPage extends Page
 		GWT.log("registerUserFailure", caught);
 
 		ready();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
+	@Override
+	public String getTitle () {
+		return UiHelper.pageTitle(getHeadingText());
 	}
 
 }

@@ -13,7 +13,8 @@ import java.util.List;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
-import com.willshex.blogwt.client.controller.PropertyController;
+import com.willshex.blogwt.client.helper.UiHelper;
+import com.willshex.utility.StringUtils;
 
 /**
  * @author William Shakour (billy1380)
@@ -33,7 +34,7 @@ public abstract class Page extends Composite {
 	protected void onAttach () {
 		super.onAttach();
 
-		Document.get().setTitle(getTitle());
+		refreshTitle();
 	}
 
 	/* (non-Javadoc)
@@ -51,8 +52,15 @@ public abstract class Page extends Composite {
 	}
 
 	public String getTitle () {
-		return PropertyController.get().title();
+		String name = this.getClass().getSimpleName();
+		int i = name.lastIndexOf("Page");
+		return UiHelper.pageTitle(StringUtils.expandByCase(
+				i > 0 ? name.substring(0, i) : name, true, true, " ", ""));
 	}
 
 	protected void reset () {}
+
+	protected void refreshTitle () {
+		Document.get().setTitle(getTitle());
+	}
 }

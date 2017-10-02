@@ -80,7 +80,7 @@ abstract class StaticTemplate implements PageMarkup {
 				" (RSS feed)\" href=\"/feed\"><link rel=\"icon\" href=\"");
 		markup.append("{favicon}");
 		markup.append("\" type=\"image/x-icon\"><title>");
-		markup.append(title + " - " + title());
+		markup.append(title + ": " + title());
 		markup.append("</title></head><body>");
 		markup.append("<h1>");
 		markup.append(title);
