@@ -4,18 +4,18 @@
 	
 	</ui:style>
 	<g:HTMLPanel>
-
-		<div class="row well">
-			<div class="col-sm-4">
-				<g:Image ui:field="imgAvatar" styleName="img-circle img-responsive center-block" />
-				<h4 ui:field="elName" class="text-center" />
-				<p ui:field="elUsername" class="text-muted text-center" />
-			</div>
-			<div class="col-sm-8">
-				<h3>About</h3>
-				<div ui:field="elSummary" />
+		<div class="well">
+			<div class="row">
+				<div class="col-sm-4">
+					<g:Image ui:field="imgAvatar" styleName="img-circle img-responsive center-block" />
+					<h4 ui:field="elName" class="text-center" />
+					<p ui:field="elUsername" class="text-muted text-center" />
+				</div>
+				<div class="col-sm-8">
+					<h3>About</h3>
+					<div ui:field="elSummary" />
+				</div>
 			</div>
 		</div>
-
 	</g:HTMLPanel>
 </ui:UiBinder> 

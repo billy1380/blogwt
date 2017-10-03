@@ -42,11 +42,11 @@
 
 				<p:AddToAny ui:field="ataShare" styleName="{style.bottom-margin} text-right" />
 
-				<p:UserSummaryPart ui:field="pnlUserSummary" styleName="col-sm-8 col-sm-offset-2"
-					visible="false" />
+				<g:HTMLPanel styleName="row" visible="false" ui:field="pnlUserSummaryRow">
+					<p:UserSummaryPart ui:field="pnlUserSummary" styleName="col-sm-8 col-sm-offset-2" />
+				</g:HTMLPanel>
 
-				<p:PostNavPart ui:field="pnlPostNav" styleName="col-xs-12"
-					visible="false" />
+				<p:PostNavPart ui:field="pnlPostNav" visible="false" />
 
 				<p:DisqusComments ui:field="dsqComments" />
 

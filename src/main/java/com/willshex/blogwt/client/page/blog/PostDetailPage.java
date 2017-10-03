@@ -91,6 +91,7 @@ public class PostDetailPage extends Page
 			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
 
 	@UiField UserSummaryPart pnlUserSummary;
+	@UiField HTMLPanel pnlUserSummaryRow;
 	@UiField PostNavPart pnlPostNav;
 
 	private ListDataProvider<Tag> tagList = new ListDataProvider<Tag>();
@@ -177,7 +178,7 @@ public class PostDetailPage extends Page
 		if (PropertyController.get().booleanProperty(
 				PropertyHelper.POST_SHOW_AUTHOR_SUMMARY, false)) {
 			pnlUserSummary.setUser(post.author);
-			pnlUserSummary.setVisible(true);
+			pnlUserSummaryRow.setVisible(true);
 		}
 
 		elAuthor.setInnerSafeHtml(author);
@@ -292,7 +293,7 @@ public class PostDetailPage extends Page
 		ataShare.setVisible(false);
 		pnlPostNav.setVisible(false);
 
-		pnlUserSummary.setVisible(false);
+		pnlUserSummaryRow.setVisible(false);
 	}
 
 	/* (non-Javadoc)
