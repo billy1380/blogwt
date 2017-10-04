@@ -3,12 +3,17 @@
 	xmlns:p="urn:import:com.willshex.blogwt.client.part" xmlns:c="urn:import:com.google.gwt.user.cellview.client">
 	<ui:import field="com.willshex.blogwt.shared.page.PageType.EditPostPageType" />
 	<ui:style gss="true">
+	@external a2a_label;
 	.bottom-margin {
 		margin-bottom: 20px;
 	}
 	
 	.tags {
 		margin: 20px 0 10px 0;
+	}
+	
+	.a2a_label {
+		display: none;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">
