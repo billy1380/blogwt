@@ -22,7 +22,7 @@ public class RegisteringComposite extends Composite {
 	private List<HandlerRegistration> registrations = null;
 
 	protected void register (HandlerRegistration handlerRegistration) {
-		ensureRegister();
+		ensureRegister().add(handlerRegistration);
 	}
 
 	private List<HandlerRegistration> ensureRegister () {
