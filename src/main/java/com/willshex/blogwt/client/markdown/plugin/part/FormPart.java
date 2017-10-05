@@ -14,11 +14,9 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -29,6 +27,7 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.api.page.event.SubmitFormEventHandler;
 import com.willshex.blogwt.client.controller.FormController;
+import com.willshex.blogwt.client.gwt.RegisteringComposite;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.part.AlertBox;
 import com.willshex.blogwt.client.part.AlertBox.AlertBoxType;
@@ -49,7 +48,8 @@ import com.willshex.gson.web.service.shared.StatusType;
  * @author William Shakour (billy1380)
  *
  */
-public class FormPart extends Composite implements SubmitFormEventHandler {
+public class FormPart extends RegisteringComposite
+		implements SubmitFormEventHandler {
 
 	private static FormPartUiBinder uiBinder = GWT
 			.create(FormPartUiBinder.class);
@@ -93,7 +93,6 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 	@UiField HTMLPanel pnlBody;
 	@UiField AlertBox alertBox;
 
-	private HandlerRegistration registration;
 	private ReCaptchaPart reCaptcha;
 	private String name;
 
@@ -319,10 +318,10 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 	}
 
 	private void loading () {
-		btnSubmit.getElement().setInnerSafeHtml(
-				WizardDialog.WizardDialogTemplates.INSTANCE.loadingButton(
-						"Sending... ", Resources.RES.primaryLoader()
-								.getSafeUri()));
+		btnSubmit.getElement()
+				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
+						.loadingButton("Sending... ",
+								Resources.RES.primaryLoader().getSafeUri()));
 	}
 
 	private void ready () {
@@ -386,19 +385,7 @@ public class FormPart extends Composite implements SubmitFormEventHandler {
 	protected void onAttach () {
 		super.onAttach();
 
-		registration = DefaultEventBus.get().addHandlerToSource(
-				SubmitFormEventHandler.TYPE, FormController.get(), this);
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
-	@Override
-	protected void onDetach () {
-		super.onDetach();
-
-		if (registration != null) {
-			registration.removeHandler();
-		}
+		register(DefaultEventBus.get().addHandlerToSource(
+				SubmitFormEventHandler.TYPE, FormController.get(), this));
 	}
 }

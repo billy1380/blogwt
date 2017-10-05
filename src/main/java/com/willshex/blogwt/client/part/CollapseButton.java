@@ -12,22 +12,21 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.blogwt.client.gwt.RegisteringComposite;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class CollapseButton extends Composite {
+public class CollapseButton extends RegisteringComposite {
 
 	private static CollapseButtonUiBinder uiBinder = GWT
 			.create(CollapseButtonUiBinder.class);
@@ -40,7 +39,6 @@ public class CollapseButton extends Composite {
 	private HTMLPanel pnlTarget = null;
 	private boolean collapsed = true;
 	private boolean transitioning = false;
-	private HandlerRegistration h;
 
 	private Timer complete = new Timer() {
 		public void run () {
@@ -140,7 +138,7 @@ public class CollapseButton extends Composite {
 	protected void onAttach () {
 		super.onAttach();
 
-		h = Window.addResizeHandler( (e) -> {
+		register(Window.addResizeHandler( (e) -> {
 			if (e.getWidth() > 768) {
 				transitioning = false;
 				collapsed = true;
@@ -150,18 +148,6 @@ public class CollapseButton extends Composite {
 				pnlTarget.addStyleName("collapse");
 				pnlTarget.getElement().getStyle().clearHeight();
 			}
-		});
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
-	@Override
-	protected void onDetach () {
-		super.onDetach();
-
-		if (h != null) {
-			h.removeHandler();
-		}
+		}));
 	}
 }

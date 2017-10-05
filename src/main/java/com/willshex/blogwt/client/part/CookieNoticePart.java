@@ -12,7 +12,6 @@ import java.util.Date;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -20,19 +19,17 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ScrollEvent;
-import com.google.gwt.user.client.Window.ScrollHandler;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.controller.PropertyController;
+import com.willshex.blogwt.client.gwt.RegisteringComposite;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class CookieNoticePart extends Composite {
+public class CookieNoticePart extends RegisteringComposite {
 
 	private static CookieNoticePartUiBinder uiBinder = GWT
 			.create(CookieNoticePartUiBinder.class);
@@ -53,7 +50,6 @@ public class CookieNoticePart extends Composite {
 
 	@UiField Style style;
 
-	private HandlerRegistration registration = null;
 	private Timer toggleFix = new Timer() {
 
 		@Override
@@ -91,10 +87,8 @@ public class CookieNoticePart extends Composite {
 		setCookie();
 		setVisible(false);
 		CookieNoticePart.this.removeStyleName(style.fixed());
-		if (registration != null) {
-			registration.removeHandler();
-			registration = null;
-		}
+
+		unregisterAll();
 	}
 
 	private boolean isCookie () {
@@ -114,14 +108,10 @@ public class CookieNoticePart extends Composite {
 		super.onAttach();
 
 		if (isVisible()) {
-			registration = Window.addWindowScrollHandler(new ScrollHandler() {
-
-				@Override
-				public void onWindowScroll (ScrollEvent event) {
-					toggleFix.cancel();
-					toggleFix.schedule(150);
-				}
-			});
+			register(Window.addWindowScrollHandler(event -> {
+				toggleFix.cancel();
+				toggleFix.schedule(150);
+			}));
 		}
 	}
 
@@ -131,11 +121,6 @@ public class CookieNoticePart extends Composite {
 	@Override
 	protected void onDetach () {
 		super.onDetach();
-
-		if (registration != null) {
-			registration.removeHandler();
-			registration = null;
-		}
 
 		toggleFix.cancel();
 	}

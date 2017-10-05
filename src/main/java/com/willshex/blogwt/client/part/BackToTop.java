@@ -10,7 +10,6 @@ package com.willshex.blogwt.client.part;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -18,7 +17,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.animation.ScrollWindow;
 import com.willshex.blogwt.client.animation.element.ElementAnimation;
@@ -26,12 +24,13 @@ import com.willshex.blogwt.client.animation.element.ElementAnimation.Complete;
 import com.willshex.blogwt.client.animation.element.FadeIn;
 import com.willshex.blogwt.client.animation.element.FadeOut;
 import com.willshex.blogwt.client.animation.gdx.math.Interpolation;
+import com.willshex.blogwt.client.gwt.RegisteringComposite;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class BackToTop extends Composite {
+public class BackToTop extends RegisteringComposite {
 
 	private static final FadeIn FADE_IN = new FadeIn();
 	private static final FadeOut FADE_OUT = new FadeOut();
@@ -42,7 +41,7 @@ public class BackToTop extends Composite {
 	interface BackToTopUiBinder extends UiBinder<Widget, BackToTop> {}
 
 	@UiField Button btnBackToTop;
-	private HandlerRegistration registration;
+
 	private Timer toggleTop = new Timer() {
 
 		@Override
@@ -117,10 +116,10 @@ public class BackToTop extends Composite {
 	protected void onAttach () {
 		super.onAttach();
 
-		registration = Window.addWindowScrollHandler(event -> {
+		register(Window.addWindowScrollHandler(event -> {
 			toggleTop.cancel();
 			toggleTop.schedule(150);
-		});
+		}));
 
 		if (shouldShow()) {
 			fadeInComplete(btnBackToTop.getElement());
@@ -135,10 +134,6 @@ public class BackToTop extends Composite {
 	@Override
 	protected void onDetach () {
 		super.onDetach();
-
-		if (registration != null) {
-			registration.removeHandler();
-		}
 
 		toggleTop.cancel();
 	}

@@ -7,7 +7,6 @@
 //
 package com.willshex.blogwt.client.part;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -29,7 +27,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -46,6 +43,7 @@ import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.gwt.RegisteringComposite;
 import com.willshex.blogwt.client.helper.GoogleAnalyticsHelper;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.shared.api.datatype.Page;
@@ -65,8 +63,9 @@ import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.web.service.shared.StatusType;
 
-public class HeaderPart extends Composite implements LoginEventHandler,
-		LogoutEventHandler, ClickHandler, ChangeUserDetailsEventHandler {
+public class HeaderPart extends RegisteringComposite
+		implements LoginEventHandler, LogoutEventHandler, ClickHandler,
+		ChangeUserDetailsEventHandler {
 
 	private static HeaderPartUiBinder uiBinder = GWT
 			.create(HeaderPartUiBinder.class);
@@ -111,8 +110,6 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	private Element elOpen;
 	private Map<String, Element> items;
 	private Map<String, Element> openables;
-
-	private List<HandlerRegistration> registration;
 
 	private HeaderPart () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -382,15 +379,11 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 	protected void onAttach () {
 		super.onAttach();
 
-		if (registration == null) {
-			registration = new ArrayList<HandlerRegistration>();
-		}
-
-		registration.add(DefaultEventBus.get().addHandlerToSource(
+		register(DefaultEventBus.get().addHandlerToSource(
 				LoginEventHandler.TYPE, SessionController.get(), this));
-		registration.add(DefaultEventBus.get().addHandlerToSource(
+		register(DefaultEventBus.get().addHandlerToSource(
 				LogoutEventHandler.TYPE, SessionController.get(), this));
-		registration.add(DefaultEventBus.get().addHandlerToSource(
+		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				(p, c) -> {
 					if (p != null) {
@@ -403,9 +396,8 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 
 					GoogleAnalyticsHelper.sendPageView("#" + c.toString());
 				}));
-		registration
-				.add(RootPanel.get().addDomHandler(this, ClickEvent.getType()));
-		registration.add(DefaultEventBus.get().addHandlerToSource(
+		register(RootPanel.get().addDomHandler(this, ClickEvent.getType()));
+		register(DefaultEventBus.get().addHandlerToSource(
 				ChangeUserDetailsEventHandler.TYPE, UserController.get(),
 				this));
 
@@ -415,18 +407,6 @@ public class HeaderPart extends Composite implements LoginEventHandler,
 		} else {
 			configureNavBar(false);
 		}
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
-	@Override
-	protected void onDetach () {
-		for (HandlerRegistration handlerRegistration : registration) {
-			handlerRegistration.removeHandler();
-		}
-
-		super.onDetach();
 	}
 
 	/**
