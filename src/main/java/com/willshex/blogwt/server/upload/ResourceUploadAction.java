@@ -17,6 +17,7 @@ import org.apache.commons.fileupload.FileItem;
 
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
+import com.google.gson.JsonObject;
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 
@@ -53,20 +54,25 @@ public class ResourceUploadAction extends CloudStorageUploadAction {
 						+ ((CloudStorageFileItem) i).getKey().getKeyString();
 				resource.description = "New uploaded file " + i.getName();
 
+				resource.name = i.getName();
+
+				JsonObject object = new JsonObject();
+				object.addProperty("contentType", i.getContentType());
+
 				// try to get a permanent url for an image, if it works
 				// add it to the description
 				try {
-					resource.description += "\nStatic url:\n"
-							+ ImagesServiceFactory.getImagesService()
-									.getServingUrl(ServingUrlOptions.Builder
-											.withBlobKey(
-													((CloudStorageFileItem) i)
-															.getKey()));
+					object.addProperty("staticUrl", ImagesServiceFactory
+							.getImagesService()
+							.getServingUrl(ServingUrlOptions.Builder
+									.withBlobKey(((CloudStorageFileItem) i)
+											.getKey()))
+							.replaceFirst("https:\\/\\/", "//")
+							.replaceFirst("http:\\/\\/", "//"));
 				} catch (Throwable e) {}
 
-				resource.name = i.getName();
-				resource.properties = "{\"contentType\":" + i.getContentType()
-						+ "}";
+				resource.properties = object.toString();
+
 				resource = ResourceServiceProvider.provide()
 						.addResource(resource);
 

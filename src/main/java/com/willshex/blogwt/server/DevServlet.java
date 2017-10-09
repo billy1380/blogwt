@@ -23,6 +23,8 @@ import javax.servlet.annotation.WebServlet;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.willshex.blogwt.server.api.blog.action.GetPostsActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.helper.SearchHelper;
@@ -175,24 +177,40 @@ public class DevServlet extends ContextAwareServlet {
 			List<Resource> resources = ResourceServiceProvider.provide()
 					.getResources(Integer.valueOf(0),
 							Integer.valueOf(Integer.MAX_VALUE), null, null);
+			JsonObject object;
 			for (Resource resource : resources) {
-				if (resource.description != null
-						&& !resource.description.contains("Static url")) {
+				if (resource.properties != null) {
+					if (resource.properties.contains(":image")) {
+						resource.properties = resource.properties
+								.replace(":image", ":\"image")
+								.replace("}", "\"}");
+					}
 
+					object = new JsonParser().parse(resource.properties)
+							.getAsJsonObject();
+				} else {
+					object = new JsonObject();
+				}
+
+				if (!object.has("staticUrl") || object.get("staticUrl")
+						.getAsString().startsWith("http")) {
 					try {
-						resource.description += "\nStatic url:\n"
-								+ ImagesServiceFactory.getImagesService()
-										.getServingUrl(ServingUrlOptions.Builder
-												.withBlobKey(new BlobKey(
-														resource.data.replace(
-																"gs://", ""))));
-						ResourceServiceProvider.provide()
-								.updateResource(resource);
+						object.addProperty("staticUrl", ImagesServiceFactory
+								.getImagesService()
+								.getServingUrl(ServingUrlOptions.Builder
+										.withBlobKey(new BlobKey(resource.data
+												.replace("gs://", ""))))
+								.replaceFirst("https:\\/\\/", "//")
+								.replaceFirst("http:\\/\\/", "//"));
 					} catch (Throwable e) {
 						if (LOG.isLoggable(Level.FINE)) {
 							LOG.fine("Could not update resource");
 						}
 					}
+
+					resource.properties = object.toString();
+
+					ResourceServiceProvider.provide().updateResource(resource);
 				}
 			}
 		} else if ("fixmetanotifications".equals(action)) {
