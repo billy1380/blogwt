@@ -64,8 +64,30 @@
 				<configuration>
 					<doCheck>true</doCheck>
 					<doUpdate>true</doUpdate>
-					<!-- <shortRevisionLength>5</shortRevisionLength> -->
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>unzip</executable>
+							<arguments>
+								<argument>-o</argument>
+								<argument>${project.build.directory}/${project.build.finalName}*war</argument>
+								<argument>META-INF/*</argument>
+								<argument>-d</argument>
+								<argument>${project.build.directory}/${project.build.finalName}/.</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
