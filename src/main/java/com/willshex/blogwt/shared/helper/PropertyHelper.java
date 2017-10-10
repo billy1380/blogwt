@@ -27,6 +27,8 @@ public class PropertyHelper {
 
 	public static final String PASSWORD_HASH_SALT = "setup.password.hash.salt";
 
+	public static final String VERSION = "system.version";
+
 	// functional properties
 	public static final String MARKDOWN_MAPS_API_KEY = "markdown.maps.api.key";
 	public static final String MARKDOWN_PREFETCH_INCLUDES = "markdown.include.prefectch";

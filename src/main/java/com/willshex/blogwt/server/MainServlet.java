@@ -12,6 +12,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
@@ -48,6 +52,9 @@ import com.willshex.server.ContextAwareServlet;
 @SuppressWarnings("serial")
 @WebServlet(name = "Site", urlPatterns = MainServlet.URL)
 public class MainServlet extends ContextAwareServlet {
+
+	private static final Logger LOG = Logger
+			.getLogger(MainServlet.class.getName());
 
 	public static final String URL = "/";
 
@@ -224,12 +231,29 @@ public class MainServlet extends ContextAwareServlet {
 		List<Property> properties = PropertyServiceProvider.provide()
 				.getProperties(0, 10000, null, null);
 
+		String build = null;
+		try {
+			Manifest m = new Manifest(getServletContext()
+					.getResourceAsStream("/META-INF/MANIFEST.MF"));
+			Attributes a = m.getMainAttributes();
+
+			build = a.getValue("Implementation-Build");
+		} catch (IOException | NullPointerException e) {
+			if (LOG.isLoggable(Level.FINE)) {
+				LOG.log(Level.FINE, "Could not retrieve version number", e);
+			}
+		}
+
+		final String version = build == null ? "none" : build;
+
+		properties.add(new Property().name(PropertyHelper.VERSION)
+				.type("string").value(version));
+
 		if (properties.size() >= 0) {
 			scriptVariables.append("var properties='[")
-					.append(String.join(", ", properties.stream()
-							.filter( (property) -> !PropertyHelper
-									.isSecretProperty(property))
-							.map( (property) -> jsonForJsVar(slim(property)))
+					.append(String.join(",", properties.stream()
+							.filter(p -> !PropertyHelper.isSecretProperty(p))
+							.map(p -> jsonForJsVar(slim(p)))
 							.collect(Collectors.toList())))
 					.append("]';");
 		}

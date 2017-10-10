@@ -34,3 +34,4 @@ www-test/
 
 /src/main/java/META-INF/persistence.xml
 /deps/
+/buildNumber.properties

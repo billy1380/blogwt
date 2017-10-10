@@ -36,6 +36,9 @@
 		<maven>3.2.1</maven>
 	</prerequisites>
 
+	<scm>
+		<connection>scm:git:https://github.com/billy1380/blogwt.git</connection>
+	</scm>
 	<build>
 		<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
 
@@ -46,6 +49,25 @@
 		</resources>
 
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>true</doCheck>
+					<doUpdate>true</doUpdate>
+					<!-- <shortRevisionLength>5</shortRevisionLength> -->
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<!-- Don't deploy gwt-dev jar to GAE -->
 				<artifactId>maven-clean-plugin</artifactId>
@@ -87,6 +109,22 @@
 					<source>1.8</source>
 					<target>1.8</target>
 					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Implementation-Build>${buildNumber}</Implementation-Build>
+						</manifestEntries>
+					</archive>
 				</configuration>
 			</plugin>
 
