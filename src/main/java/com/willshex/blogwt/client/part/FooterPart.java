@@ -66,11 +66,21 @@ public class FooterPart extends Composite {
 	}
 
 	private String version () {
-		return PropertyController.get()
+		String version = PropertyController.get()
 				.booleanProperty(PropertyHelper.FOOTER_SHOW_VERSION, false)
 						? (PropertyController.get()
-								.stringProperty(PropertyHelper.VERSION) + " - ")
+								.stringProperty(PropertyHelper.VERSION))
 						: "";
+
+		if (version.length() > 7) {
+			version = version.substring(0, 7);
+		}
+
+		if (!version.isEmpty()) {
+			version += " - ";
+		}
+
+		return version;
 	}
 
 	@SuppressWarnings("deprecation")
