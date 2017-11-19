@@ -29,4 +29,10 @@ public class JsonableHelper {
 		return map == null ? null : map.values();
 	}
 
+	public static String jsonForJsVar (Jsonable jsonable) {
+		return null == jsonable ? null
+				: jsonable.toString().replace("'", "\\'")
+						.replace("\\n", "\\\\n").replace("\\\"", "\\\\\"");
+	}
+
 }

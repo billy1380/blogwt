@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server;
 
+import static com.willshex.blogwt.shared.helper.JsonableHelper.jsonForJsVar;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,7 +44,6 @@ import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.blogwt.shared.page.Stack;
-import com.willshex.gson.shared.Jsonable;
 import com.willshex.server.ContextAwareServlet;
 
 /**
@@ -306,12 +307,6 @@ public class MainServlet extends ContextAwareServlet {
 		if (p != null) {
 			response.getOutputStream().write(p.asString().getBytes());
 		}
-	}
-
-	private String jsonForJsVar (Jsonable jsonable) {
-		return null == jsonable ? null
-				: jsonable.toString().replace("'", "\\'")
-						.replace("\\n", "\\\\n").replace("\\\"", "\\\\\"");
 	}
 
 	private Property slim (Property property) {
