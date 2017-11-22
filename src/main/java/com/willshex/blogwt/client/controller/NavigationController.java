@@ -131,12 +131,12 @@ public class NavigationController implements ValueChangeHandler<String> {
 					&& !SessionController.get().isValidSession()) {
 				SessionController.get().logout(PageType.LoginPageType,
 						s.asNextParameter());
-			} else if (p != null && p.requiresLogin()
-					&& !SessionController.get().isAuthorised(p)
-					|| !PropertyController.get()
+			} else if (p != null && !((p.requiresLogin()
+					&& !SessionController.get().isAuthorised(p))
+					|| PropertyController.get()
 							.isConfigured(p == null ? null
 									: JsonableHelper.values(
-											p.getRequiredProperties()))) {
+											p.getRequiredProperties())))) {
 				lost();
 			} else {
 				if (intended != null && intended.equals(s.toString())) {
