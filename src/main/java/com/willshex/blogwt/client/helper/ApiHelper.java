@@ -115,4 +115,8 @@ public class ApiHelper {
 		return instance;
 	}
 
+	public static <T extends DataType> T idOnly (T forCall, T full) {
+		forCall.id = full.id;
+		return forCall;
+	}
 }
