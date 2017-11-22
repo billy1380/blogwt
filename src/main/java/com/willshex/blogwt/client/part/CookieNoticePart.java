@@ -7,8 +7,6 @@
 //
 package com.willshex.blogwt.client.part;
 
-import java.util.Date;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -23,6 +21,7 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.gwt.RegisteringComposite;
+import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 /**
@@ -42,8 +41,6 @@ public class CookieNoticePart extends RegisteringComposite {
 	}
 
 	private static final String EU_COOKIE_NOTICE_KEY = "eu.cookie.notice";
-	private static final long TWENTY_YEARS = 20l * 365l * 24l * 60l * 60l
-			* 1000l;
 
 	@UiField Element elTitle;
 	@UiField InlineHyperlink btnSeeDetails;
@@ -96,8 +93,8 @@ public class CookieNoticePart extends RegisteringComposite {
 	}
 
 	private void setCookie () {
-		Cookies.setCookie(EU_COOKIE_NOTICE_KEY, "Got It!",
-				new Date(new Date().getTime() + TWENTY_YEARS));
+		Cookies.setCookie(EU_COOKIE_NOTICE_KEY, "Got It!", DateTimeHelper
+				.millisFromNow(DateTimeHelper.MILLIS_PER_DAY * 365L * 20L));
 	}
 
 	/* (non-Javadoc)

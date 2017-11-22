@@ -32,6 +32,7 @@ import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.user.call.LogoutRequest;
 import com.willshex.blogwt.shared.api.user.call.LogoutResponse;
+import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.JsonableHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
 import com.willshex.blogwt.shared.helper.RoleHelper;
@@ -111,7 +112,10 @@ public class SessionController {
 				if (result.status == StatusType.StatusTypeSuccess
 						&& result.session != null) {
 					session = result.session;
-					Cookies.setCookie(COOKIE_KEY_ID, session.id.toString());
+					Cookies.setCookie(COOKIE_KEY_ID, session.id.toString(),
+							DateTimeHelper
+									.millisFromNow(DateTimeHelper.MILLIS_PER_DAY
+											* 365L * 20L));
 
 					if (user() != null && user().lastLoggedIn == null) {
 						user().lastLoggedIn = new Date();
