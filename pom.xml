@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.willshex</groupId>
-	<artifactId>blogwt</artifactId>
+	<artifactId>bidly</artifactId>
 	<packaging>war</packaging>
 	<version>0v4</version>
-	<name>Blogwt</name>
-	<description>Blog application built with GWT on top of AppEngine</description>
+	<name>Bidly</name>
+	<description>New and used car bidding application</description>
 
 	<!-- App Engine Goals -->
 	<!-- mvn help:describe -Dplugin=appengine -->
@@ -37,7 +37,7 @@
 	</prerequisites>
 
 	<scm>
-		<connection>scm:git:https://github.com/billy1380/blogwt.git</connection>
+		<connection>scm:git:https://bitbucket.org/willshex/bidly.git</connection>
 	</scm>
 	<build>
 		<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
