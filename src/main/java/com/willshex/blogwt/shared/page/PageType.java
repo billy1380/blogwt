@@ -60,7 +60,15 @@ public enum PageType {
 	AllPostsPageType("posts", PermissionHelper.create(MANAGE_POSTS)),
 	DownloadsPageType("downloads",
 			new Property().name(PropertyHelper.DOWNLOAD_ENABLED)
-					.value(Boolean.toString(true))),;
+					.value(Boolean.toString(true))),
+
+	// bidly
+
+	DashboardPageType("dashboard", true),
+	BuildBidsPageType("buildbids", true),
+	OngoingBuildBidsPageType("ongoingbuildbids", true),
+	UploadInventoryPageType("uploadinventory", true),
+	InventoryBids("inventorybids", true),;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
