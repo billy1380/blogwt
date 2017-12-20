@@ -27,9 +27,9 @@ public class RoleHelper extends com.willshex.blogwt.shared.helper.RoleHelper {
 	public static final String MANAGER_NAME = "Manager";
 	public static final String DIRECTOR_NAME = "Director";
 
-	public static final String SALES_DESCRIPTION = "Contains all permissions grated to sales people";
-	public static final String MANAGER_DESCRIPTION = "Contains all permissions grated to managers";
-	public static final String DIRECTOR_DESCRIPTION = "Contains all permissions grated to dealership directors";
+	public static final String SALES_DESCRIPTION = "Contains all permissions granted to sales people";
+	public static final String MANAGER_DESCRIPTION = "Contains all permissions granted to managers";
+	public static final String DIRECTOR_DESCRIPTION = "Contains all permissions granted to dealership directors";
 
 	public static Role createSales () {
 		return create(SALES);
@@ -59,9 +59,9 @@ public class RoleHelper extends com.willshex.blogwt.shared.helper.RoleHelper {
 		List<Role> all = new ArrayList<Role>(
 				com.willshex.blogwt.shared.helper.RoleHelper.createAll());
 
-		all.add(createSales());
-		all.add(createManager());
-		all.add(createDirector());
+		all.add(createFullSales());
+		all.add(createFullManager());
+		all.add(createFullDirector());
 
 		return all;
 	}
