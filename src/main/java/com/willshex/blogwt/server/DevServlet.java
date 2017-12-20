@@ -50,7 +50,7 @@ import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.MetaNotificationHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PermissionHelper;
-import com.willshex.blogwt.shared.helper.RoleHelper;
+import com.willshex.blogwt.shared.helper.bidly.RoleHelper;
 import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.blogwt.shared.page.search.Filter;
 import com.willshex.server.ContextAwareServlet;
