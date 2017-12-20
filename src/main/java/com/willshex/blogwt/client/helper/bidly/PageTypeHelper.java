@@ -8,6 +8,12 @@
 package com.willshex.blogwt.client.helper.bidly;
 
 import com.willshex.blogwt.client.page.Page;
+import com.willshex.blogwt.client.page.admin.bidly.changedealerdetails.ChangeDealerDetailsPage;
+import com.willshex.blogwt.client.page.bidly.dealer.buildbids.BuildBidsPage;
+import com.willshex.blogwt.client.page.bidly.dealer.dashboard.DashboardPage;
+import com.willshex.blogwt.client.page.bidly.dealer.inventorybids.InventoryBidsPage;
+import com.willshex.blogwt.client.page.bidly.dealer.ongoingbuildbids.OngoingBuildBidsPage;
+import com.willshex.blogwt.client.page.bidly.dealer.uploadinventory.UploadInventoryPage;
 import com.willshex.blogwt.shared.page.PageType;
 
 /**
@@ -20,20 +26,23 @@ public class PageTypeHelper
 		Page page;
 
 		switch (pageType) {
+		case ChangeDealerDetailsPageType:
+			page = new ChangeDealerDetailsPage();
+			break;
 		case DashboardPageType:
-			page = null;
+			page = new DashboardPage();
 			break;
 		case BuildBidsPageType:
-			page = null;
+			page = new BuildBidsPage();
 			break;
 		case OngoingBuildBidsPageType:
-			page = null;
+			page = new OngoingBuildBidsPage();
 			break;
 		case UploadInventoryPageType:
-			page = null;
+			page = new UploadInventoryPage();
 			break;
 		case InventoryBids:
-			page = null;
+			page = new InventoryBidsPage();
 			break;
 		default:
 			page = com.willshex.blogwt.client.helper.PageTypeHelper

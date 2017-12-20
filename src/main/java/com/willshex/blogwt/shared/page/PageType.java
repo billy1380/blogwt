@@ -64,6 +64,7 @@ public enum PageType {
 
 	// bidly
 
+	ChangeDealerDetailsPageType("changedealerdetails", true, true),
 	DashboardPageType("dashboard", true),
 	BuildBidsPageType("buildbids", true),
 	OngoingBuildBidsPageType("ongoingbuildbids", true),
