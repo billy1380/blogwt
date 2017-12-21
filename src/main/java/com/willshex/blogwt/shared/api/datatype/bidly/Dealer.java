@@ -8,6 +8,7 @@
 package com.willshex.blogwt.shared.api.datatype.bidly;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.JsonArray;
@@ -28,6 +29,8 @@ public class Dealer extends DataType {
 
 	@Ignore public List<Branch> branch;
 
+	public Date suspended;
+
 	@Override
 	public JsonObject toJson () {
 		JsonObject object = super.toJson();
@@ -45,6 +48,9 @@ public class Dealer extends DataType {
 			}
 		}
 		object.add("branch", jsonBranch);
+		JsonElement jsonSuspended = suspended == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(suspended.getTime());
+		object.add("suspended", jsonSuspended);
 		return object;
 	}
 
@@ -72,6 +78,12 @@ public class Dealer extends DataType {
 			}
 		}
 
+		if (jsonObject.has("suspended")) {
+			JsonElement jsonSuspended = jsonObject.get("suspended");
+			if (jsonSuspended != null) {
+				suspended = new Date(jsonSuspended.getAsLong());
+			}
+		}
 	}
 
 	public Dealer name (String name) {
@@ -81,6 +93,11 @@ public class Dealer extends DataType {
 
 	public Dealer branch (List<Branch> branch) {
 		this.branch = branch;
+		return this;
+	}
+
+	public Dealer suspended (Date suspended) {
+		this.suspended = suspended;
 		return this;
 	}
 }

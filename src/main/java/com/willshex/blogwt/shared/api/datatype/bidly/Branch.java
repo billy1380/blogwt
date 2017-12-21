@@ -7,6 +7,8 @@
 // 
 package com.willshex.blogwt.shared.api.datatype.bidly;
 
+import java.util.Date;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -26,6 +28,7 @@ public class Branch extends DataType {
 
 	public Address location;
 	public String name;
+	public Date closed;
 
 	@Override
 	public JsonObject toJson () {
@@ -39,6 +42,9 @@ public class Branch extends DataType {
 		JsonElement jsonName = name == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(name);
 		object.add("name", jsonName);
+		JsonElement jsonClosed = closed == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(closed.getTime());
+		object.add("closed", jsonClosed);
 		return object;
 	}
 
@@ -65,6 +71,12 @@ public class Branch extends DataType {
 				name = jsonName.getAsString();
 			}
 		}
+		if (jsonObject.has("closed")) {
+			JsonElement jsonClosed = jsonObject.get("closed");
+			if (jsonClosed != null) {
+				closed = new Date(jsonClosed.getAsLong());
+			}
+		}
 	}
 
 	public Branch dealer (Dealer dealer) {
@@ -81,4 +93,10 @@ public class Branch extends DataType {
 		this.name = name;
 		return this;
 	}
+
+	public Branch closed (Date closed) {
+		this.closed = closed;
+		return this;
+	}
+
 }

@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.gwt.RunAsync;
-import com.willshex.blogwt.client.markdown.Processor;
 import com.willshex.blogwt.client.part.CookieNoticePart;
 import com.willshex.blogwt.client.part.FooterPart;
 import com.willshex.blogwt.client.part.HeaderPart;
@@ -34,7 +33,7 @@ public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
 	private void start () {
 		History.addValueChangeHandler(NavigationController.get());
 		createContentAndPages();
-		Processor.init(e -> History.fireCurrentHistoryState());
+		History.fireCurrentHistoryState();
 	}
 
 	private void createContentAndPages () {
