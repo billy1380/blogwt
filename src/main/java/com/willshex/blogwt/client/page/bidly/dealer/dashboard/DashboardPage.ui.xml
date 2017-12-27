@@ -1,8 +1,49 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
-	</ui:style>
-	<g:HTMLPanel>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:s="urn:import:com.willshex.blogwt.client.part.bidly.sidenav">
+	<ui:style
+		type="com.willshex.blogwt.client.page.bidly.dealer.dashboard.DashboardPage.Style">
+		.links {
+			stroke: #000;
+			stroke-opacity: 0.2;
+		}
 		
+		.polygons {
+			fill: none;
+			stroke: #000;
+		}
+		
+		.polygons :first-child {
+			fill: #f00;
+		}
+		
+		.sites {
+			fill: #000;
+			stroke: #fff;
+		}
+		
+		.sites :first-child {
+			fill: #fff;
+		}
+		</ui:style>
+	<g:HTMLPanel>
+		<s:SideNav />
+		<div class="container">
+			<h2>Dashboard</h2>
+
+			<h2>Weekly</h2>
+			<div class="row">
+				<div ui:field="elChart" class="ct-chart col-sm-6" />
+				<div ui:field="elChart1" class="ct-chart col-sm-6" />
+			</div>
+
+			<h2>Quarterly</h2>
+			<div class="row">
+				<div ui:field="elChart2" class="ct-chart col-sm-3" />
+				<div ui:field="elChart3" class="ct-chart col-sm-3" />
+				<div ui:field="elChart4" class="ct-chart col-sm-3" />
+				<div ui:field="elChart5" class="ct-chart col-sm-3" />
+			</div>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 
