@@ -69,7 +69,7 @@ public enum PageType {
 	BuildBidsPageType("buildbids", true),
 	OngoingBuildBidsPageType("ongoingbuildbids", true),
 	UploadInventoryPageType("uploadinventory", true),
-	InventoryBids("inventorybids", true),;
+	InventoryBidsPageType("inventorybids", true),;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;

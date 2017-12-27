@@ -7,6 +7,7 @@
 //
 package com.willshex.blogwt.client.helper.bidly;
 
+import com.google.gwt.safehtml.shared.SafeUri;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.admin.bidly.changedealerdetails.ChangeDealerDetailsPage;
 import com.willshex.blogwt.client.page.bidly.dealer.buildbids.BuildBidsPage;
@@ -22,6 +23,22 @@ import com.willshex.blogwt.shared.page.PageType;
  */
 public class PageTypeHelper
 		extends com.willshex.blogwt.client.helper.PageTypeHelper {
+
+	public static final SafeUri DASHBOARD_PAGE_HREF = asHref(
+			PageType.DashboardPageType);
+
+	public static final SafeUri BUILD_BIDS_PAGE_HREF = asHref(
+			PageType.BuildBidsPageType);
+
+	public static final SafeUri INVENTORY_BIDS_PAGE_HREF = asHref(
+			PageType.InventoryBidsPageType);
+
+	public static final SafeUri ONGOING_BUILD_BIDS_PAGE_HREF = asHref(
+			PageType.OngoingBuildBidsPageType);
+
+	public static final SafeUri UPLOAD_INVENTORY_PAGE_HREF = asHref(
+			PageType.UploadInventoryPageType);
+
 	public static Page createPage (PageType pageType) {
 		Page page;
 
@@ -41,7 +58,7 @@ public class PageTypeHelper
 		case UploadInventoryPageType:
 			page = new UploadInventoryPage();
 			break;
-		case InventoryBids:
+		case InventoryBidsPageType:
 			page = new InventoryBidsPage();
 			break;
 		default:
