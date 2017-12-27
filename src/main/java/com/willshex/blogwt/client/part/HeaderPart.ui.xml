@@ -18,7 +18,7 @@
 	</ui:style>
 
 	<g:HTMLPanel styleName="container {style.pad-top}">
-		<div class="navbar navbar-inverse">
+		<div class="navbar navbar-fixed-top navbar-inverse">
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<p:CollapseButton ui:field="btnNavExpand" />

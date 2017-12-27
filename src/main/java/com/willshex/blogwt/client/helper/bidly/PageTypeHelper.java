@@ -13,6 +13,7 @@ import com.willshex.blogwt.client.page.admin.bidly.changedealerdetails.ChangeDea
 import com.willshex.blogwt.client.page.bidly.dealer.buildbids.BuildBidsPage;
 import com.willshex.blogwt.client.page.bidly.dealer.dashboard.DashboardPage;
 import com.willshex.blogwt.client.page.bidly.dealer.inventorybids.InventoryBidsPage;
+import com.willshex.blogwt.client.page.bidly.dealer.inventroyvehicles.InventoryVehiclesPage;
 import com.willshex.blogwt.client.page.bidly.dealer.ongoingbuildbids.OngoingBuildBidsPage;
 import com.willshex.blogwt.client.page.bidly.dealer.uploadinventory.UploadInventoryPage;
 import com.willshex.blogwt.shared.page.PageType;
@@ -36,8 +37,8 @@ public class PageTypeHelper
 	public static final SafeUri ONGOING_BUILD_BIDS_PAGE_HREF = asHref(
 			PageType.OngoingBuildBidsPageType);
 
-	public static final SafeUri UPLOAD_INVENTORY_PAGE_HREF = asHref(
-			PageType.UploadInventoryPageType);
+	public static final SafeUri INVENTORY_VEHICLES_PAGE_HREF = asHref(
+			PageType.InventoryVehiclesPageType);
 
 	public static Page createPage (PageType pageType) {
 		Page page;
@@ -54,6 +55,9 @@ public class PageTypeHelper
 			break;
 		case OngoingBuildBidsPageType:
 			page = new OngoingBuildBidsPage();
+			break;
+		case InventoryVehiclesPageType:
+			page = new InventoryVehiclesPage();
 			break;
 		case UploadInventoryPageType:
 			page = new UploadInventoryPage();

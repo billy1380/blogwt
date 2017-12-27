@@ -57,7 +57,7 @@ public class SideNav extends RegisteringComposite {
 				elBuildBids.getParentElement());
 		pages.put(PageTypeHelper.ONGOING_BUILD_BIDS_PAGE_HREF.asString(),
 				elOngoingBuildBids.getParentElement());
-		pages.put(PageTypeHelper.UPLOAD_INVENTORY_PAGE_HREF.asString(),
+		pages.put(PageTypeHelper.INVENTORY_VEHICLES_PAGE_HREF.asString(),
 				elUploadInventory.getParentElement());
 		pages.put(PageTypeHelper.INVENTORY_BIDS_PAGE_HREF.asString(),
 				elInventoryBids.getParentElement());

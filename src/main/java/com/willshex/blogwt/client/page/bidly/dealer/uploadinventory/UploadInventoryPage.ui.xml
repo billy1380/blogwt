@@ -24,7 +24,7 @@
 	<g:HTMLPanel>
 		<s:SideNav />
 		<div class="container">
-			<h2>Garage</h2>
+			<h2>Add Vehicle</h2>
 			<g:FormPanel>
 				<g:HTMLPanel>
 					<p>Please enter the following details to add your vehicle stock to the
@@ -92,7 +92,8 @@
 						</g:HTMLPanel>
 
 						<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary pull-right">
-							Update (Add car to garage)
+							Update (Add
+							car to garage)
 						</g:SubmitButton>
 					</div>
 				</g:HTMLPanel>

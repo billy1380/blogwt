@@ -5,7 +5,7 @@
 	@external glyphicon, badge, active;
 	.side-nav {
 		position: fixed;
-		background: #333b45;
+		background: #312e49;
 		top: 0;
 		padding-top: 100px;
 		padding-right: 10px;
@@ -54,7 +54,7 @@
 	}
 	
 	.badge {
-		background: #9a2132;
+		background: #ba205b;
 		position: relative;
 		top: -10px;
 		left: -10px;
@@ -88,7 +88,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="{UPLOAD_INVENTORY_PAGE_HREF}" title="Garage">
+				<a href="{INVENTORY_VEHICLES_PAGE_HREF}" title="Garage">
 					<span class="glyphicon glyphicon-upload" />
 					<span ui:field="elUploadInventory">
 						Garage
