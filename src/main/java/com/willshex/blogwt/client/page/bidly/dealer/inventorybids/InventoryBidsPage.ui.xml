@@ -4,7 +4,6 @@
 	
 	</ui:style>
 	<g:HTMLPanel>
-		<s:SideNav />
 		<div class="container">
 			<h2>Used Car Offers</h2>
 		</div>

@@ -91,6 +91,12 @@ public class HeaderPart extends RegisteringComposite
 	@UiField Element elNavLeft;
 	@UiField Element elNavRight;
 	@UiField AnchorElement btnHome;
+
+	@UiField Element elBuildBids;
+	@UiField Element elOngoingBuildBids;
+	@UiField Element elUploadInventory;
+	@UiField Element elInventoryBids;
+
 	@UiField Element elAdmin;
 	@UiField Anchor btnAdmin;
 	@UiField Element elAdminDropdown;
@@ -266,6 +272,17 @@ public class HeaderPart extends RegisteringComposite
 				elPermissions);
 		ensureItems().put(PageType.ResourcesPageType.asTargetHistoryToken(),
 				elResources);
+
+		ensureItems().put(PageType.BuildBidsPageType.asTargetHistoryToken(),
+				elBuildBids);
+		ensureItems().put(
+				PageType.OngoingBuildBidsPageType.asTargetHistoryToken(),
+				elOngoingBuildBids);
+		ensureItems().put(
+				PageType.InventoryVehiclesPageType.asTargetHistoryToken(),
+				elUploadInventory);
+		ensureItems().put(PageType.InventoryBidsPageType.asTargetHistoryToken(),
+				elInventoryBids);
 
 		elAdmin.removeFromParent();
 		elAccount.removeFromParent();

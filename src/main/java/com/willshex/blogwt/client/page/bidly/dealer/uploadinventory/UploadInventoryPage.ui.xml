@@ -22,7 +22,6 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<s:SideNav />
 		<div class="container">
 			<h2>Add Vehicle</h2>
 			<g:FormPanel>

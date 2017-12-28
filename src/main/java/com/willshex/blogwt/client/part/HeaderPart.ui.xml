@@ -2,22 +2,27 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:import field="com.willshex.blogwt.client.helper.PageTypeHelper.*" />
+	<ui:import field="com.willshex.blogwt.client.helper.bidly.PageTypeHelper.*" />
 	<ui:import field="com.willshex.blogwt.shared.page.PageType.*" />
 	<ui:style gss="true">
+	@external badge;
 	.bottom {
 		vertical-align: bottom;
-	}
-	
-	.pad-top {
-		padding-top: 20px;
 	}
 	
 	.fit {
 		object-fit: cover;
 	}
+	
+	.header .badge {
+		background: #ba205b;
+		position: relative;
+		top: -10px;
+		left: -10px;
+	}
 	</ui:style>
 
-	<g:HTMLPanel styleName="container {style.pad-top}">
+	<g:HTMLPanel styleName="container {style.header}">
 		<div class="navbar navbar-fixed-top navbar-inverse">
 			<div class="container-fluid">
 				<div class="navbar-header">
@@ -32,6 +37,36 @@
 				</div>
 				<g:HTMLPanel ui:field="pnlNav" styleName="navbar-collapse">
 					<ul class="nav navbar-nav" ui:field="elNavLeft">
+						<li ui:field="elBuildBids">
+							<a href="{BUILD_BIDS_PAGE_HREF}" title="Offers">
+								<span>
+									Offers
+								</span>
+							</a>
+						</li>
+						<li ui:field="elOngoingBuildBids">
+							<a href="{ONGOING_BUILD_BIDS_PAGE_HREF}" title="Deal Stage">
+								<span>
+									Deals
+								</span>
+								<span class="badge">7</span>
+							</a>
+						</li>
+						<li ui:field="elUploadInventory">
+							<a href="{INVENTORY_VEHICLES_PAGE_HREF}" title="Garage">
+								<span>
+									Garage
+								</span>
+							</a>
+						</li>
+						<li ui:field="elInventoryBids">
+							<a href="{INVENTORY_BIDS_PAGE_HREF}" title="Used offers">
+								<span>
+									Used offers
+								</span>
+								<span class="badge">14</span>
+							</a>
+						</li>
 
 						<li class="dropdown" ui:field="elAdmin">
 							<g:Anchor ui:field="btnAdmin" styleName="dropdown-toggle">

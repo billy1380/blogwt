@@ -52,7 +52,7 @@
 		}
 		</ui:style>
 	<g:HTMLPanel>
-		<s:SideNav />
+
 		<div class="container">
 			<h2>Dashboard</h2>
 
