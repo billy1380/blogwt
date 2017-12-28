@@ -22,7 +22,7 @@
 	</ui:style>
 	<g:HTMLPanel>
 		<div class="container">
-			<h2>Deal Stage</h2>
+			<h1>Deals</h1>
 
 			<ul class="nav nav-tabs">
 				<li>

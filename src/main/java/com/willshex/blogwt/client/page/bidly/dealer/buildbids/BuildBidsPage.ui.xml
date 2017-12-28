@@ -10,7 +10,7 @@
 	<g:HTMLPanel>
 
 		<div class="container">
-			<h2>Offers</h2>
+			<h1>Offers</h1>
 
 			<div class="btn-toolbar">
 				<g:Button ui:field="btnRefresh" styleName="btn btn-info">

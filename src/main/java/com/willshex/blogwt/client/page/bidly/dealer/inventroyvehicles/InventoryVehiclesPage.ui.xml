@@ -10,7 +10,7 @@
 	</ui:style>
 	<g:HTMLPanel>
 		<div class="container">
-			<h2>Garage</h2>
+			<h1>Garage</h1>
 
 			<div class="btn-toolbar">
 				<div class="btn-group">

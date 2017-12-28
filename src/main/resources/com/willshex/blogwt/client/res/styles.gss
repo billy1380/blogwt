@@ -1,4 +1,4 @@
-@external h1, h2, h3, h4, h5, h6;
+@external h1, h2, h3, h4, h5, h6, navbar-nav, nav-tabs;
 
 @defmixin fontSmooting() {
 -webkit-font-smoothing: antialiased; /* Chrome 10+,Safari 5.1+ */
@@ -39,9 +39,9 @@
     50% { opacity: 0.0; }
     100% { opacity: 1.0; }
 }
- 
+
 body {
-	font-family: 'Noto Sans', sans-serif;
+	font-family: 'Roboto', sans-serif;
 	padding-top: 70px;
 }
 
@@ -137,4 +137,16 @@ position: relative;
 
 .blink {
     @mixin blink(1s);
+}
+
+.navbar-nav>li>a, .nav-tabs>li>a, .h1, h1 {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+}
+
+.h4, h4 {
+	font-family: 'Roboto', sans-serif;
+	text-transform: uppercase;
+	font-weight: 100;
 }

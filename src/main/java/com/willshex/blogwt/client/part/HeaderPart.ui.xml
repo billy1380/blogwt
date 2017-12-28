@@ -18,19 +18,18 @@
 		background: #ba205b;
 		position: relative;
 		top: -10px;
-		left: -10px;
 	}
 	</ui:style>
 
 	<g:HTMLPanel styleName="container {style.header}">
-		<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar navbar-fixed-top navbar-default">
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<p:CollapseButton ui:field="btnNavExpand" />
 					<a class="navbar-brand" ui:field="btnHome">
 						<span>
 							<g:Image altText="Blogwt" title="Blogwt" ui:field="imgLogo"
-								styleName="{style.fit} img-rounded {style.bottom}" width="20px" height="20px" />
+								styleName="{style.fit} {style.bottom}" width="62px" height="25px" />
 						</span>
 						<span ui:field="elName" class="text-capitalize">Blogwt</span>
 					</a>
