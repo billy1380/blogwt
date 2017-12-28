@@ -101,9 +101,11 @@ public class DashboardPage extends Page {
 	}
 
 	private void updateViews (String action) {
+		activateItem(null, false, pp -> lnkNew.getElement().getParentElement());
+		activateItem(null, false,
+				pp -> lnkUsed.getElement().getParentElement());
+
 		if ("used".equals(action)) {
-			activateItem(null, false,
-					pp -> lnkNew.getElement().getParentElement());
 			activateItem(null, true,
 					pp -> lnkUsed.getElement().getParentElement());
 			elGreenLabel.setInnerText("Deals to bid on");
@@ -118,14 +120,12 @@ public class DashboardPage extends Page {
 			elPurpleLabel.setInnerText("Messages");
 			elPurpleValue.setInnerText("3");
 
-			elChartTitle.setInnerText("No. of bids won");
-			elChart1Title.setInnerText("No. of bids lost");
-			elChartsTitle.setInnerText("No. of bids not Sent");
+			elChartTitle.setInnerText("Bids won");
+			elChart1Title.setInnerText("Bids lost");
+			elChartsTitle.setInnerText("Bids not Sent");
 		} else {
 			activateItem(null, true,
 					pp -> lnkNew.getElement().getParentElement());
-			activateItem(null, false,
-					pp -> lnkUsed.getElement().getParentElement());
 
 			elGreenLabel.setInnerText("Accepted deals");
 			elGreenValue.setInnerText("7");
@@ -139,9 +139,9 @@ public class DashboardPage extends Page {
 			elPurpleLabel.setInnerText("Messages");
 			elPurpleValue.setInnerText("6");
 
-			elChartTitle.setInnerText("No. of accepted bids");
-			elChart1Title.setInnerText("No. of enquries");
-			elChartsTitle.setInnerText("No. of cars sold");
+			elChartTitle.setInnerText("Accepted bids");
+			elChart1Title.setInnerText("Enquries");
+			elChartsTitle.setInnerText("Cars sold");
 		}
 	}
 

@@ -22,8 +22,10 @@ import com.willshex.blogwt.shared.api.datatype.bidly.Address;
 
 public class Offer extends DataType {
 	public User user;
+	public Integer messageCount;
 	public OfferStatusType status;
 	public Build build;
+	public Vehicle vehicle;
 	public Address address;
 	public List<String> messages;
 	public Date expires;
@@ -33,12 +35,18 @@ public class Offer extends DataType {
 		JsonObject object = super.toJson();
 		JsonElement jsonUser = user == null ? JsonNull.INSTANCE : user.toJson();
 		object.add("user", jsonUser);
+		JsonElement jsonMessageCount = messageCount == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(messageCount);
+		object.add("messageCount", jsonMessageCount);
 		JsonElement jsonStatus = status == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(status.toString());
 		object.add("status", jsonStatus);
 		JsonElement jsonBuild = build == null ? JsonNull.INSTANCE
 				: build.toJson();
 		object.add("build", jsonBuild);
+		JsonElement jsonVehicle = vehicle == null ? JsonNull.INSTANCE
+				: vehicle.toJson();
+		object.add("vehicle", jsonVehicle);
 		JsonElement jsonAddress = address == null ? JsonNull.INSTANCE
 				: address.toJson();
 		object.add("address", jsonAddress);
@@ -69,6 +77,12 @@ public class Offer extends DataType {
 				user.fromJson(jsonUser.getAsJsonObject());
 			}
 		}
+		if (jsonObject.has("messageCount")) {
+			JsonElement jsonMessageCount = jsonObject.get("messageCount");
+			if (jsonMessageCount != null) {
+				messageCount = Integer.valueOf(jsonMessageCount.getAsInt());
+			}
+		}
 		if (jsonObject.has("status")) {
 			JsonElement jsonStatus = jsonObject.get("status");
 			if (jsonStatus != null) {
@@ -80,6 +94,13 @@ public class Offer extends DataType {
 			if (jsonBuild != null) {
 				build = new Build();
 				build.fromJson(jsonBuild.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("vehicle")) {
+			JsonElement jsonVehicle = jsonObject.get("vehicle");
+			if (jsonVehicle != null) {
+				vehicle = new Vehicle();
+				vehicle.fromJson(jsonVehicle.getAsJsonObject());
 			}
 		}
 		if (jsonObject.has("address")) {
@@ -117,6 +138,11 @@ public class Offer extends DataType {
 		return this;
 	}
 
+	public Offer messageCount (Integer messageCount) {
+		this.messageCount = messageCount;
+		return this;
+	}
+
 	public Offer status (OfferStatusType status) {
 		this.status = status;
 		return this;
@@ -124,6 +150,11 @@ public class Offer extends DataType {
 
 	public Offer build (Build build) {
 		this.build = build;
+		return this;
+	}
+
+	public Offer vehicle (Vehicle vehicle) {
+		this.vehicle = vehicle;
 		return this;
 	}
 

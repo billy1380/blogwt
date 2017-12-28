@@ -11,6 +11,7 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.admin.bidly.changedealerdetails.ChangeDealerDetailsPage;
 import com.willshex.blogwt.client.page.bidly.dealer.buildbids.BuildBidsPage;
+import com.willshex.blogwt.client.page.bidly.dealer.buildbids.detail.BuildBidDetailPage;
 import com.willshex.blogwt.client.page.bidly.dealer.dashboard.DashboardPage;
 import com.willshex.blogwt.client.page.bidly.dealer.inventorybids.InventoryBidsPage;
 import com.willshex.blogwt.client.page.bidly.dealer.inventroyvehicles.InventoryVehiclesPage;
@@ -52,6 +53,9 @@ public class PageTypeHelper
 			break;
 		case BuildBidsPageType:
 			page = new BuildBidsPage();
+			break;
+		case BuildBidDetailPageType:
+			page = new BuildBidDetailPage();
 			break;
 		case OngoingBuildBidsPageType:
 			page = new OngoingBuildBidsPage();

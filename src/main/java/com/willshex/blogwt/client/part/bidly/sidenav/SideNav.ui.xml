@@ -73,7 +73,6 @@
 			<li>
 				<a href="{BUILD_BIDS_PAGE_HREF}" title="Offers">
 					<span class="glyphicon glyphicon-piggy-bank" />
-					<span class="badge">7</span>
 					<span ui:field="elBuildBids">
 						Offers
 					</span>
@@ -82,6 +81,7 @@
 			<li>
 				<a href="{ONGOING_BUILD_BIDS_PAGE_HREF}" title="Deal Stage">
 					<span class="glyphicon glyphicon-thumbs-up" />
+					<span class="badge">7</span>
 					<span ui:field="elOngoingBuildBids">
 						Deal Stage
 					</span>

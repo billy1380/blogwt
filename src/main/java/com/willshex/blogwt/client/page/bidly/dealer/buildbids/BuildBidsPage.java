@@ -55,7 +55,7 @@ public class BuildBidsPage extends Page {
 		clOffers.setPageSize(PagerHelper.DEFAULT_COUNT.intValue());
 		clOffers.setEmptyListWidget(pnlNoOffers);
 		clOffers.setLoadingIndicator(pnlLoading);
-		new ListDataProvider<>(Offers.OPEN).addDataDisplay(clOffers);
+		new ListDataProvider<>(Offers.NEW).addDataDisplay(clOffers);
 		pgrBottom.setDisplay(clOffers);
 		pgrBottom.setPageSize(12);
 	}

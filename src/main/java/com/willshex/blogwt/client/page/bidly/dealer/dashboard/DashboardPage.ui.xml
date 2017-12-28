@@ -59,7 +59,7 @@
 			<ul class="nav nav-tabs">
 				<li>
 					<g:InlineHyperlink ui:field="lnkNew"
-						targetHistoryToken="{DashboardPageType.asTargetHistoryToken}/new">
+						targetHistoryToken="{DashboardPageType.asTargetHistoryToken}">
 						New Cars
 					</g:InlineHyperlink>
 				</li>
