@@ -30,21 +30,21 @@
 						All
 					</g:InlineHyperlink>
 				</li>
-				<li class="active">
+				<li>
 					<g:InlineHyperlink ui:field="lnkAccepted"
 						targetHistoryToken="{OngoingBuildBidsPageType.asTargetHistoryToken}/accepted">
 						Accepted
 						<span class="glyphicon glyphicon-record {style.green}" />
 					</g:InlineHyperlink>
 				</li>
-				<li role="presentation">
+				<li>
 					<g:InlineHyperlink ui:field="lnkExpired"
 						targetHistoryToken="{OngoingBuildBidsPageType.asTargetHistoryToken}/expired">
 						Expired
 						<span class="glyphicon glyphicon-record {style.red}" />
 					</g:InlineHyperlink>
 				</li>
-				<li role="presentation">
+				<li>
 					<g:InlineHyperlink ui:field="lnkNegotiation"
 						targetHistoryToken="{OngoingBuildBidsPageType.asTargetHistoryToken}/negotiation">
 						Negotiation

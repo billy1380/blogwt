@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.client.part.bidly.sidenav;
 
+import static com.willshex.blogwt.client.helper.UiHelper.activateItem;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,27 +110,15 @@ public class SideNav extends RegisteringComposite {
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				(p, c) -> {
 					if (p != null) {
-						activateItem(p.getPage(), false);
+						activateItem(p.getPage(), false, this::getPage);
 					}
 
-					activateItem(c.getPage(), true);
+					activateItem(c.getPage(), true, this::getPage);
 				}));
 	}
 
-	/**
-	 * @param page
-	 * @param b
-	 */
-	private void activateItem (String page, boolean active) {
-		Element e = pages.get("#" + page);
-
-		if (e != null) {
-			if (active) {
-				e.addClassName("active");
-			} else {
-				e.removeClassName("active");
-			}
-		}
+	private Element getPage (String page) {
+		return pages.get("#" + page);
 	}
 
 }

@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.client.part;
 
+import static com.willshex.blogwt.client.helper.UiHelper.activateItem;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -293,20 +295,8 @@ public class HeaderPart extends RegisteringComposite
 		}
 	}
 
-	private void activateItem (String page, boolean active) {
-		Element element = getItem(page);
-
-		if (element != null) {
-			if (active && !element.hasClassName("active")) {
-				element.addClassName("active");
-			} else if (!active && element.hasClassName("active")) {
-				element.removeClassName("active");
-			}
-		}
-	}
-
 	private Element convertItemToOpenable (String key, SafeHtml title) {
-		activateItem(key, false);
+		activateItem(key, false, this::getItem);
 		Element element = getItem(key);
 		ensureItems().remove(key);
 		element.setClassName("dropdown");
@@ -387,10 +377,10 @@ public class HeaderPart extends RegisteringComposite
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				(p, c) -> {
 					if (p != null) {
-						activateItem(p.getPage(), false);
+						activateItem(p.getPage(), false, this::getItem);
 					}
 
-					activateItem(c.getPage(), true);
+					activateItem(c.getPage(), true, this::getItem);
 
 					btnNavExpand.hide();
 

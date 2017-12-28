@@ -9,6 +9,7 @@ package com.willshex.blogwt.client.helper;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.function.Function;
 
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.Cell;
@@ -59,6 +60,8 @@ public class UiHelper {
 	public static final Cell<SafeHtml> SAFE_HTML_PROTOTYPE = new SafeHtmlCell();
 	public static final StyledImageCell IMAGE_PROTOTYPE = new StyledImageCell(
 			20.0, 20.0);
+
+	private static final String ACTIVE = "active";
 
 	static {
 		IMAGE_PROTOTYPE.addClassName("img-rounded");
@@ -169,5 +172,18 @@ public class UiHelper {
 	 */
 	public static String pageTitle (String title) {
 		return PropertyController.get().title() + ": " + title;
+	}
+
+	public static void activateItem (String page, boolean active,
+			Function<String, Element> get) {
+		Element element = get.apply(page);
+
+		if (element != null) {
+			if (active && !element.hasClassName(ACTIVE)) {
+				element.addClassName(ACTIVE);
+			} else if (!active && element.hasClassName(ACTIVE)) {
+				element.removeClassName(ACTIVE);
+			}
+		}
 	}
 }
