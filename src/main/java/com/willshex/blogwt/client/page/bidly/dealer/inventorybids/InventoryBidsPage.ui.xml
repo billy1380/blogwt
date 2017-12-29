@@ -3,9 +3,8 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel>
-		<div class="container">
-			<h1>Used Offers</h1>
-		</div>
+	<g:HTMLPanel styleName="container">
+		<h1>Used Offers</h1>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

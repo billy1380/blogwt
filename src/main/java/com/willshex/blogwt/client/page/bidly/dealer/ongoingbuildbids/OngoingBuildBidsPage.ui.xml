@@ -20,53 +20,51 @@
 		color: #4caf50;
 	}
 	</ui:style>
-	<g:HTMLPanel>
-		<div class="container">
-			<h1>Deals</h1>
+	<g:HTMLPanel styleName="container">
+		<h1>Deals</h1>
 
-			<ul class="nav nav-tabs">
-				<li>
-					<g:InlineHyperlink targetHistoryToken="{OngoingBuildBidsPageType.asTargetHistoryToken}"
-						ui:field="lnkAll">
-						All
-					</g:InlineHyperlink>
-				</li>
-				<li>
-					<g:InlineHyperlink ui:field="lnkAccepted"
-						targetHistoryToken="{OngoingBuildBidsPageType.asTargetHistoryToken}/accepted">
-						Accepted
-						<span class="glyphicon glyphicon-record {style.green}" />
-					</g:InlineHyperlink>
-				</li>
-				<li>
-					<g:InlineHyperlink ui:field="lnkExpired"
-						targetHistoryToken="{OngoingBuildBidsPageType.asTargetHistoryToken}/expired">
-						Expired
-						<span class="glyphicon glyphicon-record {style.red}" />
-					</g:InlineHyperlink>
-				</li>
-				<li>
-					<g:InlineHyperlink ui:field="lnkNegotiating"
-						targetHistoryToken="{OngoingBuildBidsPageType.asTargetHistoryToken}/negotiation">
-						Negotiation
-						<span class="glyphicon glyphicon-record {style.amber}" />
-					</g:InlineHyperlink>
-				</li>
-			</ul>
+		<ul class="nav nav-tabs">
+			<li>
+				<g:InlineHyperlink targetHistoryToken="{OngoingBuildBidsPageType.asTargetHistoryToken}"
+					ui:field="lnkAll">
+					All
+				</g:InlineHyperlink>
+			</li>
+			<li>
+				<g:InlineHyperlink ui:field="lnkAccepted"
+					targetHistoryToken="{OngoingBuildBidsPageType.asTargetHistoryToken}/accepted">
+					Accepted
+					<span class="glyphicon glyphicon-record {style.green}" />
+				</g:InlineHyperlink>
+			</li>
+			<li>
+				<g:InlineHyperlink ui:field="lnkExpired"
+					targetHistoryToken="{OngoingBuildBidsPageType.asTargetHistoryToken}/expired">
+					Expired
+					<span class="glyphicon glyphicon-record {style.red}" />
+				</g:InlineHyperlink>
+			</li>
+			<li>
+				<g:InlineHyperlink ui:field="lnkNegotiating"
+					targetHistoryToken="{OngoingBuildBidsPageType.asTargetHistoryToken}/negotiation">
+					Negotiation
+					<span class="glyphicon glyphicon-record {style.amber}" />
+				</g:InlineHyperlink>
+			</li>
+		</ul>
 
-			<div class="btn-toolbar {style.space}">
-				<g:Button ui:field="btnRefresh" styleName="btn btn-info">
-					<span class="glyphicon glyphicon-refresh" />
-				</g:Button>
-			</div>
-
-			<c:CellList ui:field="clOffers" styleName="row {style.space}" />
-
-			<p:SimplePager ui:field="pgrBottom" styleName="text-right" />
-
-			<p:LoadingPanel ui:field="pnlLoading" />
-
-			<p:NoneFoundPanel subject="offers" ui:field="pnlNoOffers" />
+		<div class="btn-toolbar {style.space}">
+			<g:Button ui:field="btnRefresh" styleName="btn btn-info">
+				<span class="glyphicon glyphicon-refresh" />
+			</g:Button>
 		</div>
+
+		<c:CellList ui:field="clOffers" styleName="row {style.space}" />
+
+		<p:SimplePager ui:field="pgrBottom" styleName="text-right" />
+
+		<p:LoadingPanel ui:field="pnlLoading" />
+
+		<p:NoneFoundPanel subject="offers" ui:field="pnlNoOffers" />
 	</g:HTMLPanel>
 </ui:UiBinder> 

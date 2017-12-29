@@ -21,82 +21,80 @@
 		margin: 10px 0;
 	}
 	</ui:style>
-	<g:HTMLPanel>
-		<div class="container">
-			<h1>Add Vehicle</h1>
-			<g:FormPanel>
-				<g:HTMLPanel>
-					<p>Please enter the following details to add your vehicle stock to the
-						platform</p>
-					<div class="col-sm-4 col-sm-offset-4">
-						<g:HTMLPanel ui:field="pnlVrm" styleName="form-group">
-							<label class="control-label">Vrm</label>
-							<g:TextBox ui:field="txtVrm" styleName="form-control" />
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlVrmNote"
-								visible="false" />
-						</g:HTMLPanel>
-						<g:HTMLPanel ui:field="pnlUpload" styleName="form-group {style.upload}">
-							<label class="control-label">Upload Photos</label>
-							<div class="input-group">
-								<g:TextBox ui:field="txtValue" styleName="form-control"
-									enabled="false" />
-								<span class="input-group-btn">
-									<g:Button ui:field="btnClear" styleName="btn btn-default">
-										<span class="glyphicon glyphicon-remove" />
-									</g:Button>
-								</span>
-							</div>
-							<gu:SingleUploader ui:field="uplDragAndDrop"
-								autoSubmit="true" avoidRepeatFiles="true" validExtensions="jpg,jpeg,png"
-								servletPath="{UPLOAD_END_POINT}" type="DROPZONE" />
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlUploadNote"
-								visible="false" />
-							<g:HTMLPanel ui:field="pnlImagePreviews" />
-						</g:HTMLPanel>
-						<g:HTMLPanel ui:field="pnlDescription" styleName="form-group">
-							<label class="control-label">Description</label>
-							<g:TextArea ui:field="txtDescription" styleName="form-control"
-								visibleLines="4" />
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlDescriptionNote"
-								visible="false" />
-						</g:HTMLPanel>
-						<g:HTMLPanel ui:field="pnlOtrPrice" styleName="form-group">
-							<label class="control-label">OTR Price</label>
-							<span class="input-group">
-								<span class="input-group-addon">£</span>
-								<g:TextBox ui:field="txtOtrPrice" styleName="form-control" />
+	<g:HTMLPanel styleName="container">
+		<h1>Add Vehicle</h1>
+		<g:FormPanel>
+			<g:HTMLPanel>
+				<p>Please enter the following details to add your vehicle stock to the
+					platform</p>
+				<div class="col-sm-4 col-sm-offset-4">
+					<g:HTMLPanel ui:field="pnlVrm" styleName="form-group">
+						<label class="control-label">Vrm</label>
+						<g:TextBox ui:field="txtVrm" styleName="form-control" />
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlVrmNote"
+							visible="false" />
+					</g:HTMLPanel>
+					<g:HTMLPanel ui:field="pnlUpload" styleName="form-group {style.upload}">
+						<label class="control-label">Upload Photos</label>
+						<div class="input-group">
+							<g:TextBox ui:field="txtValue" styleName="form-control"
+								enabled="false" />
+							<span class="input-group-btn">
+								<g:Button ui:field="btnClear" styleName="btn btn-default">
+									<span class="glyphicon glyphicon-remove" />
+								</g:Button>
 							</span>
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlOtrPriceNote"
-								visible="false" />
-						</g:HTMLPanel>
+						</div>
+						<gu:SingleUploader ui:field="uplDragAndDrop" autoSubmit="true"
+							avoidRepeatFiles="true" validExtensions="jpg,jpeg,png" servletPath="{UPLOAD_END_POINT}"
+							type="DROPZONE" />
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlUploadNote"
+							visible="false" />
+						<g:HTMLPanel ui:field="pnlImagePreviews" />
+					</g:HTMLPanel>
+					<g:HTMLPanel ui:field="pnlDescription" styleName="form-group">
+						<label class="control-label">Description</label>
+						<g:TextArea ui:field="txtDescription" styleName="form-control"
+							visibleLines="4" />
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlDescriptionNote"
+							visible="false" />
+					</g:HTMLPanel>
+					<g:HTMLPanel ui:field="pnlOtrPrice" styleName="form-group">
+						<label class="control-label">OTR Price</label>
+						<span class="input-group">
+							<span class="input-group-addon">£</span>
+							<g:TextBox ui:field="txtOtrPrice" styleName="form-control" />
+						</span>
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlOtrPriceNote"
+							visible="false" />
+					</g:HTMLPanel>
 
-						<g:HTMLPanel ui:field="pnlBuyNowPrice" styleName="form-group">
-							<label class="control-label">Buy Now Price</label>
-							<span class="input-group">
-								<span class="input-group-addon">£</span>
-								<g:TextBox ui:field="txtBuyNowPrice" styleName="form-control" />
-							</span>
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlBuyNowPriceNote"
-								visible="false" />
-						</g:HTMLPanel>
+					<g:HTMLPanel ui:field="pnlBuyNowPrice" styleName="form-group">
+						<label class="control-label">Buy Now Price</label>
+						<span class="input-group">
+							<span class="input-group-addon">£</span>
+							<g:TextBox ui:field="txtBuyNowPrice" styleName="form-control" />
+						</span>
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlBuyNowPriceNote"
+							visible="false" />
+					</g:HTMLPanel>
 
-						<g:HTMLPanel ui:field="pnlConsiderationPrice" styleName="form-group">
-							<label class="control-label">Consideration Price</label>
-							<span class="input-group">
-								<span class="input-group-addon">£</span>
-								<g:TextBox ui:field="txtConsiderationPrice" styleName="form-control" />
-							</span>
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlConsiderationPriceNote"
-								visible="false" />
-						</g:HTMLPanel>
+					<g:HTMLPanel ui:field="pnlConsiderationPrice" styleName="form-group">
+						<label class="control-label">Consideration Price</label>
+						<span class="input-group">
+							<span class="input-group-addon">£</span>
+							<g:TextBox ui:field="txtConsiderationPrice" styleName="form-control" />
+						</span>
+						<g:HTMLPanel styleName="control-label small" ui:field="pnlConsiderationPriceNote"
+							visible="false" />
+					</g:HTMLPanel>
 
-						<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary pull-right">
-							Update (Add
-							car to garage)
-						</g:SubmitButton>
-					</div>
-				</g:HTMLPanel>
-			</g:FormPanel>
-		</div>
+					<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary pull-right">
+						Update (Add
+						car to garage)
+					</g:SubmitButton>
+				</div>
+			</g:HTMLPanel>
+		</g:FormPanel>
 	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -7,24 +7,22 @@
 		margin-top: 20px;
 	}
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="container">
+		<h1>Offers</h1>
 
-		<div class="container">
-			<h1>Offers</h1>
-
-			<div class="btn-toolbar">
-				<g:Button ui:field="btnRefresh" styleName="btn btn-info">
-					<span class="glyphicon glyphicon-refresh"></span>
-				</g:Button>
-			</div>
-
-			<c:CellList ui:field="clOffers" styleName="row {style.space}" />
-
-			<p:SimplePager ui:field="pgrBottom" styleName="text-right" />
-
-			<p:LoadingPanel ui:field="pnlLoading" />
-
-			<p:NoneFoundPanel subject="offers" ui:field="pnlNoOffers" />
+		<div class="btn-toolbar">
+			<g:Button ui:field="btnRefresh" styleName="btn btn-info">
+				<span class="glyphicon glyphicon-refresh"></span>
+			</g:Button>
 		</div>
+
+		<c:CellList ui:field="clOffers" styleName="row {style.space}" />
+
+		<p:SimplePager ui:field="pgrBottom" styleName="text-right" />
+
+		<p:LoadingPanel ui:field="pnlLoading" />
+
+		<p:NoneFoundPanel subject="offers" ui:field="pnlNoOffers" />
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

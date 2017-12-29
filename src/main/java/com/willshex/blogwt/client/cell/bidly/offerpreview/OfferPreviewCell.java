@@ -14,6 +14,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.willshex.blogwt.client.page.bidly.dummy.data.Offers;
 import com.willshex.blogwt.client.page.bidly.dummy.datatypes.Offer;
+import com.willshex.blogwt.shared.helper.bidly.AddressHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -48,11 +49,9 @@ public class OfferPreviewCell extends AbstractCell<Offer> {
 	 * com.google.gwt.safehtml.shared.SafeHtmlBuilder) */
 	@Override
 	public void render (Context context, Offer value, SafeHtmlBuilder sb) {
-		String postcode = value.address.postcode;
-		postcode = postcode.replace(" ", "");
-		postcode = postcode.substring(0, postcode.length() - 3);
-		sb.append(
-				Templates.T.cell(value.user.surname, postcode, colour(value)));
+		sb.append(Templates.T.cell(value.user.surname,
+				AddressHelper.postcodeArea(value.address.postcode),
+				colour(value)));
 	}
 
 	public String colour (Offer offer) {

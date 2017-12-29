@@ -53,86 +53,83 @@
 			font-weight: 500;
 		}
 		</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="container">
+		<h1>Dashboard</h1>
 
-		<div class="container">
-			<h1>Dashboard</h1>
+		<ul class="nav nav-tabs">
+			<li>
+				<g:InlineHyperlink ui:field="lnkNew"
+					targetHistoryToken="{DashboardPageType.asTargetHistoryToken}">
+					New Cars
+				</g:InlineHyperlink>
+			</li>
+			<li>
+				<g:InlineHyperlink ui:field="lnkUsed"
+					targetHistoryToken="{DashboardPageType.asTargetHistoryToken}/used">
+					Used Cars
+				</g:InlineHyperlink>
+			</li>
+		</ul>
 
-			<ul class="nav nav-tabs">
-				<li>
-					<g:InlineHyperlink ui:field="lnkNew"
-						targetHistoryToken="{DashboardPageType.asTargetHistoryToken}">
-						New Cars
-					</g:InlineHyperlink>
-				</li>
-				<li>
-					<g:InlineHyperlink ui:field="lnkUsed"
-						targetHistoryToken="{DashboardPageType.asTargetHistoryToken}/used">
-						Used Cars
-					</g:InlineHyperlink>
-				</li>
-			</ul>
-
-			<h2>Summary</h2>
-			<div class="row">
-				<div class="col-sm-6 col-md-3">
-					<div class="thumbnail">
-						<div class="{style.green} {style.marker}">&nbsp;</div>
-						<div class="caption">
-							<h4 class="col-xs-6" ui:field="elGreenLabel"></h4>
-							<div class="{style.large} text-center" ui:field="elGreenValue"></div>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-6 col-md-3">
-					<div class="thumbnail">
-						<div class="{style.red} {style.marker}">&nbsp;</div>
-						<div class="caption">
-							<h4 class="col-xs-6" ui:field="elRedLabel"></h4>
-							<div class="{style.large} text-center" ui:field="elRedValue"></div>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-6 col-md-3">
-					<div class="thumbnail">
-						<div class="{style.blue} {style.marker}">&nbsp;</div>
-						<div class="caption">
-							<h4 class="col-xs-6" ui:field="elBlueLabel"></h4>
-							<div class="{style.large} text-center" ui:field="elBlueValue"></div>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-6 col-md-3">
-					<div class="thumbnail">
-						<div class="{style.purple} {style.marker}">&nbsp;</div>
-						<div class="caption">
-							<h4 class="col-xs-6" ui:field="elPurpleLabel"></h4>
-							<div class="{style.large} text-center" ui:field="elPurpleValue"></div>
-						</div>
+		<h2>Summary</h2>
+		<div class="row">
+			<div class="col-sm-6 col-md-3">
+				<div class="thumbnail">
+					<div class="{style.green} {style.marker}">&nbsp;</div>
+					<div class="caption">
+						<h4 class="col-xs-6" ui:field="elGreenLabel"></h4>
+						<div class="{style.large} text-center" ui:field="elGreenValue"></div>
 					</div>
 				</div>
 			</div>
-
-			<h2>Weekly</h2>
-			<div class="row">
-				<div class="col-sm-6">
-					<h4 ui:field="elChartTitle" class="text-center" />
-					<div ui:field="elChart" class="ct-chart" />
-				</div>
-				<div class="col-sm-6">
-					<h4 ui:field="elChart1Title" class="text-center" />
-					<div ui:field="elChart1" class="ct-chart" />
+			<div class="col-sm-6 col-md-3">
+				<div class="thumbnail">
+					<div class="{style.red} {style.marker}">&nbsp;</div>
+					<div class="caption">
+						<h4 class="col-xs-6" ui:field="elRedLabel"></h4>
+						<div class="{style.large} text-center" ui:field="elRedValue"></div>
+					</div>
 				</div>
 			</div>
-
-			<h2>Quarterly</h2>
-			<h4 ui:field="elChartsTitle" class="text-center" />
-			<div class="row">
-				<div ui:field="elChart2" class="ct-chart col-sm-3" />
-				<div ui:field="elChart3" class="ct-chart col-sm-3" />
-				<div ui:field="elChart4" class="ct-chart col-sm-3" />
-				<div ui:field="elChart5" class="ct-chart col-sm-3" />
+			<div class="col-sm-6 col-md-3">
+				<div class="thumbnail">
+					<div class="{style.blue} {style.marker}">&nbsp;</div>
+					<div class="caption">
+						<h4 class="col-xs-6" ui:field="elBlueLabel"></h4>
+						<div class="{style.large} text-center" ui:field="elBlueValue"></div>
+					</div>
+				</div>
 			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="thumbnail">
+					<div class="{style.purple} {style.marker}">&nbsp;</div>
+					<div class="caption">
+						<h4 class="col-xs-6" ui:field="elPurpleLabel"></h4>
+						<div class="{style.large} text-center" ui:field="elPurpleValue"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<h2>Weekly</h2>
+		<div class="row">
+			<div class="col-sm-6">
+				<h4 ui:field="elChartTitle" class="text-center" />
+				<div ui:field="elChart" class="ct-chart" />
+			</div>
+			<div class="col-sm-6">
+				<h4 ui:field="elChart1Title" class="text-center" />
+				<div ui:field="elChart1" class="ct-chart" />
+			</div>
+		</div>
+
+		<h2>Quarterly</h2>
+		<h4 ui:field="elChartsTitle" class="text-center" />
+		<div class="row">
+			<div ui:field="elChart2" class="ct-chart col-sm-3" />
+			<div ui:field="elChart3" class="ct-chart col-sm-3" />
+			<div ui:field="elChart4" class="ct-chart col-sm-3" />
+			<div ui:field="elChart5" class="ct-chart col-sm-3" />
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

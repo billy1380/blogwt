@@ -11,10 +11,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.willshex.blogwt.client.page.bidly.dummy.datatypes.Offer;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.bidly.Address;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 
 /**
@@ -65,6 +67,8 @@ public class Offers {
 					.user((User) new User().forename("Dana").surname("Banks"))
 					.address(new Address().postcode("L23 2RF")).id(9L)
 					.created(DateTimeHelper.now()));
+
+	public static final Map<Long, Offer> LOOKUP = DataTypeHelper.map(ALL);
 
 	public static final List<Offer> NEW = Arrays.asList(ALL.get(0), ALL.get(5));
 
