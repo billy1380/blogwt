@@ -26,7 +26,7 @@ public class OfferPreviewCell extends AbstractCell<Offer> {
 
 		@Template("<div class=\"col-sm-4 col-md-3\">"
 				+ "<div class=\"thumbnail\">"
-				+ "<div style=\"height:5px;background-color:{2}\" class=\"img-rounded\">&nbsp;</div>"
+				+ "<div style=\"height:5px;background-color:{2}\">&nbsp;</div>"
 				+ "<div class=\"caption\"><h3>{0}</h3>"
 				+ "<span class=\"glyphicon glyphicon-map-marker\"></span> "
 				+ "<a target=\"_blank\" href=\"http://google.com/maps?q={1}\">{1}</a>"
