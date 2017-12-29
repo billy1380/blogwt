@@ -1,8 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
+	<ui:style type="com.willshex.blogwt.client.page.bidly.dealer.buildbids.detail.BuildBidDetailPage.Style">
 	@external badge, btn;
-	.title {
+	.info .title {
 		font-size: 190%;
 	}
 	
@@ -12,8 +12,12 @@
 	
 	.subtitle {
 		font-weight: 300;
-		font-size: 150%;
 		text-transform: uppercase;
+		letter-spacing: -0.1em;
+	}
+	
+	.info .subtitle {
+		font-size: 150%;
 	}
 	
 	.red {
@@ -34,104 +38,113 @@
 		margin-bottom: 10px;
 	}
 	
-	.submit {
-		margin-top: 20px;
+	.separate {
+		margin-top: 10px;
+		margin-bottom: 30px;
 	}
 	
-	.separate {
-	   margin-top: 10px;
-	   margin-bottom: 30px;
+	.space {
+		margin-top: 20px;
 	}
 	</ui:style>
-	<g:HTMLPanel styleName="container {style.bidding}">
+	<g:HTMLPanel styleName="container">
 		<h1 ui:field="elTitle">Offer</h1>
 
+		<div class="btn-toolbar {style.space}">
+			<g:Button ui:field="btnRefresh" styleName="btn btn-info">
+				<span class="glyphicon glyphicon-refresh" />
+			</g:Button>
+		</div>
+
+		<h2>Summary</h2>
 		<div class="row">
-			<div class="col-sm-8">
+			<div class="col-sm-9">
 				<div class="row">
 					<div class="col-md-3">
 						<label>Distance to showroom</label>
-						<div>
+						<div class="{style.info}">
 							<span class="{style.title}">10</span>
-							<span class="{style.subtitle}">miles</span>
+							<span class="{style.subtitle} text-muted">miles</span>
 						</div>
 					</div>
 
 					<div class="col-md-3">
 						<label>Travel distance</label>
-						<div>
+						<div class="{style.info}">
 							<span class="{style.title}">25</span>
-							<span class="{style.subtitle}">miles</span>
+							<span class="{style.subtitle} text-muted">miles</span>
 						</div>
 					</div>
 
 					<div class="col-md-6">
 						<label>Bid expires in</label>
-						<div class="{style.important}">
+						<div class="{style.info} {style.important}">
 							<span class="{style.title}">2</span>
-							<span class="{style.subtitle}">hours</span>
+							<span class="{style.subtitle} text-muted">hours</span>
 							<span class="{style.title}">15</span>
-							<span class="{style.subtitle}">mins</span>
+							<span class="{style.subtitle} text-muted">mins</span>
 						</div>
 					</div>
 				</div>
 
-				<hr class="{style.separate}"/>
-				
+				<h2>Bidding</h2>
 				<div class="row">
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<label>Dealers bidding</label>
-						<div class="{style.title}">5</div>
-					</div>
-
-					<div class="col-md-4">
-						<label>My Bid</label>
-						<span class="badge {style.red}">losing</span>
-						<div class="{style.important}">
-							<span class="{style.subtitle}">&pound;</span>
-							<span class="{style.title}">500</span>
+						<div class="{style.info}">
+							<span class="{style.title}">5</span>
 						</div>
 					</div>
-					<div class="col-md-4">
-                        <label>New OTR price</label>
-                        <div class="{style.important}">
-                            <span class="{style.subtitle}">&pound;</span>
-                            <span class="{style.title}">35,150</span>
-                        </div>
-                    </div>
+
+					<div class="col-md-3">
+						<label>New OTR price</label>
+						<div class="{style.info}">
+							<span class="{style.subtitle} text-muted">&pound;</span>
+							<span ui:field="elNewOtr" class="{style.title}">35,150</span>
+						</div>
+					</div>
+					<div class="col-md-6 {style.bidding}">
+						<label>My Bid</label>
+						<span ui:field="elStatus" class="badge {style.red}">losing</span>
+						<div class="{style.important} {style.info}">
+							<span class="{style.subtitle} text-muted">&pound;</span>
+							<span ui:field="elBid" class="{style.title}">500</span>
+						</div>
+					</div>
+
 				</div>
 
-				<h2>Increase bid</h2>
-				<div class="row">
+				<h3>Increase bid</h3>
+				<div class="row {style.bidding}">
 					<div class="col-sm-6 col-md-3">
-						<g:Button styleName="btn btn-lg btn-default">
+						<g:Button ui:field="btnIncrease1" styleName="btn btn-lg btn-default">
 							<span class="{style.subtitle}">&pound;</span>
-							<span class="{style.title}">50</span>
+							<span ui:field="elIncrease1" class="{style.title}">50</span>
 						</g:Button>
 					</div>
 
 					<div class="col-sm-6 col-md-3">
-						<g:Button styleName="btn btn-lg btn-primary">
+						<g:Button ui:field="btnIncrease2" styleName="btn btn-lg btn-primary">
 							<span class="{style.subtitle}">&pound;</span>
-							<span class="{style.title}">100</span>
+							<span ui:field="elIncrease2" class="{style.title}">100</span>
 						</g:Button>
 					</div>
 
 					<div class="col-sm-6 col-md-3">
-						<g:Button styleName="btn btn-lg btn-default">
+						<g:Button ui:field="btnIncrease3" styleName="btn btn-lg btn-default">
 							<span class="{style.subtitle}">&pound;</span>
-							<span class="{style.title}">250</span>
+							<span ui:field="elIncrease3" class="{style.title}">250</span>
 						</g:Button>
 					</div>
 
 					<div class="col-sm-6 col-md-3">
-						<g:Button styleName="btn btn-lg btn-default">
+						<g:Button ui:field="btnIncrease4" styleName="btn btn-lg btn-default">
 							<span class="{style.subtitle}">&pound;</span>
-							<span class="{style.title}">500</span>
+							<span ui:field="elIncrease4" class="{style.title}">500</span>
 						</g:Button>
 					</div>
 				</div>
-				<div class="row {style.submit}">
+				<div class="row {style.space} {style.bidding}">
 					<div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
 						<g:Button styleName="btn btn-lg btn-warning">
 							Bid too high
@@ -139,29 +152,34 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-4">
-
+			<div class="col-sm-3">
 				<div class="{style.separate}">
 					<label>Make and Model</label>
-					<div class="{style.title}">Volkswagen</div>
-					<span class="{style.subtitle}">Arteon R-Line</span>
+					<div class="{style.info}">
+						<div class="{style.title}">Volkswagen</div>
+						<span class="{style.subtitle}">Arteon R-Line</span>
+					</div>
 				</div>
 
 				<div class="{style.separate}">
 					<label>Engine</label>
-					<div class="{style.title}">2L TDI</div>
+					<div class="{style.info}">
+						<span class="{style.title}">2L TDI</span>
+					</div>
 				</div>
 
 				<div class="{style.separate}">
 					<label>Transmition</label>
-					<div class="{style.title}">Automatic</div>
+					<div class="{style.info}">
+						<span class="{style.title}">Automatic</span>
+					</div>
 				</div>
 
 				<div class="{style.separate}">
 					<label>OTR price</label>
-					<div>
+					<div class="{style.info}">
 						<span class="{style.subtitle}">&pound;</span>
-						<span class="{style.title}">35,650</span>
+						<span ui:field="elOtr" class="{style.title}">35,650</span>
 					</div>
 				</div>
 

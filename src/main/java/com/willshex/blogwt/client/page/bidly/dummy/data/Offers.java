@@ -66,11 +66,16 @@ public class Offers {
 			(Offer) new Offer()
 					.user((User) new User().forename("Dana").surname("Banks"))
 					.address(new Address().postcode("L23 2RF")).id(9L)
+					.created(DateTimeHelper.now()),
+			(Offer) new Offer()
+					.user((User) new User().forename("Jared").surname("Carter"))
+					.address(new Address().postcode("CM98 1AR")).id(10L)
 					.created(DateTimeHelper.now()));
 
 	public static final Map<Long, Offer> LOOKUP = DataTypeHelper.map(ALL);
 
-	public static final List<Offer> NEW = Arrays.asList(ALL.get(0), ALL.get(5));
+	public static final List<Offer> NEW = Arrays.asList(ALL.get(0), ALL.get(5),
+			ALL.get(9));
 
 	public static final List<Offer> AEN = new ArrayList<>();
 

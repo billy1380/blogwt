@@ -26,9 +26,9 @@ public class OfferPreviewCell extends AbstractCell<Offer> {
 		public static final Templates T = GWT.create(Templates.class);
 
 		@Template("<div class=\"col-sm-4 col-md-3\">"
-				+ "<div class=\"thumbnail\">"
+				+ "<div class=\"btn btn-default\" style=\"width:100%;text-align:left;margin-bottom:16px;text-transform:none;\">"
 				+ "<div style=\"height:5px;background-color:{2}\">&nbsp;</div>"
-				+ "<div class=\"caption\"><h3>{0}</h3>"
+				+ "<div style=\"margin:20px 0;color:#333;\"><h3>{0}</h3>"
 				+ "<span class=\"glyphicon glyphicon-map-marker\"></span> "
 				+ "<a target=\"_blank\" href=\"http://google.com/maps?q={1}\">{1}</a>"
 				+ "</div></div></div>")
@@ -38,7 +38,6 @@ public class OfferPreviewCell extends AbstractCell<Offer> {
 	private static final String AMBER = "#ffc107";
 	private static final String RED = "#f44336";
 	private static final String GREEN = "#4caf50";
-	private static final String BLUE = "#1e88e5";
 	private static final String GREY = "#546e7a";
 
 	/* (non-Javadoc)
@@ -57,14 +56,12 @@ public class OfferPreviewCell extends AbstractCell<Offer> {
 	public String colour (Offer offer) {
 		String colour = null;
 
-		if (Offers.ACCEPTED.contains(offer)) {
+		if (Offers.ACCEPTED.contains(offer) || offer.id.equals(10L)) {
 			colour = GREEN;
-		} else if (Offers.EXPIRED.contains(offer)) {
+		} else if (Offers.EXPIRED.contains(offer) || offer.id.equals(1L)) {
 			colour = RED;
 		} else if (Offers.NEGOTIATING.contains(offer)) {
 			colour = AMBER;
-		} else if (offer.id.equals(1L)) {
-			colour = BLUE;
 		} else {
 			colour = GREY;
 		}

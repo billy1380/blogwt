@@ -97,8 +97,8 @@ public class OngoingBuildBidsPage extends Page {
 				if (selection != null) {
 					model.setSelected(selection, false);
 
-					PageTypeHelper.show(PageType.BuildBidDetailPageType, "id",
-							selection.id.toString());
+					PageTypeHelper.show(PageType.OngoingBuildBidDetailPageType,
+							"id", selection.id.toString());
 
 				}
 			}

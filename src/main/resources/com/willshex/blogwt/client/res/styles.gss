@@ -149,6 +149,7 @@ position: relative;
 	font-family: 'Roboto', sans-serif;
 	text-transform: uppercase;
 	font-weight: 300;
+	letter-spacing: -0.05em;
 }
 
 .btn, .form-control, .thumbnail, .input-group-addon,

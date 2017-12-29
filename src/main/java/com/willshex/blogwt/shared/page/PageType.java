@@ -69,6 +69,7 @@ public enum PageType {
 	BuildBidsPageType("buildbids", true),
 	OngoingBuildBidsPageType("ongoingbuildbids", true),
 	BuildBidDetailPageType("buildbiddetail", true),
+	OngoingBuildBidDetailPageType("ongoingbuildbiddetail", true),
 	InventoryVehiclesPageType("garage", true),
 	VehicleDetailPageType("vehicledetail", true),
 	UploadInventoryPageType("uploadinventory", true),

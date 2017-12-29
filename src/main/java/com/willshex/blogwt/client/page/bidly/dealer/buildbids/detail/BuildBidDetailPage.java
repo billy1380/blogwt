@@ -9,10 +9,16 @@ package com.willshex.blogwt.client.page.bidly.dealer.buildbids.detail;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.NavigationController;
@@ -35,6 +41,12 @@ public class BuildBidDetailPage extends Page {
 	interface BuildBidDetailPageUiBinder
 			extends UiBinder<Widget, BuildBidDetailPage> {}
 
+	interface Style extends CssResource {
+		String red ();
+
+		String green ();
+	}
+
 	interface Templates extends SafeHtmlTemplates {
 		public static final Templates T = GWT.create(Templates.class);
 
@@ -45,7 +57,26 @@ public class BuildBidDetailPage extends Page {
 		SafeHtml title (Long id);
 	}
 
+	private static final NumberFormat FORMATTER = NumberFormat
+			.getFormat("#,###");
+
 	@UiField Element elTitle;
+
+	@UiField Element elOtr;
+	@UiField Element elNewOtr;
+	@UiField Element elBid;
+	@UiField Element elStatus;
+
+	@UiField Button btnIncrease1;
+	@UiField Button btnIncrease2;
+	@UiField Button btnIncrease3;
+	@UiField Button btnIncrease4;
+	@UiField Element elIncrease1;
+	@UiField Element elIncrease2;
+	@UiField Element elIncrease3;
+	@UiField Element elIncrease4;
+
+	@UiField Style style;
 
 	public BuildBidDetailPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -77,5 +108,46 @@ public class BuildBidDetailPage extends Page {
 	private void showOffer (Offer offer) {
 		elTitle.setInnerSafeHtml(Templates.T.title(offer.user.surname,
 				AddressHelper.postcodeArea(offer.address.postcode)));
+	}
+
+	@UiHandler({ "btnIncrease1", "btnIncrease2", "btnIncrease3",
+			"btnIncrease4" })
+	void onIncreaseClicked (ClickEvent ce) {
+		String amountParam = null;
+
+		if (ce.getSource() == btnIncrease1) {
+			amountParam = elIncrease1.getInnerText();
+		} else if (ce.getSource() == btnIncrease2) {
+			amountParam = elIncrease2.getInnerText();
+		} else if (ce.getSource() == btnIncrease3) {
+			amountParam = elIncrease3.getInnerText();
+		} else if (ce.getSource() == btnIncrease4) {
+			amountParam = elIncrease4.getInnerText();
+		}
+
+		if (amountParam != null) {
+			if (Window.confirm(
+					"Are you sure you would like to increase your bid by £"
+							+ amountParam + "?")) {
+				double amount = FORMATTER.parse(amountParam);
+				double bid = FORMATTER.parse(elBid.getInnerText());
+				double otr = FORMATTER.parse(elOtr.getInnerText());
+				double newBid;
+
+				elBid.setInnerText(FORMATTER.format(newBid = bid + amount));
+				elNewOtr.setInnerText(FORMATTER.format(otr - newBid));
+
+				elStatus.removeClassName(style.red());
+				elStatus.removeClassName(style.green());
+
+				if (newBid > 1400) {
+					elStatus.setInnerText("winning");
+					elStatus.addClassName(style.green());
+				} else {
+					elStatus.setInnerText("losing");
+					elStatus.addClassName(style.red());
+				}
+			}
+		}
 	}
 }

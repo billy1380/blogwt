@@ -27,7 +27,7 @@ public class Garage {
 			(Vehicle) new Vehicle().build(new Build().make("Audi").model("A3"))
 					.registration(dummyLicensePlate()).id(2L)
 					.created(DateTimeHelper.now()),
-			(Vehicle) new Vehicle().build(new Build().make("VW").model("Golf"))
+			(Vehicle) new Vehicle().build(new Build().make("Volkswagen").model("Golf"))
 					.registration(dummyLicensePlate()).id(3L)
 					.created(DateTimeHelper.now()),
 			(Vehicle) new Vehicle()

@@ -52,6 +52,10 @@
 			font-family: 'Roboto', sans-serif;
 			font-weight: 500;
 		}
+		
+		.space {
+			margin-top: 20px;
+		}
 		</ui:style>
 	<g:HTMLPanel styleName="container">
 		<h1>Dashboard</h1>
@@ -70,6 +74,12 @@
 				</g:InlineHyperlink>
 			</li>
 		</ul>
+
+		<div class="btn-toolbar {style.space}">
+			<g:Button ui:field="btnRefresh" styleName="btn btn-info">
+				<span class="glyphicon glyphicon-refresh" />
+			</g:Button>
+		</div>
 
 		<h2>Summary</h2>
 		<div class="row">

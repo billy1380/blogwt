@@ -16,6 +16,7 @@ import com.willshex.blogwt.client.page.bidly.dealer.dashboard.DashboardPage;
 import com.willshex.blogwt.client.page.bidly.dealer.inventorybids.InventoryBidsPage;
 import com.willshex.blogwt.client.page.bidly.dealer.inventroyvehicles.InventoryVehiclesPage;
 import com.willshex.blogwt.client.page.bidly.dealer.ongoingbuildbids.OngoingBuildBidsPage;
+import com.willshex.blogwt.client.page.bidly.dealer.ongoingbuildbids.detail.OngoingBuildBidDetailPage;
 import com.willshex.blogwt.client.page.bidly.dealer.uploadinventory.UploadInventoryPage;
 import com.willshex.blogwt.shared.page.PageType;
 
@@ -59,6 +60,9 @@ public class PageTypeHelper
 			break;
 		case OngoingBuildBidsPageType:
 			page = new OngoingBuildBidsPage();
+			break;
+		case OngoingBuildBidDetailPageType:
+			page = new OngoingBuildBidDetailPage();
 			break;
 		case InventoryVehiclesPageType:
 			page = new InventoryVehiclesPage();

@@ -108,40 +108,40 @@ public class DashboardPage extends Page {
 		if ("used".equals(action)) {
 			activateItem(null, true,
 					pp -> lnkUsed.getElement().getParentElement());
-			elGreenLabel.setInnerText("Deals to bid on");
-			elGreenValue.setInnerText("7");
-
-			elRedLabel.setInnerText("Decided on finance");
-			elRedValue.setInnerText("4");
-
-			elBlueLabel.setInnerText("Sold this week");
-			elBlueValue.setInnerText("8");
-
-			elPurpleLabel.setInnerText("Messages");
-			elPurpleValue.setInnerText("3");
-
-			elChartTitle.setInnerText("Bids won");
-			elChart1Title.setInnerText("Bids lost");
-			elChartsTitle.setInnerText("Bids not Sent");
-		} else {
-			activateItem(null, true,
-					pp -> lnkNew.getElement().getParentElement());
-
 			elGreenLabel.setInnerText("Accepted deals");
 			elGreenValue.setInnerText("7");
 
 			elRedLabel.setInnerText("Rejected deals");
 			elRedValue.setInnerText("4");
 
-			elBlueLabel.setInnerText("Negotation deals outstanding");
+			elBlueLabel.setInnerText("Negotiation deals");
 			elBlueValue.setInnerText("5");
 
-			elPurpleLabel.setInnerText("Messages");
+			elPurpleLabel.setInnerText("Unread messages");
 			elPurpleValue.setInnerText("6");
 
 			elChartTitle.setInnerText("Accepted bids");
 			elChart1Title.setInnerText("Enquries");
 			elChartsTitle.setInnerText("Cars sold");
+		} else {
+			activateItem(null, true,
+					pp -> lnkNew.getElement().getParentElement());
+
+			elGreenLabel.setInnerText("Deals to bid on");
+			elGreenValue.setInnerText("7");
+
+			elRedLabel.setInnerText("Sold this week");
+			elRedValue.setInnerText("4");
+
+			elBlueLabel.setInnerText("Lost this week");
+			elBlueValue.setInnerText("8");
+
+			elPurpleLabel.setInnerText("Unread Messages");
+			elPurpleValue.setInnerText("3");
+
+			elChartTitle.setInnerText("Bids won");
+			elChart1Title.setInnerText("Bids lost");
+			elChartsTitle.setInnerText("Bids not sent");
 		}
 	}
 

@@ -23,7 +23,9 @@ public class VehiclePreviewCell extends AbstractCell<Vehicle> {
 	interface Templates extends SafeHtmlTemplates {
 		public static final Templates T = GWT.create(Templates.class);
 
-		@Template("<div class=\"col-sm-4 col-md-3\"><div class=\"thumbnail\"><div class=\"caption\"><h3>{0} <span class=\"h4 text-muted\">{1}</span></h3><p>{2}</p></div></div></div>")
+		@Template("<div class=\"col-sm-4 col-md-3\">"
+				+ "<div class=\"btn btn-default\" style=\"width:100%;text-align:left;margin-bottom:16px;text-transform:none;\">"
+				+ "<div style=\"margin:20px 0;color:#333;\"><h3>{0} <div class=\"h4 text-muted\">{1}</div></h3><p>{2}</p></div></div></div>")
 		SafeHtml cell (String make, String model, String registration);
 	}
 
