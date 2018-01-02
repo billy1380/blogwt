@@ -49,11 +49,6 @@ public class BidTooHighDialog extends Dialog {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		UiHelper.addPlaceholder(txtBid, "e.g. 1000");
-
-		cboDeliveryDate.addItem("1 week", "1w");
-		cboDeliveryDate.addItem("1 month", "1m");
-		cboDeliveryDate.addItem("3 months", "3m");
-
 		ctlExpiryDate.setFormat("d MMM yyyy");
 		disablePast(ctlExpiryDate.ctlDate.getDatePicker());
 	}

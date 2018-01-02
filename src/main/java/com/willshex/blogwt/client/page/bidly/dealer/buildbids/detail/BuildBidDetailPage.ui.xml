@@ -40,7 +40,6 @@
 		}
 		
 		.separate {
-			margin-top: 10px;
 			margin-bottom: 30px;
 		}
 		
@@ -115,7 +114,7 @@
 
 				</div>
 
-				<h3>Increase bid</h3>
+				<label>Increase bid</label>
 				<div class="row {style.bidding}">
 					<div class="col-sm-6 col-md-3">
 						<g:Button ui:field="btnIncrease1" styleName="btn btn-lg btn-default">

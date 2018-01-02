@@ -13,10 +13,13 @@ import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
+import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.bidly.dummy.data.Offers;
 import com.willshex.blogwt.client.page.bidly.dummy.datatypes.Offer;
@@ -46,9 +49,13 @@ public class OngoingBuildBidDetailPage extends Page {
 	}
 
 	@UiField Element elTitle;
+	@UiField ListBox cboStatus;
+	@UiField TextArea txtNewMessage;
 
 	public OngoingBuildBidDetailPage () {
 		initWidget(uiBinder.createAndBindUi(this));
+		
+		UiHelper.addPlaceholder(txtNewMessage, "e.g. a response or template");
 	}
 
 	/* (non-Javadoc)

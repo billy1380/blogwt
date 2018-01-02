@@ -31,7 +31,11 @@
 							<g:HTMLPanel styleName="form-group">
 								<label class="control-label" ui:field="elDeliveryDate">Delivery
 									date</label>
-								<g:ListBox ui:field="cboDeliveryDate" styleName="form-control" />
+								<g:ListBox ui:field="cboDeliveryDate" styleName="form-control">
+									<g:item value="1w">1 week</g:item>
+									<g:item value="1m">1 month</g:item>
+									<g:item value="3m">3 months</g:item>
+								</g:ListBox>
 								<g:HTMLPanel styleName="control-label small" ui:field="pnlDeliveryDateNote"
 									visible="false" />
 							</g:HTMLPanel>
