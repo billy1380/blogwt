@@ -1,4 +1,5 @@
-@external h1, h2, h3, h4, h5, h6, navbar-nav, nav-tabs, btn, form-control, thumbnail, input-group-addon, pagination;
+@external h1, h2, h3, h4, h5, h6, navbar-nav, nav-tabs, btn, form-control,
+    thumbnail, input-group-addon, pagination, modal-content;
 
 @defmixin fontSmooting() {
 -webkit-font-smoothing: antialiased; /* Chrome 10+,Safari 5.1+ */
@@ -155,7 +156,7 @@ position: relative;
 .btn, .form-control, .thumbnail, .input-group-addon,
 .pagination>li:first-child>a, .pagination>li:first-child>span,
 .pagination>li:last-child>a, .pagination>li:last-child>span,
-.nav-tabs>li>a  {
+.nav-tabs>li>a, .modal-content {
 	border-radius: 0;
 }
 

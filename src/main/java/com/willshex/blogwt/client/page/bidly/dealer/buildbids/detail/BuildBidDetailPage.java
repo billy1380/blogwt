@@ -19,6 +19,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.NavigationController;
@@ -26,6 +27,7 @@ import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.bidly.dummy.data.Offers;
 import com.willshex.blogwt.client.page.bidly.dummy.datatypes.Offer;
+import com.willshex.blogwt.client.part.bidly.bidtoohigh.BidTooHighDialog;
 import com.willshex.blogwt.shared.helper.bidly.AddressHelper;
 import com.willshex.blogwt.shared.page.Stack;
 
@@ -149,5 +151,14 @@ public class BuildBidDetailPage extends Page {
 				}
 			}
 		}
+	}
+
+	@UiHandler("btnBidTooHigh")
+	void onBidTooHighClicked (ClickEvent ce) {
+		RootPanel.get().add(new BidTooHighDialog().show(r -> {
+			if (r.intValue() == 1) {
+				Window.alert("Thank you. Your bid has now been submitted.");
+			}
+		}));
 	}
 }

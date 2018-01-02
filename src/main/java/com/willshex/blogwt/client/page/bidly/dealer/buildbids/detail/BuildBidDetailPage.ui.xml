@@ -1,52 +1,53 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style type="com.willshex.blogwt.client.page.bidly.dealer.buildbids.detail.BuildBidDetailPage.Style">
-	@external badge, btn;
-	.info .title {
-		font-size: 190%;
-	}
-	
-	.important {
-		font-size: 190%;
-	}
-	
-	.subtitle {
-		font-weight: 300;
-		text-transform: uppercase;
-		letter-spacing: -0.1em;
-	}
-	
-	.info .subtitle {
-		font-size: 150%;
-	}
-	
-	.red {
-		background-color: #f44336;
-	}
-	
-	.green {
-		background-color: #4caf50;
-	}
-	
-	.bidding .badge {
-		position: relative;
-		top: -10px;
-	}
-	
-	.bidding .btn {
-		width: 100%;
-		margin-bottom: 10px;
-	}
-	
-	.separate {
-		margin-top: 10px;
-		margin-bottom: 30px;
-	}
-	
-	.space {
-		margin-top: 20px;
-	}
-	</ui:style>
+	<ui:style
+		type="com.willshex.blogwt.client.page.bidly.dealer.buildbids.detail.BuildBidDetailPage.Style">
+		@external badge, btn;
+		.info .title {
+			font-size: 190%;
+		}
+		
+		.important {
+			font-size: 190%;
+		}
+		
+		.subtitle {
+			font-weight: 300;
+			text-transform: uppercase;
+			letter-spacing: -0.1em;
+		}
+		
+		.info .subtitle {
+			font-size: 150%;
+		}
+		
+		.red {
+			background-color: #f44336;
+		}
+		
+		.green {
+			background-color: #4caf50;
+		}
+		
+		.bidding .badge {
+			position: relative;
+			top: -10px;
+		}
+		
+		.bidding .btn {
+			width: 100%;
+			margin-bottom: 10px;
+		}
+		
+		.separate {
+			margin-top: 10px;
+			margin-bottom: 30px;
+		}
+		
+		.space {
+			margin-top: 20px;
+		}
+		</ui:style>
 	<g:HTMLPanel styleName="container">
 		<h1 ui:field="elTitle">Offer</h1>
 
@@ -146,7 +147,7 @@
 				</div>
 				<div class="row {style.space} {style.bidding}">
 					<div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-						<g:Button styleName="btn btn-lg btn-warning">
+						<g:Button ui:field="btnBidTooHigh" styleName="btn btn-lg btn-warning">
 							Bid too high
 						</g:Button>
 					</div>
