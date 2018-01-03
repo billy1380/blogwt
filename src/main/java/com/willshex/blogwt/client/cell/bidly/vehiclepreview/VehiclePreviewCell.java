@@ -25,7 +25,7 @@ public class VehiclePreviewCell extends AbstractCell<Vehicle> {
 
 		@Template("<div class=\"col-sm-4 col-md-3\">"
 				+ "<div class=\"btn btn-default\" style=\"width:100%;text-align:left;margin-bottom:16px;text-transform:none;\">"
-				+ "<div style=\"margin:20px 0;color:#333;\"><h3>{0} <div class=\"h4 text-muted\">{1}</div></h3><p>{2}</p></div></div></div>")
+				+ "<div style=\"margin:20px 0;color:#333;\"><h3>{0} <br /> <span class=\"h4 text-muted\">{1}</span> <br /><span class=\"h4\" style=\"font-family:'Courier New',Courier,'Lucida Sans Typewriter','Lucida Typewriter',monospace;\">{2}</span></h3></div></div></div>")
 		SafeHtml cell (String make, String model, String registration);
 	}
 

@@ -21,7 +21,7 @@ import com.willshex.blogwt.shared.helper.DateTimeHelper;
  * @author William Shakour (billy1380)
  *
  */
-public class Garage {
+public interface Garage {
 	public static final List<Vehicle> ALL = Arrays.asList(
 			(Vehicle) new Vehicle().build(new Build().make("Audi").model("A5"))
 					.registration(dummyLicensePlate()).id(1L)
@@ -59,13 +59,13 @@ public class Garage {
 
 	public static final Map<Long, Vehicle> LOOKUP = DataTypeHelper.map(ALL);
 
-	private static String dummyLicensePlate () {
+	public static String dummyLicensePlate () {
 		return letter(2) + number(2) + " " + letter(3);
 	}
 
-	private static String LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+	public static String LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
 
-	private static String letter (int count) {
+	public static String letter (int count) {
 		StringBuilder letters = new StringBuilder(count);
 		for (int i = 0; i < count; i++) {
 			letters.append(letter());
@@ -74,11 +74,11 @@ public class Garage {
 		return letters.toString();
 	}
 
-	private static char letter () {
+	public static char letter () {
 		return LETTERS.charAt(Random.nextInt(LETTERS.length()));
 	}
 
-	private static String number (int count) {
+	public static String number (int count) {
 		StringBuilder numbers = new StringBuilder(count);
 		for (int i = 0; i < count; i++) {
 			numbers.append(Random.nextInt(9) + 1);

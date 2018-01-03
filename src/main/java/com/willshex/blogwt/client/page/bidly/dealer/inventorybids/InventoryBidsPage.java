@@ -19,15 +19,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.willshex.blogwt.client.DefaultEventBus;
-import com.willshex.blogwt.client.cell.bidly.offerpreview.OfferPreviewCell;
+import com.willshex.blogwt.client.cell.bidly.offerpreview.UsedOfferPreview;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.bidly.PageTypeHelper;
 import com.willshex.blogwt.client.page.Page;
-import com.willshex.blogwt.client.page.bidly.dummy.data.Garage;
 import com.willshex.blogwt.client.page.bidly.dummy.data.Offers;
 import com.willshex.blogwt.client.page.bidly.dummy.datatypes.Offer;
-import com.willshex.blogwt.client.page.bidly.dummy.datatypes.Vehicle;
 import com.willshex.blogwt.client.part.BootstrapGwtCellList;
 import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
@@ -52,7 +50,7 @@ public class InventoryBidsPage extends Page {
 	@UiField InlineHyperlink lnkNegotiating;
 
 	@UiField(provided = true) CellList<Offer> clOffers = new CellList<Offer>(
-			new OfferPreviewCell(), BootstrapGwtCellList.INSTANCE, i -> i.id);
+			new UsedOfferPreview(), BootstrapGwtCellList.INSTANCE, i -> i.id);
 
 	@UiField Button btnRefresh;
 	@UiField SimplePager pgrBottom;
@@ -62,11 +60,11 @@ public class InventoryBidsPage extends Page {
 	private SingleSelectionModel<Offer> model = new SingleSelectionModel<>();
 
 	private final ListDataProvider<Offer> ALL = new ListDataProvider<>(
-			Offers.AEN);
+			Offers.UEN);
 	private final ListDataProvider<Offer> ACCEPTED = new ListDataProvider<>(
-			Offers.ACCEPTED);
+			Offers.USED_ACCEPTED);
 	private final ListDataProvider<Offer> NEGOTIATING = new ListDataProvider<>(
-			Offers.NEGOTIATING);
+			Offers.USED_NEGOTIATING);
 
 	private ListDataProvider<Offer> current = ALL;
 
