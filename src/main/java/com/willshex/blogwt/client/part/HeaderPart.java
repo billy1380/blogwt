@@ -179,8 +179,8 @@ public class HeaderPart extends RegisteringComposite
 					if (page.priority != null && page.priority.floatValue() > 2
 							&& (foundBrandPage || removedHome) && !addedBlog) {
 						href = PageTypeHelper.asHref(PageType.PostsPageType);
-						addItem(elNavLeft,
-								SafeHtmlUtils.fromSafeConstant("Blog"), href);
+//						addItem(elNavLeft,
+//								SafeHtmlUtils.fromSafeConstant("Blog"), href);
 						addedBlog = true;
 					}
 
@@ -251,8 +251,8 @@ public class HeaderPart extends RegisteringComposite
 		if (foundBrandPage || removedHome) {
 			if (!addedBlog) {
 				href = PageTypeHelper.asHref(PageType.PostsPageType);
-				addItem(elNavLeft, SafeHtmlUtils.fromSafeConstant("Blog"),
-						href);
+//				addItem(elNavLeft, SafeHtmlUtils.fromSafeConstant("Blog"),
+//						href);
 			}
 		} else {
 			btnHome.setHref(PageTypeHelper.asHref(PageType.PostsPageType));
