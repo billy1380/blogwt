@@ -9,10 +9,12 @@ package com.willshex.blogwt.client.page.bidly.dummy.data;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.Random;
 import com.willshex.blogwt.client.page.bidly.dummy.datatypes.Build;
 import com.willshex.blogwt.client.page.bidly.dummy.datatypes.Vehicle;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 
 /**
@@ -20,14 +22,15 @@ import com.willshex.blogwt.shared.helper.DateTimeHelper;
  *
  */
 public class Garage {
-	public static final List<Vehicle> DUMMY = Arrays.asList(
+	public static final List<Vehicle> ALL = Arrays.asList(
 			(Vehicle) new Vehicle().build(new Build().make("Audi").model("A5"))
 					.registration(dummyLicensePlate()).id(1L)
 					.created(DateTimeHelper.now()),
 			(Vehicle) new Vehicle().build(new Build().make("Audi").model("A3"))
 					.registration(dummyLicensePlate()).id(2L)
 					.created(DateTimeHelper.now()),
-			(Vehicle) new Vehicle().build(new Build().make("Volkswagen").model("Golf"))
+			(Vehicle) new Vehicle()
+					.build(new Build().make("Volkswagen").model("Golf"))
 					.registration(dummyLicensePlate()).id(3L)
 					.created(DateTimeHelper.now()),
 			(Vehicle) new Vehicle()
@@ -53,6 +56,8 @@ public class Garage {
 					.build(new Build().make("Mercedes Benz").model("C-class"))
 					.registration(dummyLicensePlate()).id(9L)
 					.created(DateTimeHelper.now()));
+
+	public static final Map<Long, Vehicle> LOOKUP = DataTypeHelper.map(ALL);
 
 	private static String dummyLicensePlate () {
 		return letter(2) + number(2) + " " + letter(3);

@@ -60,7 +60,7 @@
 	}
 	
 	.message.left {
-		background: #ddd;
+		background: #eee;
 	}
 	
 	.message.left:after {
@@ -68,11 +68,11 @@
 		left: -10px;
 		bottom: auto;
 		border-width: 10px;
-		border-color: #ddd transparent transparent transparent;
+		border-color: #eee transparent transparent transparent;
 	}
 	
 	.message.right {
-		background: #ccc;
+		background: #ddd;
 	}
 	
 	.message.right:after {
@@ -81,7 +81,7 @@
 		bottom: auto;
 		left: auto;
 		border-width: 10px;
-		border-color: #ccc transparent transparent transparent;
+		border-color: #ddd transparent transparent transparent;
 	}
 	
 	.border {

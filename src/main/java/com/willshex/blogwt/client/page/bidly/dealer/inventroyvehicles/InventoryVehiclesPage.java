@@ -56,7 +56,7 @@ public class InventoryVehiclesPage extends Page {
 		clVehicles.setPageSize(PagerHelper.DEFAULT_COUNT.intValue());
 		clVehicles.setEmptyListWidget(pnlNoOffers);
 		clVehicles.setLoadingIndicator(pnlLoading);
-		new ListDataProvider<>(Garage.DUMMY).addDataDisplay(clVehicles);
+		new ListDataProvider<>(Garage.ALL).addDataDisplay(clVehicles);
 		pgrBottom.setDisplay(clVehicles);
 		pgrBottom.setPageSize(12);
 	}

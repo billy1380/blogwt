@@ -73,7 +73,8 @@ public enum PageType {
 	InventoryVehiclesPageType("garage", true),
 	VehicleDetailPageType("vehicledetail", true),
 	UploadInventoryPageType("uploadinventory", true),
-	InventoryBidsPageType("inventorybids", true),;
+	InventoryBidsPageType("inventorybids", true),
+	InventoryBidDetailPageType("inventorybiddetail", true),;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
