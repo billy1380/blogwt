@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler.NavigationChangedEvent;
 import com.willshex.blogwt.client.gwt.RunAsync;
-import com.willshex.blogwt.client.helper.bidly.PageTypeHelper;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.page.blog.notfound.NotFoundPage;
 import com.willshex.blogwt.shared.helper.JsonableHelper;
 import com.willshex.blogwt.shared.page.PageType;

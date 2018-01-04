@@ -310,7 +310,7 @@ public class PageController extends AsyncDataProvider<Page> {
 	}
 
 	public String homePageSlug () {
-		return home == null ? PageType.DashboardPageType.toString() : home.slug;
+		return home == null ? PageType.PostsPageType.toString() : home.slug;
 	}
 
 	public SafeUri homePageUri () {
@@ -318,7 +318,7 @@ public class PageController extends AsyncDataProvider<Page> {
 	}
 
 	public String homePageTargetHistoryToken () {
-		return home == null ? PageType.DashboardPageType.asTargetHistoryToken()
+		return home == null ? PageType.PostsPageType.asTargetHistoryToken()
 				: ("!" + home.slug);
 	}
 

@@ -168,7 +168,7 @@ public class SessionController {
 	}
 
 	public void logout () {
-		logout(PageType.DashboardPageType);
+		logout(PageType.PostsPageType);
 	}
 
 	public void logout (PageType pageType, String... params) {

@@ -11,6 +11,9 @@
 	background-color: #FFF;
 	border: 1px solid #CCC;
 	/* @alternate */ border: 1px solid rgba(0, 0, 0, 0.2);
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
 	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -43,7 +46,7 @@
 	background: #fff;
 	padding: 0px 4px 2px;
 	cursor: default;
-	font-weight: 700;
+	font-weight: bold
 }
 
 .datePickerDay {
@@ -60,17 +63,23 @@
 .datePickerDayIsValue {
 	background: #428BCA;
 	color: #fff;
-	font-weight: 700;
+	font-weight: bold;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px
 }
 
 .datePickerDayIsDisabled {
 	color: #AAAAAA;
-	font-weight: 300; 
+	font-style: italic
 }
 
 .datePickerDayIsHighlighted {
 	background: #EEE;
-	color: black;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	color: black
 }
 
 .datePickerDayIsValueAndHighlighted {
@@ -84,6 +93,9 @@
 	color: #FFF;
 	background-color: #474949;
 	border-color: #474949;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px
 }
 
 .datePickerMonthSelector {
@@ -96,7 +108,7 @@
 .datePickerPreviousButton, .datePickerNextButton {
 	cursor: hand;
 	cursor: pointer;
-	font-weight: 700;
+	font-weight: bold;
 	padding: 0px 4px;
 	outline: none
 }
@@ -105,9 +117,8 @@ td.datePickerMonth {
 	text-align: center;
 	vertical-align: middle;
 	white-space: nowrap;
-	font-weight: 700;
-	color: #333;
-	text-transform: uppercase;
+	font-weight: bold;
+	color: #333
 }
 
 .gwt-DateBox {
@@ -142,4 +153,7 @@ td.datePickerMonth {
 
 .datePickerPreviousButton:HOVER, .datePickerNextButton:HOVER {
 	background: #EEE;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px
 }

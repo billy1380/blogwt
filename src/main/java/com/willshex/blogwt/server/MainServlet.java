@@ -162,7 +162,7 @@ public class MainServlet extends ContextAwareServlet {
 		}
 
 		String css = InlineHelper
-				.css("https://fonts.googleapis.com/css?family=Roboto:300,400,500") + "\n"
+				.css("https://fonts.googleapis.com/css?family=Noto+Sans") + "\n"
 				+ InlineHelper.css(
 						"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css");
 

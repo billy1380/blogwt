@@ -7,8 +7,6 @@
 //
 package com.willshex.blogwt.client.part;
 
-import static com.willshex.blogwt.client.helper.UiHelper.activateItem;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,12 +89,6 @@ public class HeaderPart extends RegisteringComposite
 	@UiField Element elNavLeft;
 	@UiField Element elNavRight;
 	@UiField AnchorElement btnHome;
-
-	@UiField Element elBuildBids;
-	@UiField Element elOngoingBuildBids;
-	@UiField Element elUploadInventory;
-	@UiField Element elInventoryBids;
-
 	@UiField Element elAdmin;
 	@UiField Anchor btnAdmin;
 	@UiField Element elAdminDropdown;
@@ -179,8 +171,8 @@ public class HeaderPart extends RegisteringComposite
 					if (page.priority != null && page.priority.floatValue() > 2
 							&& (foundBrandPage || removedHome) && !addedBlog) {
 						href = PageTypeHelper.asHref(PageType.PostsPageType);
-//						addItem(elNavLeft,
-//								SafeHtmlUtils.fromSafeConstant("Blog"), href);
+						addItem(elNavLeft,
+								SafeHtmlUtils.fromSafeConstant("Blog"), href);
 						addedBlog = true;
 					}
 
@@ -251,8 +243,8 @@ public class HeaderPart extends RegisteringComposite
 		if (foundBrandPage || removedHome) {
 			if (!addedBlog) {
 				href = PageTypeHelper.asHref(PageType.PostsPageType);
-//				addItem(elNavLeft, SafeHtmlUtils.fromSafeConstant("Blog"),
-//						href);
+				addItem(elNavLeft, SafeHtmlUtils.fromSafeConstant("Blog"),
+						href);
 			}
 		} else {
 			btnHome.setHref(PageTypeHelper.asHref(PageType.PostsPageType));
@@ -272,17 +264,6 @@ public class HeaderPart extends RegisteringComposite
 				elPermissions);
 		ensureItems().put(PageType.ResourcesPageType.asTargetHistoryToken(),
 				elResources);
-
-		ensureItems().put(PageType.BuildBidsPageType.asTargetHistoryToken(),
-				elBuildBids);
-		ensureItems().put(
-				PageType.OngoingBuildBidsPageType.asTargetHistoryToken(),
-				elOngoingBuildBids);
-		ensureItems().put(
-				PageType.InventoryVehiclesPageType.asTargetHistoryToken(),
-				elUploadInventory);
-		ensureItems().put(PageType.InventoryBidsPageType.asTargetHistoryToken(),
-				elInventoryBids);
 
 		elAdmin.removeFromParent();
 		elAccount.removeFromParent();
@@ -312,8 +293,20 @@ public class HeaderPart extends RegisteringComposite
 		}
 	}
 
+	private void activateItem (String page, boolean active) {
+		Element element = getItem(page);
+
+		if (element != null) {
+			if (active && !element.hasClassName("active")) {
+				element.addClassName("active");
+			} else if (!active && element.hasClassName("active")) {
+				element.removeClassName("active");
+			}
+		}
+	}
+
 	private Element convertItemToOpenable (String key, SafeHtml title) {
-		activateItem(key, false, this::getItem);
+		activateItem(key, false);
 		Element element = getItem(key);
 		ensureItems().remove(key);
 		element.setClassName("dropdown");
@@ -394,10 +387,10 @@ public class HeaderPart extends RegisteringComposite
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				(p, c) -> {
 					if (p != null) {
-						activateItem(p.getPage(), false, this::getItem);
+						activateItem(p.getPage(), false);
 					}
 
-					activateItem(c.getPage(), true, this::getItem);
+					activateItem(c.getPage(), true);
 
 					btnNavExpand.hide();
 

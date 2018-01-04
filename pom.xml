@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.willshex</groupId>
-	<artifactId>bidly</artifactId>
+	<artifactId>blogwt</artifactId>
 	<packaging>war</packaging>
 	<version>0v4</version>
-	<name>Bidly</name>
-	<description>New and used car bidding application</description>
+	<name>Blogwt</name>
+	<description>Blog application built with GWT on top of AppEngine</description>
 
 	<!-- App Engine Goals -->
 	<!-- mvn help:describe -Dplugin=appengine -->
@@ -37,7 +37,7 @@
 	</prerequisites>
 
 	<scm>
-		<connection>scm:git:https://bitbucket.org/willshex/bidly.git</connection>
+		<connection>scm:git:https://github.com/billy1380/blogwt.git</connection>
 	</scm>
 	<build>
 		<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
@@ -62,8 +62,8 @@
 					</execution>
 				</executions>
 				<configuration>
-					<doCheck>false</doCheck>
-					<doUpdate>false</doUpdate>
+					<doCheck>true</doCheck>
+					<doUpdate>true</doUpdate>
 				</configuration>
 			</plugin>
 
@@ -292,6 +292,12 @@
 			<groupId>org.commonjava.googlecode.markdown4j</groupId>
 			<artifactId>markdown4j-gwt</artifactId>
 			<version>1.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.commonjava.googlecode.emoji</groupId>
+			<artifactId>emoji-gwt</artifactId>
+			<version>1.1</version>
 		</dependency>
 
 		<!-- Google App Engine -->

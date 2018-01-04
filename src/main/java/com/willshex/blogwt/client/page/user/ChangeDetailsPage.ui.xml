@@ -45,7 +45,7 @@
 		<div class="row">
 			<div class="col-sm-4 col-sm-offset-4">
 				<div class="{style.account}">
-					<h1 ui:field="elHeading">Account</h1>
+					<h2 ui:field="elHeading">Account</h2>
 					<div class="{style.parent} img-circle">
 						<g:Image ui:field="imgAvatar" styleName="{style.image}"
 							height="{AVATAR_LARGE_SIZE.toString}px" />

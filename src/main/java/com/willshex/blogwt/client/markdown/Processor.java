@@ -16,6 +16,10 @@ import org.markdown4j.ExtDecorator;
 import org.markdown4j.client.MarkdownProcessor;
 import org.markdown4j.client.WebSequencePlugin;
 
+import com.github.rjeschke.txtmark.Decorator;
+import com.github.rjeschke.txtmark.EmojiEmitter;
+import com.github.rjeschke.txtmark.MarkdownUtils;
+import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.PropertyController;
@@ -26,6 +30,9 @@ import com.willshex.blogwt.client.markdown.plugin.MapPlugin;
 import com.willshex.blogwt.client.markdown.plugin.PostsPlugin;
 import com.willshex.blogwt.client.markdown.plugin.YoutubePlugin;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
+
+import emoji.gwt.emoji.Emoji;
+import emoji.gwt.emoji.Emoji.Ready;
 
 /**
  * @author William Shakour (billy1380)
@@ -44,6 +51,56 @@ public class Processor extends MarkdownProcessor {
 	private static final String OPEN = "<md>", CLOSE = "</md>";
 	private static final int OPEN_LENGTH = OPEN.length(),
 			CLOSE_LENGTH = CLOSE.length();
+
+	/* (non-Javadoc)
+	 * 
+	 * @see org.markdown4j.client.MarkdownProcessor#emojiEmitter() */
+	@Override
+	protected EmojiEmitter emojiEmitter () {
+		return new EmojiEmitter() {
+
+			@Override
+			public void emitEmoji (final StringBuilder out, final String name,
+					Decorator decorator) {
+				boolean addedImage = false;
+
+				String enableEmoji = PropertyController.get()
+						.stringProperty(PropertyHelper.POST_ENABLE_EMOJI);
+
+				if (!PropertyHelper.NONE_VALUE.equals(enableEmoji)
+						&& Emoji.get() != null) {
+					SafeUri safeLink = Emoji.get().safeUri(name);
+					String link;
+					String comment;
+					if (safeLink != null
+							&& (link = safeLink.asString()).length() != 0) {
+						comment = name + " emoji";
+
+						out.append("<img class=\""
+								+ Resources.RES.styles().emoji() + "\" src=\"");
+						MarkdownUtils.appendValue(out, link, 0, link.length());
+						out.append("\" alt=\"");
+						MarkdownUtils.appendValue(out, name, 0, name.length());
+						out.append('"');
+						if (comment != null) {
+							out.append(" title=\"");
+							MarkdownUtils.appendValue(out, comment, 0,
+									comment.length());
+							out.append('"');
+						}
+						out.append(" />");
+
+						addedImage = true;
+					}
+
+				}
+
+				if (!addedImage) {
+					out.append(name);
+				}
+			}
+		};
+	}
 
 	/* (non-Javadoc)
 	 * 
@@ -167,5 +224,18 @@ public class Processor extends MarkdownProcessor {
 	 */
 	private String marker (String id) {
 		return "<span id=\"md:" + id + "\">" + id + "</span>";
+	}
+
+	/**
+	 * @param ready
+	 */
+	public static void init (Ready ready) {
+		String enableEmoji = PropertyController.get()
+				.stringProperty(PropertyHelper.POST_ENABLE_EMOJI);
+		if (!PropertyHelper.NONE_VALUE.equals(enableEmoji)) {
+			Emoji.get(enableEmoji, ready);
+		} else {
+			ready.ready(Emoji.get());
+		}
 	}
 }

@@ -61,7 +61,7 @@ public class SiteMapServlet extends ContextAwareServlet {
 
 		printRoot(p, url);
 		printPages(p, url);
-//		printBlog(p, url);
+		printBlog(p, url);
 		printPosts(p, url);
 		printTags(p, url);
 
@@ -78,10 +78,10 @@ public class SiteMapServlet extends ContextAwareServlet {
 		p.println(String.format(LOC_FORMAT, url, "#!"));
 	}
 
-//	private void printBlog (PrintWriter p, String url) {
-//		p.println(String.format(LOC_FORMAT, url,
-//				"#" + PageType.PostsPageType.asTargetHistoryToken()));
-//	}
+	private void printBlog (PrintWriter p, String url) {
+		p.println(String.format(LOC_FORMAT, url,
+				"#" + PageType.PostsPageType.asTargetHistoryToken()));
+	}
 
 	private void printPosts (PrintWriter p, String url) {
 		List<Post> posts;

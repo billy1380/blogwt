@@ -9,7 +9,7 @@
 	<g:HTMLPanel styleName="container">
 		<div class="row">
 			<div class="col-sm-4 col-sm-offset-4">
-				<h1>Access</h1>
+				<h2>Access</h2>
 				<g:FormPanel ui:field="frmChangeAccess">
 					<g:HTMLPanel>
 						<h3>Roles</h3>

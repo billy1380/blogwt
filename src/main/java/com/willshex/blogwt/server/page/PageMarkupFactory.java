@@ -27,9 +27,9 @@ public class PageMarkupFactory {
 		case PageDetailPageType:
 			pageMarkup = new StaticPage(stack);
 			break;
-//		case PostsPageType:
-//			pageMarkup = new StaticPosts(stack);
-//			break;
+		case PostsPageType:
+			pageMarkup = new StaticPosts(stack);
+			break;
 		case PostDetailPageType:
 			pageMarkup = new StaticPost(stack);
 			break;

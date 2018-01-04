@@ -1,4 +1,4 @@
 # robotstxt.org/
 
 User-agent: *
-Sitemap: http://bidlycars.appspot.com/sitemap
+Sitemap: http://blogwtproject.appspot.com/sitemap
