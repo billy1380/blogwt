@@ -96,8 +96,7 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 
 						for (String url : uploader.getServerMessage()
 								.getUploadedFileUrls()) {
-							resource.data = url.replace(ApiHelper.BASE_URL,
-									"/");
+							resource.data = url.replace(ApiHelper.BASE_URL, "");
 							break;
 						}
 

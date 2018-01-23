@@ -16,6 +16,7 @@ import com.willshex.blogwt.server.api.notification.action.GetNotificationsAction
 import com.willshex.blogwt.server.api.notification.action.SendAdhocNotificationActionHandler;
 import com.willshex.blogwt.server.api.notification.action.SetPushTokenActionHandler;
 import com.willshex.blogwt.server.api.notification.action.UpdateNotificationSettingsActionHandler;
+import com.willshex.blogwt.shared.api.notification.Notification;
 import com.willshex.blogwt.shared.api.notification.call.GetMetaNotificationsRequest;
 import com.willshex.blogwt.shared.api.notification.call.GetNotificationSettingsRequest;
 import com.willshex.blogwt.shared.api.notification.call.GetNotificationsRequest;
@@ -25,10 +26,8 @@ import com.willshex.blogwt.shared.api.notification.call.UpdateNotificationSettin
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
-@WebServlet(name = "Notification API", urlPatterns = NotificationJsonServlet.URL)
+@WebServlet(name = "Notification API", urlPatterns = Notification.PATH)
 public final class NotificationJsonServlet extends JsonServlet {
-
-	public static final String URL = "/notification";
 
 	@Override
 	protected String processAction (String action, JsonObject request) {

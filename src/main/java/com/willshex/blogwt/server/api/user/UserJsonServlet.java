@@ -29,6 +29,7 @@ import com.willshex.blogwt.server.api.user.action.LogoutActionHandler;
 import com.willshex.blogwt.server.api.user.action.RegisterUserActionHandler;
 import com.willshex.blogwt.server.api.user.action.ResetPasswordActionHandler;
 import com.willshex.blogwt.server.api.user.action.VerifyAccountActionHandler;
+import com.willshex.blogwt.shared.api.user.User;
 import com.willshex.blogwt.shared.api.user.call.BlockUsersRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
@@ -51,10 +52,8 @@ import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
-@WebServlet(name = "User API", urlPatterns = UserJsonServlet.URL)
+@WebServlet(name = "User API", urlPatterns = User.PATH)
 public final class UserJsonServlet extends JsonServlet {
-
-	public static final String URL = "/user";
 
 	@Override
 	protected String processAction (String action, JsonObject request) {

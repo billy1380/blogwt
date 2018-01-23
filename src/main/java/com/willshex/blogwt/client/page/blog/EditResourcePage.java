@@ -37,6 +37,7 @@ import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdateResourceResponse;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
+import com.willshex.blogwt.shared.api.upload.Upload;
 import com.willshex.gson.web.service.shared.StatusType;
 
 import gwtupload.client.BaseUploadStatus;
@@ -149,7 +150,7 @@ public class EditResourcePage extends Page
 				if (resource.type == ResourceTypeType.ResourceTypeTypeGoogleCloudServiceImage) {
 					for (String url : uploader.getServerMessage()
 							.getUploadedFileUrls()) {
-						new PreloadedImage(url.replace(ApiHelper.BASE_URL, "/"),
+						new PreloadedImage(url.replace(ApiHelper.BASE_URL, ""),
 								EditResourcePage.this::onImagePreloaderFinished);
 						break;
 					}
@@ -187,7 +188,7 @@ public class EditResourcePage extends Page
 			uplDragAndDrop.setVisible(false);
 
 			if (withImage) {
-				Image image = new Image("upload?blob-key="
+				Image image = new Image(Upload.PATH + "?blob-key="
 						+ resource.data.replace("gs://", ""));
 				image.addStyleName("img-rounded");
 				image.addStyleName("img-responsive");

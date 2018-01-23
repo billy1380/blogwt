@@ -16,6 +16,7 @@ import com.willshex.blogwt.server.api.page.action.GetPageActionHandler;
 import com.willshex.blogwt.server.api.page.action.GetPagesActionHandler;
 import com.willshex.blogwt.server.api.page.action.SubmitFormActionHandler;
 import com.willshex.blogwt.server.api.page.action.UpdatePageActionHandler;
+import com.willshex.blogwt.shared.api.page.Page;
 import com.willshex.blogwt.shared.api.page.call.CreatePageRequest;
 import com.willshex.blogwt.shared.api.page.call.DeletePageRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPageRequest;
@@ -25,10 +26,8 @@ import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
-@WebServlet(name = "Page API", urlPatterns = PageJsonServlet.URL)
+@WebServlet(name = "Page API", urlPatterns = Page.PATH)
 public final class PageJsonServlet extends JsonServlet {
-
-	public static final String URL = "/page";
 
 	@Override
 	protected String processAction (String action, JsonObject request) {

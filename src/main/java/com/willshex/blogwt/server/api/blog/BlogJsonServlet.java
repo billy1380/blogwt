@@ -27,6 +27,7 @@ import com.willshex.blogwt.server.api.blog.action.SubmitRatingActionHandler;
 import com.willshex.blogwt.server.api.blog.action.UpdatePostActionHandler;
 import com.willshex.blogwt.server.api.blog.action.UpdatePropertiesActionHandler;
 import com.willshex.blogwt.server.api.blog.action.UpdateResourceActionHandler;
+import com.willshex.blogwt.shared.api.blog.Blog;
 import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceRequest;
@@ -47,9 +48,8 @@ import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
 @SuppressWarnings("serial")
-@WebServlet(name = "Blog API", urlPatterns = BlogJsonServlet.URL)
+@WebServlet(name = "Blog API", urlPatterns = Blog.PATH)
 public final class BlogJsonServlet extends JsonServlet {
-	public static final String URL = "/blog";
 
 	@Override
 	protected String processAction (String action, JsonObject request) {

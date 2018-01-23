@@ -22,6 +22,7 @@ import com.willshex.blogwt.server.helper.ServletHelper;
 import com.willshex.blogwt.server.service.generateddownload.GeneratedDownloadServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownload;
 import com.willshex.blogwt.shared.api.datatype.Session;
+import com.willshex.blogwt.shared.api.download.Download;
 import com.willshex.blogwt.shared.api.download.call.DeleteGeneratedDownloadsRequest;
 import com.willshex.blogwt.shared.api.download.call.GenerateDownloadRequest;
 import com.willshex.blogwt.shared.api.download.call.GetGeneratedDownloadsRequest;
@@ -31,10 +32,9 @@ import com.willshex.gson.web.service.server.JsonServlet;
 import com.willshex.utility.StringUtils;
 
 @SuppressWarnings("serial")
-@WebServlet(name = "Download API", urlPatterns = DownloadJsonServlet.URL)
+@WebServlet(name = "Download API", urlPatterns = Download.PATH)
 public final class DownloadJsonServlet extends JsonServlet {
 
-	public static final String URL = "/download";
 	private static final String ENTITY_ID_KEY = "id";
 
 	@Override

@@ -17,7 +17,13 @@ import com.willshex.blogwt.client.api.page.PageService;
 import com.willshex.blogwt.client.api.search.SearchService;
 import com.willshex.blogwt.client.api.user.UserService;
 import com.willshex.blogwt.shared.api.Request;
+import com.willshex.blogwt.shared.api.blog.Blog;
 import com.willshex.blogwt.shared.api.datatype.DataType;
+import com.willshex.blogwt.shared.api.download.Download;
+import com.willshex.blogwt.shared.api.page.Page;
+import com.willshex.blogwt.shared.api.search.Search;
+import com.willshex.blogwt.shared.api.upload.Upload;
+import com.willshex.blogwt.shared.api.user.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.web.service.client.event.CallFailureEventHandler;
 import com.willshex.gson.web.service.client.event.CallStartEventHandler;
@@ -32,13 +38,13 @@ public class ApiHelper {
 
 	public static final String ACCESS_CODE = "2bfe5f0e-9138-401c-8619-9a66f6367c9a";
 	public static final String HOST = getHost();
-	public static final String BASE_URL = "//" + HOST + "/";
-	public static final String BLOG_END_POINT = BASE_URL + "blog";
-	public static final String USER_END_POINT = BASE_URL + "user";
-	public static final String PAGE_END_POINT = BASE_URL + "page";
-	public static final String SEARCH_END_POINT = BASE_URL + "search";
-	public static final String UPLOAD_END_POINT = BASE_URL + "upload";
-	public static final String DOWNLOAD_END_POINT = BASE_URL + "download";
+	public static final String BASE_URL = "//" + HOST;
+	public static final String BLOG_END_POINT = BASE_URL + Blog.PATH;
+	public static final String USER_END_POINT = BASE_URL + User.PATH;
+	public static final String PAGE_END_POINT = BASE_URL + Page.PATH;
+	public static final String SEARCH_END_POINT = BASE_URL + Search.PATH;
+	public static final String UPLOAD_END_POINT = BASE_URL + Upload.PATH;
+	public static final String DOWNLOAD_END_POINT = BASE_URL + Download.PATH;
 
 	static {
 		DefaultEventBus.get().addHandler(CallStartEventHandler.TYPE,

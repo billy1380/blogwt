@@ -20,6 +20,7 @@ import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Resource;
+import com.willshex.blogwt.shared.api.upload.Upload;
 
 import gwtupload.server.exceptions.UploadActionException;
 import gwtupload.server.gae.CloudStorageFileItemFactory.CloudStorageFileItem;
@@ -30,10 +31,8 @@ import gwtupload.server.gae.CloudStorageUploadAction;
  *
  */
 @SuppressWarnings("serial")
-@WebServlet(name = "Upload", urlPatterns = ResourceUploadAction.URL)
+@WebServlet(name = "Upload", urlPatterns = Upload.PATH)
 public class ResourceUploadAction extends CloudStorageUploadAction {
-
-	public static final String URL = "/upload";
 
 	/* (non-Javadoc)
 	 * 

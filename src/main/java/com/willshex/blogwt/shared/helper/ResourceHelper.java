@@ -8,6 +8,7 @@
 package com.willshex.blogwt.shared.helper;
 
 import com.willshex.blogwt.shared.api.datatype.Resource;
+import com.willshex.blogwt.shared.api.upload.Upload;
 
 /**
  * @author William Shakour (billy1380)
@@ -31,7 +32,7 @@ public class ResourceHelper {
 
 	public static String dataUrl (Resource r) {
 		return r == null || r.data == null || r.data.length() <= 5 ? null
-				: "/upload?blob-key=" + r.data.substring(5);
+				: Upload.PATH + "?blob-key=" + r.data.substring(5);
 	}
 
 	public static String descriptionUrl (Resource r) {
