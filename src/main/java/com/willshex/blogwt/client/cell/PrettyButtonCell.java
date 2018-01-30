@@ -44,7 +44,7 @@ public class PrettyButtonCell extends ButtonCell {
 		addButton("unsuspend", "btn-success", null);
 		addButton("clone", "btn-default", "glyphicon-duplicate");
 		addButton("edit", "btn-default", "glyphicon-edit");
-		addButton("admin", "btn-default", "glyphicon-sunglasses");
+		addButton("admin", "btn-default", "glyphicon-certificate");
 		addButton("user", "btn-default", "glyphicon-user");
 	}
 
