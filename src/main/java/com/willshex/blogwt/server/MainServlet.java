@@ -51,13 +51,15 @@ import com.willshex.server.ContextAwareServlet;
  *
  */
 @SuppressWarnings("serial")
-@WebServlet(name = "Site", urlPatterns = MainServlet.URL)
+@WebServlet(name = "Site", urlPatterns = { MainServlet.URL,
+		MainServlet.ALT_URL })
 public class MainServlet extends ContextAwareServlet {
 
 	private static final Logger LOG = Logger
 			.getLogger(MainServlet.class.getName());
 
-	public static final String URL = "/";
+	public static final String ALT_URL = "/";
+	public static final String URL = "";
 
 	private static String PAGE_FORMAT = null;
 
