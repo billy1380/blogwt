@@ -53,14 +53,6 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 
 	interface PagesPageUiBinder extends UiBinder<Widget, PagesPage> {}
 
-	@UiField(provided = true) CellTable<Page> tblPages = new CellTable<Page>(
-			PagerHelper.DEFAULT_COUNT.intValue(),
-			BootstrapGwtCellTable.INSTANCE);
-	@UiField SimplePager pgrPages;
-	@UiField NoneFoundPanel pnlNoPages;
-	@UiField Button btnRefresh;
-	@UiField LoadingPanel pnlLoading;
-
 	public interface PagesPageTemplates extends SafeHtmlTemplates {
 		public PagesPageTemplates INSTANCE = GWT
 				.create(PagesPageTemplates.class);
@@ -75,17 +67,14 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 		SafeHtml no ();
 
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
-	@Override
-	protected void onAttach () {
-		super.onAttach();
-
-		register(DefaultEventBus.get().addHandlerToSource(
-				DeletePageEventHandler.TYPE, PageController.get(), this));
-	}
+	
+	@UiField(provided = true) CellTable<Page> tblPages = new CellTable<Page>(
+			PagerHelper.DEFAULT_COUNT.intValue(),
+			BootstrapGwtCellTable.INSTANCE);
+	@UiField SimplePager pgrPages;
+	@UiField NoneFoundPanel pnlNoPages;
+	@UiField Button btnRefresh;
+	@UiField LoadingPanel pnlLoading;
 
 	public PagesPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -96,6 +85,17 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 		tblPages.setLoadingIndicator(pnlLoading);
 		PageController.get().addDataDisplay(tblPages);
 		pgrPages.setDisplay(tblPages);
+	}
+	
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
+	@Override
+	protected void onAttach () {
+		super.onAttach();
+
+		register(DefaultEventBus.get().addHandlerToSource(
+				DeletePageEventHandler.TYPE, PageController.get(), this));
 	}
 
 	private void createColumns () {
