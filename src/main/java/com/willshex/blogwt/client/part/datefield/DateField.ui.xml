@@ -1,0 +1,17 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
+	<ui:style>
+	@external dateBoxPopup;
+	
+	.dateBoxPopup {
+		z-index: 1060;
+	}
+	</ui:style>
+	<g:HTMLPanel tag="span">
+		<d:DateBox ui:field="ctlDate" styleName="form-control" />
+		<g:Anchor styleName="input-group-addon" ui:field="btnStatus">
+			<span ui:field="elStatusIcon" />
+		</g:Anchor>
+	</g:HTMLPanel>
+</ui:UiBinder> 
