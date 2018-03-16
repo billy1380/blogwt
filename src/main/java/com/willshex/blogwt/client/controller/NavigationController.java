@@ -14,13 +14,13 @@ import java.util.Map;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler.NavigationChangedEvent;
 import com.willshex.blogwt.client.gwt.RunAsync;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
+import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.page.blog.notfound.NotFoundPage;
 import com.willshex.blogwt.shared.helper.JsonableHelper;
 import com.willshex.blogwt.shared.page.PageType;
@@ -71,7 +71,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 	public static final String DELETE_ACTION_PARAMETER_VALUE = "delete";
 	public static final String VIEW_ACTION_PARAMETER_VALUE = "view";
 
-	private Map<String, Composite> pages = new HashMap<String, Composite>();
+	private Map<String, Page> pages = new HashMap<String, Page>();
 
 	private Stack stack;
 
@@ -79,7 +79,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	private void attachPage (PageType type,
 			final NavigationChangedEvent event) {
-		Composite page = null;
+		Page page = null;
 
 		if ((page = getPageFromCache(type)) == null) {
 			createAsyncPage(type, event);
@@ -88,7 +88,16 @@ public class NavigationController implements ValueChangeHandler<String> {
 		if (page != null) {
 			if (!page.isAttached()) {
 				pageHolder.clear();
+
+				if (page.hasHeader()) {
+					pageHolder.add(page.getHeader());
+				}
+
 				pageHolder.add(page);
+
+				if (page.hasFooter()) {
+					pageHolder.add(page.getFooter());
+				}
 			}
 
 			Scheduler.get().scheduleDeferred( () -> DefaultEventBus.get()
@@ -104,7 +113,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 		return pageType.toString();
 	}
 
-	private Composite getPageFromCache (PageType type) {
+	private Page getPageFromCache (PageType type) {
 		return pages.get(pageKeyForCache(type));
 	}
 

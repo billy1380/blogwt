@@ -8,8 +8,11 @@
 package com.willshex.blogwt.client.page;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.user.client.ui.Composite;
 import com.willshex.blogwt.client.gwt.RegisteringComposite;
 import com.willshex.blogwt.client.helper.UiHelper;
+import com.willshex.blogwt.client.part.FooterPart;
+import com.willshex.blogwt.client.part.HeaderPart;
 import com.willshex.utility.StringUtils;
 
 /**
@@ -48,5 +51,21 @@ public abstract class Page extends RegisteringComposite {
 
 	protected void refreshTitle () {
 		Document.get().setTitle(getTitle());
+	}
+
+	public boolean hasHeader () {
+		return getHeader() != null;
+	}
+
+	public boolean hasFooter () {
+		return getFooter() != null;
+	}
+
+	public Composite getHeader () {
+		return HeaderPart.get();
+	}
+
+	public Composite getFooter () {
+		return FooterPart.get();
 	}
 }

@@ -210,4 +210,12 @@ public class LoginPage extends Page implements LoginEventHandler {
 		return UiHelper.pageTitle("Sign in");
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#hasHeader() */
+	@Override
+	public boolean hasHeader () {
+		return false;
+	}
+
 }

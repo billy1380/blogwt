@@ -9,6 +9,7 @@ package com.willshex.blogwt.client.helper;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.function.Function;
 
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.Cell;
@@ -16,6 +17,7 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeUri;
@@ -59,6 +61,8 @@ public class UiHelper {
 	public static final Cell<SafeHtml> SAFE_HTML_PROTOTYPE = new SafeHtmlCell();
 	public static final StyledImageCell IMAGE_PROTOTYPE = new StyledImageCell(
 			20.0, 20.0);
+
+	private static final String ACTIVE = "active";
 
 	static {
 		IMAGE_PROTOTYPE.addClassName("img-rounded");
@@ -169,5 +173,42 @@ public class UiHelper {
 	 */
 	public static String pageTitle (String title) {
 		return PropertyController.get().title() + ": " + title;
+	}
+
+	public static void activateItem (String page, boolean active,
+			Function<String, Element> get) {
+		Element element = get.apply(page);
+
+		if (element != null) {
+			if (active && !element.hasClassName(ACTIVE)) {
+				element.addClassName(ACTIVE);
+			} else if (!active && element.hasClassName(ACTIVE)) {
+				element.removeClassName(ACTIVE);
+			}
+		}
+	}
+
+	public static void scaleSvg (Element parent, float scale) {
+		Element el = parent.getFirstChildElement();
+		String w = el.getAttribute("width"), h = el.getAttribute("height");
+		String wu = w.substring(w.length() - 2, w.length()),
+				hu = h.substring(h.length() - 2, h.length());
+		float wf = Float.parseFloat(w.substring(0, w.length() - 2)),
+				hf = Float.parseFloat(h.substring(0, h.length() - 2));
+
+		String nw = Float.toString(wf * scale) + wu,
+				nh = Float.toString(hf * scale) + hu;
+
+		el.setAttribute("width", nw);
+		el.setAttribute("height", nh);
+	}
+
+	public static void insertSvg (Element el, TextResource resource) {
+		el.setInnerHTML(resource.getText());
+	}
+
+	public static void setSvgFill (Element parent, String colour) {
+		parent.getElementsByTagName("path").getItem(0).getStyle()
+				.setProperty("fill", colour);
 	}
 }

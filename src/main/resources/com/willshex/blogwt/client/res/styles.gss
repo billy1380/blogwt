@@ -121,7 +121,7 @@ h6 .emoji, .h6 .emoji {
 }
 
 .externalLink:after {
-position: relative;
+    position: relative;
     top: 2px;
     display: inline-block;
     font-family: 'Glyphicons Halflings';
