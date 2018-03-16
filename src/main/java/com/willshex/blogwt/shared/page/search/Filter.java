@@ -9,7 +9,6 @@ package com.willshex.blogwt.shared.page.search;
 
 import java.util.Arrays;
 
-import com.google.gwt.core.shared.GWT;
 import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.utility.StringUtils;
 
@@ -60,8 +59,6 @@ public class Filter {
 
 	@Override
 	public boolean equals (Object obj) {
-		GWT.log(url());
-		GWT.log(((Filter) obj).url());
 		return obj != null && obj instanceof Filter
 				? url().equals(((Filter) obj).url())
 				: super.equals(obj);
