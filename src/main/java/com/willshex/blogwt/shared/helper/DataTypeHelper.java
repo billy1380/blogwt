@@ -7,6 +7,11 @@
 //
 package com.willshex.blogwt.shared.helper;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
 import com.googlecode.objectify.Key;
 import com.willshex.blogwt.shared.api.datatype.DataType;
 
@@ -32,5 +37,19 @@ public class DataTypeHelper {
 	public static <T extends DataType> boolean same (T a, Long id) {
 		return a != null && id != null && a.id != null
 				&& a.id.longValue() == id.longValue();
+	}
+
+	public static <T> Map<Long, T> map (List<T> data, Function<T, Long> id) {
+		Map<Long, T> map = new HashMap<>();
+
+		for (T t : data) {
+			map.put(id.apply(t), t);
+		}
+
+		return map;
+	}
+
+	public static <T extends DataType> Map<Long, T> map (List<T> data) {
+		return map(data, t -> t.id);
 	}
 }
