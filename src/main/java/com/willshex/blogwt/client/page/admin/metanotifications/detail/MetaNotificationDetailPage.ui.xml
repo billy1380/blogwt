@@ -1,0 +1,72 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style gss="true">
+	.checkbox label {
+		display: inline; padding-left: 5px; padding-right: 10px;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="container">
+		<g:FormPanel ui:field="frmDetails">
+			<g:HTMLPanel>
+				<h3 ui:field="elTitle">Add Notification</h3>
+
+				<g:HTMLPanel ui:field="pnlCode" styleName="form-group">
+					<label class="control-label">Code</label>
+					<g:TextBox ui:field="txtCode" styleName="form-control" />
+					<g:HTMLPanel styleName="control-label small" ui:field="pnlCodeNote"
+						visible="false" />
+				</g:HTMLPanel>
+
+				<g:HTMLPanel ui:field="pnlName" styleName="form-group">
+					<label class="control-label">Name</label>
+					<g:TextBox ui:field="txtName" styleName="form-control" />
+					<g:HTMLPanel styleName="control-label small" ui:field="pnlNameNote"
+						visible="false" />
+				</g:HTMLPanel>
+
+				<g:HTMLPanel ui:field="pnlContent" styleName="form-group">
+					<label class="control-label">Content</label>
+					<g:TextArea ui:field="txtContent" styleName="form-control"
+						visibleLines="4" />
+					<g:HTMLPanel styleName="control-label small" ui:field="pnlContentNote"
+						visible="false" />
+				</g:HTMLPanel>
+
+				<g:HTMLPanel ui:field="pnlGroup" styleName="form-group">
+					<label class="control-label">Group</label>
+					<g:TextBox ui:field="txtGroup" styleName="form-control" />
+					<g:HTMLPanel styleName="control-label small" ui:field="pnlGroupNote"
+						visible="false" />
+				</g:HTMLPanel>
+
+				<g:HTMLPanel ui:field="pnlMode" styleName="form-group">
+					<label class="control-label">Available via</label>
+					<g:HTMLPanel>
+						<g:CheckBox ui:field="cboModeEmail" text="E-mail" styleName="{style.checkbox}" />
+						<g:CheckBox ui:field="cboModeSms" text="SMS" styleName="{style.checkbox}" />
+						<g:CheckBox ui:field="cboModePush" text="Push" styleName="{style.checkbox}" />
+					</g:HTMLPanel>
+					<g:HTMLPanel styleName="control-label small" ui:field="pnlModeNote"
+						visible="false" />
+				</g:HTMLPanel>
+
+				<g:HTMLPanel ui:field="pnlDefault" styleName="form-group">
+					<label class="control-label">Default delivery</label>
+					<g:HTMLPanel>
+						<g:CheckBox ui:field="cboDefaultEmail" text="E-mail" styleName="{style.checkbox}" />
+						<g:CheckBox ui:field="cboDefaultSms" text="SMS" styleName="{style.checkbox}" />
+						<g:CheckBox ui:field="cboDefaultPush" text="Push" styleName="{style.checkbox}" />
+					</g:HTMLPanel>
+					<g:HTMLPanel styleName="control-label small" ui:field="pnlDefaultNote"
+						visible="false" />
+				</g:HTMLPanel>
+
+				<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary"
+					text="Update">
+					Update
+				</g:SubmitButton>
+
+			</g:HTMLPanel>
+		</g:FormPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

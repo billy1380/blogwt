@@ -100,6 +100,7 @@ public class HeaderPart extends RegisteringComposite
 	@UiField Element elResources;
 	@UiField Element elRoles;
 	@UiField Element elPermissions;
+	@UiField Element elMetaNotifications;
 	@UiField Element elUsers;
 	@UiField Element elAccount;
 	@UiField Element elDownloads;
@@ -266,6 +267,9 @@ public class HeaderPart extends RegisteringComposite
 				elPermissions);
 		ensureItems().put(PageType.ResourcesPageType.asTargetHistoryToken(),
 				elResources);
+		ensureItems().put(
+				PageType.MetaNotificationsPageType.asTargetHistoryToken(),
+				elMetaNotifications);
 
 		elAdmin.removeFromParent();
 		elAccount.removeFromParent();
@@ -469,6 +473,8 @@ public class HeaderPart extends RegisteringComposite
 					.create(PermissionHelper.MANAGE_USERS);
 			Permission manageResources = PermissionHelper
 					.create(PermissionHelper.MANAGE_RESOURCES);
+			Permission manageMetaNotifications = PermissionHelper
+					.create(PermissionHelper.MANAGE_NOTIFICATIONS);
 
 			if (SessionController.get().isAdmin()) {
 				addAdmin = true;
@@ -520,6 +526,14 @@ public class HeaderPart extends RegisteringComposite
 				elAdminDropdown.appendChild(elResources);
 			} else {
 				elResources.removeFromParent();
+			}
+			
+			if (isAdmin || SessionController.get()
+					.isAuthorised(manageMetaNotifications)) {
+				addAdmin = true;
+				elAdminDropdown.appendChild(elMetaNotifications);
+			} else {
+				elMetaNotifications.removeFromParent();
 			}
 		}
 

@@ -11,6 +11,7 @@ import com.willshex.blogwt.server.service.metanotification.MetaNotificationServi
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.gson.web.service.server.InputValidationException;
+import com.willshex.gson.web.service.server.ServiceException;
 
 /**
  * @author William Shakour (billy1380)
@@ -19,6 +20,14 @@ import com.willshex.gson.web.service.server.InputValidationException;
 public class MetaNotificationValidator extends ApiValidator {
 	private static final Class<MetaNotification> CLASS = MetaNotification.class;
 	private static final String TYPE = CLASS.getSimpleName();
+
+	public static MetaNotification validate (MetaNotification meta, String name)
+			throws InputValidationException {
+		if (meta == null) throwServiceError(InputValidationException.class,
+				ApiError.InvalidValueNull, TYPE + ": " + name);
+
+		return meta;
+	}
 
 	public static MetaNotification lookup (MetaNotification metaNotification,
 			String name) throws InputValidationException {
@@ -38,10 +47,10 @@ public class MetaNotificationValidator extends ApiValidator {
 
 		MetaNotification lookupMetaNotification = null;
 		if (isIdLookup) {
-			metaNotification = MetaNotificationServiceProvider.provide()
+			lookupMetaNotification = MetaNotificationServiceProvider.provide()
 					.getMetaNotification(metaNotification.id);
 		} else if (isCodeLookup) {
-			metaNotification = MetaNotificationServiceProvider.provide()
+			lookupMetaNotification = MetaNotificationServiceProvider.provide()
 					.getCodeMetaNotification(metaNotification.code);
 		}
 
@@ -49,6 +58,12 @@ public class MetaNotificationValidator extends ApiValidator {
 			throwServiceError(InputValidationException.class,
 					ApiError.DataTypeNotFound, TYPE + ": " + name);
 
-		return metaNotification;
+		return lookupMetaNotification;
+	}
+
+	public static <T extends Iterable<MetaNotification>> T lookupAll (
+			T metaNotifications, String name) throws ServiceException {
+		return processAll(false, metaNotifications,
+				MetaNotificationValidator::lookup, TYPE, name);
 	}
 }

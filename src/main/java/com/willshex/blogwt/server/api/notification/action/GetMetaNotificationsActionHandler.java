@@ -33,6 +33,7 @@ public final class GetMetaNotificationsActionHandler extends
 			GetMetaNotificationsResponse output) throws Exception {
 		ApiValidator.request(input, GetMetaNotificationsRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
+		
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");
 

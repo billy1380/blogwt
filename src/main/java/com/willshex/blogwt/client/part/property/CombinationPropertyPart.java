@@ -13,7 +13,6 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -31,8 +30,8 @@ public class CombinationPropertyPart extends AbstractPropertyPart {
 	private static CheckBoxPropertyPartUiBinder uiBinder = GWT
 			.create(CheckBoxPropertyPartUiBinder.class);
 
-	interface CheckBoxPropertyPartUiBinder extends
-			UiBinder<Widget, CombinationPropertyPart> {}
+	interface CheckBoxPropertyPartUiBinder
+			extends UiBinder<Widget, CombinationPropertyPart> {}
 
 	interface Style extends CssResource {
 		String checkbox ();
@@ -45,42 +44,36 @@ public class CombinationPropertyPart extends AbstractPropertyPart {
 	@UiField Style style;
 	private Map<String, CheckBox> checkBoxes = new HashMap<String, CheckBox>();
 
-	private final ValueChangeHandler<Boolean> CHECKED = new ValueChangeHandler<Boolean>() {
-
-		@Override
-		public void onValueChange (ValueChangeEvent<Boolean> event) {
-			String value = ((CheckBox) event.getSource()).getFormValue();
-			if (event.getValue().booleanValue()) {
-				if (CombinationPropertyPart.this.value == null
-						|| CombinationPropertyPart.this.value.length() == 0
-						|| PropertyHelper.NONE_VALUE
-								.equals(CombinationPropertyPart.this.value)) {
-					setValue(value, true);
-				} else if (!CombinationPropertyPart.this.value.contains(value)) {
-					setValue(CombinationPropertyPart.this.value + "," + value,
-							true);
-				}
-			} else {
-				if (CombinationPropertyPart.this.value != null
-						&& CombinationPropertyPart.this.value.length() > 0
-						&& !PropertyHelper.NONE_VALUE
-								.equals(CombinationPropertyPart.this.value)) {
-					if (CombinationPropertyPart.this.value
-							.contains("," + value)) {
-						setValue(
-								CombinationPropertyPart.this.value.replace(","
-										+ value, ""), true);
-					} else if (CombinationPropertyPart.this.value
-							.contains(value + ",")) {
-						setValue(CombinationPropertyPart.this.value.replace(
-								value + ",", ""), true);
-					} else {
-						setValue(PropertyHelper.NONE_VALUE, true);
-					}
+	private void onChecked (ValueChangeEvent<Boolean> event) {
+		String value = ((CheckBox) event.getSource()).getFormValue();
+		if (event.getValue().booleanValue()) {
+			if (CombinationPropertyPart.this.value == null
+					|| CombinationPropertyPart.this.value.length() == 0
+					|| PropertyHelper.NONE_VALUE
+							.equals(CombinationPropertyPart.this.value)) {
+				setValue(value, true);
+			} else if (!CombinationPropertyPart.this.value.contains(value)) {
+				setValue(CombinationPropertyPart.this.value + "," + value,
+						true);
+			}
+		} else {
+			if (CombinationPropertyPart.this.value != null
+					&& CombinationPropertyPart.this.value.length() > 0
+					&& !PropertyHelper.NONE_VALUE
+							.equals(CombinationPropertyPart.this.value)) {
+				if (CombinationPropertyPart.this.value.contains("," + value)) {
+					setValue(CombinationPropertyPart.this.value
+							.replace("," + value, ""), true);
+				} else if (CombinationPropertyPart.this.value
+						.contains(value + ",")) {
+					setValue(CombinationPropertyPart.this.value
+							.replace(value + ",", ""), true);
+				} else {
+					setValue(PropertyHelper.NONE_VALUE, true);
 				}
 			}
 		}
-	};
+	}
 
 	public CombinationPropertyPart (Map<String, String> options) {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -89,7 +82,7 @@ public class CombinationPropertyPart extends AbstractPropertyPart {
 			pnlCheckBoxes.add(checkBox = new CheckBox());
 			checkBox.setFormValue(key);
 			checkBox.setText(options.get(key));
-			checkBox.addValueChangeHandler(CHECKED);
+			checkBox.addValueChangeHandler(this::onChecked);
 			checkBox.setStyleName(style.checkbox());
 			checkBoxes.put(key, checkBox);
 		}
@@ -134,9 +127,8 @@ public class CombinationPropertyPart extends AbstractPropertyPart {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.willshex.blogwt.client.part.property.AbstractPropertyPart#setDescription
-	 * (java.lang.String) */
+	 * @see com.willshex.blogwt.client.part.property.AbstractPropertyPart#
+	 * setDescription (java.lang.String) */
 	@Override
 	public void setDescription (String description) {
 		elDescription.setInnerText(description);

@@ -60,6 +60,9 @@
 								<li ui:field="elResources">
 									<a href="{RESOURCES_PAGE_HREF}">Resources</a>
 								</li>
+								<li ui:field="elMetaNotifications">
+                                    <a href="{META_NOTIFICATIONS_PAGE_HREF}">Notifications</a>
+                                </li>
 							</ul>
 						</li>
 

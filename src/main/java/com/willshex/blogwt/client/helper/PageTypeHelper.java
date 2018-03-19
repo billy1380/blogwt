@@ -19,6 +19,8 @@ import com.willshex.blogwt.client.page.admin.ResourcesPage;
 import com.willshex.blogwt.client.page.admin.RolesPage;
 import com.willshex.blogwt.client.page.admin.UsersPage;
 import com.willshex.blogwt.client.page.admin.WidgetTestPage;
+import com.willshex.blogwt.client.page.admin.metanotifications.MetaNotificationsPage;
+import com.willshex.blogwt.client.page.admin.metanotifications.detail.MetaNotificationDetailPage;
 import com.willshex.blogwt.client.page.blog.EditPostPage;
 import com.willshex.blogwt.client.page.blog.EditResourcePage;
 import com.willshex.blogwt.client.page.blog.PostDetailPage;
@@ -60,6 +62,8 @@ public class PageTypeHelper {
 			PageType.AllPostsPageType);
 	public static final SafeUri DOWNLOADS_PAGE_HREF = asHref(
 			PageType.DownloadsPageType);
+	public static final SafeUri META_NOTIFICATIONS_PAGE_HREF = asHref(
+			PageType.MetaNotificationsPageType);
 
 	/**
 	 * 
@@ -140,6 +144,12 @@ public class PageTypeHelper {
 			break;
 		case DownloadsPageType:
 			page = new DownloadsPage();
+			break;
+		case MetaNotificationsPageType:
+			page = new MetaNotificationsPage();
+			break;
+		case MetaNotificationDetailPageType:
+			page = new MetaNotificationDetailPage();
 			break;
 		case PageDetailPageType:
 		default:

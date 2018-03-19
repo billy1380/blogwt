@@ -13,6 +13,7 @@ import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_POSTS;
 import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_RESOURCES;
 import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_ROLES;
 import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_USERS;
+import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_NOTIFICATIONS;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -60,7 +61,11 @@ public enum PageType {
 	AllPostsPageType("posts", PermissionHelper.create(MANAGE_POSTS)),
 	DownloadsPageType("downloads",
 			new Property().name(PropertyHelper.DOWNLOAD_ENABLED)
-					.value(Boolean.toString(true))),;
+					.value(Boolean.toString(true))),
+	MetaNotificationsPageType("metanotifications",
+			PermissionHelper.create(MANAGE_NOTIFICATIONS)),
+	MetaNotificationDetailPageType("metanotificationdetail",
+			PermissionHelper.create(MANAGE_NOTIFICATIONS)),;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;

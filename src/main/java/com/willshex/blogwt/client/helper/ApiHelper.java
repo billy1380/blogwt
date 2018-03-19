@@ -13,6 +13,7 @@ import com.google.gwt.core.shared.GWT;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.blog.BlogService;
 import com.willshex.blogwt.client.api.download.DownloadService;
+import com.willshex.blogwt.client.api.notification.NotificationService;
 import com.willshex.blogwt.client.api.page.PageService;
 import com.willshex.blogwt.client.api.search.SearchService;
 import com.willshex.blogwt.client.api.user.UserService;
@@ -20,6 +21,7 @@ import com.willshex.blogwt.shared.api.Request;
 import com.willshex.blogwt.shared.api.blog.Blog;
 import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.api.download.Download;
+import com.willshex.blogwt.shared.api.notification.Notification;
 import com.willshex.blogwt.shared.api.page.Page;
 import com.willshex.blogwt.shared.api.search.Search;
 import com.willshex.blogwt.shared.api.upload.Upload;
@@ -43,6 +45,8 @@ public class ApiHelper {
 	public static final String USER_END_POINT = BASE_URL + User.PATH;
 	public static final String PAGE_END_POINT = BASE_URL + Page.PATH;
 	public static final String SEARCH_END_POINT = BASE_URL + Search.PATH;
+	public static final String NOTIFICATION_END_POINT = BASE_URL
+			+ Notification.PATH;
 	public static final String UPLOAD_END_POINT = BASE_URL + Upload.PATH;
 	public static final String DOWNLOAD_END_POINT = BASE_URL + Download.PATH;
 
@@ -90,6 +94,13 @@ public class ApiHelper {
 	public static SearchService createSearchClient () {
 		SearchService service = new SearchService();
 		service.setUrl(SEARCH_END_POINT);
+		service.setBus(DefaultEventBus.get());
+		return service;
+	}
+
+	public static NotificationService createNotificationClient () {
+		NotificationService service = new NotificationService();
+		service.setUrl(NOTIFICATION_END_POINT);
 		service.setBus(DefaultEventBus.get());
 		return service;
 	}

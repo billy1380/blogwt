@@ -13,6 +13,10 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.willshex.blogwt.shared.api.notification.call.AddMetaNotificationRequest;
+import com.willshex.blogwt.shared.api.notification.call.AddMetaNotificationResponse;
+import com.willshex.blogwt.shared.api.notification.call.GetMetaNotificationRequest;
+import com.willshex.blogwt.shared.api.notification.call.GetMetaNotificationResponse;
 import com.willshex.blogwt.shared.api.notification.call.GetMetaNotificationsRequest;
 import com.willshex.blogwt.shared.api.notification.call.GetMetaNotificationsResponse;
 import com.willshex.blogwt.shared.api.notification.call.GetNotificationSettingsRequest;
@@ -23,12 +27,243 @@ import com.willshex.blogwt.shared.api.notification.call.SendAdhocNotificationReq
 import com.willshex.blogwt.shared.api.notification.call.SendAdhocNotificationResponse;
 import com.willshex.blogwt.shared.api.notification.call.SetPushTokenRequest;
 import com.willshex.blogwt.shared.api.notification.call.SetPushTokenResponse;
+import com.willshex.blogwt.shared.api.notification.call.UpdateMetaNotificationRequest;
+import com.willshex.blogwt.shared.api.notification.call.UpdateMetaNotificationResponse;
 import com.willshex.blogwt.shared.api.notification.call.UpdateNotificationSettingsRequest;
 import com.willshex.blogwt.shared.api.notification.call.UpdateNotificationSettingsResponse;
 import com.willshex.gson.web.service.client.HttpException;
 import com.willshex.gson.web.service.client.JsonService;
 
 public final class NotificationService extends JsonService {
+	public static final String NotificationMethodUpdateMetaNotification = "UpdateMetaNotification";
+
+	public Request updateMetaNotification (
+			UpdateMetaNotificationRequest input) {
+		return updateMetaNotification(input, null, null);
+	}
+
+	public Request updateMetaNotification (UpdateMetaNotificationRequest input,
+			AsyncSuccess<UpdateMetaNotificationRequest, UpdateMetaNotificationResponse> onSuccess) {
+		return updateMetaNotification(input, onSuccess, null);
+	}
+
+	public Request updateMetaNotification (UpdateMetaNotificationRequest input,
+			final AsyncCallback<UpdateMetaNotificationResponse> callback) {
+		return updateMetaNotification(input, (i, o) -> {
+			callback.onSuccess(o);
+		}, (i, c) -> {
+			callback.onFailure(c);
+		});
+	}
+
+	public Request updateMetaNotification (UpdateMetaNotificationRequest input,
+			AsyncSuccess<UpdateMetaNotificationRequest, UpdateMetaNotificationResponse> onSuccess,
+			AsyncFailure<UpdateMetaNotificationRequest> onFailure) {
+		Request handle = null;
+		try {
+			handle = sendRequest(NotificationMethodUpdateMetaNotification,
+					input, new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								UpdateMetaNotificationResponse outputParameter = new UpdateMetaNotificationResponse();
+								parseResponse(response, outputParameter);
+								if (onSuccess != null) {
+									onSuccess.call(input, outputParameter);
+								}
+
+								onCallSuccess(NotificationService.this,
+										NotificationMethodUpdateMetaNotification,
+										input, outputParameter);
+							} catch (JSONException | HttpException exception) {
+								if (onFailure != null) {
+									onFailure.call(input, exception);
+								}
+
+								onCallFailure(NotificationService.this,
+										NotificationMethodUpdateMetaNotification,
+										input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							if (onFailure != null) {
+								onFailure.call(input, exception);
+							}
+
+							onCallFailure(NotificationService.this,
+									NotificationMethodUpdateMetaNotification,
+									input, exception);
+						}
+					});
+			onCallStart(NotificationService.this,
+					NotificationMethodUpdateMetaNotification, input, handle);
+		} catch (RequestException exception) {
+			if (onFailure != null) {
+				onFailure.call(input, exception);
+			}
+
+			onCallFailure(NotificationService.this,
+					NotificationMethodUpdateMetaNotification, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String NotificationMethodAddMetaNotification = "AddMetaNotification";
+
+	public Request addMetaNotification (AddMetaNotificationRequest input) {
+		return addMetaNotification(input, null, null);
+	}
+
+	public Request addMetaNotification (AddMetaNotificationRequest input,
+			AsyncSuccess<AddMetaNotificationRequest, AddMetaNotificationResponse> onSuccess) {
+		return addMetaNotification(input, onSuccess, null);
+	}
+
+	public Request addMetaNotification (AddMetaNotificationRequest input,
+			final AsyncCallback<AddMetaNotificationResponse> callback) {
+		return addMetaNotification(input, (i, o) -> {
+			callback.onSuccess(o);
+		}, (i, c) -> {
+			callback.onFailure(c);
+		});
+	}
+
+	public Request addMetaNotification (AddMetaNotificationRequest input,
+			AsyncSuccess<AddMetaNotificationRequest, AddMetaNotificationResponse> onSuccess,
+			AsyncFailure<AddMetaNotificationRequest> onFailure) {
+		Request handle = null;
+		try {
+			handle = sendRequest(NotificationMethodAddMetaNotification, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								AddMetaNotificationResponse outputParameter = new AddMetaNotificationResponse();
+								parseResponse(response, outputParameter);
+								if (onSuccess != null) {
+									onSuccess.call(input, outputParameter);
+								}
+
+								onCallSuccess(NotificationService.this,
+										NotificationMethodAddMetaNotification,
+										input, outputParameter);
+							} catch (JSONException | HttpException exception) {
+								if (onFailure != null) {
+									onFailure.call(input, exception);
+								}
+
+								onCallFailure(NotificationService.this,
+										NotificationMethodAddMetaNotification,
+										input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							if (onFailure != null) {
+								onFailure.call(input, exception);
+							}
+
+							onCallFailure(NotificationService.this,
+									NotificationMethodAddMetaNotification,
+									input, exception);
+						}
+					});
+			onCallStart(NotificationService.this,
+					NotificationMethodAddMetaNotification, input, handle);
+		} catch (RequestException exception) {
+			if (onFailure != null) {
+				onFailure.call(input, exception);
+			}
+
+			onCallFailure(NotificationService.this,
+					NotificationMethodAddMetaNotification, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String NotificationMethodGetMetaNotification = "GetMetaNotification";
+
+	public Request getMetaNotification (GetMetaNotificationRequest input) {
+		return getMetaNotification(input, null, null);
+	}
+
+	public Request getMetaNotification (GetMetaNotificationRequest input,
+			AsyncSuccess<GetMetaNotificationRequest, GetMetaNotificationResponse> onSuccess) {
+		return getMetaNotification(input, onSuccess, null);
+	}
+
+	public Request getMetaNotification (GetMetaNotificationRequest input,
+			final AsyncCallback<GetMetaNotificationResponse> callback) {
+		return getMetaNotification(input, (i, o) -> {
+			callback.onSuccess(o);
+		}, (i, c) -> {
+			callback.onFailure(c);
+		});
+	}
+
+	public Request getMetaNotification (GetMetaNotificationRequest input,
+			AsyncSuccess<GetMetaNotificationRequest, GetMetaNotificationResponse> onSuccess,
+			AsyncFailure<GetMetaNotificationRequest> onFailure) {
+		Request handle = null;
+		try {
+			handle = sendRequest(NotificationMethodGetMetaNotification, input,
+					new RequestCallback() {
+						@Override
+						public void onResponseReceived (Request request,
+								Response response) {
+							try {
+								GetMetaNotificationResponse outputParameter = new GetMetaNotificationResponse();
+								parseResponse(response, outputParameter);
+								if (onSuccess != null) {
+									onSuccess.call(input, outputParameter);
+								}
+
+								onCallSuccess(NotificationService.this,
+										NotificationMethodGetMetaNotification,
+										input, outputParameter);
+							} catch (JSONException | HttpException exception) {
+								if (onFailure != null) {
+									onFailure.call(input, exception);
+								}
+
+								onCallFailure(NotificationService.this,
+										NotificationMethodGetMetaNotification,
+										input, exception);
+							}
+						}
+
+						@Override
+						public void onError (Request request,
+								Throwable exception) {
+							if (onFailure != null) {
+								onFailure.call(input, exception);
+							}
+
+							onCallFailure(NotificationService.this,
+									NotificationMethodGetMetaNotification,
+									input, exception);
+						}
+					});
+			onCallStart(NotificationService.this,
+					NotificationMethodGetMetaNotification, input, handle);
+		} catch (RequestException exception) {
+			if (onFailure != null) {
+				onFailure.call(input, exception);
+			}
+
+			onCallFailure(NotificationService.this,
+					NotificationMethodGetMetaNotification, input, exception);
+		}
+		return handle;
+	}
+
 	public static final String NotificationMethodGetNotifications = "GetNotifications";
 
 	public Request getNotifications (GetNotificationsRequest input) {
