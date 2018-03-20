@@ -15,6 +15,7 @@ import java.util.Map;
 import org.markdown4j.ExtDecorator;
 import org.markdown4j.client.MarkdownProcessor;
 import org.markdown4j.client.WebSequencePlugin;
+import org.markdown4j.client.shared.DefaultEmojiEmitter;
 
 import com.github.rjeschke.txtmark.Decorator;
 import com.github.rjeschke.txtmark.EmojiEmitter;
@@ -57,49 +58,47 @@ public class Processor extends MarkdownProcessor {
 	 * @see org.markdown4j.client.MarkdownProcessor#emojiEmitter() */
 	@Override
 	protected EmojiEmitter emojiEmitter () {
-		return new EmojiEmitter() {
+		String enableEmoji = PropertyController.get()
+				.stringProperty(PropertyHelper.POST_ENABLE_EMOJI);
+		return !PropertyHelper.NONE_VALUE.equals(enableEmoji)
+				&& Emoji.get() != null ? Processor::emitEmoji
+						: Processor::platformEmitEmoji;
+	}
 
-			@Override
-			public void emitEmoji (final StringBuilder out, final String name,
-					Decorator decorator) {
-				boolean addedImage = false;
+	static void platformEmitEmoji (final StringBuilder out, final String name,
+			Decorator decorator) {
+		out.append(DefaultEmojiEmitter.html(name));
+	}
 
-				String enableEmoji = PropertyController.get()
-						.stringProperty(PropertyHelper.POST_ENABLE_EMOJI);
+	static void emitEmoji (final StringBuilder out, final String name,
+			Decorator decorator) {
+		String enableEmoji = PropertyController.get()
+				.stringProperty(PropertyHelper.POST_ENABLE_EMOJI);
 
-				if (!PropertyHelper.NONE_VALUE.equals(enableEmoji)
-						&& Emoji.get() != null) {
-					SafeUri safeLink = Emoji.get().safeUri(name);
-					String link;
-					String comment;
-					if (safeLink != null
-							&& (link = safeLink.asString()).length() != 0) {
-						comment = name + " emoji";
+		if (!PropertyHelper.NONE_VALUE.equals(enableEmoji)
+				&& Emoji.get() != null) {
+			SafeUri safeLink = Emoji.get().safeUri(name);
+			String link;
+			String comment;
+			if (safeLink != null
+					&& (link = safeLink.asString()).length() != 0) {
+				comment = name + " emoji";
 
-						out.append("<img class=\""
-								+ Resources.RES.styles().emoji() + "\" src=\"");
-						MarkdownUtils.appendValue(out, link, 0, link.length());
-						out.append("\" alt=\"");
-						MarkdownUtils.appendValue(out, name, 0, name.length());
-						out.append('"');
-						if (comment != null) {
-							out.append(" title=\"");
-							MarkdownUtils.appendValue(out, comment, 0,
-									comment.length());
-							out.append('"');
-						}
-						out.append(" />");
-
-						addedImage = true;
-					}
-
+				out.append("<img class=\"" + Resources.RES.styles().emoji()
+						+ "\" src=\"");
+				MarkdownUtils.appendValue(out, link, 0, link.length());
+				out.append("\" alt=\"");
+				MarkdownUtils.appendValue(out, name, 0, name.length());
+				out.append('"');
+				if (comment != null) {
+					out.append(" title=\"");
+					MarkdownUtils.appendValue(out, comment, 0,
+							comment.length());
+					out.append('"');
 				}
-
-				if (!addedImage) {
-					out.append(name);
-				}
+				out.append(" />");
 			}
-		};
+		}
 	}
 
 	/* (non-Javadoc)
@@ -131,7 +130,6 @@ public class Processor extends MarkdownProcessor {
 
 		ExtDecorator decorator;
 		setDecorator(decorator = new ExtDecorator() {
-
 			/* (non-Javadoc)
 			 * 
 			 * @see
