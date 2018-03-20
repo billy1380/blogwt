@@ -1,0 +1,26 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="com.willshex.blogwt.client.helper.PageTypeHelper.*" />
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel>
+		<ul class="nav nav-tabs">
+			<li ui:field="elDetailsPage">
+				<a href="{CHANGE_DETAILS_PAGE_HREF}">Details</a>
+			</li>
+			<li ui:field="elPasswordPage">
+				<a href="{CHANGE_PASSWORD_PAGE_HREF}">Password</a>
+			</li>
+			<li ui:field="elAccessPage">
+				<a href="{CHANGE_ACCESS_PAGE_HREF}">Roles &amp; Permissions</a>
+			</li>
+			<li ui:field="elNotificationSettingsPage" class="disabled">
+				<a>Notification Settings</a>
+			</li>
+			<li ui:field="elNotificationsPage" class="disabled">
+				<a>Notifications</a>
+			</li>
+		</ul>
+	</g:HTMLPanel>
+</ui:UiBinder> 

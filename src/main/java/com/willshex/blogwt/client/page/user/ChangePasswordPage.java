@@ -28,6 +28,7 @@ import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
+import com.willshex.blogwt.client.part.accounttabs.AccountTabsPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
@@ -62,6 +63,8 @@ public class ChangePasswordPage extends Page
 	@UiField Element elReset;
 	@UiField Element elActionCode;
 
+	@UiField HTMLPanel pnlTabs;
+
 	private Long userId;
 	private String actionCode;
 
@@ -82,6 +85,8 @@ public class ChangePasswordPage extends Page
 	@Override
 	protected void onAttach () {
 		super.onAttach();
+
+		pnlTabs.add(AccountTabsPart.get());
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				ChangePasswordEventHandler.TYPE, UserController.get(), this));

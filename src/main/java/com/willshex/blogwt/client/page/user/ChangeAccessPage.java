@@ -20,6 +20,7 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
@@ -36,6 +37,7 @@ import com.willshex.blogwt.client.part.BootstrapGwtCellTable;
 import com.willshex.blogwt.client.part.BootstrapGwtSuggestBox;
 import com.willshex.blogwt.client.part.LoadingPanel;
 import com.willshex.blogwt.client.part.NoneFoundPanel;
+import com.willshex.blogwt.client.part.accounttabs.AccountTabsPart;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
@@ -79,6 +81,8 @@ public class ChangeAccessPage extends Page
 
 	@UiField LoadingPanel pnlRolesLoading;
 	@UiField LoadingPanel pnlPermissionsLoading;
+
+	@UiField HTMLPanel pnlTabs;
 
 	private User user;
 
@@ -209,6 +213,8 @@ public class ChangeAccessPage extends Page
 	@Override
 	protected void onAttach () {
 		super.onAttach();
+
+		pnlTabs.add(AccountTabsPart.get());
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),

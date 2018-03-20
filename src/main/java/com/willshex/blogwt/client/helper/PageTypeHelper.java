@@ -65,6 +65,13 @@ public class PageTypeHelper {
 	public static final SafeUri META_NOTIFICATIONS_PAGE_HREF = asHref(
 			PageType.MetaNotificationsPageType);
 
+	public static final SafeUri CHANGE_DETAILS_PAGE_HREF = asHref(
+			PageType.ChangeDetailsPageType);
+	public static final SafeUri CHANGE_PASSWORD_PAGE_HREF = asHref(
+			PageType.ChangePasswordPageType);
+	public static final SafeUri CHANGE_ACCESS_PAGE_HREF = asHref(
+			PageType.ChangeAccessPageType);
+
 	/**
 	 * 
 	 * @param pageType

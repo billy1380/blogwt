@@ -42,6 +42,7 @@
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">
+		<g:HTMLPanel ui:field="pnlTabs" />
 		<div class="row">
 			<div class="col-sm-4 col-sm-offset-4">
 				<div class="{style.account}">

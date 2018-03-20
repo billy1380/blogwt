@@ -39,6 +39,7 @@ import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
+import com.willshex.blogwt.client.part.accounttabs.AccountTabsPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
@@ -122,6 +123,8 @@ public class ChangeDetailsPage extends Page
 	@UiField TextArea txtSummary;
 	@UiField HTMLPanel pnlSummaryNote;
 
+	@UiField HTMLPanel pnlTabs;
+
 	private User user;
 	private String actionText;
 
@@ -149,6 +152,8 @@ public class ChangeDetailsPage extends Page
 	@Override
 	protected void onAttach () {
 		super.onAttach();
+
+		pnlTabs.add(AccountTabsPart.get());
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),

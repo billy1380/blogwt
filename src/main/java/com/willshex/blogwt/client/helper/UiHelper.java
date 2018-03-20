@@ -175,10 +175,7 @@ public class UiHelper {
 		return PropertyController.get().title() + ": " + title;
 	}
 
-	public static void activateItem (String page, boolean active,
-			Function<String, Element> get) {
-		Element element = get.apply(page);
-
+	public static void activateItem (Element element, boolean active) {
 		if (element != null) {
 			if (active && !element.hasClassName(ACTIVE)) {
 				element.addClassName(ACTIVE);
@@ -186,6 +183,11 @@ public class UiHelper {
 				element.removeClassName(ACTIVE);
 			}
 		}
+	}
+
+	public static void activateItem (String page, boolean active,
+			Function<String, Element> get) {
+		activateItem(get.apply(page), active);
 	}
 
 	public static void scaleSvg (Element parent, float scale) {

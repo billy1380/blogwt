@@ -7,6 +7,7 @@
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">
+		<g:HTMLPanel ui:field="pnlTabs" />
 		<div class="row">
 			<div class="col-sm-4 col-sm-offset-4">
 				<h2>Access</h2>
@@ -54,9 +55,9 @@
 		<p:NoneFoundPanel ui:field="pnlNoRoles" subject="roles" />
 
 		<p:NoneFoundPanel ui:field="pnlNoPermissions" subject="permissions" />
-		
+
 		<p:LoadingPanel ui:field="pnlRolesLoading" />
-		
+
 		<p:LoadingPanel ui:field="pnlPermissionsLoading" />
 	</g:HTMLPanel>
 </ui:UiBinder> 

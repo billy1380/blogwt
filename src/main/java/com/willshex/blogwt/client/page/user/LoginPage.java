@@ -14,6 +14,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -30,6 +31,7 @@ import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
+import com.willshex.blogwt.client.part.loginheader.LoginHeaderPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
@@ -215,7 +217,15 @@ public class LoginPage extends Page implements LoginEventHandler {
 	 * @see com.willshex.blogwt.client.page.Page#hasHeader() */
 	@Override
 	public boolean hasHeader () {
-		return false;
+		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.willshex.blogwt.client.page.Page#getHeader()
+	 */
+	@Override
+	public Composite getHeader () {
+		return LoginHeaderPart.get();
 	}
 
 }
