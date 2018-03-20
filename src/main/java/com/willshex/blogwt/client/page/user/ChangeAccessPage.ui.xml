@@ -10,7 +10,7 @@
 		<g:HTMLPanel ui:field="pnlTabs" />
 		<div class="row">
 			<div class="col-sm-4 col-sm-offset-4">
-				<h2>Access</h2>
+				<h2 class="text-center">Access</h2>
 				<g:FormPanel ui:field="frmChangeAccess">
 					<g:HTMLPanel>
 						<h3>Roles</h3>
