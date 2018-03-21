@@ -7,19 +7,19 @@
 	<g:HTMLPanel>
 		<ul class="nav nav-tabs">
 			<li ui:field="elDetailsPage">
-				<a href="{CHANGE_DETAILS_PAGE_HREF}">Details</a>
+				<a ui:field="elDetails" href="{CHANGE_DETAILS_PAGE_HREF}">Details</a>
 			</li>
 			<li ui:field="elPasswordPage">
-				<a href="{CHANGE_PASSWORD_PAGE_HREF}">Password</a>
+				<a ui:field="elPassword" href="{CHANGE_PASSWORD_PAGE_HREF}">Password</a>
 			</li>
 			<li ui:field="elAccessPage">
-				<a href="{CHANGE_ACCESS_PAGE_HREF}">Roles &amp; Permissions</a>
+				<a ui:field="elAccess" href="{CHANGE_ACCESS_PAGE_HREF}">Roles &amp; Permissions</a>
 			</li>
 			<li ui:field="elNotificationSettingsPage" class="disabled">
-				<a>Notification Settings</a>
+				<a ui:field="elNotificationSettings">Notification Settings</a>
 			</li>
 			<li ui:field="elNotificationsPage" class="disabled">
-				<a>Notifications</a>
+				<a ui:field="elNotifications">Notifications</a>
 			</li>
 		</ul>
 	</g:HTMLPanel>

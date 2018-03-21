@@ -153,12 +153,14 @@ public class ChangeDetailsPage extends Page
 	protected void onAttach () {
 		super.onAttach();
 
-		pnlTabs.add(AccountTabsPart.get());
+		AccountTabsPart.get().removeFromParent();
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				(p, c) -> {
 					reset();
+
+					boolean addTabs = true;
 
 					if (PageType.ChangeDetailsPageType.equals(c.getPage())) {
 						if (c.getAction() == null) {
@@ -166,6 +168,8 @@ public class ChangeDetailsPage extends Page
 							lnkChangePassword.setTargetHistoryToken(
 									PageType.ChangePasswordPageType
 											.asTargetHistoryToken());
+							AccountTabsPart.get().setUser(null);
+
 							lnkChangePassword.setVisible(true);
 							pnlPassword.setVisible(false);
 						} else if ("id".equals(c.getAction())
@@ -174,6 +178,7 @@ public class ChangeDetailsPage extends Page
 							User user = new User();
 							user.id(id);
 
+							AccountTabsPart.get().setUser(user);
 							UserController.get().getUser(user);
 
 							lnkChangePassword.setVisible(false);
@@ -186,6 +191,8 @@ public class ChangeDetailsPage extends Page
 							if (SessionController.get().isAdmin()) {
 								actionText = CREATE_ACTION_TEXT;
 							}
+
+							addTabs = false;
 						}
 					} else if (PageType.RegisterPageType.equals(c.getPage())) {
 						elDates.setInnerText("Enter user details");
@@ -193,10 +200,19 @@ public class ChangeDetailsPage extends Page
 						pnlPassword.setVisible(true);
 
 						actionText = REGISTER_ACTION_TEXT;
+
+						addTabs = false;
 					}
 
 					elHeading.setInnerText(getHeadingText());
 					elGravatar.setInnerSafeHtml(getGravatarSafeHtml());
+
+					if (addTabs) {
+						pnlTabs.add(AccountTabsPart.get());
+						AccountTabsPart.get().navigationChanged(p, c);
+					} else {
+						AccountTabsPart.get().removeFromParent();
+					}
 
 					ready();
 					refreshTitle();
@@ -230,15 +246,13 @@ public class ChangeDetailsPage extends Page
 			imgAvatar.setAltText(username);
 			imgAvatar.setUrl(user.avatar + "?s=" + UserHelper.AVATAR_LARGE_SIZE
 					+ "&default=retro");
+			String url = PageTypeHelper.asHref(PageType.ChangeAccessPageType,
+					"id", user.id.toString()).asString();
 			h3Username.setInnerSafeHtml(UserHelper.isAdmin(user)
-					? ChangeDetailsTemplates.INSTANCE.adminRolesAndPermissions(
-							username,
-							PageTypeHelper.asHref(PageType.ChangeAccessPageType,
-									user.id.toString()).asString())
-					: ChangeDetailsTemplates.INSTANCE.rolesAndPermissions(
-							username,
-							PageTypeHelper.asHref(PageType.ChangeAccessPageType,
-									user.id.toString()).asString()));
+					? ChangeDetailsTemplates.INSTANCE
+							.adminRolesAndPermissions(username, url)
+					: ChangeDetailsTemplates.INSTANCE
+							.rolesAndPermissions(username, url));
 			elDates.setInnerText("Added " + DateTimeHelper.ago(user.created)
 					+ " and last seen " + (user.lastLoggedIn == null ? "never"
 							: DateTimeHelper.ago(user.lastLoggedIn)));

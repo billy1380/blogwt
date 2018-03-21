@@ -9,6 +9,8 @@ package com.willshex.blogwt.client.page.user;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -44,6 +46,8 @@ import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse;
 import com.willshex.blogwt.shared.helper.DataTypeHelper;
+import com.willshex.blogwt.shared.helper.PermissionHelper;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
@@ -83,8 +87,14 @@ public class ChangeAccessPage extends Page
 	@UiField LoadingPanel pnlPermissionsLoading;
 
 	@UiField HTMLPanel pnlTabs;
+	@UiField Element elAddRole;
+	@UiField Element elAddPermission;
 
 	private User user;
+	private static final Permission MANAGE_USERS = PermissionHelper
+			.create(PermissionHelper.MANAGE_USERS);
+	private Column<Role, String> deleteRow;
+	private Column<Permission, String> deletePermission;
 
 	public ChangeAccessPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -101,6 +111,33 @@ public class ChangeAccessPage extends Page
 		tblPermissions.setEmptyTableWidget(pnlNoPermissions);
 		tblPermissions.setLoadingIndicator(pnlPermissionsLoading);
 		createPermissionColumns();
+
+		canManage(false);
+	}
+
+	private void canManage (boolean isUserManager) {
+		if (isUserManager) {
+			elAddRole.getStyle().clearDisplay();
+			elAddPermission.getStyle().clearDisplay();
+			if (-1 == tblRoles.getColumnIndex(deleteRow)) {
+				tblRoles.addColumn(deleteRow);
+			}
+
+			if (-1 == tblPermissions.getColumnIndex(deletePermission)) {
+				tblPermissions.addColumn(deletePermission);
+			}
+		} else {
+			elAddRole.getStyle().setDisplay(Display.NONE);
+			elAddPermission.getStyle().setDisplay(Display.NONE);
+
+			if (-1 != tblRoles.getColumnIndex(deleteRow)) {
+				tblRoles.removeColumn(deleteRow);
+			}
+
+			if (-1 != tblPermissions.getColumnIndex(deletePermission)) {
+				tblPermissions.removeColumn(deletePermission);
+			}
+		}
 	}
 
 	private void createRoleColumns () {
@@ -121,15 +158,14 @@ public class ChangeAccessPage extends Page
 			}
 		};
 
-		Column<Role, String> delete = new Column<Role, String>(
-				UiHelper.ACTION_PROTOTYPE) {
+		deleteRow = new Column<Role, String>(UiHelper.ACTION_PROTOTYPE) {
 
 			@Override
 			public String getValue (Role object) {
 				return "delete";
 			}
 		};
-		delete.setFieldUpdater(new FieldUpdater<Role, String>() {
+		deleteRow.setFieldUpdater(new FieldUpdater<Role, String>() {
 
 			@Override
 			public void update (int index, Role object, String value) {
@@ -139,11 +175,10 @@ public class ChangeAccessPage extends Page
 				}
 			}
 		});
-		delete.setHorizontalAlignment(Column.ALIGN_RIGHT);
+		deleteRow.setHorizontalAlignment(Column.ALIGN_RIGHT);
 
 		tblRoles.addColumn(code);
 		tblRoles.addColumn(name);
-		tblRoles.addColumn(delete);
 	}
 
 	private void createPermissionColumns () {
@@ -164,7 +199,7 @@ public class ChangeAccessPage extends Page
 			}
 		};
 
-		Column<Permission, String> delete = new Column<Permission, String>(
+		deletePermission = new Column<Permission, String>(
 				UiHelper.ACTION_PROTOTYPE) {
 
 			@Override
@@ -172,22 +207,25 @@ public class ChangeAccessPage extends Page
 				return "delete";
 			}
 		};
-		delete.setFieldUpdater(new FieldUpdater<Permission, String>() {
+		deletePermission
+				.setFieldUpdater(new FieldUpdater<Permission, String>() {
 
-			@Override
-			public void update (int index, Permission object, String value) {
-				if (Window.confirm(
-						"Are you sure you want to revoke user permission: "
-								+ object.name + "?")) {
-					UserController.get().revokeUserPermissions(user, object);
-				}
-			}
-		});
-		delete.setHorizontalAlignment(Column.ALIGN_RIGHT);
+					@Override
+					public void update (int index, Permission object,
+							String value) {
+						if (Window.confirm(
+								"Are you sure you want to revoke user permission: "
+										+ object.name + "?")) {
+							UserController.get().revokeUserPermissions(user,
+									object);
+						}
+					}
+				});
+		deletePermission.setHorizontalAlignment(Column.ALIGN_RIGHT);
 
 		tblPermissions.addColumn(code);
 		tblPermissions.addColumn(name);
-		tblPermissions.addColumn(delete);
+		tblPermissions.addColumn(deletePermission);
 	}
 
 	@UiHandler("btnAddRole")
@@ -222,18 +260,20 @@ public class ChangeAccessPage extends Page
 					ready();
 
 					User loggedIn = SessionController.get().user();
+					User urlUser = null;
 					if (c.getAction() == null
-							|| (loggedIn != null && loggedIn.id
-									.equals(Long.valueOf(c.getAction())))) {
+							|| (loggedIn != null && DataTypeHelper
+									.same(loggedIn, urlUser = urlUser(c)))) {
 						user = loggedIn;
 					} else {
 						user = null;
 					}
 
-					if (user == null) {
-						(user = new User()).id(Long.valueOf(c.getAction()));
+					if (user == null && urlUser != null) {
+						user = urlUser;
 					}
 
+					AccountTabsPart.get().setUser(user);
 					UserController.get().setUser(user);
 					tblRoles.setVisibleRangeAndClearData(
 							tblRoles.getVisibleRange(), true);
@@ -242,6 +282,18 @@ public class ChangeAccessPage extends Page
 				}));
 		register(DefaultEventBus.get().addHandlerToSource(
 				ChangeUserAccessEventHandler.TYPE, UserController.get(), this));
+
+		canManage(SessionController.get().isAdmin()
+				|| SessionController.get().isAuthorised(MANAGE_USERS));
+	}
+
+	private User urlUser (Stack c) {
+		User urlUser = null;
+		if ("id".equals(c.getAction()) && c.getParameterCount() > 0) {
+			urlUser = (User) new User().id(Long.valueOf(c.getParameter(0)));
+		}
+
+		return urlUser;
 	}
 
 	private void loading () {
@@ -258,6 +310,7 @@ public class ChangeAccessPage extends Page
 	@Override
 	protected void reset () {
 		frmChangeAccess.reset();
+		canManage(false);
 		super.reset();
 	}
 

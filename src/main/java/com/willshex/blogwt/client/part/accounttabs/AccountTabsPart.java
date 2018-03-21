@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -21,6 +22,8 @@ import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.gwt.RegisteringComposite;
+import com.willshex.blogwt.client.helper.PageTypeHelper;
+import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.blogwt.shared.page.Stack;
 
@@ -52,6 +55,12 @@ public class AccountTabsPart extends RegisteringComposite
 	@UiField Element elAccessPage;
 	@UiField Element elNotificationSettingsPage;
 	@UiField Element elNotificationsPage;
+
+	@UiField AnchorElement elDetails;
+	@UiField AnchorElement elPassword;
+	@UiField AnchorElement elAccess;
+	@UiField AnchorElement elNotificationSettings;
+	@UiField AnchorElement elNotifications;
 
 	private Map<String, Element> items = new HashMap<>();
 
@@ -100,6 +109,27 @@ public class AccountTabsPart extends RegisteringComposite
 
 	private Element getItem (String key) {
 		return items == null ? null : items.get(key);
+	}
+
+	/**
+	 * @param user
+	 */
+	public void setUser (User user) {
+		if (user == null) {
+			elDetails.setHref(
+					PageTypeHelper.asHref(PageType.ChangeDetailsPageType));
+			elPassword.setHref(
+					PageTypeHelper.asHref(PageType.ChangePasswordPageType));
+			elAccess.setHref(
+					PageTypeHelper.asHref(PageType.ChangeAccessPageType));
+		} else {
+			elDetails.setHref(PageTypeHelper.asHref(
+					PageType.ChangeDetailsPageType, "id", user.id.toString()));
+			elPassword.setHref(PageTypeHelper.asHref(
+					PageType.ChangePasswordPageType, "id", user.id.toString()));
+			elAccess.setHref(PageTypeHelper.asHref(
+					PageType.ChangeAccessPageType, "id", user.id.toString()));
+		}
 	}
 
 }

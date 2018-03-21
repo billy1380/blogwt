@@ -16,35 +16,37 @@
 						<h3>Roles</h3>
 						<g:HTMLPanel styleName="{style.pad-bottom}">
 							<c:CellTable ui:field="tblRoles" styleName="col-sm-12 table table-striped" />
-
-							<g:HTMLPanel ui:field="pnlRole" styleName="form-group">
-								<label class="control-label">Role</label>
-								<g:SuggestBox ui:field="txtRole" styleName="form-control" />
-								<g:HTMLPanel styleName="control-label small" ui:field="pnlRoleNote"
-									visible="false" />
-							</g:HTMLPanel>
-							<div class="text-right">
-								<g:SubmitButton ui:field="btnAddRole" styleName="btn btn-primary"
-									text="Add Role">
-									Add Role
-								</g:SubmitButton>
+							<div ui:field="elAddRole">
+								<g:HTMLPanel ui:field="pnlRole" styleName="form-group">
+									<label class="control-label">Role</label>
+									<g:SuggestBox ui:field="txtRole" styleName="form-control" />
+									<g:HTMLPanel styleName="control-label small" ui:field="pnlRoleNote"
+										visible="false" />
+								</g:HTMLPanel>
+								<div class="text-right">
+									<g:SubmitButton ui:field="btnAddRole" styleName="btn btn-primary"
+										text="Add Role">
+										Add Role
+									</g:SubmitButton>
+								</div>
 							</div>
 						</g:HTMLPanel>
 						<h3>Permissions</h3>
 						<g:HTMLPanel>
 							<c:CellTable ui:field="tblPermissions" styleName="col-sm-12 table table-striped" />
-
-							<g:HTMLPanel ui:field="pnlPermission" styleName="form-group">
-								<label class="control-label">Permission</label>
-								<g:SuggestBox ui:field="txtPermission" styleName="form-control" />
-								<g:HTMLPanel styleName="control-label small" ui:field="pnlPermissionNote"
-									visible="false" />
-							</g:HTMLPanel>
-							<div class="text-right">
-								<g:SubmitButton ui:field="btnAddPermission" styleName="btn btn-primary"
-									text="Add Permission">
-									Add Permission
-								</g:SubmitButton>
+							<div ui:field="elAddPermission">
+								<g:HTMLPanel ui:field="pnlPermission" styleName="form-group">
+									<label class="control-label">Permission</label>
+									<g:SuggestBox ui:field="txtPermission" styleName="form-control" />
+									<g:HTMLPanel styleName="control-label small" ui:field="pnlPermissionNote"
+										visible="false" />
+								</g:HTMLPanel>
+								<div class="text-right">
+									<g:SubmitButton ui:field="btnAddPermission" styleName="btn btn-primary"
+										text="Add Permission">
+										Add Permission
+									</g:SubmitButton>
+								</div>
 							</div>
 						</g:HTMLPanel>
 					</g:HTMLPanel>

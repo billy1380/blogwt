@@ -30,6 +30,7 @@ import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.accounttabs.AccountTabsPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
+import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse;
 import com.willshex.blogwt.shared.page.PageType;
@@ -111,6 +112,9 @@ public class ChangePasswordPage extends Page
 												pnlPassword.getElement());
 							} else {
 								userId = Long.valueOf(value);
+
+								AccountTabsPart.get()
+										.setUser((User) new User().id(userId));
 							}
 						}
 					}
