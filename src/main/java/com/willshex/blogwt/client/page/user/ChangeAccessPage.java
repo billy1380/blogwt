@@ -259,11 +259,14 @@ public class ChangeAccessPage extends Page
 				(p, c) -> {
 					ready();
 
+					boolean noUrlUser = false;
 					User loggedIn = SessionController.get().user();
 					User urlUser = null;
-					if (c.getAction() == null
-							|| (loggedIn != null && DataTypeHelper
-									.same(loggedIn, urlUser = urlUser(c)))) {
+					if (c.getAction() == null) {
+						user = loggedIn;
+						noUrlUser = true;
+					} else if (loggedIn != null && DataTypeHelper.same(loggedIn,
+							urlUser = urlUser(c))) {
 						user = loggedIn;
 					} else {
 						user = null;
@@ -273,7 +276,7 @@ public class ChangeAccessPage extends Page
 						user = urlUser;
 					}
 
-					AccountTabsPart.get().setUser(user);
+					AccountTabsPart.get().setUser(noUrlUser ? null : user);
 					UserController.get().setUser(user);
 					tblRoles.setVisibleRangeAndClearData(
 							tblRoles.getVisibleRange(), true);
