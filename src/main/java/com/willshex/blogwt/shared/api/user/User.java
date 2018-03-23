@@ -12,5 +12,5 @@ package com.willshex.blogwt.shared.api.user;
  *
  */
 public interface User {
-	public static final String PATH = "/api/User";
+	public static final String PATH = "/api/user";
 }
