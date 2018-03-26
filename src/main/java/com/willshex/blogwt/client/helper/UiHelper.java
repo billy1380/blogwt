@@ -131,24 +131,24 @@ public class UiHelper {
 	}
 
 	@SafeVarargs
-	public static <E extends Enum<E>> void add (ListBox cboPosition, Class<E> e,
+	public static <E extends Enum<E>> void add (ListBox cbo, Class<E> e,
 			E... exclude) {
-		add(false, cboPosition, e, exclude);
+		add(false, cbo, e, exclude);
 	}
 
 	@SafeVarargs
-	public static <E extends Enum<E>> void add (boolean allowNone,
-			ListBox cboPosition, Class<E> e, E... exclude) {
+	public static <E extends Enum<E>> void add (boolean allowNone, ListBox cbo,
+			Class<E> e, E... exclude) {
 
 		HashSet<E> s = new HashSet<>(Arrays.asList(exclude));
 
 		if (allowNone) {
-			cboPosition.addItem("None", "");
+			cbo.addItem("None", "");
 		}
 
 		for (E v : e.getEnumConstants()) {
 			if (!s.contains(v)) {
-				cboPosition.addItem(v.toString());
+				cbo.addItem(v.toString());
 			}
 		}
 	}
