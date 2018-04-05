@@ -7,6 +7,10 @@
 //
 package com.willshex.blogwt.shared.api.blog.call;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -14,12 +18,21 @@ import com.willshex.blogwt.shared.api.Response;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 
 public class GetTagsResponse extends Response {
-	public Tag tags;
+	public List<Tag> tags;
 
 	@Override
 	public JsonObject toJson () {
 		JsonObject object = super.toJson();
-		JsonElement jsonTags = tags == null ? JsonNull.INSTANCE : tags.toJson();
+		JsonElement jsonTags = JsonNull.INSTANCE;
+		if (tags != null) {
+			jsonTags = new JsonArray();
+			for (int i = 0; i < tags.size(); i++) {
+				JsonElement jsonTagsItem = tags.get(i) == null
+						? JsonNull.INSTANCE
+						: tags.get(i).toJson();
+				((JsonArray) jsonTags).add(jsonTagsItem);
+			}
+		}
 		object.add("tags", jsonTags);
 		return object;
 	}
@@ -30,13 +43,29 @@ public class GetTagsResponse extends Response {
 		if (jsonObject.has("tags")) {
 			JsonElement jsonTags = jsonObject.get("tags");
 			if (jsonTags != null) {
-				tags = new Tag();
-				tags.fromJson(jsonTags.getAsJsonObject());
+				tags = new ArrayList<Tag>();
+				Tag item = null;
+				for (int i = 0; i < jsonTags.getAsJsonArray().size(); i++) {
+					if (jsonTags.getAsJsonArray().get(i) != null) {
+						(item = new Tag()).fromJson(jsonTags.getAsJsonArray()
+								.get(i).getAsJsonObject());
+						tags.add(item);
+					}
+				}
 			}
 		}
+
 	}
 
-	public GetTagsResponse tags (Tag tags) {
+	/**
+	
+	  * Fluent setter for tags.
+	  * 
+	  * @param parameters
+	  * @return
+	  */
+
+	public GetTagsResponse tags (List<Tag> tags) {
 		this.tags = tags;
 		return this;
 	}
