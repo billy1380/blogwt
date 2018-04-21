@@ -12,8 +12,12 @@ import java.util.logging.Logger;
 import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
+import com.willshex.blogwt.server.helper.PersistenceHelper;
+import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesResponse;
+import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
+import com.willshex.blogwt.shared.api.datatype.Post;
 
 public final class GetArchiveEntriesActionHandler extends
 		ActionHandler<GetArchiveEntriesRequest, GetArchiveEntriesResponse> {
@@ -34,6 +38,17 @@ public final class GetArchiveEntriesActionHandler extends
 
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");
+
+		output.archive = ArchiveEntryServiceProvider.provide()
+				.getArchiveEntries();
+
+		if (output.archive != null) {
+			for (ArchiveEntry archiveEntry : output.archive) {
+				archiveEntry.posts = PersistenceHelper.typeList(Post.class,
+						archiveEntry.postKeys);
+			}
+		}
+
 	}
 
 	/* (non-Javadoc)
