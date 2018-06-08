@@ -111,7 +111,9 @@ public class SiteMapServlet extends ContextAwareServlet {
 
 		if (pages != null) {
 			for (Page page : pages) {
-				p.println(String.format(LOC_FORMAT, url, "#!" + page.slug));
+				if (page.priority != null) {
+					p.println(String.format(LOC_FORMAT, url, "#!" + page.slug));
+				}
 			}
 		}
 	}
