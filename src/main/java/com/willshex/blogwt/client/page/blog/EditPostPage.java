@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -318,6 +319,11 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	@UiHandler({ "txtTitle", "txtSummary", "txtContent", "txtTags" })
 	void onTxtKeyUp (KeyUpEvent e) {
 		deferUpdate();
+		changes++;
+	}
+
+	@UiHandler({ "cbxDirectOnly", "cbxComments", "cbxPublish" })
+	void onChecked (ValueChangeEvent<Boolean> vce) {
 		changes++;
 	}
 
