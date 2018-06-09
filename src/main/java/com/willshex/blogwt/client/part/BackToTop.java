@@ -9,8 +9,8 @@ package com.willshex.blogwt.client.part;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -60,15 +60,11 @@ public class BackToTop extends RegisteringComposite {
 
 	private void fadeOutComplete (Element e) {
 		e.getStyle().setOpacity(0.0);
+		e.getStyle().setDisplay(Display.NONE);
 	}
 
 	public BackToTop () {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		btnBackToTop.getElement().setInnerHTML(SafeHtmlUtils.fromTrustedString(
-				"<span class=\"glyphicon glyphicon-arrow-up aria-hidden=\"true\"></span> ")
-				.asString() + btnBackToTop.getText());
-
 		btnBackToTop.getElement().getStyle().setOpacity(0.0);
 	}
 
@@ -81,6 +77,7 @@ public class BackToTop extends RegisteringComposite {
 
 	protected void fadeIn (Button button, float duration, Complete onComplete) {
 		if (isOpacity(button, 0)) {
+			button.getElement().getStyle().clearDisplay();
 			runAnimation(FADE_IN, button, duration, onComplete);
 		}
 	}
@@ -105,7 +102,7 @@ public class BackToTop extends RegisteringComposite {
 		go();
 	}
 
-	public void go () {
+	public static void go () {
 		new ScrollWindow(0, Interpolation.pow4).run(300);
 	}
 
