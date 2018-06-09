@@ -16,6 +16,8 @@ import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.resources.client.TextResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
@@ -193,10 +195,17 @@ public class UiHelper {
 	public static void scaleSvg (Element parent, float scale) {
 		Element el = parent.getFirstChildElement();
 		String w = el.getAttribute("width"), h = el.getAttribute("height");
-		String wu = w.substring(w.length() - 2, w.length()),
-				hu = h.substring(h.length() - 2, h.length());
-		float wf = Float.parseFloat(w.substring(0, w.length() - 2)),
-				hf = Float.parseFloat(h.substring(0, h.length() - 2));
+
+		boolean hasUnits = true;
+		try {
+			Float.parseFloat(w);
+			hasUnits = false;
+		} catch (Exception ex) {}
+
+		String wu = hasUnits ? w.substring(w.length() - 2, w.length()) : "",
+				hu = hasUnits ? h.substring(h.length() - 2, h.length()) : "";
+		float wf = Float.parseFloat(hasUnits ? w.replace(wu, "") : w),
+				hf = Float.parseFloat(hasUnits ? h.replace(hu, "") : h);
 
 		String nw = Float.toString(wf * scale) + wu,
 				nh = Float.toString(hf * scale) + hu;
@@ -210,7 +219,53 @@ public class UiHelper {
 	}
 
 	public static void setSvgFill (Element parent, String colour) {
-		parent.getElementsByTagName("path").getItem(0).getStyle()
-				.setProperty("fill", colour);
+		NodeList<Element> paths = parent.getElementsByTagName("path");
+		int count = paths.getLength();
+		Element e;
+		for (int i = 0; i < count; i++) {
+			e = paths.getItem(i);
+			if (!"none".equals(e.getAttribute("fill"))) {
+				e.getStyle().setProperty("fill", colour);
+				break;
+			}
+		}
+	}
+
+	public static void setSvgFill (Element parent, String startColour,
+			String endColour) {
+		NodeList<Element> elements = parent
+				.getElementsByTagName("linearGradient");
+		Element linearGradient = null;
+
+		String id = gradient(startColour, endColour);
+
+		(linearGradient = elements.getItem(0)).setAttribute("xlink:href",
+				"#" + id);
+		linearGradient.setAttribute("id", "linearGradient" + id);
+
+		(linearGradient = elements.getItem(1)).setAttribute("id", id);
+		Element start = linearGradient.getFirstChildElement();
+		Style startStyle = start.getStyle();
+		startStyle.setProperty("stopColor", startColour);
+		startStyle.setProperty("stopOpacity", "1");
+		Style endStyle = start.getNextSiblingElement().getStyle();
+		endStyle.setProperty("stopColor", endColour);
+		endStyle.setProperty("stopOpacity", "1");
+
+		setSvgFill(parent, "url(#linearGradient" + id + ")");
+	}
+
+	private static String gradient (String startColour, String endColour) {
+		return "g" + startColour.substring(1) + "_" + endColour.substring(1);
+	}
+
+	public static Element makeResponsive (Element element) {
+		String classNames = element.getAttribute("class");
+		if (classNames == null || classNames.isEmpty()) {
+			element.setAttribute("class", "img-responsive");
+		} else {
+			element.setAttribute("class", classNames + " img-responsive");
+		}
+		return element;
 	}
 }
