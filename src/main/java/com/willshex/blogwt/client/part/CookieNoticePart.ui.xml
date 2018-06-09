@@ -13,13 +13,14 @@
 		left: 0;
 		right: 0;
 		position: fixed;
+		bottom: 0;
 	}
 	
 	.buttons {
 		padding-top: 10px;
 	}
 	</ui:style>
-	<g:HTMLPanel stylePrimaryName="alert {style.alert} alert-info">
+	<g:HTMLPanel stylePrimaryName="alert {style.alert} alert-info {style.fixed}">
 		<div class="container text-justify">
 			<span ui:field="elTitle"></span>
 			does not use cookies except for sign in purposes, however we use 3rd party
