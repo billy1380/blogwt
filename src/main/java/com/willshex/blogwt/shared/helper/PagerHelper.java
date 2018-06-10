@@ -21,6 +21,7 @@ public class PagerHelper {
 	public static Integer DEFAULT_START = Integer.valueOf(0);
 	public static Integer DEFAULT_COUNT = Integer.valueOf(10);
 	public static String DEFAULT_SORT_BY = null;
+	private static Integer CAP = Integer.valueOf(DEFAULT_COUNT.intValue() * 4);
 
 	public static void updatePager (Pager pager, List<?> list) {
 		updatePager(pager, list, null);
@@ -28,8 +29,8 @@ public class PagerHelper {
 
 	public static void updatePager (Pager pager, List<?> list, Integer total) {
 		if (list != null) {
-			pager.start = Integer.valueOf(pager.start.intValue()
-					+ (list.size()));
+			pager.start = Integer
+					.valueOf(pager.start.intValue() + (list.size()));
 		} else {
 			// list is null so do nothing
 		}
@@ -40,8 +41,8 @@ public class PagerHelper {
 	}
 
 	public static Pager createInfinitePager () {
-		return new Pager().start(DEFAULT_START).count(
-				Integer.valueOf(Integer.MAX_VALUE));
+		return new Pager().start(DEFAULT_START)
+				.count(Integer.valueOf(Integer.MAX_VALUE));
 	}
 
 	public static Pager createDefaultPager () {
@@ -60,13 +61,13 @@ public class PagerHelper {
 				pager.count = DEFAULT_COUNT;
 			}
 
-			pager.start = Integer.valueOf(pager.start.intValue()
-					+ pager.count.intValue());
+			pager.start = Integer
+					.valueOf(pager.start.intValue() + pager.count.intValue());
 
 			if (pager.totalCount != null
 					&& pager.totalCount.intValue() < pager.start.intValue()) {
-				pager.start = Integer.valueOf(pager.totalCount.intValue()
-						- pager.count.intValue());
+				pager.start = Integer.valueOf(
+						pager.totalCount.intValue() - pager.count.intValue());
 			}
 
 			if (pager.start < 0) {
@@ -88,8 +89,8 @@ public class PagerHelper {
 			}
 
 			if (pager.start.intValue() > pager.count.intValue()) {
-				pager.start = Integer.valueOf(pager.start.intValue()
-						- pager.count.intValue());
+				pager.start = Integer.valueOf(
+						pager.start.intValue() - pager.count.intValue());
 			} else {
 				pager.start = DEFAULT_START;
 			}
@@ -100,11 +101,17 @@ public class PagerHelper {
 
 	public static Pager reset (Pager pager) {
 		if (pager != null) {
-			pager.start(DEFAULT_START)
-					.count(DEFAULT_COUNT)
-					.sortBy(DEFAULT_SORT_BY)
-					.sortDirection(
+			pager.start(DEFAULT_START).count(DEFAULT_COUNT)
+					.sortBy(DEFAULT_SORT_BY).sortDirection(
 							SortDirectionType.SortDirectionTypeDescending);
+		}
+
+		return pager;
+	}
+
+	public static Pager capIfTooLarge (Pager pager) {
+		if (pager.count.intValue() > CAP.intValue()) {
+			pager.count(CAP);
 		}
 
 		return pager;
