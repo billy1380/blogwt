@@ -10,7 +10,7 @@ package com.willshex.blogwt.client.part;
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeUri;
@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.helper.ApiHelper;
+import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
 public class FooterPart extends Composite {
@@ -33,7 +34,7 @@ public class FooterPart extends Composite {
 	public interface FooterTemplates extends SafeHtmlTemplates {
 		FooterTemplates FOOTER_TEMPLATES = GWT.create(FooterTemplates.class);
 
-		@Template("{5}Copyright &copy; <a href=\"{0}\" class=\"{4}\" target=\"_blank\" rel=\"noopener\">{1}</a> {2}. All rights reserved - {3}.")
+		@Template("{5}Copyright &copy; <a href=\"{0}\" class=\"{4}\" target=\"_blank\" rel=\"noopener\">{1}</a> {2}. All rights reserved - {3}. {6} | {7}")
 		SafeHtml copyrightNotice (SafeUri uri, String holder, String years,
 				String name, String styleNames, String version);
 
@@ -42,31 +43,39 @@ public class FooterPart extends Composite {
 				String years, String name, String version);
 	}
 
-	@UiField DivElement divCopyright;
+	@UiField Element elCopyright;
 	@UiField BackToTop btnBackToTop;
 
 	private FooterPart () {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		PropertyController controller = PropertyController.get();
+		Resources.RES.styles().ensureInjected();
 
+		fillFooter(elCopyright);
+	}
+
+	public void fillFooter (Element elCopyright) {
+		PropertyController controller = PropertyController.get();
 		SafeUri url = controller.copyrightHolderUrl();
+
 		String urlAsString = url.asString();
 		if (urlAsString.contains(ApiHelper.HOST)
 				|| urlAsString.startsWith("#")) {
-			divCopyright.setInnerSafeHtml(FooterTemplates.FOOTER_TEMPLATES
+			elCopyright.setInnerSafeHtml(FooterTemplates.FOOTER_TEMPLATES
 					.copyrightNoticeInternal(url, controller.copyrightHolder(),
-							years(controller), controller.title(), version()));
+							years(controller), controller.title(),
+							version(controller)));
 		} else {
-			divCopyright.setInnerSafeHtml(FooterTemplates.FOOTER_TEMPLATES
+			elCopyright.setInnerSafeHtml(FooterTemplates.FOOTER_TEMPLATES
 					.copyrightNotice(url, controller.copyrightHolder(),
 							years(controller), controller.title(),
-							Resources.RES.styles().externalLink(), version()));
+							Resources.RES.styles().externalLink(),
+							version(controller)));
 		}
 	}
 
-	private String version () {
-		String version = PropertyController.get()
+	private String version (PropertyController controller) {
+		String version = controller
 				.booleanProperty(PropertyHelper.FOOTER_SHOW_VERSION, false)
 						? (PropertyController.get()
 								.stringProperty(PropertyHelper.VERSION))
@@ -89,10 +98,10 @@ public class FooterPart extends Composite {
 		Date now = new Date();
 
 		if (started.getYear() == now.getYear()) {
-			return Integer.toString(1900 + now.getYear());
+			return DateTimeHelper.year(now);
 		} else {
-			return Integer.toString(1900 + started.getYear()) + "-"
-					+ Integer.toString(1900 + now.getYear());
+			return DateTimeHelper.year(started) + "-"
+					+ DateTimeHelper.year(now);
 		}
 	}
 
@@ -110,7 +119,7 @@ public class FooterPart extends Composite {
 	}
 
 	public void scrollToTop () {
-		btnBackToTop.go();
+		BackToTop.go();
 	}
 
 }

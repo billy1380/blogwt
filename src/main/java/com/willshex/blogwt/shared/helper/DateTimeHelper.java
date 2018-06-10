@@ -115,4 +115,13 @@ public class DateTimeHelper {
 		return millisFrom((long) days * MILLIS_PER_DAY, from);
 	}
 
+	public static String year () {
+		return year(now());
+	}
+
+	@SuppressWarnings("deprecation")
+	public static String year (Date date) {
+		return Integer.toString(1900 + date.getYear());
+	}
+
 }
