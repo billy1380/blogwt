@@ -10,10 +10,9 @@ package com.willshex.blogwt.server.service.persistence;
 import javax.servlet.annotation.WebFilter;
 
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.impl.translate.Translators;
+import com.googlecode.objectify.impl.translate.TranslatorFactory;
 import com.willshex.blogwt.server.service.persistence.translator.NotificationModeTypeTranslatorFactory;
 import com.willshex.blogwt.server.service.persistence.translator.PermissionTypeTypeTranslatorFactory;
 import com.willshex.blogwt.server.service.persistence.translator.RelationshipTypeTypeTranslatorFactory;
@@ -43,42 +42,67 @@ import com.willshex.blogwt.shared.api.datatype.User;
  */
 public class PersistenceServiceProvider {
 
+	public static interface Registrar {
+		<T> void register (Class<T> type);
+	}
+
+	public static interface TranslatorAdder {
+		void add (TranslatorFactory<?, ?> trans);
+	}
+
 	@WebFilter(filterName = "ObjectifyFilter", urlPatterns = "/*")
 	public static final class PersistenceFilter extends ObjectifyFilter {}
 
 	static {
-		Translators translators = factory().getTranslators();
-		translators.add(new PermissionTypeTypeTranslatorFactory());
-		translators.add(new RelationshipTypeTypeTranslatorFactory());
-		translators.add(new ResourceTypeTypeTranslatorFactory());
-		translators.add(new NotificationModeTypeTranslatorFactory());
+		registerCoreTranslators();
+		registerOtherTranslators();
 
-		factory().register(User.class);
-		factory().register(Session.class);
-		factory().register(Post.class);
-		factory().register(Resource.class);
-		factory().register(Permission.class);
-		factory().register(Role.class);
-		factory().register(Property.class);
-		factory().register(PostContent.class);
-		factory().register(Page.class);
-		factory().register(Tag.class);
-		factory().register(ArchiveEntry.class);
-		factory().register(Notification.class);
-		factory().register(MetaNotification.class);
-		factory().register(PushToken.class);
-		factory().register(NotificationSetting.class);
-		factory().register(Relationship.class);
-		factory().register(Rating.class);
-		factory().register(GeneratedDownload.class);
+		registerCoreClasses();
+		registerOtherClasses();
 	}
 
 	public static Objectify provide () {
 		return ObjectifyService.ofy();
 	}
 
-	private static ObjectifyFactory factory () {
-		return ObjectifyService.factory();
+	private static void registerCoreTranslators () {
+		translator().add(new PermissionTypeTypeTranslatorFactory());
+		translator().add(new RelationshipTypeTypeTranslatorFactory());
+		translator().add(new ResourceTypeTypeTranslatorFactory());
+		translator().add(new NotificationModeTypeTranslatorFactory());
+	}
+
+	private static void registerOtherTranslators () {}
+
+	private static void registerCoreClasses () {
+		registrar().register(User.class);
+		registrar().register(Session.class);
+		registrar().register(Post.class);
+		registrar().register(Resource.class);
+		registrar().register(Permission.class);
+		registrar().register(Role.class);
+		registrar().register(Property.class);
+		registrar().register(PostContent.class);
+		registrar().register(Page.class);
+		registrar().register(Tag.class);
+		registrar().register(ArchiveEntry.class);
+		registrar().register(Notification.class);
+		registrar().register(MetaNotification.class);
+		registrar().register(PushToken.class);
+		registrar().register(NotificationSetting.class);
+		registrar().register(Relationship.class);
+		registrar().register(Rating.class);
+		registrar().register(GeneratedDownload.class);
+	}
+
+	private static void registerOtherClasses () {}
+
+	private static Registrar registrar () {
+		return ObjectifyService.factory()::register;
+	}
+
+	private static TranslatorAdder translator () {
+		return ObjectifyService.factory().getTranslators()::add;
 	}
 
 }
