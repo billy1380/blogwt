@@ -46,7 +46,6 @@ import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.gwt.RegisteringComposite;
-import com.willshex.blogwt.client.helper.GoogleAnalyticsHelper;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.Permission;
@@ -387,8 +386,6 @@ public class HeaderPart extends RegisteringComposite
 					activateItem(c.getPage(), true, this::getItem);
 
 					btnNavExpand.hide();
-
-					GoogleAnalyticsHelper.sendPageView("#" + c.toString());
 				}));
 		register(RootPanel.get().addDomHandler(this, ClickEvent.getType()));
 		register(DefaultEventBus.get().addHandlerToSource(

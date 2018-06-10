@@ -9,7 +9,11 @@ package com.willshex.blogwt.client.page;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.Composite;
+import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.controller.NavigationController;
+import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.gwt.RegisteringComposite;
+import com.willshex.blogwt.client.helper.GoogleAnalyticsHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.part.FooterPart;
 import com.willshex.blogwt.client.part.HeaderPart;
@@ -28,6 +32,12 @@ public abstract class Page extends RegisteringComposite {
 		super.onAttach();
 
 		refreshTitle();
+
+		register(DefaultEventBus.get().addHandlerToSource(
+				NavigationChangedEventHandler.TYPE, NavigationController.get(),
+				(p, c) -> {
+					GoogleAnalyticsHelper.sendPageView("#" + c.toString());
+				}));
 	}
 
 	/* (non-Javadoc)
