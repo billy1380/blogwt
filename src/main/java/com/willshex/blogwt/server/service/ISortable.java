@@ -13,6 +13,12 @@ package com.willshex.blogwt.server.service;
  */
 public interface ISortable<T extends Enum<T>> {
 	public default String map (T sortBy) {
-		return sortBy.toString();
+		String mapped = sortBy.toString();
+
+		if ("id".equals(mapped)) {
+			mapped = "__key__";
+		}
+
+		return mapped;
 	}
 }
