@@ -189,7 +189,7 @@ final class PageService implements IPageService {
 
 		for (Page page : pages) {
 			posts.addAll(PersistenceHelper
-					.batchLookup(PostServiceProvider.provide(), page.postKeys));
+					.batchLookupKeys(PostServiceProvider.provide(), page.postKeys));
 		}
 
 		// FIXME: just load in one go (batcg)

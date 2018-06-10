@@ -95,7 +95,7 @@ public class UserValidator extends ApiValidator {
 
 	public static boolean isAdmin (User user) {
 		List<Role> roles = user.roles == null && user.roleKeys != null
-				? PersistenceHelper.batchLookup(RoleServiceProvider.provide(),
+				? PersistenceHelper.batchLookupKeys(RoleServiceProvider.provide(),
 						user.roleKeys)
 				: user.roles;
 		return user != null && roles != null
@@ -119,7 +119,7 @@ public class UserValidator extends ApiValidator {
 		boolean authorised = isAdmin(user);
 		List<Permission> permissions = user.permissions == null
 				&& user.permissionKeys != null
-						? PersistenceHelper.batchLookup(
+						? PersistenceHelper.batchLookupKeys(
 								PermissionServiceProvider.provide(),
 								user.permissionKeys)
 						: user.permissions;

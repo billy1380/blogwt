@@ -282,7 +282,7 @@ public class PersistenceHelper {
 		return t.id;
 	}
 
-	public static <T> List<T> batchLookup (BatchGetter<T> batcher,
+	public static <T> List<T> batchLookupKeys (BatchGetter<T> batcher,
 			Iterable<Key<T>> keys) {
 		Map<Object, T> map = PersistenceHelper
 				.typeMap(batcher.get(PersistenceHelper.keysToIds(keys)));

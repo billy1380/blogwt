@@ -7,7 +7,6 @@
 //
 package com.willshex.blogwt.server.service.post;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter;
@@ -44,7 +43,7 @@ public interface IPostService extends IService, BatchGetter<Post> {
 	 * @param removedTags
 	 * @return
 	 */
-	public Post updatePost (Post post, Collection<String> removedTags);
+	public Post updatePost (Post post, Iterable<String> removedTags);
 
 	/**
 	 * @param post
@@ -146,7 +145,7 @@ public interface IPostService extends IService, BatchGetter<Post> {
 	/**
 	 * @param ids
 	 */
-	public List<Post> getIdPostBatch (Collection<Long> ids);
+	public List<Post> getIdPostBatch (Iterable<Long> ids);
 
 	/**
 	 * Get last published post

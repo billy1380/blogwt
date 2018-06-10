@@ -185,9 +185,9 @@ final class PostService implements IPostService, ISearch<Post> {
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.post.IPostService#updatePost(com.
-	 * willshex.blogwt.shared.api.datatype.Post, java.util.Collection) */
+	 * willshex.blogwt.shared.api.datatype.Post, java.lang.Iterable) */
 	@Override
-	public Post updatePost (Post post, Collection<String> removedTags) {
+	public Post updatePost (Post post, Iterable<String> removedTags) {
 		post.slug = PostHelper.slugify(post.title);
 
 		if (post.content != null) {
@@ -484,10 +484,10 @@ final class PostService implements IPostService, ISearch<Post> {
 	/* (non-Javadoc)
 	 * 
 	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#getPostBatch(java
-	 * .util.Collection) */
+	 * com.willshex.blogwt.server.service.post.IPostService#getIdPostBatch(java.
+	 * lang.Iterable) */
 	@Override
-	public List<Post> getIdPostBatch (Collection<Long> ids) {
+	public List<Post> getIdPostBatch (Iterable<Long> ids) {
 		return new ArrayList<Post>(load().ids(ids).values());
 	}
 
@@ -519,7 +519,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * @param post
 	 * @param tags 
 	 */
-	private void deleteFromTags (Post post, Collection<String> tags) {
+	private void deleteFromTags (Post post, Iterable<String> tags) {
 		if (tags != null) {
 			Tag tag;
 			for (String name : tags) {
@@ -802,9 +802,9 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
-	 * get(java.util.Collection) */
+	 * get(java.lang.Iterable) */
 	@Override
-	public List<Post> get (Collection<Long> ids) {
+	public List<Post> get (Iterable<Long> ids) {
 		return getIdPostBatch(ids);
 	}
 

@@ -13,7 +13,6 @@ import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +26,10 @@ import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.PermissionSortType;
 import com.willshex.blogwt.shared.api.datatype.Role;
 
+/**
+ * @author William Shakour (billy1380)
+ *
+ */
 final class PermissionService implements IPermissionService {
 	public String getName () {
 		return NAME;
@@ -85,10 +88,10 @@ final class PermissionService implements IPermissionService {
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.permission.IPermissionService#
-	 * getIdPermissionsBatch(java.util.Collection) */
+	 * getIdPermissionBatch(java.lang.Iterable) */
 	@Override
 	public List<Permission> getIdPermissionBatch (
-			Collection<Long> permissionIds) {
+			Iterable<Long> permissionIds) {
 		return new ArrayList<Permission>(load().ids(permissionIds).values());
 	}
 
@@ -120,7 +123,7 @@ final class PermissionService implements IPermissionService {
 			role = RoleServiceProvider.provide().getRole(role.id);
 		}
 
-		return PersistenceHelper.batchLookup(this, role.permissionKeys);
+		return PersistenceHelper.batchLookupKeys(this, role.permissionKeys);
 	}
 
 	/* (non-Javadoc)
@@ -145,9 +148,9 @@ final class PermissionService implements IPermissionService {
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
-	 * get(java.util.Collection) */
+	 * get(java.lang.Iterable) */
 	@Override
-	public List<Permission> get (Collection<Long> ids) {
+	public List<Permission> get (Iterable<Long> ids) {
 		return getIdPermissionBatch(ids);
 	}
 

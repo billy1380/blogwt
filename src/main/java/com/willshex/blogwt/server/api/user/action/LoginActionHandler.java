@@ -104,13 +104,13 @@ public final class LoginActionHandler
 		}
 
 		if (output.session.user.roleKeys != null) {
-			output.session.user.roles = PersistenceHelper.batchLookup(
+			output.session.user.roles = PersistenceHelper.batchLookupKeys(
 					RoleServiceProvider.provide(),
 					output.session.user.roleKeys);
 		}
 
 		if (output.session.user.permissionKeys != null) {
-			output.session.user.permissions = PersistenceHelper.batchLookup(
+			output.session.user.permissions = PersistenceHelper.batchLookupKeys(
 					PermissionServiceProvider.provide(),
 					output.session.user.permissionKeys);
 		}

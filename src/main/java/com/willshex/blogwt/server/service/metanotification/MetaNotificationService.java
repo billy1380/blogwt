@@ -12,7 +12,6 @@ import static com.willshex.blogwt.server.helper.PersistenceHelper.id;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -81,11 +80,11 @@ final class MetaNotificationService implements IMetaNotificationService {
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.metanotification.
-	 * IMetaNotificationService#getIdMetaNotificationBatch(java.util.
-	 * Collection) */
+	 * IMetaNotificationService#getIdMetaNotificationBatch(java.lang.
+	 * Iterable) */
 	@Override
 	public List<MetaNotification> getIdMetaNotificationBatch (
-			Collection<Long> ids) {
+			Iterable<Long> ids) {
 		return new ArrayList<MetaNotification>(load().ids(ids).values());
 	}
 
@@ -104,9 +103,9 @@ final class MetaNotificationService implements IMetaNotificationService {
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
-	 * get(java.util.Collection) */
+	 * get(java.lang.Iterable) */
 	@Override
-	public List<MetaNotification> get (Collection<Long> ids) {
+	public List<MetaNotification> get (Iterable<Long> ids) {
 		return getIdMetaNotificationBatch(ids);
 	}
 

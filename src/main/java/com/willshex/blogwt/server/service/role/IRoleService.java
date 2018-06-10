@@ -8,7 +8,6 @@
 //
 package com.willshex.blogwt.server.service.role;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.willshex.blogwt.server.service.ISortable;
@@ -70,7 +69,7 @@ public interface IRoleService extends IService, BatchGetter<Role>, ISortable<Rol
 	 * @param roles
 	 * @return
 	 */
-	public List<Role> getIdRoleBatch (Collection<Long> roleIds);
+	public List<Role> getIdRoleBatch (Iterable<Long> roleIds);
 
 	/**
 	 * 

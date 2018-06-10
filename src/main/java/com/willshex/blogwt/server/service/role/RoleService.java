@@ -13,7 +13,6 @@ import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -90,10 +89,11 @@ final class RoleService implements IRoleService {
 
 	/* (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.server.service.role.IRoleService#getIdRoles(java
-	 * .util.Collection) */
+	 * @see
+	 * com.willshex.blogwt.server.service.role.IRoleService#getIdRoleBatch(java.
+	 * lang.Iterable) */
 	@Override
-	public List<Role> getIdRoleBatch (Collection<Long> roleIds) {
+	public List<Role> getIdRoleBatch (Iterable<Long> roleIds) {
 		return new ArrayList<Role>(load().ids(roleIds).values());
 	}
 
@@ -129,9 +129,9 @@ final class RoleService implements IRoleService {
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
-	 * get(java.util.Collection) */
+	 * get(java.lang.Iterable) */
 	@Override
-	public List<Role> get (Collection<Long> ids) {
+	public List<Role> get (Iterable<Long> ids) {
 		return getIdRoleBatch(ids);
 	}
 

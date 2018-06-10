@@ -164,7 +164,7 @@ public final class GetUsersActionHandler
 
 		if (userIds != null) {
 			// order might become important later for now, it is not
-			relatedUsers = PersistenceHelper.batchLookup(
+			relatedUsers = PersistenceHelper.batchLookupKeys(
 					UserServiceProvider.provide(),
 					PersistenceHelper.idsToKeys(User.class, userIds));
 		}

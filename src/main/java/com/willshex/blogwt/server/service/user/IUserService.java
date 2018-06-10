@@ -7,7 +7,6 @@
 //
 package com.willshex.blogwt.server.service.user;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.willshex.blogwt.server.service.ISortable;
@@ -81,7 +80,7 @@ public interface IUserService extends IService, BatchGetter<User>,
 	 * 
 	 * @param users
 	 */
-	public void addUserBatch (Collection<User> users);
+	public void addUserBatch (Iterable<User> users);
 
 	/**
 	 * @param username
@@ -152,6 +151,6 @@ public interface IUserService extends IService, BatchGetter<User>,
 	 * @param ids
 	 * @return
 	 */
-	public List<User> getIdUserBatch (Collection<Long> ids);
+	public List<User> getIdUserBatch (Iterable<Long> ids);
 
 }

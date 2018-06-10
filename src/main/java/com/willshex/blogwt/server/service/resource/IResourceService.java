@@ -7,7 +7,6 @@
 //
 package com.willshex.blogwt.server.service.resource;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.willshex.blogwt.server.service.ISortable;
@@ -60,7 +59,7 @@ public interface IResourceService
 	 * @param ids
 	 * @return
 	 */
-	public List<Resource> getIdResourceBatch (Collection<Long> ids);
+	public List<Resource> getIdResourceBatch (Iterable<Long> ids);
 
 	public default String map (ResourceSortType sortBy) {
 		return sortBy == ResourceSortType.ResourceSortTypeId ? "__key__"

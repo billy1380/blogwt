@@ -13,7 +13,6 @@ import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -101,9 +100,9 @@ final class ResourceService implements IResourceService {
 	/* (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.resource.IResourceService#
-	 * getIdsResourceBatch(java.util.Collection) */
+	 * getIdResourceBatch(java.lang.Iterable) */
 	@Override
-	public List<Resource> getIdResourceBatch (Collection<Long> ids) {
+	public List<Resource> getIdResourceBatch (Iterable<Long> ids) {
 		return new ArrayList<Resource>(load().ids(ids).values());
 	}
 
@@ -111,9 +110,9 @@ final class ResourceService implements IResourceService {
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
-	 * get(java.util.Collection) */
+	 * get(java.lang.Iterable) */
 	@Override
-	public List<Resource> get (Collection<Long> ids) {
+	public List<Resource> get (Iterable<Long> ids) {
 		return getIdResourceBatch(ids);
 	}
 

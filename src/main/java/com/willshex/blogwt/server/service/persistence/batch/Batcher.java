@@ -12,7 +12,6 @@ import static com.willshex.blogwt.server.helper.PersistenceHelper.keysToIds;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +57,7 @@ public class Batcher {
 
 	@FunctionalInterface
 	public static interface BatchGetter<U> {
-		List<U> get (Collection<Long> ids);
+		List<U> get (Iterable<Long> ids);
 	}
 
 	public static <T extends DataType, U> void lookup (T t, Has<T, U> h,
@@ -71,14 +70,14 @@ public class Batcher {
 		lookup(Arrays.asList(t), k, h, g, b);
 	}
 
-	public static <T extends DataType, U> void lookup (Collection<T> c,
+	public static <T extends DataType, U> void lookup (Iterable<T> c,
 			Has<T, U> h, HasSet<T, U> g, BatchGetter<U> b) {
 		lookup(c, PersistenceHelper::id, h, g, b);
 	}
 
-	public static <T extends DataType, U> void lookup (Collection<T> c,
+	public static <T extends DataType, U> void lookup (Iterable<T> c,
 			Id<Long, U> k, Has<T, U> h, HasSet<T, U> g, BatchGetter<U> b) {
-		if (c != null && !c.isEmpty()) {
+		if (c != null) {
 			Map<Long, List<T>> lookup = new HashMap<>();
 			List<T> sub;
 			Long id;
@@ -98,13 +97,17 @@ public class Batcher {
 				}
 			}
 
-			List<U> us = b.get(lookup.keySet());
+			if (!lookup.isEmpty()) {
+				List<U> us = b.get(lookup.keySet());
 
-			for (U u : us) {
-				sub = lookup.get(k.id(u));
+				if (us != null) {
+					for (U u : us) {
+						sub = lookup.get(k.id(u));
 
-				for (T t : sub) {
-					g.set(t, u);
+						for (T t : sub) {
+							g.set(t, u);
+						}
+					}
 				}
 			}
 		}
@@ -120,15 +123,15 @@ public class Batcher {
 		lookup(Arrays.asList(t), k, h, a, b);
 	}
 
-	public static <T extends DataType, U> void lookup (Collection<T> c,
+	public static <T extends DataType, U> void lookup (Iterable<T> c,
 			HasMany<T, U> h, HasManyAdd<T, U> a, BatchGetter<U> b) {
 		lookup(c, PersistenceHelper::id, h, a, b);
 	}
 
-	public static <T extends DataType, U> void lookup (Collection<T> c,
+	public static <T extends DataType, U> void lookup (Iterable<T> c,
 			Id<Long, U> k, HasMany<T, U> h, HasManyAdd<T, U> a,
 			BatchGetter<U> b) {
-		if (c != null && !c.isEmpty()) {
+		if (c != null) {
 			Map<Long, List<T>> lookup = new HashMap<>();
 			List<T> sub;
 			List<Long> ids;
@@ -150,13 +153,17 @@ public class Batcher {
 				}
 			}
 
-			List<U> us = b.get(lookup.keySet());
+			if (!lookup.isEmpty()) {
+				List<U> us = b.get(lookup.keySet());
 
-			for (U u : us) {
-				sub = lookup.get(k.id(u));
+				if (us != null) {
+					for (U u : us) {
+						sub = lookup.get(k.id(u));
 
-				for (T t : sub) {
-					a.add(t, u);
+						for (T t : sub) {
+							a.add(t, u);
+						}
+					}
 				}
 			}
 		}

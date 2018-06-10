@@ -63,7 +63,7 @@ public final class UpdateNotificationSettingsActionHandler extends
 						setting.userKey);
 			}
 
-			List<MetaNotification> metas = PersistenceHelper.batchLookup(
+			List<MetaNotification> metas = PersistenceHelper.batchLookupKeys(
 					MetaNotificationServiceProvider.provide(),
 					PersistenceHelper.idsToKeys(MetaNotification.class,
 							notificationSettingLookup.keySet()));

@@ -30,7 +30,7 @@ public class UserHelper extends com.willshex.blogwt.shared.helper.UserHelper {
 	public static void populateRolesFromKeys (User user) {
 		if (user != null) {
 			if (user.roleKeys != null) {
-				user.roles = PersistenceHelper.batchLookup(
+				user.roles = PersistenceHelper.batchLookupKeys(
 						RoleServiceProvider.provide(), user.roleKeys);
 			}
 		}
@@ -39,7 +39,7 @@ public class UserHelper extends com.willshex.blogwt.shared.helper.UserHelper {
 	public static void populatePermissionsFromKeys (User user) {
 		if (user != null) {
 			if (user.permissionKeys != null) {
-				user.permissions = PersistenceHelper.batchLookup(
+				user.permissions = PersistenceHelper.batchLookupKeys(
 						PermissionServiceProvider.provide(),
 						user.permissionKeys);
 			}

@@ -8,7 +8,6 @@
 //
 package com.willshex.blogwt.server.service.permission;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.willshex.blogwt.server.service.ISortable;
@@ -86,7 +85,7 @@ public interface IPermissionService extends IService, BatchGetter<Permission>,
 	 * @return
 	 */
 	public List<Permission> getIdPermissionBatch (
-			Collection<Long> permissionIds);
+			Iterable<Long> permissionIds);
 
 	/**
 	 * Get permissions in a role

@@ -183,7 +183,7 @@ final class UserService implements IUserService {
 	}
 
 	@Override
-	public void addUserBatch (Collection<User> users) {
+	public void addUserBatch (Iterable<User> users) {
 		for (User user : users) {
 			if (user.created == null) {
 				user.added = user.created = new Date();
@@ -524,9 +524,9 @@ final class UserService implements IUserService {
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.user.IUserService#getIdUserBatch(java.
-	 * util.Collection) */
+	 * lang.Iterable) */
 	@Override
-	public List<User> getIdUserBatch (Collection<Long> ids) {
+	public List<User> getIdUserBatch (Iterable<Long> ids) {
 		return addAvatars(new ArrayList<User>(load().ids(ids).values()));
 	}
 
@@ -539,12 +539,12 @@ final class UserService implements IUserService {
 		User user = getUser(id);
 
 		if (user.roleKeys != null) {
-			user.roles = PersistenceHelper
-					.batchLookup(RoleServiceProvider.provide(), user.roleKeys);
+			user.roles = PersistenceHelper.batchLookupKeys(
+					RoleServiceProvider.provide(), user.roleKeys);
 		}
 
 		if (user.permissionKeys != null) {
-			user.permissions = PersistenceHelper.batchLookup(
+			user.permissions = PersistenceHelper.batchLookupKeys(
 					PermissionServiceProvider.provide(), user.permissionKeys);
 		}
 
@@ -615,9 +615,9 @@ final class UserService implements IUserService {
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
-	 * get(java.util.Collection) */
+	 * get(java.lang.Iterable) */
 	@Override
-	public List<User> get (Collection<Long> ids) {
+	public List<User> get (Iterable<Long> ids) {
 		return getIdUserBatch(ids);
 	}
 

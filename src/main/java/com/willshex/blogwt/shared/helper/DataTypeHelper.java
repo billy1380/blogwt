@@ -52,4 +52,8 @@ public class DataTypeHelper {
 	public static <T extends DataType> Map<Long, T> map (List<T> data) {
 		return map(data, t -> t.id);
 	}
+
+	public static <T extends DataType> int idSort (T r, T l) {
+		return r.id.compareTo(l.id);
+	}
 }

@@ -8,7 +8,6 @@
 
 package com.willshex.blogwt.server.service.metanotification;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.willshex.blogwt.server.service.ISortable;
@@ -66,7 +65,7 @@ public interface IMetaNotificationService extends IService,
 	 * @return
 	 */
 	public List<MetaNotification> getIdMetaNotificationBatch (
-			Collection<Long> ids);
+			Iterable<Long> ids);
 
 	/**
 	 * Get code meta notification

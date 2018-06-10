@@ -99,7 +99,7 @@ public final class GetPostsActionHandler
 			Tag tag = TagServiceProvider.provide().getSlugTag(input.tag);
 
 			if (tag != null) {
-				output.posts = PersistenceHelper.batchLookup(
+				output.posts = PersistenceHelper.batchLookupKeys(
 						PostServiceProvider.provide(), tag.postKeys);
 			}
 		}
@@ -114,7 +114,7 @@ public final class GetPostsActionHandler
 				input.archiveEntry = ArchiveEntryValidator
 						.lookup(input.archiveEntry, "input.archiveEntry");
 
-				output.posts = PersistenceHelper.batchLookup(
+				output.posts = PersistenceHelper.batchLookupKeys(
 						PostServiceProvider.provide(),
 						input.archiveEntry.postKeys);
 			}
