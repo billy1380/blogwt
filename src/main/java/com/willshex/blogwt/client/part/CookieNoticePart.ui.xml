@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style type="com.willshex.blogwt.client.part.CookieNoticePart.Style">
+	<ui:style gss="true">
 	.alert {
 		padding: 15px;
 		border-radius: 0;
@@ -10,9 +10,9 @@
 	
 	.fixed {
 		z-index: 2500;
+		position: fixed;
 		left: 0;
 		right: 0;
-		position: fixed;
 		bottom: 0;
 	}
 	
