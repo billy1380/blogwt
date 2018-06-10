@@ -1,6 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:p="urn:import:com.willshex.blogwt.client.part">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:p="urn:import:com.willshex.blogwt.client.part">
 	<ui:style gss="true">
 	.pad-bottom {
 		padding-bottom: 40px;
@@ -15,17 +17,18 @@
 					<g:HTMLPanel>
 						<h3>Roles</h3>
 						<g:HTMLPanel styleName="{style.pad-bottom}">
-							<c:CellTable ui:field="tblRoles" styleName="col-sm-12 table table-striped" />
+							<c:CellTable ui:field="tblRoles"
+								styleName="col-sm-12 table table-striped" />
 							<div ui:field="elAddRole">
 								<g:HTMLPanel ui:field="pnlRole" styleName="form-group">
 									<label class="control-label">Role</label>
 									<g:SuggestBox ui:field="txtRole" styleName="form-control" />
-									<g:HTMLPanel styleName="control-label small" ui:field="pnlRoleNote"
-										visible="false" />
+									<g:HTMLPanel styleName="control-label small"
+										ui:field="pnlRoleNote" visible="false" />
 								</g:HTMLPanel>
 								<div class="text-right">
-									<g:SubmitButton ui:field="btnAddRole" styleName="btn btn-primary"
-										text="Add Role">
+									<g:SubmitButton ui:field="btnAddRole"
+										styleName="btn btn-primary" text="Add Role">
 										Add Role
 									</g:SubmitButton>
 								</div>
@@ -33,17 +36,19 @@
 						</g:HTMLPanel>
 						<h3>Permissions</h3>
 						<g:HTMLPanel>
-							<c:CellTable ui:field="tblPermissions" styleName="col-sm-12 table table-striped" />
+							<c:CellTable ui:field="tblPermissions"
+								styleName="col-sm-12 table table-striped" />
 							<div ui:field="elAddPermission">
 								<g:HTMLPanel ui:field="pnlPermission" styleName="form-group">
 									<label class="control-label">Permission</label>
-									<g:SuggestBox ui:field="txtPermission" styleName="form-control" />
-									<g:HTMLPanel styleName="control-label small" ui:field="pnlPermissionNote"
-										visible="false" />
+									<g:SuggestBox ui:field="txtPermission"
+										styleName="form-control" />
+									<g:HTMLPanel styleName="control-label small"
+										ui:field="pnlPermissionNote" visible="false" />
 								</g:HTMLPanel>
 								<div class="text-right">
-									<g:SubmitButton ui:field="btnAddPermission" styleName="btn btn-primary"
-										text="Add Permission">
+									<g:SubmitButton ui:field="btnAddPermission"
+										styleName="btn btn-primary" text="Add Permission">
 										Add Permission
 									</g:SubmitButton>
 								</div>
@@ -56,7 +61,8 @@
 
 		<p:NoneFoundPanel ui:field="pnlNoRoles" subject="roles" />
 
-		<p:NoneFoundPanel ui:field="pnlNoPermissions" subject="permissions" />
+		<p:NoneFoundPanel ui:field="pnlNoPermissions"
+			subject="permissions" />
 
 		<p:LoadingPanel ui:field="pnlRolesLoading" />
 

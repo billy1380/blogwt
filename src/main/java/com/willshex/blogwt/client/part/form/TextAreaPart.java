@@ -93,4 +93,12 @@ public class TextAreaPart extends Composite implements FormField {
 		return elName.getInnerText();
 	}
 
+	public void setLarge (boolean large) {
+		if (large) {
+			addStyleName("form-group-lg");
+		} else {
+			removeStyleName("form-group-lg");
+		}
+	}
+
 }
