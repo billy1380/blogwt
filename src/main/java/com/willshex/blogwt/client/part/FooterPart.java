@@ -34,7 +34,7 @@ public class FooterPart extends Composite {
 	public interface FooterTemplates extends SafeHtmlTemplates {
 		FooterTemplates FOOTER_TEMPLATES = GWT.create(FooterTemplates.class);
 
-		@Template("{5}Copyright &copy; <a href=\"{0}\" class=\"{4}\" target=\"_blank\" rel=\"noopener\">{1}</a> {2}. All rights reserved - {3}. {6} | {7}")
+		@Template("{5}Copyright &copy; <a href=\"{0}\" class=\"{4}\" target=\"_blank\" rel=\"noopener\">{1}</a> {2}. All rights reserved - {3}.")
 		SafeHtml copyrightNotice (SafeUri uri, String holder, String years,
 				String name, String styleNames, String version);
 
