@@ -50,7 +50,7 @@ public final class SubmitFormActionHandler
 		input.form = FormValidator.validate(input.form, "input.form");
 
 		Property email = PropertyServiceProvider.provide()
-				.getNamedProperty(PropertyHelper.OUTGOING_EMAIL);
+				.getNamedProperty(PropertyHelper.INCOMING_EMAIL);
 
 		Property title = PropertyServiceProvider.provide()
 				.getNamedProperty(PropertyHelper.TITLE);
@@ -65,8 +65,9 @@ public final class SubmitFormActionHandler
 			}
 		}
 
-		if (!EmailHelper.sendEmail(email.value, title.value, "Submit form",
-				body.toString(), false))
+		if (!EmailHelper.sendEmail(email.value, title.value,
+				"[" + input.form.name + "] Form Submitted", body.toString(),
+				false))
 			ApiValidator.throwServiceError(ServiceException.class,
 					ApiError.FailedToSendEmail, "input.form");
 

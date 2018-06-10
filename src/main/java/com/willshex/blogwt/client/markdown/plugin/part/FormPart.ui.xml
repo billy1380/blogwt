@@ -12,10 +12,8 @@
 			<g:HTMLPanel ui:field="pnlBody">
 				<p:AlertBox ui:field="alertBox" visible="false"/>
 
-				<g:HTMLPanel ui:field="pnlFields">
-
-				</g:HTMLPanel>
-
+				<g:HTMLPanel ui:field="pnlFields" />
+				
 				<g:HTMLPanel ui:field="pnlButtons">
 					<g:ResetButton ui:field="btnReset" text="Reset" styleName="btn btn-default" />
 					<g:SubmitButton ui:field="btnSubmit" text="Send" styleName="btn btn-primary" />

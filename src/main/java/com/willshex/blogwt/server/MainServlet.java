@@ -123,9 +123,11 @@ public class MainServlet extends ContextAwareServlet {
 		}
 
 		String pageTitle = (title == null ? "Blogwt" : title.value);
-		String rssLink = "", faviconLink = null, googleAnalyticsSnippet = "";
+		String rssLink = "", faviconLink = null, googleAnalyticsSnippet = "",
+				googleAdSenseSnippet = "";
 		String rssPropertyValue = null, faviconPropertyValue = null,
-				googleAnalyticsPropertyValue = null;
+				googleAnalyticsPropertyValue = null,
+				googleAdSensePropertyValue = null;
 
 		if (properties != null) {
 			propertyLookup = PropertyHelper.toLookup(properties);
@@ -138,6 +140,9 @@ public class MainServlet extends ContextAwareServlet {
 
 			googleAnalyticsPropertyValue = PropertyHelper.value(
 					propertyLookup.get(PropertyHelper.GOOGLE_ANALYTICS_KEY));
+
+			googleAdSensePropertyValue = PropertyHelper.value(
+					propertyLookup.get(PropertyHelper.GOOGLE_AD_SENSE_KEY));
 		}
 
 		if (rssPropertyValue == null
@@ -154,13 +159,21 @@ public class MainServlet extends ContextAwareServlet {
 
 		if (googleAnalyticsPropertyValue != null && !PropertyHelper.NONE_VALUE
 				.equals(googleAnalyticsPropertyValue)) {
-			googleAnalyticsSnippet = "<!-- Google Analytics -->\n"
-					+ "<script>\n"
+			googleAnalyticsSnippet = "<script>\n"
 					+ "window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;\n"
 					+ "ga('create', '" + googleAnalyticsPropertyValue
 					+ "', 'auto');\n" + "</script>\n"
-					+ "<script async src='https://www.google-analytics.com/analytics.js'></script>\n"
-					+ "<!-- End Google Analytics -->";
+					+ "<script async src='https://www.google-analytics.com/analytics.js'></script>\n";
+		}
+
+		if (googleAdSensePropertyValue != null && !PropertyHelper.NONE_VALUE
+				.equals(googleAdSensePropertyValue)) {
+			googleAdSenseSnippet = "<script async src=\"//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js\"></script>\n"
+					+ "<script>\n"
+					+ "  (adsbygoogle = window.adsbygoogle || []).push({\n"
+					+ "    google_ad_client: \"" + googleAdSensePropertyValue
+					+ "\",\n" + "    enable_page_level_ads: true\n" + "  });\n"
+					+ "</script>";
 		}
 
 		String css = InlineHelper
@@ -168,10 +181,12 @@ public class MainServlet extends ContextAwareServlet {
 				+ InlineHelper.css(
 						"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css");
 
-		RESPONSE.get().getOutputStream().write(String
-				.format(PAGE_FORMAT, googleAnalyticsSnippet, css, rssLink,
-						faviconLink, pageTitle, scriptVariables.toString())
-				.getBytes());
+		RESPONSE.get().getOutputStream()
+				.write(String
+						.format(PAGE_FORMAT, googleAnalyticsSnippet,
+								googleAdSenseSnippet, css, rssLink, faviconLink,
+								pageTitle, scriptVariables.toString())
+						.getBytes());
 
 	}
 

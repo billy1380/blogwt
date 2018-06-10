@@ -61,11 +61,13 @@ public class FormPart extends RegisteringComposite
 	private static final String BODY_PANEL_CLASS_PARAM_KEY = "bodyclass";
 	private static final String FIELD_PANEL_CLASS_PARAM_KEY = "fieldclass";
 	private static final String BUTTON_BAR_CLASS_PARAM_KEY = "buttonclass";
+	private static final String IS_LARGE_PARAM_KEY = "islarge";
 
 	private static final String TYPE = "type";
 	private static final String NAME = "name";
 	private static final String DEFAULT_VALUE = "defaultValue";
 	private static final String ALLOWED_VALUES = "allowedValues";
+	private static final String PLACEHOLDER = "placeholder";
 
 	private static final String RECAPTCH_API_KEY = "recaptchaApiKey";
 
@@ -75,6 +77,7 @@ public class FormPart extends RegisteringComposite
 		public String defaultValue;
 		public List<String> allowedValues;
 		public Map<String, String> parameters;
+		public String placeholder;
 
 		public void addAllowedValue (String value) {
 			if (allowedValues == null) {
@@ -95,6 +98,7 @@ public class FormPart extends RegisteringComposite
 
 	private ReCaptchaPart reCaptcha;
 	private String name;
+	private boolean isLarge;
 
 	public FormPart () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -123,6 +127,7 @@ public class FormPart extends RegisteringComposite
 				if (current instanceof FormField) {
 					field = new Field().name(((FormField) current).name())
 							.value(((FormField) current).value());
+
 					if (form.fields == null) {
 						form.fields = new ArrayList<Field>();
 					}
@@ -186,23 +191,35 @@ public class FormPart extends RegisteringComposite
 			case FieldTypeTypeText:
 				TextBoxPart textBox = new TextBoxPart();
 				textBox.elName.setInnerHTML(config.name);
-				UiHelper.addPlaceholder(textBox.txtValue, config.name);
+				if (config.placeholder != null) {
+					UiHelper.addPlaceholder(textBox.txtValue,
+							config.placeholder);
+				} else {
+					UiHelper.addPlaceholder(textBox.txtValue, config.name);
+				}
 				textBox.txtValue.setValue(config.defaultValue);
 				pnlFields.add(textBox);
 				if (autofocus) {
 					UiHelper.autoFocus(textBox.txtValue);
 				}
+				textBox.setLarge(isLarge);
 				break;
 			case FieldTypeTypeLongText:
 				TextAreaPart longText = new TextAreaPart();
 				longText.elName.setInnerHTML(config.name);
-				UiHelper.addPlaceholder(longText.txtValue, config.name);
+				if (config.placeholder != null) {
+					UiHelper.addPlaceholder(longText.txtValue,
+							config.placeholder);
+				} else {
+					UiHelper.addPlaceholder(longText.txtValue, config.name);
+				}
 				longText.txtValue.setValue(config.defaultValue);
 				longText.txtValue.setVisibleLines(4);
 				pnlFields.add(longText);
 				if (autofocus) {
 					UiHelper.autoFocus(longText.txtValue);
 				}
+				longText.setLarge(isLarge);
 				break;
 			case FieldTypeTypeSingleOption:
 				ListBoxPart listBox = new ListBoxPart();
@@ -270,6 +287,10 @@ public class FormPart extends RegisteringComposite
 					for (String value : allowedValues) {
 						config.addAllowedValue(value);
 					}
+					break;
+				case PLACEHOLDER:
+					config.placeholder = splitParam[1];
+					break;
 				}
 			}
 		}
@@ -314,6 +335,15 @@ public class FormPart extends RegisteringComposite
 
 		if (params.containsKey(NAME_PARAM_KEY)) {
 			name = params.get(NAME_PARAM_KEY);
+		}
+
+		if (params.containsKey(IS_LARGE_PARAM_KEY)) {
+			isLarge = Boolean.parseBoolean(params.get(IS_LARGE_PARAM_KEY));
+			
+			if (isLarge) {
+				btnReset.addStyleName("btn-lg col-xs-12");
+				btnSubmit.addStyleName("btn-lg col-xs-12");
+			}
 		}
 	}
 
@@ -370,7 +400,7 @@ public class FormPart extends RegisteringComposite
 		ready();
 	}
 
-	private void reset () {
+	public void reset () {
 		frmForm.reset();
 
 		if (reCaptcha != null) {

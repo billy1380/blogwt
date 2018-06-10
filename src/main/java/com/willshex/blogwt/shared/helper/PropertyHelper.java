@@ -35,6 +35,7 @@ public class PropertyHelper {
 	public static final String RECAPTCHA_API_KEY = "recaptcha.api.key";
 
 	public static final String GOOGLE_ANALYTICS_KEY = "google.analytics.key";
+	public static final String GOOGLE_AD_SENSE_KEY = "google.adsense.key";
 
 	public static final String POST_COMMENTS_ENABLED = "post.comments.enabled";
 	public static final String POST_DISQUS_ID = "post.comments.disqus.id";
@@ -60,6 +61,8 @@ public class PropertyHelper {
 	public static final String FOOTER_SHOW_VERSION = "footer.show.site.version";
 
 	public static final String OUTGOING_EMAIL = "email.outgoing";
+	public static final String INCOMING_EMAIL = "email.incoming";
+	
 	public static final String FIREBASE_API_KEY = "notification.firebase.key";
 
 	public static final String COOKIE_DETAILS_PAGE_SLUG = "cookie.details.slug";
@@ -89,6 +92,7 @@ public class PropertyHelper {
 	public static final String RECAPTCHA_API_KEY_DESCRIPTION = "Server API key (secret)";
 
 	public static final String GOOGLE_ANALYTICS_KEY_DESCRIPTION = "Google Analytics API Key";
+	public static final String GOOGLE_AD_SENSE_KEY_DESCRIPTION = "Google AdSense API Key";
 
 	public static final String POST_COMMENTS_ENABLED_DESCRIPTION = "Enable Comments";
 	public static final String POST_DISQUS_ID_DESCRIPTION = "Disqus Identifier";
@@ -114,6 +118,8 @@ public class PropertyHelper {
 
 	public static final String FOOTER_SHOW_VERSION_DESCRIPTION = "Shows the blogwt version on the site footer";
 	public static final String OUTGOING_EMAIL_DESCRIPTION = "Appengine outgoing email address";
+	public static final String INCOMING_EMAIL_DESCRIPTION = "Incoming email address";
+	
 	public static final String FIREBASE_API_KEY_DESCRIPTION = "Firebase push notification api key";
 
 	public static final String ALLOW_USER_REGISTRATION_DESCRIPTION = "Allow users to register";
@@ -211,6 +217,12 @@ public class PropertyHelper {
 		return new Property().name(GOOGLE_ANALYTICS_KEY)
 				.description(GOOGLE_ANALYTICS_KEY_DESCRIPTION)
 				.group("Analytics").type("string").value(value);
+	}
+
+	public static Property createGoogleAdSenseApiKey (String value) {
+		return new Property().name(GOOGLE_AD_SENSE_KEY)
+				.description(GOOGLE_AD_SENSE_KEY_DESCRIPTION)
+				.group("Monetising").type("string").value(value);
 	}
 
 	public static Property createDisqusId (String value) {
@@ -325,6 +337,12 @@ public class PropertyHelper {
 				.description(OUTGOING_EMAIL_DESCRIPTION).group("Functional")
 				.type("string").value(value);
 	}
+	
+	public static Property createIncomingEmail (String value) {
+		return new Property().name(INCOMING_EMAIL)
+				.description(INCOMING_EMAIL_DESCRIPTION).group("Functional")
+				.type("string").value(value);
+	}
 
 	public static Property createFirebaseApiKey (String value) {
 		return new Property().name(FIREBASE_API_KEY).group("Functional")
@@ -379,6 +397,7 @@ public class PropertyHelper {
 			properties.add(createDisqusId(null));
 			properties.add(createRecaptchaApiKey(null));
 			properties.add(createGoogleAnalyticsApiKey(null));
+			properties.add(createGoogleAdSenseApiKey(null));
 			properties.add(createCategoryId(null));
 			properties.add(createPostShareEnabled(null));
 			properties.add(createMarkdownPrefechIncludes(null));
@@ -397,6 +416,7 @@ public class PropertyHelper {
 			properties.add(createEnableUserRelationships(null));
 			properties.add(createFaviconUrl(null));
 			properties.add(createOutgoingEmail(null));
+			properties.add(createIncomingEmail(null));
 			properties.add(createFirebaseApiKey(null));
 			properties.add(createCookieDetailsPageSlug(null));
 			properties.add(createRatingEnabled(null));
