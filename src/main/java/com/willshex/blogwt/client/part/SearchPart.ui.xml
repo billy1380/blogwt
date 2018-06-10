@@ -7,7 +7,7 @@
 		<h3>Search</h3>
 		<g:FormPanel ui:field="frmSearch">
 			<g:HTMLPanel>
-				<div class="input-group">
+				<div class="input-group input-group-lg">
 					<g:TextBox styleName="form-control" ui:field="txtQuery" />
 					<span class="input-group-btn">
 						<g:SubmitButton styleName="btn btn-primary" ui:field="btnSubmit">
