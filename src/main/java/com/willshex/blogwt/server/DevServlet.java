@@ -96,12 +96,18 @@ public class DevServlet extends ContextAwareServlet {
 		if ("gentags".equals(action)) {
 			TagServiceProvider.provide().generateTags();
 		} else if (action != null && action.startsWith("index")) {
+			String group = REQUEST.get().getParameter("group");
+
+			if (group == null || group.trim().isEmpty()) {
+				group = "blogwt";
+			}
+
 			PageServiceProvider.provide();
 			PostServiceProvider.provide();
 			UserServiceProvider.provide();
 
 			((ISearch<?>) ServiceDiscovery
-					.getService("blogwt." + action.replace("index", "")))
+					.getService(group + "." + action.replace("index", "")))
 							.indexAll();
 		} else if ("clearsearch".equals(action)) {
 			PersistenceServiceProvider.provide();
