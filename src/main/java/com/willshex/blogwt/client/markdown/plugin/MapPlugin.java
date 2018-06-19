@@ -15,27 +15,18 @@ import java.util.Map;
 import org.markdown4j.client.AbstractAsyncPlugin;
 import org.markdown4j.client.event.PluginContentReadyEventHandler.PluginContentReadyEvent;
 
-import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.willshex.blogwt.client.DefaultEventBus;
+import com.willshex.blogwt.client.helper.MapHelper;
+import com.willshex.blogwt.client.helper.MapHelper.MapsReadyEventHandler;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
 public class MapPlugin extends AbstractAsyncPlugin {
-
-	private static final Callback<Void, Exception> EMPTY = new Callback<Void, Exception>() {
-		public void onFailure (Exception reason) {}
-		public void onSuccess (Void result) {}
-	};
-
-	private String apiKey;
-
-	private static boolean added = false;
-	private static boolean initialised = false;
 
 	private static Map<String, MapPluginItem> items = new HashMap<String, MapPlugin.MapPluginItem>();
 
@@ -49,9 +40,9 @@ public class MapPlugin extends AbstractAsyncPlugin {
 
 	public MapPlugin (String apiKey, HandlerManager manager) {
 		super("map", manager);
-		this.apiKey = apiKey;
 
-		registerMapsInitialisedMethod();
+		DefaultEventBus.get().addHandler(MapsReadyEventHandler.TYPE,
+				this::mapsInitialised);
 	}
 
 	/* (non-Javadoc)
@@ -74,23 +65,11 @@ public class MapPlugin extends AbstractAsyncPlugin {
 		out.append("<div id=\"");
 		out.append(item.id);
 		out.append("\">Loading maps API...</div>");
-
-		if (!added) {
-			added = true;
-
-			ScriptInjector.fromUrl(
-					"https://maps.googleapis.com/maps/api/js?callback=mapsInitialised&key="
-							+ apiKey)
-					.setCallback(EMPTY).inject();
-		}
-
-		if (initialised) {
-			mapsInitialised();
-		}
+		
+		MapHelper.inject();
 	}
 
-	public static void mapsInitialised () {
-		initialised = true;
+	public void mapsInitialised () {
 		List<String> remove = new ArrayList<String>();
 
 		MapPluginItem item;
@@ -105,10 +84,6 @@ public class MapPlugin extends AbstractAsyncPlugin {
 			items.remove(id);
 		}
 	}
-
-	public static native void registerMapsInitialisedMethod () /*-{
-	window.mapsInitialised = $entry(@com.willshex.blogwt.client.markdown.plugin.MapPlugin::mapsInitialised());
-	}-*/;
 
 	private static void readyToLoad (final HandlerManager manager,
 			final MapPlugin instance, final String id, final List<String> lines,
