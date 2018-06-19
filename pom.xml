@@ -147,6 +147,8 @@
 							<Implementation-Build>${buildNumber}</Implementation-Build>
 						</manifestEntries>
 					</archive>
+					<warSourceExcludes>WEB-INF/appengine-generated/**</warSourceExcludes>
+					<warSourceExcludes>WEB-INF/deploy/**</warSourceExcludes>
 				</configuration>
 			</plugin>
 
