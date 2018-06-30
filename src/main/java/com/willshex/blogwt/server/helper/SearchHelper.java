@@ -7,12 +7,16 @@
 //
 package com.willshex.blogwt.server.helper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Document.Builder;
+import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.PutException;
@@ -30,8 +34,12 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.googlecode.objectify.cmd.Query;
+import com.willshex.blogwt.server.service.search.ISearch;
+import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
+import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.helper.PagerHelper;
+import com.willshex.utility.StringUtils;
 
 /**
  * @author William Shakour (billy1380)
@@ -43,7 +51,7 @@ public class SearchHelper {
 	public static final String ENTITY_ID_KEY = "id";
 
 	private final static String ALL_INDEX_NAME = "all";
-	public static final int SHORT_SEARCH_LIMIT = 3;
+	public static final Integer SHORT_SEARCH_LIMIT = Integer.valueOf(3);
 	private static final String INDEX_SEARCH_URL = "/searchindexer";
 
 	private static final int RETRY_COUNT = 3;
@@ -52,6 +60,13 @@ public class SearchHelper {
 	public static final int SORT_LIMIT = 10000;
 
 	private static SearchService searchService;
+	private static final SimpleDateFormat QUERY_DATE_FORMAT = new SimpleDateFormat(
+			"yyyy-MM-dd");
+
+	public static interface GetAll<T, E extends Enum<E>> {
+		List<T> get (Integer start, Integer count, E sortBy,
+				SortDirectionType sortDirection);
+	}
 
 	public static void indexDocument (Document document) {
 		indexDocument(ALL_INDEX_NAME, document);
@@ -61,6 +76,24 @@ public class SearchHelper {
 		if (document != null) {
 			indexDocument(name, document, RETRY_COUNT);
 		}
+	}
+
+	public static <T extends DataType, E extends Enum<E>> List<T> indexAll (
+			String name, GetAll<T, E> pagedGetter) {
+		Pager pager = PagerHelper.createDefaultPager();
+
+		List<T> lines = null;
+		do {
+			lines = pagedGetter.get(pager.start, pager.count, null, null);
+
+			for (T line : lines) {
+				SearchHelper.queueToIndex(name, line.id);
+			}
+
+			PagerHelper.moveForward(pager);
+		} while (lines != null && lines.size() >= pager.count.intValue());
+
+		return lines;
 	}
 
 	private static void indexDocument (String name, Document document,
@@ -155,15 +188,14 @@ public class SearchHelper {
 				.setReturningIdsOnly(true);
 
 		if (sortBy != null) {
-			queryOptionsBuilder
-					.setSortOptions(SortOptions.newBuilder()
-							.addSortExpression(SortExpression.newBuilder()
-									.setExpression(sortBy)
-									.setDirection(direction == null
-											|| direction == SortDirectionType.SortDirectionTypeDescending
-													? SortExpression.SortDirection.DESCENDING
-													: SortExpression.SortDirection.ASCENDING))
-							.setLimit(SearchHelper.SORT_LIMIT).build());
+			queryOptionsBuilder.setSortOptions(SortOptions.newBuilder()
+					.addSortExpression(SortExpression.newBuilder()
+							.setExpression(sortBy)
+							.setDirection(direction == null
+									|| direction == SortDirectionType.SortDirectionTypeDescending
+											? SortExpression.SortDirection.DESCENDING
+											: SortExpression.SortDirection.ASCENDING))
+					.setLimit(SearchHelper.SORT_LIMIT).build());
 		}
 
 		QueryOptions options = queryOptionsBuilder.build();
@@ -238,5 +270,57 @@ public class SearchHelper {
 
 		return cursor == null ? SearchHelper.EMPTY_CURSOR
 				: cursor.toWebSafeString();
+	}
+
+	public static <T> T one (String query, ISearch<T> searchable) {
+		List<T> result = pagedAndSorted(searchable, query, Integer.valueOf(0),
+				Integer.valueOf(1), null, null);
+		return result == null || result.isEmpty() ? null : result.get(0);
+	}
+
+	public static String queryDate (Date date) {
+		return QUERY_DATE_FORMAT.format(date);
+	}
+
+	public static void addSearchTokens (Builder documentBuilder,
+			List<String> searchable) {
+		addSearchTokens("search", documentBuilder, searchable);
+	}
+
+	public static void addSearchTokens (String fieldName,
+			Builder documentBuilder, List<String> searchable) {
+		Collection<String> tokens = StringUtils.matchParts(searchable);
+
+		if (tokens != null && !tokens.isEmpty()) {
+			for (String token : tokens) {
+				documentBuilder.addField(
+						Field.newBuilder().setName(fieldName).setText(token));
+			}
+		}
+	}
+
+	public static <T> List<T> pagedAndSorted (ISearch<T> search, String query,
+			Integer start, Integer count, String sortBy,
+			SortDirectionType sortDirection) {
+		EnvironmentHelper.selectNamespace(search.isShared());
+		return search.search(query, start, count, sortBy, sortDirection);
+	}
+
+	public static <T> String pagedAndSorted (ISearch<T> search, List<T> results,
+			String query, String next, Integer count, String sortBy,
+			SortDirectionType sortDirection) {
+		EnvironmentHelper.selectNamespace(search.isShared());
+		return search.search(results, query, next, count, sortBy,
+				sortDirection);
+	}
+
+	public static <T> void indexAll (ISearch<T> search) {
+		EnvironmentHelper.selectNamespace(search.isShared());
+		search.indexAll();
+	}
+
+	public static <T> void index (ISearch<T> search, Long id) {
+		EnvironmentHelper.selectNamespace(search.isShared());
+		search.index(id);
 	}
 }

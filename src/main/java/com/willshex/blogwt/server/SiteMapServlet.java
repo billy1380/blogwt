@@ -22,6 +22,7 @@ import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Page;
+import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Tag;
@@ -34,7 +35,8 @@ import com.willshex.server.ContextAwareServlet;
  *
  */
 @SuppressWarnings("serial")
-@WebServlet(name = "Site Map", urlPatterns = SiteMapServlet.URL)
+@WebServlet(name = "Site Map", urlPatterns = { SiteMapServlet.URL,
+		SiteMapServlet.URL + ".xml" })
 public class SiteMapServlet extends ContextAwareServlet {
 	public static final String URL = "/sitemap";
 
@@ -107,7 +109,7 @@ public class SiteMapServlet extends ContextAwareServlet {
 
 	private void printPages (PrintWriter p, String url) {
 		List<Page> pages = PageServiceProvider.provide().getPages(Boolean.FALSE,
-				Integer.valueOf(0), null, null, null);
+				Integer.valueOf(0), null, PageSortType.PageSortTypePriority, null);
 
 		if (pages != null) {
 			for (Page page : pages) {

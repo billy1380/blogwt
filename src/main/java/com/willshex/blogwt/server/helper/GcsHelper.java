@@ -47,25 +47,29 @@ public class GcsHelper {
 		}
 	}
 
-	public static void save (byte[] data, Supplier<String> mime, String path) {
+	public static void save (byte[] data, Supplier<String> mime,
+			GcsFilename fileName) {
 		if (LOG.isLoggable(Level.FINER)) {
-			LOG.finer("Saving data with mime type [" + mime + "] to [" + path
-					+ "]");
+			LOG.finer("Saving data with mime type [" + mime.get() + "] to ["
+					+ fileName.getObjectName() + "]");
 		}
 
 		GcsFileOptions instance = new GcsFileOptions.Builder()
 				.mimeType(mime.get()).build();
-		GcsFilename fileName = new GcsFilename(
-				System.getProperty(BUCKET_NAME_PROPERTY_KEY), path);
 
 		try (BufferedOutputStream osw = new BufferedOutputStream(
 				Channels.newOutputStream(GcsServiceFactory.createGcsService()
 						.createOrReplace(fileName, instance)))) {
 			osw.write(data);
 		} catch (IOException e) {
-			LOG.log(Level.SEVERE,
-					"Error occured trying to write data to [" + path + "]", e);
+			LOG.log(Level.SEVERE, "Error occured trying to write data to ["
+					+ fileName.getObjectName() + "]", e);
 		}
+	}
+
+	public static void save (byte[] data, Supplier<String> mime, String path) {
+		save(data, mime, new GcsFilename(
+				System.getProperty(BUCKET_NAME_PROPERTY_KEY), path));
 	}
 
 	/**

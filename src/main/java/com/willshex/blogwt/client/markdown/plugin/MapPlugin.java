@@ -65,7 +65,7 @@ public class MapPlugin extends AbstractAsyncPlugin {
 		out.append("<div id=\"");
 		out.append(item.id);
 		out.append("\">Loading maps API...</div>");
-		
+
 		MapHelper.inject();
 	}
 

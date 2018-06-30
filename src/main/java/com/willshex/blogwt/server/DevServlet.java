@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +28,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.willshex.blogwt.server.api.blog.action.GetPostsActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
+import com.willshex.blogwt.server.helper.EnvironmentHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.generateddownload.GeneratedDownloadServiceProvider;
@@ -40,10 +42,13 @@ import com.willshex.blogwt.server.service.role.RoleServiceProvider;
 import com.willshex.blogwt.server.service.search.ISearch;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
+import com.willshex.blogwt.shared.api.Pager;
+import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.blog.call.GetPostsRequest;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownload;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.datatype.Permission;
+import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
@@ -71,6 +76,11 @@ public class DevServlet extends ContextAwareServlet {
 			.getLogger(DevServlet.class.getName());
 
 	public static final String URL = "/dev";
+
+	private static interface AllPaged<T, E extends Enum<E>> {
+		List<T> get (Integer start, Integer count, E sortBy,
+				SortDirectionType sortDirection);
+	}
 
 	/* (non-Javadoc)
 	 * 
@@ -106,14 +116,18 @@ public class DevServlet extends ContextAwareServlet {
 			PostServiceProvider.provide();
 			UserServiceProvider.provide();
 
-			((ISearch<?>) ServiceDiscovery
-					.getService(group + "." + action.replace("index", "")))
-							.indexAll();
+			SearchHelper.indexAll((ISearch<?>) ServiceDiscovery
+					.getService(group + "." + action.replace("index", "")));
 		} else if ("clearsearch".equals(action)) {
 			PersistenceServiceProvider.provide();
 
 			String name = REQUEST.get().getParameter("index");
 			String ids = REQUEST.get().getParameter("ids");
+
+			String namespace = REQUEST.get().getParameter("ns");
+			EnvironmentHelper.selectNamespace(namespace == null ? false
+					: Boolean.valueOf(namespace).booleanValue());
+
 			String[] split = ids.split(",");
 
 			for (String id : split) {
@@ -252,6 +266,26 @@ public class DevServlet extends ContextAwareServlet {
 			default:
 				break;
 			}
+		} else if (action != null && action.startsWith("deleteposts")) {
+			processPaged( (Integer s, Integer c, PostSortType o,
+					SortDirectionType d) -> PostServiceProvider.provide()
+							.getPosts(Boolean.TRUE, Boolean.FALSE, s, c, o, d),
+					PostServiceProvider.provide()::deletePost);
 		}
+	}
+
+	private static <T, E extends Enum<E>> void processPaged (
+			AllPaged<T, E> supplier, Consumer<T> deleter) {
+		Pager p = PagerHelper.createDefaultPager().count(Integer.valueOf(1200));
+		List<T> list;
+		do {
+			list = supplier.get(p.start, p.count, null, null);
+
+			for (T item : list) {
+				deleter.accept(item);
+			}
+
+			PagerHelper.moveForward(p);
+		} while (list.size() == p.count.intValue());
 	}
 }

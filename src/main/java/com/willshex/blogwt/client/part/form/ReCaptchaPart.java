@@ -29,7 +29,7 @@ public class ReCaptchaPart extends Composite implements FormField {
 
 	private static ScriptElement SCRIPT = null;
 	private String key;
-	private String id;
+	private String id = null;
 	private String error;
 
 	public ReCaptchaPart () {
@@ -61,7 +61,9 @@ public class ReCaptchaPart extends Composite implements FormField {
 	}-*/;
 
 	private void render () {
-		id = render(getWidget().getElement(), key);
+		if (SCRIPT != null && id == null) {
+			id = render(getWidget().getElement(), key);
+		}
 	}
 
 	private native String render (Object element, String key) /*-{
@@ -71,19 +73,12 @@ public class ReCaptchaPart extends Composite implements FormField {
 	}-*/;
 
 	public void reset () {
-		reset(id);
+		if (SCRIPT != null && id != null) {
+			reset(id);
+		}
 	}
 
-	private void remove () {
-		remove(id);
-	}
-
-	private native void remove (String id) /*-{
-	$wnd.grecaptcha.remove(id);
-	}-*/;
-
-	public native void reset (
-			String id) /*-{
+	public native void reset (String id) /*-{
 	$wnd.grecaptcha.reset(id);
 	}-*/;
 

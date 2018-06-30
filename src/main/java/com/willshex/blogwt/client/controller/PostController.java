@@ -389,4 +389,8 @@ public class PostController extends AsyncDataProvider<Post> {
 		isAdminMode = value;
 	}
 
+	public boolean hasTag () {
+		return tag != null && !tag.trim().isEmpty();
+	}
+
 }

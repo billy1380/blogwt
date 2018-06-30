@@ -22,6 +22,7 @@ import com.willshex.blogwt.server.api.validation.PropertyValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
+import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.relationship.RelationshipServiceProvider;
@@ -99,9 +100,9 @@ public final class GetUsersActionHandler
 		ApiValidator.validateLength(input.query = input.query.trim(), 1, 255,
 				"input.query");
 
-		return UserServiceProvider.provide().search(input.query,
-				input.pager.start, input.pager.count, input.pager.sortBy,
-				input.pager.sortDirection);
+		return SearchHelper.pagedAndSorted(UserServiceProvider.provide(),
+				input.query, input.pager.start, input.pager.count,
+				input.pager.sortBy, input.pager.sortDirection);
 	}
 
 	/**

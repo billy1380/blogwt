@@ -11,9 +11,11 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.appengine.api.urlfetch.HTTPHeader;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
@@ -36,13 +38,19 @@ public class HttpHelper {
 	 * @param method
 	 * @return
 	 */
-	public static byte[] curl (URL url, byte[] payload, HTTPMethod method) {
+	public static byte[] curl (URL url, byte[] payload, HTTPMethod method,
+			Map<String, String> headers) {
 		byte[] content = null;
 		URLFetchService fetcher = URLFetchServiceFactory.getURLFetchService();
 
 		try {
 			HTTPRequest request = new HTTPRequest(url, method);
 			request.getFetchOptions().setDeadline(Double.valueOf(60.0));
+
+			if (headers != null) {
+				headers.forEach(
+						(k, v) -> request.addHeader(new HTTPHeader(k, v)));
+			}
 
 			if (LOG.isLoggable(Level.FINEST)) {
 				LOG.log(Level.FINEST, "Fetching response");
@@ -91,7 +99,7 @@ public class HttpHelper {
 	}
 
 	public static byte[] curl (String endpoint, byte[] payload,
-			HTTPMethod method) {
+			HTTPMethod method, Map<String, String> headers) {
 		byte[] content = null;
 
 		if (LOG.isLoggable(Level.FINE)) {
@@ -103,7 +111,7 @@ public class HttpHelper {
 
 		try {
 			URL url = new URL(endpoint);
-			content = curl(url, payload, method);
+			content = curl(url, payload, method, headers);
 		} catch (MalformedURLException e) {
 			if (LOG.isLoggable(Level.SEVERE)) {
 				LOG.log(Level.SEVERE, String.format(
@@ -115,11 +123,16 @@ public class HttpHelper {
 	}
 
 	public static byte[] curl (String endpoint) {
-		return curl(endpoint, HTTPMethod.POST);
+		return curl(endpoint, null);
 	}
 
-	public static byte[] curl (String endpoint, HTTPMethod method) {
-		return curl(endpoint, null, method);
+	public static byte[] curl (String endpoint, Map<String, String> headers) {
+		return curl(endpoint, HTTPMethod.POST, headers);
+	}
+
+	public static byte[] curl (String endpoint, HTTPMethod method,
+			Map<String, String> headers) {
+		return curl(endpoint, null, method, headers);
 	}
 
 }

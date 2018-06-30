@@ -77,7 +77,7 @@ public class SearchIndexServlet extends ContextAwareServlet {
 			IService service = ServiceDiscovery.getService(nameParam);
 
 			if (service != null && service instanceof ISearch) {
-				((ISearch<?>) service).index(id);
+				SearchHelper.index((ISearch<?>) service, id);
 			}
 		}
 	}

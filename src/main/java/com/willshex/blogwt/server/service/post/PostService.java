@@ -140,6 +140,15 @@ final class PostService implements IPostService, ISearch<Post> {
 	public Document toDocument (Post post) {
 		Document document = null;
 
+		if (post.authorKey != null) {
+			post.author = UserServiceProvider.provide()
+					.getUser(keyToId(post.authorKey));
+		}
+
+		if (post.contentKey != null) {
+			post.content = loadContent().id(keyToId(post.contentKey)).now();
+		}
+
 		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
 
 			if (post.author == null) {
@@ -538,19 +547,11 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * @see com.willshex.blogwt.server.service.search.IIndex#indexAll() */
 	@Override
 	public void indexAll () {
-		Pager pager = PagerHelper.createDefaultPager();
-
-		List<Post> posts = null;
-		do {
-			posts = getPosts(Boolean.FALSE, Boolean.FALSE, pager.start,
-					pager.count, null, null);
-
-			for (Post post : posts) {
-				SearchHelper.queueToIndex(getName(), post.id);
-			}
-
-			PagerHelper.moveForward(pager);
-		} while (posts != null && posts.size() >= pager.count.intValue());
+		SearchHelper.indexAll(getName(),
+				(Integer start, Integer count, PostSortType sortBy,
+						SortDirectionType sortDirection) -> getPosts(
+								Boolean.FALSE, Boolean.FALSE, start, count,
+								sortBy, sortDirection));
 	}
 
 	/* (non-Javadoc)
@@ -740,18 +741,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * com.willshex.blogwt.server.service.search.IIndex#index(java.lang.Long) */
 	@Override
 	public void index (Long id) {
-		Post post = getPost(id);
-
-		if (post.authorKey != null) {
-			post.author = UserServiceProvider.provide()
-					.getUser(keyToId(post.authorKey));
-		}
-
-		if (post.contentKey != null) {
-			post.content = loadContent().id(keyToId(post.contentKey)).now();
-		}
-
-		SearchHelper.indexDocument(toDocument(post));
+		SearchHelper.indexDocument(toDocument(getPost(id)));
 	}
 
 	/* (non-Javadoc)
@@ -766,7 +756,7 @@ final class PostService implements IPostService, ISearch<Post> {
 		List<Post> posts = new ArrayList<Post>();
 		String id;
 		Post post;
-		int limit = SearchHelper.SHORT_SEARCH_LIMIT;
+		int limit = SearchHelper.SHORT_SEARCH_LIMIT.intValue();
 		final String postServiceName = getName();
 		for (ScoredDocument scoredDocument : matches) {
 			if (limit == 0) {

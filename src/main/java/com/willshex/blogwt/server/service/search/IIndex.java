@@ -15,6 +15,10 @@ import com.google.appengine.api.search.Document;
  */
 public interface IIndex<T> {
 
+	default boolean isShared() {
+		return false;
+	}
+	
 	void index (Long id);
 
 	void indexAll ();

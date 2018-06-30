@@ -37,14 +37,12 @@ import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.server.service.role.RoleServiceProvider;
-import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Permission;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Role;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.datatype.UserSortType;
-import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.server.ContextAwareServlet;
 import com.willshex.utility.StringUtils;
@@ -462,6 +460,17 @@ final class UserService implements IUserService {
 		Document document = null;
 
 		if (user != null) {
+			if (user.roleKeys != null) {
+				user.roles = PersistenceHelper.batchLookupKeys(
+						RoleServiceProvider.provide(), user.roleKeys);
+			}
+
+			if (user.permissionKeys != null) {
+				user.permissions = PersistenceHelper.batchLookupKeys(
+						PermissionServiceProvider.provide(),
+						user.permissionKeys);
+			}
+
 			Document.Builder documentBuilder = Document.newBuilder();
 			documentBuilder.setId(getName() + user.id.toString())
 					.addField(Field.newBuilder().setName("username")
@@ -506,18 +515,7 @@ final class UserService implements IUserService {
 	 * @see com.willshex.blogwt.server.service.user.IUserService#indexAll() */
 	@Override
 	public void indexAll () {
-		Pager pager = PagerHelper.createDefaultPager();
-
-		List<User> users = null;
-		do {
-			users = getUsers(pager.start, pager.count, null, null);
-
-			for (User user : users) {
-				SearchHelper.queueToIndex(getName(), user.id);
-			}
-
-			PagerHelper.moveForward(pager);
-		} while (users != null && users.size() >= pager.count.intValue());
+		SearchHelper.indexAll(getName(), this::getUsers);
 	}
 
 	/* (non-Javadoc)
@@ -536,19 +534,7 @@ final class UserService implements IUserService {
 	 * com.willshex.blogwt.server.service.search.IIndex#index(java.lang.Long) */
 	@Override
 	public void index (Long id) {
-		User user = getUser(id);
-
-		if (user.roleKeys != null) {
-			user.roles = PersistenceHelper.batchLookupKeys(
-					RoleServiceProvider.provide(), user.roleKeys);
-		}
-
-		if (user.permissionKeys != null) {
-			user.permissions = PersistenceHelper.batchLookupKeys(
-					PermissionServiceProvider.provide(), user.permissionKeys);
-		}
-
-		SearchHelper.indexDocument(toDocument(user));
+		SearchHelper.indexDocument(getName(), toDocument(getUser(id)));
 	}
 
 	/* (non-Javadoc)

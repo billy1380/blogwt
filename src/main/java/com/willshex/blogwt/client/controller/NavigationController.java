@@ -208,8 +208,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	public void showNext () {
 		if (stack.hasNext()) {
-			PageTypeHelper.show(PageType.fromString(stack.getNext().getPage()),
-					stack.getNext().toString(1));
+			PageTypeHelper.show(stack.getNext().toString());
 		} else {
 			PageTypeHelper
 					.show(PageController.get().homePageTargetHistoryToken());
@@ -219,9 +218,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	public void showPrevious () {
 		if (stack.hasPrevious()) {
-			PageTypeHelper.show(
-					PageType.fromString(stack.getPrevious().getPage()),
-					stack.getPrevious().toString(1));
+			PageTypeHelper.show(stack.getPrevious().toString());
 		} else {
 			PageTypeHelper
 					.show(PageController.get().homePageTargetHistoryToken());

@@ -102,8 +102,10 @@ public class PagerHelper {
 	public static Pager reset (Pager pager) {
 		if (pager != null) {
 			pager.start(DEFAULT_START).count(DEFAULT_COUNT)
-					.sortBy(DEFAULT_SORT_BY).sortDirection(
-							SortDirectionType.SortDirectionTypeDescending);
+					.sortBy(DEFAULT_SORT_BY)
+					.sortDirection(
+							SortDirectionType.SortDirectionTypeDescending)
+					.next(null).previous(null);
 		}
 
 		return pager;

@@ -59,9 +59,10 @@ public final class SearchAllActionHandler
 			ApiValidator.throwServiceError(InputValidationException.class,
 					ApiError.InvalidValueNull, "String: input.query");
 
-		output.posts = ((ISearch<Post>) PostServiceProvider.provide()).search(
-				input.query, Integer.valueOf(0),
-				SearchHelper.SHORT_SEARCH_LIMIT, null, null);
+		output.posts = SearchHelper.pagedAndSorted(
+				(ISearch<Post>) PostServiceProvider.provide(), input.query,
+				Integer.valueOf(0), SearchHelper.SHORT_SEARCH_LIMIT, null,
+				null);
 
 		Map<Key<User>, User> users = new HashMap<Key<User>, User>();
 		if (output.posts != null) {
@@ -75,9 +76,10 @@ public final class SearchAllActionHandler
 			}
 		}
 
-		output.pages = ((ISearch<Page>) PageServiceProvider.provide()).search(
-				input.query, Integer.valueOf(0),
-				SearchHelper.SHORT_SEARCH_LIMIT, null, null);
+		output.pages = SearchHelper.pagedAndSorted(
+				(ISearch<Page>) PageServiceProvider.provide(), input.query,
+				Integer.valueOf(0), SearchHelper.SHORT_SEARCH_LIMIT, null,
+				null);
 
 		if (output.pages != null) {
 			for (Page page : output.pages) {
@@ -90,9 +92,10 @@ public final class SearchAllActionHandler
 			}
 		}
 
-		output.users = ((ISearch<User>) UserServiceProvider.provide()).search(
-				input.query, Integer.valueOf(0),
-				SearchHelper.SHORT_SEARCH_LIMIT, null, null);
+		output.users = SearchHelper.pagedAndSorted(
+				(ISearch<User>) UserServiceProvider.provide(), input.query,
+				Integer.valueOf(0), SearchHelper.SHORT_SEARCH_LIMIT, null,
+				null);
 	}
 
 	/* (non-Javadoc)

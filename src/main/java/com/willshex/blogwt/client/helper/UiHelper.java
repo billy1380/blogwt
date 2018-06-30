@@ -15,7 +15,9 @@ import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
@@ -44,6 +46,9 @@ public class UiHelper {
 
 		@Template("<a class=\"btn btn-default {1}\" href=\"{0}\"><span class=\"glyphicon glyphicon-edit\"></span> edit</a>")
 		SafeHtml edit (SafeUri u, String size);
+
+		@Template("<a href=\"{0}\" title=\"{1}\">{1}</a>")
+		SafeHtml link (SafeUri href, String text);
 
 		default SafeHtml edit (SafeUri u) {
 			return edit(u, "");
@@ -214,6 +219,13 @@ public class UiHelper {
 		el.setAttribute("height", nh);
 	}
 
+	public static void setSvgDimentions (Element parent, String width,
+			String height) {
+		Element el = parent.getFirstChildElement();
+		el.setAttribute("width", width);
+		el.setAttribute("height", height);
+	}
+
 	public static void insertSvg (Element el, TextResource resource) {
 		el.setInnerHTML(resource.getText());
 	}
@@ -267,5 +279,17 @@ public class UiHelper {
 			element.setAttribute("class", classNames + " img-responsive");
 		}
 		return element;
+	}
+
+	public static void setThemeColor (String colour) {
+		NodeList<Element> tags = Document.get().getElementsByTagName("meta");
+		for (int i = 0; i < tags.getLength(); i++) {
+			MetaElement metaTag = tags.getItem(i).cast();
+
+			if ("theme-color".equals(metaTag.getName())) {
+				metaTag.setContent(colour);
+				break;
+			}
+		}
 	}
 }

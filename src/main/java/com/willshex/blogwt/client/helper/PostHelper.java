@@ -56,9 +56,6 @@ public class PostHelper extends com.willshex.blogwt.shared.helper.PostHelper {
 		return makeMarkup(value);
 	}
 
-	/**
-	 * @return
-	 */
 	public static HandlerRegistration handlePluginContentReady () {
 		return processor().addPluginContentReadyHandler(
 				(event, plugin, lines, params, id, content) -> {

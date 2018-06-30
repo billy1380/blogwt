@@ -31,12 +31,10 @@ import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
-import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
 import com.willshex.blogwt.shared.api.datatype.Post;
-import com.willshex.blogwt.shared.helper.PagerHelper;
 
 final class PageService implements IPageService {
 	public String getName () {
@@ -90,6 +88,11 @@ final class PageService implements IPageService {
 		Document document = null;
 
 		if (page != null) {
+			page.owner = UserServiceProvider.provide()
+					.getUser(keyToId(page.ownerKey));
+
+			populatePostContents(Arrays.asList(page));
+
 			Document.Builder documentBuilder = Document.newBuilder();
 
 			documentBuilder.setId(getName() + page.id.toString())
@@ -188,8 +191,8 @@ final class PageService implements IPageService {
 		List<Post> posts = new ArrayList<Post>();
 
 		for (Page page : pages) {
-			posts.addAll(PersistenceHelper
-					.batchLookupKeys(PostServiceProvider.provide(), page.postKeys));
+			posts.addAll(PersistenceHelper.batchLookupKeys(
+					PostServiceProvider.provide(), page.postKeys));
 		}
 
 		// FIXME: just load in one go (batcg)
@@ -235,19 +238,11 @@ final class PageService implements IPageService {
 	 * @see com.willshex.blogwt.server.service.search.IIndex#indexAll() */
 	@Override
 	public void indexAll () {
-		Pager pager = PagerHelper.createDefaultPager();
-
-		List<Page> pages = null;
-		do {
-			pages = getPages(Boolean.FALSE, pager.start, pager.count, null,
-					null);
-
-			for (Page page : pages) {
-				SearchHelper.queueToIndex(getName(), page.id);
-			}
-
-			PagerHelper.moveForward(pager);
-		} while (pages != null && pages.size() >= pager.count.intValue());
+		SearchHelper.indexAll(getName(),
+				(Integer start, Integer count, PageSortType sortBy,
+						SortDirectionType sortDirection) -> getPages(
+								Boolean.FALSE, start, count, sortBy,
+								sortDirection));
 	}
 
 	/* (non-Javadoc)
@@ -284,14 +279,7 @@ final class PageService implements IPageService {
 	 * com.willshex.blogwt.server.service.search.IIndex#index(java.lang.Long) */
 	@Override
 	public void index (Long id) {
-		Page page = getPage(id);
-
-		page.owner = UserServiceProvider.provide()
-				.getUser(keyToId(page.ownerKey));
-
-		populatePostContents(Arrays.asList(page));
-
-		SearchHelper.indexDocument(toDocument(page));
+		SearchHelper.indexDocument(getName(), toDocument(getPage(id)));
 	}
 
 	/* (non-Javadoc)

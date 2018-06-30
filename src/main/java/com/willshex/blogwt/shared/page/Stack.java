@@ -32,14 +32,14 @@ public class Stack {
 
 			for (String part : parts) {
 				String[] parameters;
-				if (next == null
-						&& (parameters = Stack.decode(NEXT_KEY, part)) != null) {
-					next = new Stack(StringUtils.join(
-							Arrays.asList(parameters), "/"));
-				} else if (previous == null
-						&& (parameters = Stack.decode(PREVIOUS_KEY, part)) != null) {
-					previous = new Stack(StringUtils.join(
-							Arrays.asList(parameters), "/"));
+				if (next == null && (parameters = Stack.decode(NEXT_KEY,
+						part)) != null) {
+					next = new Stack(
+							StringUtils.join(Arrays.asList(parameters), "/"));
+				} else if (previous == null && (parameters = Stack
+						.decode(PREVIOUS_KEY, part)) != null) {
+					previous = new Stack(
+							StringUtils.join(Arrays.asList(parameters), "/"));
 				}
 			}
 		}
@@ -93,8 +93,10 @@ public class Stack {
 	}
 
 	public String toString (int fromPart) {
-		return parts == null ? "" : StringUtils.join(Arrays.asList(parts)
-				.subList(fromPart, parts.length), "/");
+		return parts == null ? ""
+				: StringUtils.join(
+						Arrays.asList(parts).subList(fromPart, parts.length),
+						"/");
 	}
 
 	public String toString (String... param) {
@@ -111,11 +113,11 @@ public class Stack {
 	}
 
 	public String asNextParameter () {
-		return Stack.encode(NEXT_KEY, allParts);
+		return Stack.encode(NEXT_KEY, allParts.split("/"));
 	}
 
 	public String asPreviousParameter () {
-		return Stack.encode(PREVIOUS_KEY, allParts);
+		return Stack.encode(PREVIOUS_KEY, allParts.split("/"));
 	}
 
 	/**
@@ -150,7 +152,7 @@ public class Stack {
 		String parameters = "";
 
 		if (values != null && values.length > 0) {
-			parameters = StringUtils.join(Arrays.asList(values), "/");
+			parameters = StringUtils.join(Arrays.asList(values), "$");
 		}
 
 		return (name == null || name.length() == 0) ? parameters
@@ -161,11 +163,12 @@ public class Stack {
 		String content;
 		String[] splitContent = null;
 
-		if (encoded != null && encoded.length() > 0 && encoded.startsWith(name)) {
+		if (encoded != null && encoded.length() > 0
+				&& encoded.startsWith(name)) {
 			content = encoded.substring(name.length());
 
 			if (content != null && content.length() > 0) {
-				splitContent = content.split("/");
+				splitContent = content.split("\\$");
 			}
 		}
 

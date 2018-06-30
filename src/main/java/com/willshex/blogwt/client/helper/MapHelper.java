@@ -9,6 +9,7 @@ package com.willshex.blogwt.client.helper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.Element;
@@ -87,7 +88,13 @@ public class MapHelper {
 
 		String markerName = params.get(MARKER_NAME_PARAM_NAME);
 
-		return showMap(element, lat, lng, zoom, markerName);
+		Object map = showMap(element, lat, lng, zoom);
+
+		if (markerName != null && markerName.equals("<nameless>")) {
+			markPosition(markerName, lat, lng, zoom, map);
+		}
+
+		return map;
 	}
 
 	private static native void registerMapsInitialisedMethod () /*-{
@@ -183,8 +190,33 @@ public class MapHelper {
 	});
 	}-*/;
 
-	private static native Object showMap (Element element, float lat, float lng,
-			int zoom, String markerName) /*-{
+	public static void geocode (String address,
+			BiConsumer<Double, Double> callback) {
+		geocode(address, callback, geocoder);
+	}
+
+	private static native void geocode (String address,
+			BiConsumer<Double, Double> callback, Object geocoder) /*-{
+	geocoder.geocode({
+	    'address' : address
+	}, function(results, status) {
+	    if (status === 'OK') {
+		var call = $entry(@com.willshex.blogwt.client.helper.MapHelper::geocodeCallback(
+		DDLjava/util/function/BiConsumer;));
+		call(results[0].geometry.location.lat(), results[0].geometry.location.lng(), callback);
+	    } else {
+		Console.error('Geocode was not successful for the following reason: ' + status);
+	    }
+	});
+	}-*/;
+
+	private static void geocodeCallback (double lat, double lng,
+			BiConsumer<Double, Double> callback) {
+		callback.accept(Double.valueOf(lat), Double.valueOf(lng));
+	}
+
+	public static native Object showMap (Element element, float lat, float lng,
+			int zoom) /*-{
 	var myLatlng = {
 	    lat : lat,
 	    lng : lng
@@ -196,16 +228,47 @@ public class MapHelper {
 	};
 
 	var map = new $wnd.google.maps.Map(element, mapOptions);
+	return map;
+	}-*/;
 
-	if (markerName !== undefined) {
-	    var marker = new $wnd.google.maps.Marker({
-		position : myLatlng,
-		map : map,
-		title : (markerName === "<nameless>" ? undefined : markerName)
-	    });
+	public static Object markPosition (String markerName, float lat, float lng,
+			int zoom, Object map) {
+		return markPosition(markerName, lat, lng, zoom, "#ED2939", map);
 	}
 
-	return map;
+	public static native Object markPosition (String markerName, float lat,
+			float lng, int zoom, String colour, Object map) /*-{
+	var myLatlng = {
+	    lat : lat,
+	    lng : lng
+	};
+
+	var marker = new $wnd.google.maps.Marker({
+	    map : map,
+	    position : myLatlng,
+	    title : (markerName === "<nameless>" ? undefined : markerName),
+	    icon : {
+		path : 'm 0,0 c -6.16093,0 -11.15532,4.994393 -11.15532,11.15532 0,6.16092 1.78986,8.459917 12.05912,19.716775 8.40609,-10.962218 9.97441,-13.482931 10.25152,-19.716775 0.27359,-6.154849 -4.9944,-11.15532 -11.15532,-11.15532 z m 0.005,2.518395 a 8.3810184,8.3810184 0 0 1 8.38114,8.380986 8.3810184,8.3810184 0 0 1 -8.38114,8.381144 8.3810184,8.3810184 0 0 1 -8.38099,-8.381144 8.3810184,8.3810184 0 0 1 8.38099,-8.380986 z',
+		fillColor : colour,
+		fillOpacity : 1,
+		strokeColor : '#000',
+		strokeWeight : 0,
+		scale : 1,
+	    }
+	});
+
+	map.setCenter(myLatlng);
+	map.setZoom(zoom);
+
+	return marker;
+	}-*/;
+
+	public static native void clearMarker (Object marker) /*-{
+	marker.setMap(null);
+	}-*/;
+
+	public static native void focus (Object marker, Object map) /*-{
+	map.panTo(marker.getPosition());
 	}-*/;
 
 }
