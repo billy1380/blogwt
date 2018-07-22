@@ -1,7 +1,11 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:d="urn:import:com.willshex.blogwt.client.part.details">
 	<ui:import field="com.willshex.blogwt.shared.page.PageType.*" />
-	<ui:import field="com.willshex.blogwt.shared.helper.UserHelper.AVATAR_LARGE_SIZE" />
+	<ui:import
+		field="com.willshex.blogwt.shared.helper.UserHelper.AVATAR_LARGE_SIZE" />
+	<ui:import field="com.willshex.blogwt.client.helper.PageTypeHelper.*" />
 	<ui:style gss="true">
 	.parent {
 		position: relative;
@@ -20,21 +24,16 @@
 		margin: auto;
 	}
 	
-	.top-of-pair {
-		margin-bottom: -1px;
-		border-bottom-right-radius: 0;
-		border-bottom-left-radius: 0;
+	.button {
+		width: 100%;
 	}
 	
-	.bottom-of-pair {
-		margin-bottom: 10px;
-		border-top-left-radius: 0;
-		border-top-right-radius: 0;
+	.pad-bottom {
+		margin-bottom: 40px;
 	}
 	
-	.top-of-pair:focus, .bottom-of-pair:focus {
-		position: relative;
-		z-index: 2;
+	.pad-top {
+		margin-top: 20px;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">
@@ -51,63 +50,24 @@
 					<span class="text-muted" ui:field="elDates" />
 				</div>
 				<g:FormPanel ui:field="frmDetails">
-					<g:HTMLPanel>
-						<g:HTMLPanel ui:field="pnlUsername" styleName="form-group">
-							<label class="control-label">Username</label>
-							<g:HTMLPanel styleName="input-group">
-								<span class="input-group-addon">@</span>
-								<g:TextBox ui:field="txtUsername" styleName="form-control" />
-							</g:HTMLPanel>
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlUsernameNote"
-								visible="false" />
-							<g:Hyperlink text="Change password" ui:field="lnkChangePassword"
-								styleName="text-right" targetHistoryToken="{ChangePasswordPageType.asTargetHistoryToken}" />
-						</g:HTMLPanel>
+					<g:HTMLPanel styleName="{style.pad-bottom}">
+						<d:DetailsPart ui:field="pnlDetails" />
 
-						<g:HTMLPanel ui:field="pnlPassword" styleName="form-group">
-							<label class="control-label">Password</label>
-							<g:PasswordTextBox ui:field="txtPassword"
-								styleName="form-control {style.top-of-pair}" />
-							<g:PasswordTextBox ui:field="txtConfirmPassword"
-								styleName="form-control {style.bottom-of-pair}" />
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlPasswordNote"
-								visible="false" />
-						</g:HTMLPanel>
-
-						<g:HTMLPanel ui:field="pnlForename" styleName="form-group">
-							<label class="control-label">Forename</label>
-							<g:TextBox ui:field="txtForename" styleName="form-control" />
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlForenameNote"
-								visible="false" />
-						</g:HTMLPanel>
-
-						<g:HTMLPanel ui:field="pnlSurname" styleName="form-group">
-							<label class="control-label">Surname</label>
-							<g:TextBox ui:field="txtSurname" styleName="form-control" />
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlSurnameNote"
-								visible="false" />
-						</g:HTMLPanel>
-
-						<g:HTMLPanel ui:field="pnlEmail" styleName="form-group">
-							<label class="control-label">E-mail</label>
-							<g:TextBox ui:field="txtEmail" styleName="form-control" />
-							<span class="text-muted small" ui:field="elGravatar" />
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlEmailNote"
-								visible="false" />
-						</g:HTMLPanel>
-
-						<g:HTMLPanel ui:field="pnlSummary" styleName="form-group">
-							<label class="control-label">Summary</label>
-							<g:TextArea ui:field="txtSummary" styleName="form-control"
-								visibleLines="4" />
-							<g:HTMLPanel styleName="control-label small" ui:field="pnlSummaryNote"
-								visible="false" />
-						</g:HTMLPanel>
-
-						<g:SubmitButton ui:field="btnUpdate" styleName="btn btn-primary pull-right"
-							text="Update">
+						<g:SubmitButton ui:field="btnUpdate"
+							styleName="{style.button} btn btn-primary" text="Update">
 							Update
 						</g:SubmitButton>
+
+						<g:HTMLPanel styleName="text-center" ui:field="pnlAlternative"
+							visible="false">
+							<div class="{style.pad-top}">or if you already have an account</div>
+
+							<a href="{LOGIN_PAGE_HREF}" ui:field="btnLogin"
+								class="{style.button} btn btn-default {style.pad-top}"
+								text="Sign in">
+								Sign in
+							</a>
+						</g:HTMLPanel>
 					</g:HTMLPanel>
 				</g:FormPanel>
 			</div>

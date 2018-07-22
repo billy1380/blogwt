@@ -13,12 +13,8 @@ import com.google.appengine.api.search.Document;
  * @author William Shakour (billy1380)
  *
  */
-public interface IIndex<T> {
+public interface IIndex<T> extends ITenancy {
 
-	default boolean isShared() {
-		return false;
-	}
-	
 	void index (Long id);
 
 	void indexAll ();

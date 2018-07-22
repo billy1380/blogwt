@@ -113,6 +113,9 @@ public class ChangeAccessPage extends Page
 		createPermissionColumns();
 
 		canManage(false);
+		
+		UiHelper.addPlaceholder(txtRole, "e.g. administrator or ADM");
+		UiHelper.addPlaceholder(txtPermission, "e.g. manage posts or MPO");
 	}
 
 	private void canManage (boolean isUserManager) {

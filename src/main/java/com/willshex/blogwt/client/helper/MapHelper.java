@@ -78,7 +78,7 @@ public class MapHelper {
 		s.setWidth(width, widthUnits);
 
 		float height = floatParam(params, HEIGHT_PARAM_NAME, 200);
-		Unit heightUnits = unitParam(params, HEIGHT_UNITS_PARAM_NAME, Unit.PT);
+		Unit heightUnits = unitParam(params, HEIGHT_UNITS_PARAM_NAME, Unit.PX);
 		s.setHeight(height, heightUnits);
 
 		float lat = floatParam(params, LAT_PARAM_NAME, -34.397f);

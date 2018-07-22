@@ -13,6 +13,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.impl.translate.TranslatorFactory;
+import com.willshex.blogwt.server.helper.EnvironmentHelper;
 import com.willshex.blogwt.server.service.persistence.translator.NotificationModeTypeTranslatorFactory;
 import com.willshex.blogwt.server.service.persistence.translator.PermissionTypeTypeTranslatorFactory;
 import com.willshex.blogwt.server.service.persistence.translator.RelationshipTypeTypeTranslatorFactory;
@@ -62,6 +63,11 @@ public class PersistenceServiceProvider {
 	}
 
 	public static Objectify provide () {
+		return provide(false);
+	}
+
+	public static Objectify provide (boolean shared) {
+		EnvironmentHelper.selectNamespace(shared);
 		return ObjectifyService.ofy();
 	}
 

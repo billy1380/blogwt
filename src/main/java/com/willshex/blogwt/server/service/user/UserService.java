@@ -120,7 +120,7 @@ final class UserService implements IUserService {
 	public void deleteUser (User user) {
 		provide().delete().entity(user);
 
-		SearchHelper.deleteSearch(getName() + user.id.toString());
+		SearchHelper.deleteSearch(this, getName() + user.id.toString());
 	}
 
 	/* (non-Javadoc)
@@ -534,7 +534,7 @@ final class UserService implements IUserService {
 	 * com.willshex.blogwt.server.service.search.IIndex#index(java.lang.Long) */
 	@Override
 	public void index (Long id) {
-		SearchHelper.indexDocument(getName(), toDocument(getUser(id)));
+		SearchHelper.indexDocument(this, getName(), toDocument(getUser(id)));
 	}
 
 	/* (non-Javadoc)
@@ -545,7 +545,8 @@ final class UserService implements IUserService {
 	@Override
 	public List<User> search (String query, Integer start, Integer count,
 			String sortBy, SortDirectionType direction) {
-		Results<ScoredDocument> matches = SearchHelper.getIndex().search(query);
+		Results<ScoredDocument> matches = SearchHelper.getIndex(this)
+				.search(query);
 		List<User> users = new ArrayList<User>();
 		String id;
 		User user;

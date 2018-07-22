@@ -8,6 +8,7 @@
 package com.willshex.blogwt.shared.page;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 import com.willshex.utility.StringUtils;
 
@@ -178,5 +179,13 @@ public class Stack {
 	public int getParameterCount () {
 		int count = parts.length - 2;
 		return count > 0 ? count : 0;
+	}
+
+	public void processParameters (Consumer<String> processor) {
+		final int count = getParameterCount();
+
+		for (int i = 0; i < count; i++) {
+			processor.accept(getParameter(i));
+		}
 	}
 }

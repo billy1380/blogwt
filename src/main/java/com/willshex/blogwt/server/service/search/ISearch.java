@@ -24,4 +24,12 @@ public interface ISearch<T> extends IIndex<T> {
 	String search (Collection<T> resultHolder, String query, String next,
 			Integer count, String sortBy, SortDirectionType direction);
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.server.service.search.ITenancy#isShared() */
+	@Override
+	default boolean isShared () {
+		return false;
+	}
+
 }

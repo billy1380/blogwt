@@ -11,7 +11,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -20,16 +19,11 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.api.user.event.ChangeUserDetailsEventHandler;
-import com.willshex.blogwt.client.api.user.event.GetEmailAvatarEventHandler;
 import com.willshex.blogwt.client.api.user.event.GetUserDetailsEventHandler;
 import com.willshex.blogwt.client.api.user.event.RegisterUserEventHandler;
 import com.willshex.blogwt.client.controller.NavigationController;
@@ -40,12 +34,11 @@ import com.willshex.blogwt.client.helper.PageTypeHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.accounttabs.AccountTabsPart;
+import com.willshex.blogwt.client.part.details.DetailsPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse;
-import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarRequest;
-import com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsRequest;
 import com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse;
 import com.willshex.blogwt.shared.api.user.call.RegisterUserRequest;
@@ -53,6 +46,7 @@ import com.willshex.blogwt.shared.api.user.call.RegisterUserResponse;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
@@ -61,7 +55,7 @@ import com.willshex.gson.web.service.shared.StatusType;
  */
 public class ChangeDetailsPage extends Page
 		implements GetUserDetailsEventHandler, ChangeUserDetailsEventHandler,
-		GetEmailAvatarEventHandler, RegisterUserEventHandler {
+		RegisterUserEventHandler {
 
 	private static ChangeDetailsPageUiBinder uiBinder = GWT
 			.create(ChangeDetailsPageUiBinder.class);
@@ -72,9 +66,6 @@ public class ChangeDetailsPage extends Page
 	public interface ChangeDetailsTemplates extends SafeHtmlTemplates {
 		ChangeDetailsTemplates INSTANCE = GWT
 				.create(ChangeDetailsTemplates.class);
-
-		@Template("{0} (<a href=\"https://en.gravatar.com/\" target=\"_blank\">Gravatar</a>)")
-		SafeHtml gravatarComment (String comment);
 
 		@Template("{0} <a href=\"{1}\"><span class=\"glyphicon glyphicon-user\"></span></a>")
 		SafeHtml rolesAndPermissions (String username, String accessHref);
@@ -88,42 +79,17 @@ public class ChangeDetailsPage extends Page
 	private static final String REGISTER_ACTION_TEXT = "Register";
 
 	@UiField Element elHeading;
-	@UiField Element elGravatar;
+	@UiField DetailsPart pnlDetails;
 	@UiField FormPanel frmDetails;
 
 	@UiField Image imgAvatar;
 	@UiField HeadingElement h3Username;
 	@UiField Element elDates;
 
-	@UiField HTMLPanel pnlUsername;
-	@UiField TextBox txtUsername;
-	@UiField HTMLPanel pnlUsernameNote;
-
-	@UiField HTMLPanel pnlPassword;
-	@UiField PasswordTextBox txtPassword;
-	@UiField PasswordTextBox txtConfirmPassword;
-	@UiField HTMLPanel pnlPasswordNote;
-
-	@UiField HTMLPanel pnlForename;
-	@UiField TextBox txtForename;
-	@UiField HTMLPanel pnlForenameNote;
-
-	@UiField HTMLPanel pnlSurname;
-	@UiField TextBox txtSurname;
-	@UiField HTMLPanel pnlSurnameNote;
-
-	@UiField HTMLPanel pnlEmail;
-	@UiField TextBox txtEmail;
-	@UiField HTMLPanel pnlEmailNote;
-
 	@UiField Button btnUpdate;
-	@UiField Hyperlink lnkChangePassword;
-
-	@UiField HTMLPanel pnlSummary;
-	@UiField TextArea txtSummary;
-	@UiField HTMLPanel pnlSummaryNote;
 
 	@UiField HTMLPanel pnlTabs;
+	@UiField HTMLPanel pnlAlternative;
 
 	private User user;
 	private String actionText;
@@ -131,19 +97,15 @@ public class ChangeDetailsPage extends Page
 	public ChangeDetailsPage () {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		UiHelper.addPlaceholder(txtUsername, "Username");
-		UiHelper.autoFocus(txtUsername);
-
-		UiHelper.addPlaceholder(txtPassword, "Password");
-		UiHelper.addPlaceholder(txtConfirmPassword, "Confirm password");
-
-		UiHelper.addPlaceholder(txtForename, "Forename");
-		UiHelper.addPlaceholder(txtSurname, "Surname");
-		UiHelper.addPlaceholder(txtEmail, "Email");
-
-		UiHelper.addPlaceholder(txtSummary, "Summary");
-
 		actionText = UPDATE_ACTION_TEXT;
+
+		pnlDetails.addAvatarChanged(a -> imgAvatar.setUrl(a));
+		pnlDetails.addUsernameChanged(u -> {
+			String username = "@" + u;
+
+			imgAvatar.setAltText(username);
+			h3Username.setInnerHTML(username);
+		});
 	}
 
 	/* (non-Javadoc)
@@ -157,87 +119,75 @@ public class ChangeDetailsPage extends Page
 
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
-				(p, c) -> {
-					reset();
-
-					boolean addTabs = true;
-
-					if (PageType.ChangeDetailsPageType.equals(c.getPage())) {
-						if (c.getAction() == null) {
-							show(user = SessionController.get().user());
-							lnkChangePassword.setTargetHistoryToken(
-									PageType.ChangePasswordPageType
-											.asTargetHistoryToken());
-							AccountTabsPart.get().setUser(null);
-
-							lnkChangePassword.setVisible(true);
-							pnlPassword.setVisible(false);
-						} else if ("id".equals(c.getAction())
-								&& c.getParameterCount() > 0) {
-							Long id = Long.valueOf(c.getParameter(0));
-							User user = new User();
-							user.id(id);
-
-							AccountTabsPart.get().setUser(user);
-							UserController.get().getUser(user);
-
-							lnkChangePassword.setVisible(false);
-							pnlPassword.setVisible(false);
-						} else if ("new".equals(c.getAction())) {
-							elDates.setInnerText("Enter user details");
-							lnkChangePassword.setVisible(false);
-							pnlPassword.setVisible(true);
-
-							if (SessionController.get().isAdmin()) {
-								actionText = CREATE_ACTION_TEXT;
-							}
-
-							addTabs = false;
-						}
-					} else if (PageType.RegisterPageType.equals(c.getPage())) {
-						elDates.setInnerText("Enter user details");
-						lnkChangePassword.setVisible(false);
-						pnlPassword.setVisible(true);
-
-						actionText = REGISTER_ACTION_TEXT;
-
-						addTabs = false;
-					}
-
-					elHeading.setInnerText(getHeadingText());
-					elGravatar.setInnerSafeHtml(getGravatarSafeHtml());
-
-					if (addTabs) {
-						pnlTabs.add(AccountTabsPart.get());
-						AccountTabsPart.get().navigationChanged(p, c);
-					} else {
-						AccountTabsPart.get().removeFromParent();
-					}
-
-					ready();
-					refreshTitle();
-				}));
+				this::navigationChanged));
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetUserDetailsEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(
 				ChangeUserDetailsEventHandler.TYPE, UserController.get(),
 				this));
-		register(DefaultEventBus.get().addHandlerToSource(
-				GetEmailAvatarEventHandler.TYPE, UserController.get(), this));
+
 		register(DefaultEventBus.get().addHandlerToSource(
 				RegisterUserEventHandler.TYPE, UserController.get(), this));
 	}
 
-	@UiHandler("txtUsername")
-	void onUsernameChanged (ValueChangeEvent<String> vce) {
-		String username = "@" + vce.getValue();
-		imgAvatar.setAltText(username);
-		h3Username.setInnerHTML(username);
-	}
+	void navigationChanged (Stack p, Stack c) {
+		reset();
 
-	@UiHandler("txtEmail")
-	void onEmailChanged (ValueChangeEvent<String> vce) {
-		UserController.get().getEmailAvatar(vce.getValue());
+		boolean addTabs = true, showAlternative = false;
+
+		if (PageType.ChangeDetailsPageType.equals(c.getPage())) {
+			if (c.getAction() == null) {
+				show(user = SessionController.get().user());
+				AccountTabsPart.get().setUser(null);
+
+				pnlDetails.setShowChangePassword(true);
+				pnlDetails.setShowPassword(false);
+			} else if ("id".equals(c.getAction())
+					&& c.getParameterCount() > 0) {
+				Long id = Long.valueOf(c.getParameter(0));
+				User user = new User();
+				user.id(id);
+
+				AccountTabsPart.get().setUser(user);
+				UserController.get().getUser(user);
+
+				pnlDetails.setShowChangePassword(false);
+				pnlDetails.setShowPassword(false);
+			} else if ("new".equals(c.getAction())) {
+				elDates.setInnerText("Enter user details");
+				pnlDetails.setShowChangePassword(false);
+				pnlDetails.setShowPassword(true);
+
+				if (SessionController.get().isAdmin()) {
+					actionText = CREATE_ACTION_TEXT;
+				}
+
+				addTabs = false;
+			}
+		} else if (PageType.RegisterPageType.equals(c.getPage())) {
+			elDates.setInnerText("Enter user details");
+			pnlDetails.setShowChangePassword(false);
+			pnlDetails.setShowPassword(true);
+
+			actionText = REGISTER_ACTION_TEXT;
+
+			showAlternative = true;
+			addTabs = false;
+		}
+
+		elHeading.setInnerText(getHeadingText());
+		setGravatarSafeHtml();
+
+		if (addTabs) {
+			pnlTabs.add(AccountTabsPart.get());
+			AccountTabsPart.get().navigationChanged(p, c);
+		} else {
+			AccountTabsPart.get().removeFromParent();
+		}
+
+		pnlAlternative.setVisible(showAlternative);
+		ready();
+		refreshTitle();
 	}
 
 	private void show (User user) {
@@ -256,11 +206,7 @@ public class ChangeDetailsPage extends Page
 			elDates.setInnerText("Added " + DateTimeHelper.ago(user.created)
 					+ " and last seen " + (user.lastLoggedIn == null ? "never"
 							: DateTimeHelper.ago(user.lastLoggedIn)));
-			txtUsername.setText(user.username);
-			txtForename.setText(user.forename);
-			txtSurname.setText(user.surname);
-			txtEmail.setText(user.email);
-			txtSummary.setText(user.summary);
+			pnlDetails.setUser(user);
 		}
 	}
 
@@ -276,9 +222,7 @@ public class ChangeDetailsPage extends Page
 			GetUserDetailsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			show(user = output.user);
-			lnkChangePassword
-					.setTargetHistoryToken(PageType.ChangePasswordPageType
-							.asTargetHistoryToken("id", user.id.toString()));
+			pnlDetails.setUser(user);
 		}
 
 		ready();
@@ -302,13 +246,14 @@ public class ChangeDetailsPage extends Page
 	void onUpdateClicked (ClickEvent ce) {
 		if (isValid()) {
 			loading();
-			User user = new User().username(txtUsername.getText())
-					.forename(txtForename.getText())
-					.surname(txtSurname.getText()).email(txtEmail.getText())
-					.summary(txtSummary.getValue());
+			User user = new User().username(pnlDetails.getUsername())
+					.forename(pnlDetails.getForename())
+					.surname(pnlDetails.getSurname())
+					.email(pnlDetails.getEmail())
+					.summary(pnlDetails.getSummary());
 
 			if (this.user == null) {
-				user.password(txtPassword.getText());
+				user.password(pnlDetails.getPassword());
 				UserController.get().registerUser(user);
 			} else {
 				user.id(this.user.id);
@@ -333,15 +278,9 @@ public class ChangeDetailsPage extends Page
 				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
 						.nextButton(actionText));
 
+		pnlDetails.setEnabled(true);
+		pnlDetails.focus();
 		btnUpdate.setEnabled(true);
-		txtUsername.setEnabled(true);
-		txtForename.setEnabled(true);
-		txtSurname.setEnabled(true);
-		txtEmail.setEnabled(true);
-		txtPassword.setEnabled(true);
-		txtConfirmPassword.setEnabled(true);
-
-		txtUsername.setFocus(true);
 	}
 
 	private void loading () {
@@ -351,23 +290,9 @@ public class ChangeDetailsPage extends Page
 								Resources.RES.primaryLoader().getSafeUri()));
 
 		btnUpdate.setEnabled(false);
-		txtUsername.setEnabled(false);
-		txtForename.setEnabled(false);
-		txtSurname.setEnabled(false);
-		txtEmail.setEnabled(false);
-		txtPassword.setEnabled(false);
-		txtConfirmPassword.setEnabled(false);
+		pnlDetails.setEnabled(false);
 
-		pnlUsername.removeStyleName("has-error");
-		pnlUsernameNote.setVisible(false);
-		pnlForename.removeStyleName("has-error");
-		pnlForenameNote.setVisible(false);
-		pnlSurname.removeStyleName("has-error");
-		pnlSurnameNote.setVisible(false);
-		pnlEmail.removeStyleName("has-error");
-		pnlEmailNote.setVisible(false);
-		pnlPassword.removeStyleName("has-error");
-		pnlPasswordNote.setVisible(false);
+		pnlDetails.clearErrors();
 	}
 
 	private String getLoadingText () {
@@ -404,24 +329,21 @@ public class ChangeDetailsPage extends Page
 		return headingText;
 	}
 
-	private SafeHtml getGravatarSafeHtml () {
-		SafeHtml gravatarSafeHtml = null;
+	private void setGravatarSafeHtml () {
 		switch (actionText) {
 		case UPDATE_ACTION_TEXT:
-			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE.gravatarComment(
+			pnlDetails.setGravatarComment(
 					"Changing e-mail address will change your avatar");
 			break;
 		case CREATE_ACTION_TEXT:
-			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE.gravatarComment(
+			pnlDetails.setGravatarComment(
 					"E-mail address will determine user's avatar");
 			break;
 		case REGISTER_ACTION_TEXT:
-			gravatarSafeHtml = ChangeDetailsTemplates.INSTANCE.gravatarComment(
+			pnlDetails.setGravatarComment(
 					"Your e-mail address will determine your avatar");
 			break;
 		}
-
-		return gravatarSafeHtml;
 	}
 
 	/* (non-Javadoc)
@@ -469,34 +391,6 @@ public class ChangeDetailsPage extends Page
 		user = null;
 
 		super.reset();
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler
-	 * #getEmailAvatarSuccess(com.willshex.blogwt.shared.api.user.call.
-	 * GetEmailAvatarRequest,
-	 * com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse) */
-	@Override
-	public void getEmailAvatarSuccess (GetEmailAvatarRequest input,
-			GetEmailAvatarResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			imgAvatar.setUrl(output.avatar + "?s="
-					+ UserHelper.AVATAR_LARGE_SIZE + "&default=retro");
-		}
-	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler
-	 * #getEmailAvatarFailure(com.willshex.blogwt.shared.api.user.call.
-	 * GetEmailAvatarRequest, java.lang.Throwable) */
-	@Override
-	public void getEmailAvatarFailure (GetEmailAvatarRequest input,
-			Throwable caught) {
-		GWT.log("getEmailAvatarFailure", caught);
 	}
 
 	/* (non-Javadoc)

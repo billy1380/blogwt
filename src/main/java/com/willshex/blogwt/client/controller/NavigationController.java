@@ -206,6 +206,15 @@ public class NavigationController implements ValueChangeHandler<String> {
 		intended = value.toString();
 	}
 
+	public void replaceNext () {
+		if (stack.hasNext()) {
+			PageTypeHelper.replace(stack.getNext().toString());
+		} else {
+			PageTypeHelper
+					.replace(PageController.get().homePageTargetHistoryToken());
+		}
+	}
+
 	public void showNext () {
 		if (stack.hasNext()) {
 			PageTypeHelper.show(stack.getNext().toString());
@@ -213,7 +222,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 			PageTypeHelper
 					.show(PageController.get().homePageTargetHistoryToken());
 		}
-
 	}
 
 	public void showPrevious () {

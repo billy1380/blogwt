@@ -174,30 +174,34 @@ public class SessionController {
 	public void logout (PageType pageType, String... params) {
 		UserService userService = ApiHelper.createUserClient();
 
-		final LogoutRequest input = setSession(
-				ApiHelper.setAccessCode(new LogoutRequest()));
+		if (session != null) {
+			final LogoutRequest input = setSession(
+					ApiHelper.setAccessCode(new LogoutRequest()));
 
-		userService.logout(input, new AsyncCallback<LogoutResponse>() {
+			userService.logout(input, new AsyncCallback<LogoutResponse>() {
 
-			@Override
-			public void onSuccess (LogoutResponse output) {
-				DefaultEventBus.get().fireEventFromSource(
-						new LogoutEventHandler.LogoutSuccess(input, output),
-						SessionController.this);
-			}
+				@Override
+				public void onSuccess (LogoutResponse output) {
+					DefaultEventBus.get().fireEventFromSource(
+							new LogoutEventHandler.LogoutSuccess(input, output),
+							SessionController.this);
+				}
 
-			@Override
-			public void onFailure (Throwable caught) {
-				DefaultEventBus.get().fireEventFromSource(
-						new LogoutEventHandler.LogoutFailure(input, caught),
-						SessionController.this);
-			}
-		});
+				@Override
+				public void onFailure (Throwable caught) {
+					DefaultEventBus.get().fireEventFromSource(
+							new LogoutEventHandler.LogoutFailure(input, caught),
+							SessionController.this);
+				}
+			});
 
-		session = null;
+			session = null;
+		}
+
 		Cookies.removeCookie(COOKIE_KEY_ID);
+
 		if (pageType != null) {
-			PageTypeHelper.show(pageType, params);
+			PageTypeHelper.replace(pageType, params);
 		}
 	}
 

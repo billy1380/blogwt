@@ -146,7 +146,7 @@ final class PageService implements IPageService {
 	public void deletePage (Page page) {
 		provide().delete().entity(page).now();
 
-		SearchHelper.deleteSearch(getName() + page.id.toString());
+		SearchHelper.deleteSearch(this, getName() + page.id.toString());
 	}
 
 	/* (non-Javadoc)
@@ -279,7 +279,7 @@ final class PageService implements IPageService {
 	 * com.willshex.blogwt.server.service.search.IIndex#index(java.lang.Long) */
 	@Override
 	public void index (Long id) {
-		SearchHelper.indexDocument(getName(), toDocument(getPage(id)));
+		SearchHelper.indexDocument(this, getName(), toDocument(getPage(id)));
 	}
 
 	/* (non-Javadoc)
@@ -290,7 +290,8 @@ final class PageService implements IPageService {
 	@Override
 	public List<Page> search (String query, Integer start, Integer count,
 			String sortBy, SortDirectionType direction) {
-		Results<ScoredDocument> matches = SearchHelper.getIndex().search(query);
+		Results<ScoredDocument> matches = SearchHelper.getIndex(this)
+				.search(query);
 		List<Page> pages = new ArrayList<Page>();
 		String id;
 		Page page;

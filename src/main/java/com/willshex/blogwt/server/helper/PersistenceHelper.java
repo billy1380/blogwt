@@ -25,6 +25,7 @@ import com.willshex.blogwt.server.service.ISortable;
 import com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.DataType;
+import com.willshex.blogwt.shared.util.LongSparseArray;
 
 /**
  * @author William Shakour (billy1380)
@@ -33,7 +34,7 @@ import com.willshex.blogwt.shared.api.datatype.DataType;
 public class PersistenceHelper {
 
 	public static <T> Long keyToId (Key<T> key) {
-		return Long.valueOf(key.getId());
+		return key == null ? null : Long.valueOf(key.getId());
 	}
 
 	public static <T> Key<T> idToKey (Class<? extends T> kindClass, Long id) {
@@ -130,6 +131,26 @@ public class PersistenceHelper {
 
 			try {
 				lookup.put((LS) f.get(item), item);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		return lookup;
+	}
+
+	public static <T> LongSparseArray<T> typeSparse (Iterable<T> items) {
+		LongSparseArray<T> lookup = new LongSparseArray<>();
+
+		Field f = null;
+
+		for (T item : items) {
+			if (f == null) {
+				f = key(item.getClass());
+			}
+
+			try {
+				lookup.put(((Long) f.get(item)).longValue(), item);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				throw new RuntimeException(e);
 			}

@@ -11,7 +11,9 @@
 	}
 	</ui:style>
 	<g:HTMLPanel>
-		<g:Button ui:field="btnBackToTop" styleName="{style.backToTop} btn btn-primary"
-			text="Back To Top" />
+		<g:Button ui:field="btnBackToTop"
+			styleName="{style.backToTop} btn btn-default">
+			<span class="glyphicon glyphicon-chevron-up" />
+		</g:Button>
 	</g:HTMLPanel>
 </ui:UiBinder> 

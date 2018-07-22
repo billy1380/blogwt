@@ -8,6 +8,7 @@
 package com.willshex.blogwt.client.page.user;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -25,6 +26,7 @@ import com.willshex.blogwt.client.Resources;
 import com.willshex.blogwt.client.api.user.event.LoginEventHandler;
 import com.willshex.blogwt.client.controller.NavigationController;
 import com.willshex.blogwt.client.controller.PageController;
+import com.willshex.blogwt.client.controller.PropertyController;
 import com.willshex.blogwt.client.controller.SessionController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.ApiHelper;
@@ -36,6 +38,9 @@ import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.LoginRequest;
 import com.willshex.blogwt.shared.api.user.call.LoginResponse;
 import com.willshex.blogwt.shared.api.validation.ApiError;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
+import com.willshex.blogwt.shared.page.PageType;
+import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.gson.web.service.shared.StatusType;
 
 /**
@@ -61,6 +66,9 @@ public class LoginPage extends Page implements LoginEventHandler {
 
 	@UiField Button btnSignIn;
 	@UiField FormPanel frmLogin;
+	@UiField HTMLPanel pnlAlternative;
+
+	@UiField AnchorElement btnRegister;
 
 	public LoginPage () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -99,10 +107,8 @@ public class LoginPage extends Page implements LoginEventHandler {
 		txtPassword.setEnabled(false);
 		cbxRememberMe.setEnabled(false);
 
-		pnlUsername.removeStyleName("has-error");
-		pnlUsernameNote.setVisible(false);
-		pnlPassword.removeStyleName("has-error");
-		pnlPasswordNote.setVisible(false);
+		UiHelper.removeError(pnlUsername, pnlUsernameNote);
+		UiHelper.removeError(pnlPassword, pnlPasswordNote);
 	}
 
 	/* (non-Javadoc)
@@ -117,24 +123,49 @@ public class LoginPage extends Page implements LoginEventHandler {
 		register(DefaultEventBus.get().addHandlerToSource(
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				(p, c) -> {
-					if (SessionController.get().isValidSession()) {
-						PageTypeHelper.show(PageController.get()
-								.homePageTargetHistoryToken());
-					} else {
-						String action = c.getAction();
-						if (action != null) {
-							String[] parts = action.split("=");
+					btnRegister.setHref(PageTypeHelper.REGISTER_PAGE_HREF);
 
-							if (parts != null && parts.length > 1) {
-								if ("username".equals(parts[0])) {
-									txtUsername.setValue(parts[1]);
-								}
-							}
+					if (SessionController.get().isValidSession()) {
+						if (c.hasNext()) {
+							NavigationController.get().showNext();
+						} else {
+							PageTypeHelper.show(PageController.get()
+									.homePageTargetHistoryToken());
+						}
+					} else {
+						processParameter(c.getAction());
+
+						if (c.hasNext()) {
+							btnRegister.setHref(PageTypeHelper.asHref(
+									PageType.RegisterPageType,
+									c.getNext().asNextParameter()));
 						}
 					}
 				}));
 
+		pnlAlternative.setVisible(PropertyController.get().booleanProperty(
+				PropertyHelper.ALLOW_USER_REGISTRATION, false));
+
 		ready();
+	}
+
+	private void processParameter (String parameter) {
+		if (parameter != null) {
+			String[] parts = parameter.split("=");
+
+			if (parts != null && parts.length > 1) {
+				if ("username".equals(parts[0])) {
+					txtUsername.setValue(parts[1]);
+				} else if (isNext(parts[0])) {
+
+				}
+			}
+		}
+	}
+
+	private boolean isNext (String part) {
+		return Stack.NEXT_KEY.substring(0, Stack.NEXT_KEY.length() - 1)
+				.equals(part);
 	}
 
 	@UiHandler("btnSignIn")
@@ -159,13 +190,12 @@ public class LoginPage extends Page implements LoginEventHandler {
 		if (output.status == StatusType.StatusTypeFailure) {
 			if (ApiHelper.isError(output.error,
 					ApiError.AuthenticationFailed)) {
-				pnlUsername.addStyleName("has-error");
-				pnlUsernameNote.getElement().setInnerText(output.error.message);
-				pnlUsernameNote.setVisible(true);
-				pnlPassword.addStyleName("has-error");
+				UiHelper.showError(pnlUsername, pnlPasswordNote,
+						output.error.message);
+				pnlPassword.addStyleName(UiHelper.HAS_ERROR_STYLE);
 			}
 		} else {
-			NavigationController.get().showNext();
+			NavigationController.get().replaceNext();
 		}
 
 		ready();
@@ -197,11 +227,10 @@ public class LoginPage extends Page implements LoginEventHandler {
 	protected void reset () {
 		frmLogin.reset();
 
-		pnlUsername.removeStyleName("has-error");
-		pnlUsernameNote.setVisible(false);
-		pnlPassword.removeStyleName("has-error");
-		pnlPasswordNote.setVisible(false);
+		UiHelper.removeError(pnlUsername, pnlUsernameNote);
+		UiHelper.removeError(pnlPassword, pnlPasswordNote);
 
+		btnRegister.setHref(PageTypeHelper.REGISTER_PAGE_HREF);
 	}
 
 	/* (non-Javadoc)
@@ -217,12 +246,12 @@ public class LoginPage extends Page implements LoginEventHandler {
 	 * @see com.willshex.blogwt.client.page.Page#hasHeader() */
 	@Override
 	public boolean hasHeader () {
-		return true;
+		return false;
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.page.Page#getHeader()
-	 */
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#getHeader() */
 	@Override
 	public Composite getHeader () {
 		return LoginHeaderPart.get();

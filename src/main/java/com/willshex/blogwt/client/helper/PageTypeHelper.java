@@ -72,6 +72,11 @@ public class PageTypeHelper {
 	public static final SafeUri CHANGE_ACCESS_PAGE_HREF = asHref(
 			PageType.ChangeAccessPageType);
 
+	public static final SafeUri REGISTER_PAGE_HREF = asHref(
+			PageType.RegisterPageType);
+	public static final SafeUri LOGIN_PAGE_HREF = asHref(
+			PageType.LoginPageType);
+
 	/**
 	 * 
 	 * @param pageType
@@ -181,6 +186,19 @@ public class PageTypeHelper {
 	public static void show (final String targetHistoryToken) {
 		Scheduler.get()
 				.scheduleDeferred( () -> History.newItem(targetHistoryToken));
+	}
+	
+	public static void replace (final PageType pageType) {
+		replace(pageType.asTargetHistoryToken());
+	}
+
+	public static void replace (final PageType pageType, final String... params) {
+		replace(pageType.asTargetHistoryToken(params));
+	}
+
+	public static void replace (final String targetHistoryToken) {
+		Scheduler.get()
+				.scheduleDeferred( () -> History.replaceItem(targetHistoryToken));
 	}
 
 	public static SafeUri asHref (PageType pageType) {

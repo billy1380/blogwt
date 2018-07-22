@@ -62,7 +62,7 @@ public class MetaNotificationsPage extends Page {
 	//					.modes(Arrays.asList(
 	//							NotificationModeType.NotificationModeTypeSms))
 	//					.name("ABC name").id(1L)),
-	//			i -> i.id);
+	//			DataTypeHelper::id);
 
 	public MetaNotificationsPage () {
 		initWidget(uiBinder.createAndBindUi(this));

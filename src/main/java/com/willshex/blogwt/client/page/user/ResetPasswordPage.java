@@ -13,6 +13,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -23,6 +24,7 @@ import com.willshex.blogwt.client.api.user.event.ResetPasswordEventHandler;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
+import com.willshex.blogwt.client.part.loginheader.LoginHeaderPart;
 import com.willshex.blogwt.client.wizard.WizardDialog;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse;
@@ -51,7 +53,7 @@ public class ResetPasswordPage extends Page implements
 	public ResetPasswordPage () {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		UiHelper.addPlaceholder(txtEmail, "E-mail");
+		UiHelper.addPlaceholder(txtEmail, "e.g. johnny@smith.com");
 		UiHelper.autoFocus(txtEmail);
 	}
 
@@ -160,5 +162,29 @@ public class ResetPasswordPage extends Page implements
 	protected void reset () {
 		frmReset.reset();
 		super.reset();
+	}
+	
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
+	@Override
+	public String getTitle () {
+		return UiHelper.pageTitle("Forgot password");
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#hasHeader() */
+	@Override
+	public boolean hasHeader () {
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#getHeader() */
+	@Override
+	public Composite getHeader () {
+		return LoginHeaderPart.get();
 	}
 }

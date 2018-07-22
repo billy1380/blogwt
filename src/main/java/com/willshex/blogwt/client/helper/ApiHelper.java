@@ -27,6 +27,7 @@ import com.willshex.blogwt.shared.api.search.Search;
 import com.willshex.blogwt.shared.api.upload.Upload;
 import com.willshex.blogwt.shared.api.user.User;
 import com.willshex.blogwt.shared.api.validation.ApiError;
+import com.willshex.gson.shared.Jsonable;
 import com.willshex.gson.web.service.client.event.CallFailureEventHandler;
 import com.willshex.gson.web.service.client.event.CallStartEventHandler;
 import com.willshex.gson.web.service.client.event.CallSuccessEventHandler;
@@ -54,20 +55,19 @@ public class ApiHelper {
 		DefaultEventBus.get().addHandler(CallStartEventHandler.TYPE,
 				(origin, name, i, handle) -> {
 					GWT.log("Calling " + origin.getUrl() + "." + name
-							+ " with input [" + i + "].");
+							+ " with input [" + pretty(i) + "].");
 				});
 		DefaultEventBus.get().addHandler(CallSuccessEventHandler.TYPE,
 				(origin, name, i, o) -> {
 					GWT.log("Call to " + origin.getUrl() + "." + name
-							+ " with input [" + i + "] succeeded with output ["
-							+ o + "].");
+							+ " with input [" + pretty(i)
+							+ "] succeeded with output [" + pretty(o) + "].");
 				});
-		DefaultEventBus.get()
-				.addHandler(CallFailureEventHandler.TYPE,
-						(origin, name, i, caught) -> GWT.log(
-								"Call to " + origin.getUrl() + "." + name
-										+ " with input [" + i + "] failed.",
-								caught));
+		DefaultEventBus.get().addHandler(CallFailureEventHandler.TYPE,
+				(origin, name, i, caught) -> GWT.log(
+						"Call to " + origin.getUrl() + "." + name
+								+ " with input [" + pretty(i) + "] failed.",
+						caught));
 	}
 
 	public static BlogService createBlogClient () {
@@ -75,6 +75,14 @@ public class ApiHelper {
 		service.setUrl(BLOG_END_POINT);
 		service.setBus(DefaultEventBus.get());
 		return service;
+	}
+
+	private static String pretty (Jsonable i) {
+		return i == null ? null :
+		//			JsonUtils.beautifyJson(
+				i.toString()
+		//		)
+		;
 	}
 
 	public static UserService createUserClient () {

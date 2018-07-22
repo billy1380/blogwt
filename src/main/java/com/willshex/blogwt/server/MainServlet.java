@@ -12,6 +12,7 @@ import static com.willshex.blogwt.shared.helper.JsonableHelper.jsonForJsVar;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.Attributes;
@@ -25,11 +26,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.willshex.blogwt.server.helper.HttpHelper;
 import com.willshex.blogwt.server.helper.InlineHelper;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.ServletHelper;
-import com.willshex.blogwt.server.page.PageMarkup;
-import com.willshex.blogwt.server.page.PageMarkupFactory;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.property.IPropertyService;
@@ -43,7 +44,6 @@ import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
-import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.server.ContextAwareServlet;
 
 /**
@@ -61,6 +61,9 @@ public class MainServlet extends ContextAwareServlet {
 	public static final String ALT_URL = "/";
 	public static final String URL = "";
 
+	private static final String ESCAPED_FRAGMENT_KEY = "_escaped_fragment_";
+	private static final String PRE_RENDER_SERIVCE_ENDPOINT = "https://service.prerender.io/";
+
 	private static String PAGE_FORMAT = null;
 
 	//	private static final long TIMEOUT_MILLIS = 5000;
@@ -70,6 +73,8 @@ public class MainServlet extends ContextAwareServlet {
 
 	private static final String RSS_LINK_FORMAT = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"%s\" href=\"/feed\" />";
 	private static final String FAVICON_FORMAT = "<link rel=\"icon\" href=\"%s\" type=\"image/x-icon\">";
+
+	private static final String PRERENDERER_TOKEN = null;
 
 	static {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -298,7 +303,7 @@ public class MainServlet extends ContextAwareServlet {
 	 * @return
 	 */
 	private boolean isStatic () {
-		return REQUEST.get().getParameter("_escaped_fragment_") != null;
+		return REQUEST.get().getParameter(ESCAPED_FRAGMENT_KEY) != null;
 	}
 
 	/**
@@ -310,19 +315,29 @@ public class MainServlet extends ContextAwareServlet {
 	 */
 	private void processStaticRequest () throws IOException {
 		HttpServletRequest request = REQUEST.get();
-		String fragmentParameter = request.getParameter("_escaped_fragment_");
+		String fragmentParameter = request.getParameter(ESCAPED_FRAGMENT_KEY);
 
-		Stack s = Stack.parse(fragmentParameter);
-		PageMarkup p = PageMarkupFactory.createFromStack(s);
+		if (PRERENDERER_TOKEN != null && !PRERENDERER_TOKEN.isEmpty()) {
+			Map<String, String> headers = new HashMap<>();
+			headers.put("X-Prerender-Token", PRERENDERER_TOKEN);
+			headers.put("User-Agent", request.getHeader("User-Agent"));
 
-		HttpServletResponse response = RESPONSE.get();
+			String url = ServletHelper.constructBaseUrl(request);
 
-		response.setCharacterEncoding(ServletHelper.UTF8);
-		response.setHeader("Content-Type",
-				"text/html; charset=" + ServletHelper.UTF8);
+			byte[] bytes = HttpHelper.curl(
+					PRE_RENDER_SERIVCE_ENDPOINT + url + "?"
+							+ ESCAPED_FRAGMENT_KEY + "=" + fragmentParameter,
+					HTTPMethod.GET, headers);
 
-		if (p != null) {
-			response.getOutputStream().write(p.asString().getBytes());
+			HttpServletResponse response = RESPONSE.get();
+
+			response.setCharacterEncoding(ServletHelper.UTF8);
+			response.setHeader("Content-Type",
+					"text/html; charset=" + ServletHelper.UTF8);
+
+			if (bytes != null) {
+				response.getOutputStream().write(bytes);
+			}
 		}
 	}
 

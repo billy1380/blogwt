@@ -14,6 +14,7 @@ import java.util.function.Function;
 
 import com.googlecode.objectify.Key;
 import com.willshex.blogwt.shared.api.datatype.DataType;
+import com.willshex.blogwt.shared.util.LongSparseArray;
 
 /**
  * @author William Shakour (billy1380)
@@ -53,7 +54,26 @@ public class DataTypeHelper {
 		return map(data, t -> t.id);
 	}
 
+	public static <T> LongSparseArray<T> sparse (List<T> data,
+			Function<T, Long> id) {
+		return LongSparseArray.of(data, id);
+	}
+
+	public static <T extends DataType> LongSparseArray<T> sparse (
+			List<T> data) {
+		return sparse(data, t -> t.id);
+	}
+
+	public static <T extends DataType> LongSparseArray<T> toLookup (
+			List<T> data) {
+		return data == null ? new LongSparseArray<T>() : sparse(data);
+	}
+
 	public static <T extends DataType> int idSort (T r, T l) {
 		return r.id.compareTo(l.id);
+	}
+
+	public static <T extends DataType> Long id (T t) {
+		return t.id;
 	}
 }

@@ -7,13 +7,13 @@
 //
 package com.willshex.blogwt.shared.page;
 
+import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_NOTIFICATIONS;
 import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_PAGES;
 import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_PERMISSIONS;
 import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_POSTS;
 import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_RESOURCES;
 import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_ROLES;
 import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_USERS;
-import static com.willshex.blogwt.shared.helper.PermissionHelper.MANAGE_NOTIFICATIONS;
 
 import java.util.Arrays;
 import java.util.Collection;

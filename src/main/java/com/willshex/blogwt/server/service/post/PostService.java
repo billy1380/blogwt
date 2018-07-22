@@ -330,7 +330,7 @@ final class PostService implements IPostService, ISearch<Post> {
 
 		provide().delete().key(post.contentKey).now();
 
-		SearchHelper.deleteSearch(getName() + post.id.toString());
+		SearchHelper.deleteSearch(this, getName() + post.id.toString());
 
 		if (previousSlug != null && nextSlug != null) {
 			previousPost = getSlugPost(previousSlug);
@@ -741,7 +741,7 @@ final class PostService implements IPostService, ISearch<Post> {
 	 * com.willshex.blogwt.server.service.search.IIndex#index(java.lang.Long) */
 	@Override
 	public void index (Long id) {
-		SearchHelper.indexDocument(toDocument(getPost(id)));
+		SearchHelper.indexDocument(this, toDocument(getPost(id)));
 	}
 
 	/* (non-Javadoc)
@@ -752,7 +752,8 @@ final class PostService implements IPostService, ISearch<Post> {
 	@Override
 	public List<Post> search (String query, Integer start, Integer count,
 			String sortBy, SortDirectionType direction) {
-		Results<ScoredDocument> matches = SearchHelper.getIndex().search(query);
+		Results<ScoredDocument> matches = SearchHelper.getIndex(this)
+				.search(query);
 		List<Post> posts = new ArrayList<Post>();
 		String id;
 		Post post;

@@ -20,6 +20,7 @@ public class PagerHelper {
 
 	public static Integer DEFAULT_START = Integer.valueOf(0);
 	public static Integer DEFAULT_COUNT = Integer.valueOf(10);
+	public static Integer INFINITE_COUNT = Integer.valueOf(Integer.MAX_VALUE);
 	public static String DEFAULT_SORT_BY = null;
 	private static Integer CAP = Integer.valueOf(DEFAULT_COUNT.intValue() * 4);
 

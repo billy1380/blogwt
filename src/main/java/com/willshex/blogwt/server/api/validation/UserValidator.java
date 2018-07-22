@@ -39,6 +39,8 @@ public class UserValidator extends ApiValidator {
 
 	public static User validate (User user, String name)
 			throws InputValidationException {
+		notNull(user, CLASS, name);
+
 		boolean foundUsername = false, foundEmail = false;
 
 		if (user.username != null) {
@@ -95,8 +97,8 @@ public class UserValidator extends ApiValidator {
 
 	public static boolean isAdmin (User user) {
 		List<Role> roles = user.roles == null && user.roleKeys != null
-				? PersistenceHelper.batchLookupKeys(RoleServiceProvider.provide(),
-						user.roleKeys)
+				? PersistenceHelper.batchLookupKeys(
+						RoleServiceProvider.provide(), user.roleKeys)
 				: user.roles;
 		return user != null && roles != null
 				&& RoleHelper.toLookup(roles).containsKey(RoleHelper.ADMIN);

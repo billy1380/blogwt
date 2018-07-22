@@ -1,0 +1,60 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:p="urn:import:com.willshex.blogwt.client.part.password">
+	<ui:import field="com.willshex.blogwt.shared.page.PageType.*" />
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel>
+		<g:HTMLPanel ui:field="pnlUsername"
+			styleName="form-group">
+			<label class="control-label">Username</label>
+			<g:HTMLPanel styleName="input-group">
+				<span class="input-group-addon">@</span>
+				<g:TextBox ui:field="txtUsername" styleName="form-control" />
+			</g:HTMLPanel>
+			<g:HTMLPanel styleName="control-label small"
+				ui:field="pnlUsernameNote" visible="false" />
+			<g:Hyperlink text="Change password" ui:field="lnkChangePassword"
+				styleName="text-right"
+				targetHistoryToken="{ChangePasswordPageType.asTargetHistoryToken}" />
+		</g:HTMLPanel>
+
+		<p:PasswordPart ui:field="pnlPassword" />
+
+		<g:HTMLPanel ui:field="pnlForename"
+			styleName="form-group">
+			<label class="control-label">Forename</label>
+			<g:TextBox ui:field="txtForename" styleName="form-control" />
+			<g:HTMLPanel styleName="control-label small"
+				ui:field="pnlForenameNote" visible="false" />
+		</g:HTMLPanel>
+
+		<g:HTMLPanel ui:field="pnlSurname"
+			styleName="form-group">
+			<label class="control-label">Surname</label>
+			<g:TextBox ui:field="txtSurname" styleName="form-control" />
+			<g:HTMLPanel styleName="control-label small"
+				ui:field="pnlSurnameNote" visible="false" />
+		</g:HTMLPanel>
+
+		<g:HTMLPanel ui:field="pnlEmail"
+			styleName="form-group">
+			<label class="control-label">E-mail</label>
+			<g:TextBox ui:field="txtEmail" styleName="form-control" />
+			<span class="text-muted small" ui:field="elGravatar" />
+			<g:HTMLPanel styleName="control-label small"
+				ui:field="pnlEmailNote" visible="false" />
+		</g:HTMLPanel>
+
+		<g:HTMLPanel ui:field="pnlSummary"
+			styleName="form-group">
+			<label class="control-label">Summary</label>
+			<g:TextArea ui:field="txtSummary" styleName="form-control"
+				visibleLines="4" />
+			<g:HTMLPanel styleName="control-label small"
+				ui:field="pnlSummaryNote" visible="false" />
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

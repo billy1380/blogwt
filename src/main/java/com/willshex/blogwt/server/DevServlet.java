@@ -28,7 +28,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.willshex.blogwt.server.api.blog.action.GetPostsActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
-import com.willshex.blogwt.server.helper.EnvironmentHelper;
+import com.willshex.blogwt.server.background.resave.ResaveServlet;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.generateddownload.GeneratedDownloadServiceProvider;
@@ -77,7 +77,7 @@ public class DevServlet extends ContextAwareServlet {
 
 	public static final String URL = "/dev";
 
-	private static interface AllPaged<T, E extends Enum<E>> {
+	public static interface AllPaged<T, E extends Enum<E>> {
 		List<T> get (Integer start, Integer count, E sortBy,
 				SortDirectionType sortDirection);
 	}
@@ -125,13 +125,14 @@ public class DevServlet extends ContextAwareServlet {
 			String ids = REQUEST.get().getParameter("ids");
 
 			String namespace = REQUEST.get().getParameter("ns");
-			EnvironmentHelper.selectNamespace(namespace == null ? false
-					: Boolean.valueOf(namespace).booleanValue());
 
 			String[] split = ids.split(",");
 
 			for (String id : split) {
-				SearchHelper.deleteSearch(name, id);
+				SearchHelper.deleteSearch(
+						() -> namespace == null ? false
+								: Boolean.valueOf(namespace).booleanValue(),
+						name, id);
 			}
 		} else if ("linkall".equals(action)) {
 			PostServiceProvider.provide().linkAll();
@@ -266,6 +267,9 @@ public class DevServlet extends ContextAwareServlet {
 			default:
 				break;
 			}
+		} else if (action != null && action.startsWith("resave")) {
+			String typeName = REQUEST.get().getParameter("type");
+			ResaveServlet.queueForResaving(typeName);
 		} else if (action != null && action.startsWith("deleteposts")) {
 			processPaged( (Integer s, Integer c, PostSortType o,
 					SortDirectionType d) -> PostServiceProvider.provide()
@@ -274,18 +278,23 @@ public class DevServlet extends ContextAwareServlet {
 		}
 	}
 
+	public static <T, E extends Enum<E>> Pager processPaged (Pager p,
+			AllPaged<T, E> supplier, Consumer<T> processor) {
+		List<T> list = supplier.get(p.start, p.count, null, null);
+
+		for (T item : list) {
+			processor.accept(item);
+		}
+
+		return list.size() == p.count.intValue() ? PagerHelper.moveForward(p)
+				: null;
+	}
+
 	private static <T, E extends Enum<E>> void processPaged (
-			AllPaged<T, E> supplier, Consumer<T> deleter) {
+			AllPaged<T, E> supplier, Consumer<T> processor) {
 		Pager p = PagerHelper.createDefaultPager().count(Integer.valueOf(1200));
-		List<T> list;
 		do {
-			list = supplier.get(p.start, p.count, null, null);
-
-			for (T item : list) {
-				deleter.accept(item);
-			}
-
-			PagerHelper.moveForward(p);
-		} while (list.size() == p.count.intValue());
+			p = processPaged(p, supplier, processor);
+		} while (p != null);
 	}
 }

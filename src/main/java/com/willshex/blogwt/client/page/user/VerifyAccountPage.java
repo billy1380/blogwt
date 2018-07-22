@@ -13,6 +13,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.DefaultEventBus;
 import com.willshex.blogwt.client.api.user.event.VerifyAccountEventHandler;
@@ -21,7 +22,9 @@ import com.willshex.blogwt.client.controller.PageController;
 import com.willshex.blogwt.client.controller.UserController;
 import com.willshex.blogwt.client.event.NavigationChangedEventHandler;
 import com.willshex.blogwt.client.helper.PageTypeHelper;
+import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.client.page.Page;
+import com.willshex.blogwt.client.part.loginheader.LoginHeaderPart;
 import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
 import com.willshex.blogwt.shared.api.user.call.VerifyAccountResponse;
 import com.willshex.gson.web.service.shared.StatusType;
@@ -118,4 +121,28 @@ public class VerifyAccountPage extends Page
 		super.reset();
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
+	@Override
+	public String getTitle () {
+		return UiHelper.pageTitle("Verify email");
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#hasHeader() */
+	@Override
+	public boolean hasHeader () {
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.willshex.blogwt.client.page.Page#getHeader() */
+	@Override
+	public Composite getHeader () {
+		return LoginHeaderPart.get();
+	}
+	
 }

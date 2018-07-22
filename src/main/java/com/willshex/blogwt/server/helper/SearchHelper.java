@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.appengine.api.search.Cursor;
 import com.google.appengine.api.search.Document;
@@ -35,6 +37,7 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.service.search.ISearch;
+import com.willshex.blogwt.server.service.search.ITenancy;
 import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.DataType;
@@ -46,6 +49,9 @@ import com.willshex.utility.StringUtils;
  *
  */
 public class SearchHelper {
+
+	private static final Logger LOG = Logger
+			.getLogger(SearchHelper.class.getName());
 
 	public static final String ENTITY_NAME_KEY = "name";
 	public static final String ENTITY_ID_KEY = "id";
@@ -68,13 +74,19 @@ public class SearchHelper {
 				SortDirectionType sortDirection);
 	}
 
-	public static void indexDocument (Document document) {
-		indexDocument(ALL_INDEX_NAME, document);
+	public static void indexDocument (ITenancy tenancy, Document document) {
+		indexDocument(tenancy, ALL_INDEX_NAME, document);
 	}
 
-	public static void indexDocument (String name, Document document) {
+	public static <T> void indexDocument (ITenancy tenancy, String name,
+			Document document) {
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Indexing document with document [" + document + "] and ["
+					+ name + "]");
+		}
+
 		if (document != null) {
-			indexDocument(name, document, RETRY_COUNT);
+			indexDocument(tenancy, name, document, RETRY_COUNT);
 		}
 	}
 
@@ -82,8 +94,17 @@ public class SearchHelper {
 			String name, GetAll<T, E> pagedGetter) {
 		Pager pager = PagerHelper.createDefaultPager();
 
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Indexing all [" + name + "]");
+		}
+
 		List<T> lines = null;
 		do {
+			if (LOG.isLoggable(Level.FINE)) {
+				LOG.fine("Getting pager start [" + pager.start + "] count ["
+						+ pager.count + "]");
+			}
+
 			lines = pagedGetter.get(pager.start, pager.count, null, null);
 
 			for (T line : lines) {
@@ -96,11 +117,11 @@ public class SearchHelper {
 		return lines;
 	}
 
-	private static void indexDocument (String name, Document document,
-			int retry) {
+	private static void indexDocument (ITenancy tenancy, String name,
+			Document document, int retry) {
 		do {
 			try {
-				getIndex(name).put(document);
+				getIndex(tenancy, name).put(document);
 				retry = 0;
 			} catch (PutException e) {
 				if (StatusCode.TRANSIENT_ERROR
@@ -116,31 +137,51 @@ public class SearchHelper {
 
 	private static SearchService ensureSearchService () {
 		if (searchService == null) {
+			if (LOG.isLoggable(Level.FINE)) {
+				LOG.fine("Search service is null, creating now.");
+			}
+
 			searchService = SearchServiceFactory.getSearchService();
 		}
 
 		return searchService;
 	}
 
-	public static void deleteSearch (String documentId) {
-		deleteSearch(ALL_INDEX_NAME, documentId);
+	public static void deleteSearch (ITenancy tenancy, String documentId) {
+		deleteSearch(tenancy, ALL_INDEX_NAME, documentId);
 	}
 
-	public static void deleteSearch (String name, String documentId) {
-		getIndex(name).delete(documentId);
+	public static void deleteSearch (ITenancy tenancy, String name,
+			String documentId) {
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Deleting name [" + name + "] document id [" + documentId
+					+ "]");
+		}
+
+		getIndex(tenancy, name).delete(documentId);
 	}
 
-	public static Index getIndex () {
-		return getIndex(ALL_INDEX_NAME);
+	public static Index getIndex (ITenancy tenancy) {
+		return getIndex(tenancy, ALL_INDEX_NAME);
 	}
 
-	public static Index getIndex (String name) {
+	public static Index getIndex (ITenancy tenancy, String name) {
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Getting index [" + name + "]");
+		}
+
+		EnvironmentHelper.selectNamespace(tenancy.isShared());
 		return ensureSearchService()
 				.getIndex(IndexSpec.newBuilder().setName(name).build());
 	}
 
 	public static <T> Query<T> addStartsWith (String field, String text,
 			Query<T> query) {
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Searching for [" + text + "] in field [" + field
+					+ "] with query [" + query + "]");
+		}
+
 		return query.filter(field + " >=", text).filter(field + " <",
 				text + "\ufffd");
 	}
@@ -159,12 +200,24 @@ public class SearchHelper {
 		int retry = RETRY_COUNT;
 		do {
 			try {
+				if (LOG.isLoggable(Level.FINE)) {
+					LOG.fine("Enqueueing name [" + name + "] and id [" + id
+							+ "] for indexing on [" + queue.getQueueName()
+							+ "]");
+				}
+
 				queue.add(options);
 
 				// success no need to retry
 				retry = 0;
 			} catch (TransientFailureException ex) {
 				retry--;
+
+				if (LOG.isLoggable(Level.FINE)) {
+					LOG.log(Level.FINE,
+							"Failed, retrying [" + retry + "] retrys remaining",
+							ex);
+				}
 			}
 		} while (retry > 0);
 	}
@@ -177,8 +230,8 @@ public class SearchHelper {
 	 * @param direction
 	 * @return 
 	 */
-	public static List<Long> search (String query, String indexName,
-			Integer start, Integer count, String sortBy,
+	public static List<Long> search (ITenancy tenancy, String query,
+			String indexName, Integer start, Integer count, String sortBy,
 			SortDirectionType direction) {
 		QueryOptions.Builder queryOptionsBuilder = QueryOptions.newBuilder()
 				.setOffset(start == null ? PagerHelper.DEFAULT_START.intValue()
@@ -203,7 +256,7 @@ public class SearchHelper {
 		com.google.appengine.api.search.Query apiQuery = com.google.appengine.api.search.Query
 				.newBuilder().setOptions(options).build(query);
 
-		Results<ScoredDocument> matches = SearchHelper.getIndex(indexName)
+		Results<ScoredDocument> matches = getIndex(tenancy, indexName)
 				.search(apiQuery);
 
 		String id;
@@ -217,9 +270,9 @@ public class SearchHelper {
 		return ids;
 	}
 
-	public static String search (Collection<Long> resultsIds, String query,
-			String indexName, String next, Integer count, String sortBy,
-			SortDirectionType direction) {
+	public static String search (ITenancy tenancy, Collection<Long> resultsIds,
+			String query, String indexName, String next, Integer count,
+			String sortBy, SortDirectionType direction) {
 		Cursor cursor = null;
 
 		if (!SearchHelper.EMPTY_CURSOR.equals(next)) {
@@ -249,8 +302,8 @@ public class SearchHelper {
 			com.google.appengine.api.search.Query apiQuery = com.google.appengine.api.search.Query
 					.newBuilder().setOptions(options).build(query);
 
-			Results<ScoredDocument> matches = SearchHelper.getIndex(indexName)
-					.search(apiQuery);
+			Results<ScoredDocument> matches = SearchHelper
+					.getIndex(tenancy, indexName).search(apiQuery);
 
 			String id;
 			if (resultsIds == null) {
@@ -272,9 +325,14 @@ public class SearchHelper {
 				: cursor.toWebSafeString();
 	}
 
-	public static <T> T one (String query, ISearch<T> searchable) {
-		List<T> result = pagedAndSorted(searchable, query, Integer.valueOf(0),
+	public static <T> T one (String query, ISearch<T> search) {
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Searching for one with query [" + query + "]");
+		}
+
+		List<T> result = pagedAndSorted(search, query, Integer.valueOf(0),
 				Integer.valueOf(1), null, null);
+
 		return result == null || result.isEmpty() ? null : result.get(0);
 	}
 
@@ -289,6 +347,14 @@ public class SearchHelper {
 
 	public static void addSearchTokens (String fieldName,
 			Builder documentBuilder, List<String> searchable) {
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Adding search tokens to field [" + fieldName + "]");
+
+			if (LOG.isLoggable(Level.FINEST)) {
+				LOG.finest("Tokens [" + searchable + "]");
+			}
+		}
+
 		Collection<String> tokens = StringUtils.matchParts(searchable);
 
 		if (tokens != null && !tokens.isEmpty()) {
