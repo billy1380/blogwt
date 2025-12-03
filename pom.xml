@@ -22,7 +22,7 @@
 
 	<properties>
 		<!-- GWT -->
-		<gwt.version>2.8.1</gwt.version>
+		<gwt.version>2.8.2</gwt.version>
 		<gwt.style>OBF</gwt.style>
 
 		<!-- App Engine -->
@@ -62,14 +62,15 @@
 					</execution>
 				</executions>
 				<configuration>
-					<doCheck>true</doCheck>
-					<doUpdate>true</doUpdate>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
 				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -209,14 +210,21 @@
 						<module>com.willshex.blogwt.Blogwt</module>
 					</modules>
 				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<!-- appengine:devserver_start - start web server -->
 			<!-- appengine:devserver_stop - stop web server -->
 			<plugin>
-				<groupId>com.google.appengine</groupId>
+				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>appengine-maven-plugin</artifactId>
-				<version>${appengine.version}</version>
+				<version>2.7.0</version>
 				<configuration>
 					<enableJarSplitting>true</enableJarSplitting>
 					<enableJarClasses>false</enableJarClasses>
@@ -231,6 +239,7 @@
 						<jvmFlag>-XX:+CMSPermGenSweepingEnabled</jvmFlag>
 						<jvmFlag>-Xmx3G</jvmFlag>
 					</jvmFlags>
+					<projectId>blogwtproject</projectId>
 					<version>0v4</version>
 				</configuration>
 			</plugin>

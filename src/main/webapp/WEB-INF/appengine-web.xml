@@ -2,12 +2,13 @@
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
 	<application>blogwtproject</application>
 	<version>1</version>
-	<runtime>java8</runtime>
+	<runtime>java17</runtime>
 
 	<!-- Allows App Engine to send multiple requests to one instance in parallel: -->
 	<threadsafe>true</threadsafe>
 	
 	<sessions-enabled>true</sessions-enabled>
+	<app-engine-apis>true</app-engine-apis>
 
 	<!-- Configure serving/caching of GWT files -->
 	<static-files>
