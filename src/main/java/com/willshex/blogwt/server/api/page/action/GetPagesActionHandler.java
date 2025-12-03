@@ -25,27 +25,36 @@ import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPagesResponse;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.UserHelper;
+import com.willshex.gson.web.service.server.InputValidationException;
 
 public final class GetPagesActionHandler
 		extends ActionHandler<GetPagesRequest, GetPagesResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetPagesActionHandler.class.getName());
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
 	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
+	 * com.willshex.gson.web.service.shared.Response)
+	 */
 	@Override
-	protected void handle (GetPagesRequest input, GetPagesResponse output)
+	protected void handle(GetPagesRequest input, GetPagesResponse output)
 			throws Exception {
 
 		ApiValidator.request(input, GetPagesRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-		output.session = input.session = SessionValidator
-				.lookupCheckAndExtend(input.session, "input.session");
+		if (input.session != null) {
+			try {
+				output.session = input.session = SessionValidator
+						.lookupCheckAndExtend(input.session, "input.session");
+			} catch (InputValidationException ex) {
+				output.session = input.session = null;
+			}
+		}
 
 		if (input.pager == null) {
 			input.pager = PagerHelper.createDefaultPager();
@@ -78,19 +87,23 @@ public final class GetPagesActionHandler
 		output.pager = PagerHelper.moveForward(input.pager);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput()
+	 */
 	@Override
-	protected GetPagesResponse newOutput () {
+	protected GetPagesResponse newOutput() {
 		return new GetPagesResponse();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger()
+	 */
 	@Override
-	protected Logger logger () {
+	protected Logger logger() {
 		return LOG;
 	}
 }
