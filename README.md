@@ -30,3 +30,17 @@ __Note:__ To change the gwt code on the fly the code server has to be running. T
 
 ## Demo
 I have previously had issues with discrepancies between the appengine sdk behaviour and production so to use for testing and also for demo purposes I there is a relatively up to date version of the project running __[here](http://blogwtproject.appspot.com "Blogwt demo")__ so go have a look.
+
+### Build
+To build the project and generate the WAR file, run:
+```bash
+mvn clean package
+```
+This will compile the Java code, compile the GWT client-side code, and package everything into a WAR file in the `target` directory.
+
+### Deploy
+To deploy the application to Google App Engine, run:
+```bash
+mvn appengine:deploy
+```
+This command will upload the application to the App Engine project configured in `pom.xml` (or `appengine-web.xml`).
