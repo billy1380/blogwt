@@ -26,7 +26,7 @@ import com.willshex.service.ServiceDiscovery;
  * @author billy1380
  *
  */
-@SuppressWarnings("serial")
+
 @WebServlet(name = "Search Indexer", urlPatterns = SearchIndexServlet.URL)
 @ServletSecurity(value = @HttpConstraint(rolesAllowed = "admin"))
 public class SearchIndexServlet extends ContextAwareServlet {
@@ -36,11 +36,13 @@ public class SearchIndexServlet extends ContextAwareServlet {
 	private static final Logger LOG = Logger
 			.getLogger(SearchIndexServlet.class.getName());
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.service.ContextAwareServlet#doGet() */
+	 * @see com.willshex.service.ContextAwareServlet#doGet()
+	 */
 	@Override
-	protected void doGet () throws ServletException, IOException {
+	protected void doGet() throws ServletException, IOException {
 		super.doGet();
 
 		String appEngineQueue = REQUEST.get()
@@ -82,11 +84,13 @@ public class SearchIndexServlet extends ContextAwareServlet {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.service.ContextAwareServlet#doPost() */
+	 * @see com.willshex.service.ContextAwareServlet#doPost()
+	 */
 	@Override
-	protected void doPost () throws ServletException, IOException {
+	protected void doPost() throws ServletException, IOException {
 		doGet();
 	}
 

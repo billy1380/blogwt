@@ -23,9 +23,9 @@ import javax.servlet.annotation.ServletSecurity;
 import javax.servlet.annotation.WebServlet;
 
 import com.google.gson.JsonObject;
-import com.willshex.blogwt.server.DevServlet.AllPaged;
 import com.willshex.blogwt.server.background.resave.input.QueueForResavingAction;
 import com.willshex.blogwt.server.background.resave.input.ResaveAction;
+import com.willshex.blogwt.server.dev.DevServlet.AllPaged;
 import com.willshex.blogwt.server.helper.QueueHelper;
 import com.willshex.blogwt.server.helper.QueueHelper.HasQueueAction;
 import com.willshex.blogwt.shared.api.Pager;
@@ -39,7 +39,7 @@ import com.willshex.server.ContextAwareServlet;
  * @author William Shakour (billy1380)
  *
  */
-@SuppressWarnings("serial")
+
 @WebServlet(name = "Resave", description = "Resaves data after attribute changes", urlPatterns = {
 		ResaveServlet.URL, ResaveServlet.URL + "/*" })
 @ServletSecurity(value = @HttpConstraint(rolesAllowed = "admin"))
@@ -51,7 +51,8 @@ public class ResaveServlet extends ContextAwareServlet
 		public final Function<Iterable<Long>, List<T>> batchSupplier;
 		public final Consumer<T> processor;
 
-		Resaver (Function<Iterable<Long>, List<T>> batchSupplier,
+		@SuppressWarnings("unused")
+		Resaver(Function<Iterable<Long>, List<T>> batchSupplier,
 				AllPaged<T, E> pagedSupplier, Consumer<T> processor) {
 			this.batchSupplier = batchSupplier;
 			this.pagedSupplier = pagedSupplier;
@@ -72,22 +73,26 @@ public class ResaveServlet extends ContextAwareServlet
 	private static final Map<String, Resaver<? extends DataType, ?>> RESAVERS = new HashMap<>();
 
 	static {
-//		RESAVERS.put();
+		// RESAVERS.put();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.server.ContextAwareServlet#doPost() */
+	 * @see com.willshex.server.ContextAwareServlet#doPost()
+	 */
 	@Override
-	protected void doPost () throws ServletException, IOException {
+	protected void doPost() throws ServletException, IOException {
 		doGet();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.server.ContextAwareServlet#doGet() */
+	 * @see com.willshex.server.ContextAwareServlet#doGet()
+	 */
 	@Override
-	protected void doGet () throws ServletException, IOException {
+	protected void doGet() throws ServletException, IOException {
 		super.doGet();
 
 		try {
@@ -97,12 +102,14 @@ public class ResaveServlet extends ContextAwareServlet
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.helper.QueueHelper.HasQueueAction#
-	 * processAction(java.lang.String, com.google.gson.JsonObject) */
+	 * processAction(java.lang.String, com.google.gson.JsonObject)
+	 */
 	@Override
-	public void processAction (String action, JsonObject json)
+	public void processAction(String action, JsonObject json)
 			throws Exception {
 		if (QUEUE_FOR_RESAVING_ACTION.equals(action)) {
 			QueueForResavingAction input = new QueueForResavingAction();
@@ -115,7 +122,7 @@ public class ResaveServlet extends ContextAwareServlet
 		}
 	}
 
-	private void processQueueForResaving (QueueForResavingAction input)
+	private void processQueueForResaving(QueueForResavingAction input)
 			throws ServiceException {
 		Resaver<? extends DataType, ?> resaver = RESAVERS.get(input.typeName);
 
@@ -139,7 +146,7 @@ public class ResaveServlet extends ContextAwareServlet
 		}
 	}
 
-	private void processResave (ResaveAction input) throws ServiceException {
+	private void processResave(ResaveAction input) throws ServiceException {
 		@SuppressWarnings("unchecked")
 		Resaver<DataType, ?> r = (Resaver<DataType, ?>) RESAVERS
 				.get(input.typeName);
@@ -162,17 +169,17 @@ public class ResaveServlet extends ContextAwareServlet
 		}
 	}
 
-	public static void queueForResaving (String typeName) {
+	public static void queueForResaving(String typeName) {
 		queueForResaving(typeName,
 				PagerHelper.createDefaultPager().count(AT_A_TIME));
 	}
 
-	public static void queueForResaving (String typeName, Pager pager) {
+	public static void queueForResaving(String typeName, Pager pager) {
 		QueueHelper.enqueue(URL, QUEUE_FOR_RESAVING_ACTION,
 				new QueueForResavingAction().typeName(typeName).pager(pager));
 	}
 
-	public static void resave (String typeName, List<? extends DataType> data,
+	public static void resave(String typeName, List<? extends DataType> data,
 			Pager pager) {
 		QueueHelper.enqueue(URL, RESAVE_ACTION,
 				new ResaveAction().typeName(typeName)

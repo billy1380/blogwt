@@ -66,7 +66,7 @@ import com.willshex.utility.JsonUtils;
  * @author William Shakour (billy1380)
  *
  */
-@SuppressWarnings("serial")
+
 @WebServlet(name = "Dev", urlPatterns = { DevServlet.URL,
 		DevServlet.URL + "/*" })
 @ServletSecurity(value = @HttpConstraint(rolesAllowed = "admin"))
@@ -78,23 +78,27 @@ public class DevServlet extends ContextAwareServlet {
 	public static final String URL = "/dev";
 
 	public static interface AllPaged<T, E extends Enum<E>> {
-		List<T> get (Integer start, Integer count, E sortBy,
+		List<T> get(Integer start, Integer count, E sortBy,
 				SortDirectionType sortDirection);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.server.ContextAwareServlet#doPost() */
+	 * @see com.willshex.server.ContextAwareServlet#doPost()
+	 */
 	@Override
-	protected void doPost () throws ServletException, IOException {
+	protected void doPost() throws ServletException, IOException {
 		doGet();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.service.ContextAwareServlet#doGet() */
+	 * @see com.willshex.service.ContextAwareServlet#doGet()
+	 */
 	@Override
-	protected void doGet () throws ServletException, IOException {
+	protected void doGet() throws ServletException, IOException {
 		super.doGet();
 
 		String action = REQUEST.get().getParameter("action");
@@ -264,21 +268,74 @@ public class DevServlet extends ContextAwareServlet {
 			Stack stack = Stack.parse(d.parameters);
 			Filter filter = Filter.fromStack(stack);
 			switch (filter.type) {
-			default:
-				break;
+				default:
+					break;
 			}
 		} else if (action != null && action.startsWith("resave")) {
 			String typeName = REQUEST.get().getParameter("type");
 			ResaveServlet.queueForResaving(typeName);
 		} else if (action != null && action.startsWith("deleteposts")) {
-			processPaged( (Integer s, Integer c, PostSortType o,
+			processPaged((Integer s, Integer c, PostSortType o,
 					SortDirectionType d) -> PostServiceProvider.provide()
 							.getPosts(Boolean.TRUE, Boolean.FALSE, s, c, o, d),
 					PostServiceProvider.provide()::deletePost);
+		} else if ("convertstrings".equals(action)) {
+			com.google.appengine.api.datastore.DatastoreService ds = com.google.appengine.api.datastore.DatastoreServiceFactory
+					.getDatastoreService();
+			java.util.List<String> kinds = java.util.Arrays.asList("ArchiveEntry",
+					"Comment", "Field", "Form", "GeneratedDownload",
+					"MetaNotification", "Notification", "NotificationSetting",
+					"Page", "Permission", "Post", "PostContent", "Property",
+					"PushToken", "Rating", "Reaction", "Relationship",
+					"Resource", "Role", "Session", "Tag", "User");
+
+			for (String kind : kinds) {
+				com.google.appengine.api.datastore.Query q = new com.google.appengine.api.datastore.Query(
+						kind);
+				com.google.appengine.api.datastore.PreparedQuery pq = ds
+						.prepare(q);
+				for (com.google.appengine.api.datastore.Entity entity : pq
+						.asIterable()) {
+					boolean changed = false;
+					com.google.appengine.api.datastore.Entity newEntity = null;
+
+					// Handle ID
+					com.google.appengine.api.datastore.Key key = entity
+							.getKey();
+					if (key.getId() != 0) {
+						newEntity = new com.google.appengine.api.datastore.Entity(
+								kind, String.valueOf(key.getId()));
+						newEntity.setPropertiesFrom(entity);
+						changed = true;
+					} else {
+						newEntity = entity;
+					}
+
+					// Handle Date properties
+					java.util.Map<String, Object> properties = newEntity
+							.getProperties();
+					for (java.util.Map.Entry<String, Object> entry : properties
+							.entrySet()) {
+						if (entry.getValue() instanceof java.util.Date) {
+							newEntity.setProperty(entry.getKey(),
+									((java.util.Date) entry.getValue())
+											.toInstant().toString());
+							changed = true;
+						}
+					}
+
+					if (changed) {
+						ds.put(newEntity);
+						if (key.getId() != 0) {
+							ds.delete(key);
+						}
+					}
+				}
+			}
 		}
 	}
 
-	public static <T, E extends Enum<E>> Pager processPaged (Pager p,
+	public static <T, E extends Enum<E>> Pager processPaged(Pager p,
 			AllPaged<T, E> supplier, Consumer<T> processor) {
 		List<T> list = supplier.get(p.start, p.count, null, null);
 
@@ -290,7 +347,7 @@ public class DevServlet extends ContextAwareServlet {
 				: null;
 	}
 
-	private static <T, E extends Enum<E>> void processPaged (
+	private static <T, E extends Enum<E>> void processPaged(
 			AllPaged<T, E> supplier, Consumer<T> processor) {
 		Pager p = PagerHelper.createDefaultPager().count(Integer.valueOf(1200));
 		do {

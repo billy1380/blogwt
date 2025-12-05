@@ -47,12 +47,11 @@ import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdateResourceRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
-@SuppressWarnings("serial")
 @WebServlet(name = "Blog API", urlPatterns = Blog.PATH)
 public final class BlogJsonServlet extends JsonServlet {
 
 	@Override
-	protected String processAction (String action, JsonObject request) {
+	protected String processAction(String action, JsonObject request) {
 		String output = "null";
 		if ("GetProperties".equals(action)) {
 			GetPropertiesRequest input = new GetPropertiesRequest();

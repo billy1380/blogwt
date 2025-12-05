@@ -12,7 +12,6 @@ import java.util.Date;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -34,56 +33,63 @@ import com.willshex.blogwt.shared.helper.DateTimeHelper;
  *
  */
 public class DateField extends Composite
-		implements HasValueChangeHandlers<Date>, HasValue<Date> {
+		implements HasValue<Date> {
 
 	private static DateFieldUiBinder uiBinder = GWT
 			.create(DateFieldUiBinder.class);
 
-	interface DateFieldUiBinder extends UiBinder<Widget, DateField> {}
+	interface DateFieldUiBinder extends UiBinder<Widget, DateField> {
+	}
 
-	@UiField public DateBox ctlDate;
-	@UiField Element elStatusIcon;
+	@UiField
+	public DateBox ctlDate;
+	@UiField
+	Element elStatusIcon;
 
 	private static final String CALENDAR = "glyphicon glyphicon-calendar";
 	private static final String CLOSE = "glyphicon glyphicon-remove";
 
-	public DateField () {
+	public DateField() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 		showIcon(CALENDAR);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
 	@Override
-	protected void onAttach () {
+	protected void onAttach() {
 		super.onAttach();
 
 		this.removeStyleName("input-group");
 		this.addStyleName("input-group");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.google.gwt.event.logical.shared.HasValueChangeHandlers#
 	 * addValueChangeHandler(com.google.gwt.event.logical.shared.
-	 * ValueChangeHandler) */
+	 * ValueChangeHandler)
+	 */
 	@Override
-	public HandlerRegistration addValueChangeHandler (
+	public HandlerRegistration addValueChangeHandler(
 			ValueChangeHandler<Date> handler) {
 		return ctlDate.addValueChangeHandler(handler);
 	}
 
-	public void setPlaceholder (String s) {
+	public void setPlaceholder(String s) {
 		UiHelper.addPlaceholder(ctlDate.getTextBox(), s);
 	}
 
 	/**
 	 * @param pattern
 	 */
-	public void setFormat (String pattern) {
+	public void setFormat(String pattern) {
 		ctlDate.setFormat(new DefaultFormat(DateTimeFormat.getFormat(pattern)));
 		UiHelper.addPlaceholder(ctlDate.getTextBox(), "e.g. "
 				+ ctlDate.getFormat().format(ctlDate, DateTimeHelper.now()));
@@ -92,23 +98,27 @@ public class DateField extends Composite
 	/**
 	 * @return
 	 */
-	public boolean isEmpty () {
+	public boolean isEmpty() {
 		return ctlDate.getTextBox().getValue().trim().isEmpty();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.google.gwt.user.client.ui.HasValue#getValue() */
+	 * @see com.google.gwt.user.client.ui.HasValue#getValue()
+	 */
 	@Override
-	public Date getValue () {
+	public Date getValue() {
 		return ctlDate.getValue();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object) */
+	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object)
+	 */
 	@Override
-	public void setValue (Date value) {
+	public void setValue(Date value) {
 		ctlDate.setValue(value);
 
 		if (value == null) {
@@ -118,12 +128,14 @@ public class DateField extends Composite
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object,
-	 * boolean) */
+	 * boolean)
+	 */
 	@Override
-	public void setValue (Date value, boolean fireEvents) {
+	public void setValue(Date value, boolean fireEvents) {
 		ctlDate.setValue(value, fireEvents);
 
 		if (!fireEvents) {
@@ -136,7 +148,7 @@ public class DateField extends Composite
 	}
 
 	@UiHandler("btnStatus")
-	void onStatusClicked (ClickEvent ce) {
+	void onStatusClicked(ClickEvent ce) {
 		if (ctlDate.getValue() == null) {
 			ctlDate.showDatePicker();
 			ctlDate.setFocus(true);
@@ -147,7 +159,7 @@ public class DateField extends Composite
 	}
 
 	@UiHandler("ctlDate")
-	void onValueChanged (ValueChangeEvent<Date> vce) {
+	void onValueChanged(ValueChangeEvent<Date> vce) {
 		if (vce.getValue() == null) {
 			showIcon(CALENDAR);
 		} else {
@@ -155,7 +167,7 @@ public class DateField extends Composite
 		}
 	}
 
-	private void showIcon (String style) {
+	private void showIcon(String style) {
 		elStatusIcon.removeClassName(CALENDAR);
 		elStatusIcon.removeClassName(CLOSE);
 		elStatusIcon.addClassName(style);

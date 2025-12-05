@@ -31,12 +31,11 @@ import com.willshex.blogwt.shared.api.notification.call.UpdateMetaNotificationRe
 import com.willshex.blogwt.shared.api.notification.call.UpdateNotificationSettingsRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
-@SuppressWarnings("serial")
 @WebServlet(name = "Notification API", urlPatterns = Notification.PATH)
 public final class NotificationJsonServlet extends JsonServlet {
 
 	@Override
-	protected String processAction (String action, JsonObject request) {
+	protected String processAction(String action, JsonObject request) {
 		String output = "null";
 		if ("UpdateMetaNotification".equals(action)) {
 			UpdateMetaNotificationRequest input = new UpdateMetaNotificationRequest();

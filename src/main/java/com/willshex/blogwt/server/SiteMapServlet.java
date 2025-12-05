@@ -34,7 +34,7 @@ import com.willshex.server.ContextAwareServlet;
  * @author William Shakour (billy1380)
  *
  */
-@SuppressWarnings("serial")
+
 @WebServlet(name = "Site Map", urlPatterns = { SiteMapServlet.URL,
 		SiteMapServlet.URL + ".xml" })
 public class SiteMapServlet extends ContextAwareServlet {
@@ -43,11 +43,13 @@ public class SiteMapServlet extends ContextAwareServlet {
 	private static final String MIME_TYPE = "application/xml; charset=UTF-8";
 	private static final String LOC_FORMAT = "    <url><loc>%s/%s</loc></url>";
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.service.ContextAwareServlet#doGet() */
+	 * @see com.willshex.service.ContextAwareServlet#doGet()
+	 */
 	@Override
-	protected void doGet () throws ServletException, IOException {
+	protected void doGet() throws ServletException, IOException {
 		super.doGet();
 
 		String url = ServletHelper.constructBaseUrl(REQUEST.get());
@@ -72,20 +74,20 @@ public class SiteMapServlet extends ContextAwareServlet {
 		p.close();
 	}
 
-	protected void doPost () throws ServletException, IOException {
+	protected void doPost() throws ServletException, IOException {
 		doGet();
 	}
 
-	private void printRoot (PrintWriter p, String url) {
+	private void printRoot(PrintWriter p, String url) {
 		p.println(String.format(LOC_FORMAT, url, "#!"));
 	}
 
-	private void printBlog (PrintWriter p, String url) {
+	private void printBlog(PrintWriter p, String url) {
 		p.println(String.format(LOC_FORMAT, url,
 				"#" + PageType.PostsPageType.asTargetHistoryToken()));
 	}
 
-	private void printPosts (PrintWriter p, String url) {
+	private void printPosts(PrintWriter p, String url) {
 		List<Post> posts;
 		Pager pager = PagerHelper.createDefaultPager();
 
@@ -107,7 +109,7 @@ public class SiteMapServlet extends ContextAwareServlet {
 		} while (posts != null && posts.size() >= pager.count.intValue());
 	}
 
-	private void printPages (PrintWriter p, String url) {
+	private void printPages(PrintWriter p, String url) {
 		List<Page> pages = PageServiceProvider.provide().getPages(Boolean.FALSE,
 				Integer.valueOf(0), null, PageSortType.PageSortTypePriority, null);
 
@@ -120,7 +122,7 @@ public class SiteMapServlet extends ContextAwareServlet {
 		}
 	}
 
-	private void printTags (PrintWriter p, String url) {
+	private void printTags(PrintWriter p, String url) {
 		List<Tag> tags = TagServiceProvider.provide().getTags();
 
 		if (tags.size() >= 0) {

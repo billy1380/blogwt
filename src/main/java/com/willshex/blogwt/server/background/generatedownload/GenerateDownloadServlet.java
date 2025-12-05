@@ -35,7 +35,7 @@ import com.willshex.server.ContextAwareServlet;
  * @author William Shakour (billy1380)
  *
  */
-@SuppressWarnings("serial")
+
 @WebServlet(name = "Generate Download", urlPatterns = GenerateDownloadServlet.URL)
 public class GenerateDownloadServlet extends ContextAwareServlet
 		implements HasQueueAction {
@@ -44,11 +44,13 @@ public class GenerateDownloadServlet extends ContextAwareServlet
 
 	public static final String URL = "/generatedownload";
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.server.ContextAwareServlet#doGet() */
+	 * @see com.willshex.server.ContextAwareServlet#doGet()
+	 */
 	@Override
-	protected void doGet () throws ServletException, IOException {
+	protected void doGet() throws ServletException, IOException {
 		super.doGet();
 
 		try {
@@ -58,20 +60,24 @@ public class GenerateDownloadServlet extends ContextAwareServlet
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.server.ContextAwareServlet#doPost() */
+	 * @see com.willshex.server.ContextAwareServlet#doPost()
+	 */
 	@Override
-	protected void doPost () throws ServletException, IOException {
+	protected void doPost() throws ServletException, IOException {
 		doGet();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.helper.QueueHelper.HasQueueAction#
-	 * processAction(java.lang.String, com.google.gson.JsonObject) */
+	 * processAction(java.lang.String, com.google.gson.JsonObject)
+	 */
 	@Override
-	public void processAction (String action, JsonObject json)
+	public void processAction(String action, JsonObject json)
 			throws ServiceException {
 		if (GENERATE_DOWNLOAD_ACTION.equals(action)) {
 			GenerateDownloadAction input = new GenerateDownloadAction();
@@ -82,9 +88,9 @@ public class GenerateDownloadServlet extends ContextAwareServlet
 
 	/**
 	 * @param input
-	 * @throws InputValidationException 
+	 * @throws InputValidationException
 	 */
-	private void processGenerateDownload (GenerateDownloadAction input)
+	private void processGenerateDownload(GenerateDownloadAction input)
 			throws ServiceException {
 		GeneratedDownload generatedDownload = GeneratedDownloadValidator
 				.lookup(input.download, "input.download");
@@ -126,7 +132,7 @@ public class GenerateDownloadServlet extends ContextAwareServlet
 		}
 	}
 
-	public static void generateDownload (GeneratedDownload download) {
+	public static void generateDownload(GeneratedDownload download) {
 		QueueHelper.enqueue(URL, GENERATE_DOWNLOAD_ACTION,
 				new GenerateDownloadAction()
 						.download((GeneratedDownload) new GeneratedDownload()

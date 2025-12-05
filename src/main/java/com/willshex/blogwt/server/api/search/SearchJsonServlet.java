@@ -15,12 +15,11 @@ import com.willshex.blogwt.shared.api.search.Search;
 import com.willshex.blogwt.shared.api.search.call.SearchAllRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
-@SuppressWarnings("serial")
 @WebServlet(name = "Search API", urlPatterns = Search.PATH)
 public final class SearchJsonServlet extends JsonServlet {
 
 	@Override
-	protected String processAction (String action, JsonObject request) {
+	protected String processAction(String action, JsonObject request) {
 		String output = "null";
 		if ("SearchAll".equals(action)) {
 			SearchAllRequest input = new SearchAllRequest();

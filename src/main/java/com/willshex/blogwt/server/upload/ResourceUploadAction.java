@@ -30,17 +30,19 @@ import gwtupload.server.gae.CloudStorageUploadAction;
  * @author William Shakour (billy1380)
  *
  */
-@SuppressWarnings("serial")
+
 @WebServlet(name = "Upload", urlPatterns = Upload.PATH)
 public class ResourceUploadAction extends CloudStorageUploadAction {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * gwtupload.server.gae.CloudStorageUploadAction#executeAction(javax.servlet
-	 * .http.HttpServletRequest, java.util.List) */
+	 * .http.HttpServletRequest, java.util.List)
+	 */
 	@Override
-	public String executeAction (HttpServletRequest request,
+	public String executeAction(HttpServletRequest request,
 			List<FileItem> sessionFiles) throws UploadActionException {
 		StringBuffer resourcesJson = new StringBuffer();
 		Resource resource;
@@ -68,7 +70,8 @@ public class ResourceUploadAction extends CloudStorageUploadAction {
 											.getKey()))
 							.replaceFirst("https:\\/\\/", "//")
 							.replaceFirst("http:\\/\\/", "//"));
-				} catch (Throwable e) {}
+				} catch (Throwable e) {
+				}
 
 				resource.properties = object.toString();
 

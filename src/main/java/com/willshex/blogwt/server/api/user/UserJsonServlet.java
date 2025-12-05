@@ -51,12 +51,11 @@ import com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest;
 import com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
-@SuppressWarnings("serial")
 @WebServlet(name = "User API", urlPatterns = User.PATH)
 public final class UserJsonServlet extends JsonServlet {
 
 	@Override
-	protected String processAction (String action, JsonObject request) {
+	protected String processAction(String action, JsonObject request) {
 		String output = "null";
 		if ("GetUsers".equals(action)) {
 			GetUsersRequest input = new GetUsersRequest();

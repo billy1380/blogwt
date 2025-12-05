@@ -31,14 +31,13 @@ import com.willshex.blogwt.shared.page.search.Filter;
 import com.willshex.gson.web.service.server.JsonServlet;
 import com.willshex.utility.StringUtils;
 
-@SuppressWarnings("serial")
 @WebServlet(name = "Download API", urlPatterns = Download.PATH)
 public final class DownloadJsonServlet extends JsonServlet {
 
 	private static final String ENTITY_ID_KEY = "id";
 
 	@Override
-	protected String processAction (String action, JsonObject request) {
+	protected String processAction(String action, JsonObject request) {
 		String output = "null";
 		if ("DeleteGeneratedDownloads".equals(action)) {
 			DeleteGeneratedDownloadsRequest input = new DeleteGeneratedDownloadsRequest();
@@ -59,11 +58,13 @@ public final class DownloadJsonServlet extends JsonServlet {
 		return output;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.gson.web.service.server.JsonServlet#doGet() */
+	 * @see com.willshex.gson.web.service.server.JsonServlet#doGet()
+	 */
 	@Override
-	protected void doGet () throws IOException {
+	protected void doGet() throws IOException {
 		String action = REQUEST.get().getParameter("action");
 		String request = REQUEST.get().getParameter("request");
 

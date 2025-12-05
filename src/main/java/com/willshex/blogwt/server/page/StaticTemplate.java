@@ -8,6 +8,7 @@
 package com.willshex.blogwt.server.page;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,14 +37,14 @@ abstract class StaticTemplate implements PageMarkup {
 
 	private MarkdownProcessor processor;
 
-	public StaticTemplate (Stack stack) {
+	public StaticTemplate(Stack stack) {
 		this.stack = stack;
 
 		processor = new MarkdownProcessor();
 		processor.registerPlugins(new IncludePlugin());
 	}
 
-	protected String process (String markdown) {
+	protected String process(String markdown) {
 		String processed = "";
 		try {
 			processed = processor.process(markdown);
@@ -54,11 +55,12 @@ abstract class StaticTemplate implements PageMarkup {
 		return processed;
 	}
 
-	protected <T extends Request> T input (Class<T> type) {
+	protected <T extends Request> T input(Class<T> type) {
 		T input = null;
 		try {
-			input = type.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
+			input = type.getDeclaredConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -67,7 +69,7 @@ abstract class StaticTemplate implements PageMarkup {
 		return input;
 	}
 
-	protected void appendHeader (StringBuffer markup) {
+	protected void appendHeader(StringBuffer markup) {
 		String title = PropertyServiceProvider.provide()
 				.getNamedProperty(PropertyHelper.TITLE).value;
 		String extendedTitle = PropertyServiceProvider.provide()
@@ -92,7 +94,7 @@ abstract class StaticTemplate implements PageMarkup {
 		appendNavigationLinks(markup);
 	}
 
-	private void appendNavigationLinks (StringBuffer markup) {
+	private void appendNavigationLinks(StringBuffer markup) {
 		List<Page> pages = PageServiceProvider.provide().getPages(Boolean.FALSE,
 				Integer.valueOf(0), null, PageSortType.PageSortTypePriority,
 				null);
@@ -109,7 +111,7 @@ abstract class StaticTemplate implements PageMarkup {
 		}
 	}
 
-	protected void appendFooter (StringBuffer markup) {
+	protected void appendFooter(StringBuffer markup) {
 		String copyright = PropertyServiceProvider.provide()
 				.getNamedProperty(PropertyHelper.COPYRIGHT_URL).value;
 		String copyrightHolder = PropertyServiceProvider.provide()
@@ -130,7 +132,7 @@ abstract class StaticTemplate implements PageMarkup {
 		markup.append(".</div> </footer></div></div></body></html>");
 	}
 
-	public String asString () {
+	public String asString() {
 		StringBuffer markup = new StringBuffer();
 
 		appendHeader(markup);
@@ -142,8 +144,8 @@ abstract class StaticTemplate implements PageMarkup {
 		return markup.toString();
 	}
 
-	protected abstract void appendPage (StringBuffer markup);
+	protected abstract void appendPage(StringBuffer markup);
 
-	protected abstract String title ();
+	protected abstract String title();
 
 }

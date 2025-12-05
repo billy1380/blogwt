@@ -23,12 +23,15 @@ import com.willshex.blogwt.client.helper.PostHelper;
  * @author William Shakour (billy1380)
  *
  */
+@SuppressWarnings("all")
 public class GalleryPart extends Composite {
+	// TODO: Complete this class
 
 	private static GalleryPartUiBinder uiBinder = GWT
 			.create(GalleryPartUiBinder.class);
 
-	interface GalleryPartUiBinder extends UiBinder<Widget, GalleryPart> {}
+	interface GalleryPartUiBinder extends UiBinder<Widget, GalleryPart> {
+	}
 
 	private static class ConfigLine {
 		public String url;
@@ -47,16 +50,16 @@ public class GalleryPart extends Composite {
 	private String name;
 	private boolean showThumbnails;
 
-	public GalleryPart () {
+	public GalleryPart() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 
 	/**
 	 * @param params
 	 */
-	public void setParams (Map<String, String> params) {
+	public void setParams(Map<String, String> params) {
 		String[] splitParam;
-		
+
 		if (params.containsKey(SHOW_THUMBNAILS_KEY)) {
 			showThumbnails = Boolean.valueOf(params.get(SHOW_THUMBNAILS_KEY));
 		}
@@ -69,7 +72,7 @@ public class GalleryPart extends Composite {
 	/**
 	 * @param line
 	 */
-	public void addImageWithLine (String line) {
+	public void addImageWithLine(String line) {
 		if (line.length() > 0) {
 			ConfigLine config = parseConfigLine(line);
 
@@ -92,7 +95,7 @@ public class GalleryPart extends Composite {
 		}
 	}
 
-	private ConfigLine parseConfigLine (String line) {
+	private ConfigLine parseConfigLine(String line) {
 		String[] params = line.split("/");
 		ConfigLine config = new ConfigLine();
 
@@ -105,15 +108,15 @@ public class GalleryPart extends Composite {
 				parameters.put(splitParam[0], splitParam[1]);
 
 				switch (splitParam[0]) {
-				case URL:
-					config.url = splitParam[1];
-					break;
-				case NAME:
-					config.name = splitParam[1];
-					break;
-				case CAPTION:
-					config.caption = splitParam[1];
-					break;
+					case URL:
+						config.url = splitParam[1];
+						break;
+					case NAME:
+						config.name = splitParam[1];
+						break;
+					case CAPTION:
+						config.caption = splitParam[1];
+						break;
 				}
 			}
 		}

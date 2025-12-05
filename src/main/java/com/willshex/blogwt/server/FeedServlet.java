@@ -43,9 +43,10 @@ import com.willshex.server.ContextAwareServlet;
 /**
  * @author William Shakour (billy1380)
  *
- *	Based on https://rometools.github.io/rome/RssAndAtOMUtilitiEsROMEV0.5AndAboveTutorialsAndArticles/RssAndAtOMUtilitiEsROMEV0.5TutorialUsingROMEWithinAServletToCreateAndReturnAFeed.html
+ *         Based on
+ *         https://rometools.github.io/rome/RssAndAtOMUtilitiEsROMEV0.5AndAboveTutorialsAndArticles/RssAndAtOMUtilitiEsROMEV0.5TutorialUsingROMEWithinAServletToCreateAndReturnAFeed.html
  */
-@SuppressWarnings("serial")
+
 @WebServlet(name = "Feed", urlPatterns = FeedServlet.URL, initParams = {
 		@WebInitParam(name = "default.feed.type", value = "rss_2.0") })
 public class FeedServlet extends ContextAwareServlet {
@@ -58,18 +59,20 @@ public class FeedServlet extends ContextAwareServlet {
 
 	private String defaultFeedType;
 
-	public void init () {
+	public void init() {
 		defaultFeedType = getServletConfig()
 				.getInitParameter(DEFAULT_FEED_TYPE);
 		defaultFeedType = (defaultFeedType != null) ? defaultFeedType
 				: "atom_0.3";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.service.ContextAwareServlet#doGet() */
+	 * @see com.willshex.service.ContextAwareServlet#doGet()
+	 */
 	@Override
-	protected void doGet () throws ServletException, IOException {
+	protected void doGet() throws ServletException, IOException {
 		super.doGet();
 
 		Property generateRss = PropertyServiceProvider.provide()
@@ -98,7 +101,7 @@ public class FeedServlet extends ContextAwareServlet {
 		}
 	}
 
-	protected SyndFeed getFeed (HttpServletRequest request)
+	protected SyndFeed getFeed(HttpServletRequest request)
 			throws IOException, FeedException {
 		SyndFeed feed = new SyndFeedImpl();
 		String url = ServletHelper.constructBaseUrl(request);

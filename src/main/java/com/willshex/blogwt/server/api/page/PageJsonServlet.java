@@ -25,12 +25,11 @@ import com.willshex.blogwt.shared.api.page.call.SubmitFormRequest;
 import com.willshex.blogwt.shared.api.page.call.UpdatePageRequest;
 import com.willshex.gson.web.service.server.JsonServlet;
 
-@SuppressWarnings("serial")
 @WebServlet(name = "Page API", urlPatterns = Page.PATH)
 public final class PageJsonServlet extends JsonServlet {
 
 	@Override
-	protected String processAction (String action, JsonObject request) {
+	protected String processAction(String action, JsonObject request) {
 		String output = "null";
 		if ("SubmitForm".equals(action)) {
 			SubmitFormRequest input = new SubmitFormRequest();

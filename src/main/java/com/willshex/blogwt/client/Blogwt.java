@@ -7,7 +7,6 @@
 //
 package com.willshex.blogwt.client;
 
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -20,29 +19,29 @@ import com.willshex.blogwt.client.part.CookieNoticePart;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Blogwt extends ErrorHandlingEntryPoint implements EntryPoint {
+public class Blogwt extends ErrorHandlingEntryPoint {
 
 	private HTMLPanel content;
 
-	public void onModuleLoad () {
+	public void onModuleLoad() {
 		super.onModuleLoad();
 
 		RunAsync.run(Blogwt.this::start);
 	}
 
-	private void start () {
+	private void start() {
 		History.addValueChangeHandler(NavigationController.get());
 		createContentAndPages();
 		Processor.init(e -> History.fireCurrentHistoryState());
 	}
 
-	private void createContentAndPages () {
+	private void createContentAndPages() {
 		content = new HTMLPanel(SafeHtmlUtils.EMPTY_SAFE_HTML);
 		RootPanel.get().add(content);
 
 		content.add(NavigationController.get()
 				.setPageHolder(new HTMLPanel(SafeHtmlUtils.EMPTY_SAFE_HTML)));
-		
+
 		content.add(new CookieNoticePart());
 	}
 }

@@ -9,6 +9,7 @@ package com.willshex.blogwt.server.helper;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,15 +34,15 @@ import com.willshex.blogwt.shared.util.LongSparseArray;
  */
 public class PersistenceHelper {
 
-	public static <T> Long keyToId (Key<T> key) {
+	public static <T> Long keyToId(Key<T> key) {
 		return key == null ? null : Long.valueOf(key.getId());
 	}
 
-	public static <T> Key<T> idToKey (Class<? extends T> kindClass, Long id) {
+	public static <T> Key<T> idToKey(Class<? extends T> kindClass, Long id) {
 		return Key.create(kindClass, id.longValue());
 	}
 
-	public static <T> List<Long> keysToIds (Iterable<Key<T>> keys) {
+	public static <T> List<Long> keysToIds(Iterable<Key<T>> keys) {
 		List<Long> collection = null;
 		if (keys != null) {
 			collection = new ArrayList<Long>();
@@ -52,7 +53,7 @@ public class PersistenceHelper {
 		return collection;
 	}
 
-	public static <T> List<Key<T>> idsToKeys (Class<? extends T> kindClass,
+	public static <T> List<Key<T>> idsToKeys(Class<? extends T> kindClass,
 			Collection<Long> ids) {
 		List<Key<T>> collection = null;
 		if (ids != null) {
@@ -64,17 +65,18 @@ public class PersistenceHelper {
 		return collection;
 	}
 
-	public static <T> T type (Class<T> t, Key<T> key, Field f) {
+	public static <T> T type(Class<T> t, Key<T> key, Field f) {
 		T i = null;
 		if (key != null) {
 			try {
-				i = t.newInstance();
+				i = t.getDeclaredConstructor().newInstance();
 				if (f.getType() == String.class) {
 					f.set(i, key.getName());
 				} else if (f.getType() == Long.class) {
 					f.set(i, keyToId(key));
 				}
-			} catch (InstantiationException | IllegalAccessException e) {
+			} catch (InstantiationException | IllegalAccessException | NoSuchMethodError | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -82,7 +84,7 @@ public class PersistenceHelper {
 		return i;
 	}
 
-	public static <T> T type (Class<T> t, Key<T> key) {
+	public static <T> T type(Class<T> t, Key<T> key) {
 		return type(t, key, key(t));
 	}
 
@@ -92,7 +94,7 @@ public class PersistenceHelper {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> typeList (Class<T> t, Iterable<?> ids) {
+	public static <T> List<T> typeList(Class<T> t, Iterable<?> ids) {
 		List<T> list = null;
 
 		if (ids != null) {
@@ -105,12 +107,13 @@ public class PersistenceHelper {
 					if (id instanceof Key) {
 						list.add(type(t, (Key<T>) id, f));
 					} else if (id instanceof Long || id instanceof String) {
-						i = (T) t.newInstance();
+						i = (T) t.getDeclaredConstructor().newInstance();
 						f.set(i, id);
 						list.add(i);
 					}
 				}
-			} catch (InstantiationException | IllegalAccessException e) {
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -119,7 +122,7 @@ public class PersistenceHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <LS, T> Map<LS, T> typeMap (Iterable<T> items) {
+	public static <LS, T> Map<LS, T> typeMap(Iterable<T> items) {
 		Map<LS, T> lookup = new HashMap<>();
 
 		Field f = null;
@@ -139,7 +142,7 @@ public class PersistenceHelper {
 		return lookup;
 	}
 
-	public static <T> LongSparseArray<T> typeSparse (Iterable<T> items) {
+	public static <T> LongSparseArray<T> typeSparse(Iterable<T> items) {
 		LongSparseArray<T> lookup = new LongSparseArray<>();
 
 		Field f = null;
@@ -164,7 +167,7 @@ public class PersistenceHelper {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <LS, T> List<LS> typeCollectionToIds (Iterable<T> iterable) {
+	public static <LS, T> List<LS> typeCollectionToIds(Iterable<T> iterable) {
 		List<LS> ids = null;
 
 		if (iterable != null && iterable.iterator().hasNext()) {
@@ -183,15 +186,15 @@ public class PersistenceHelper {
 		return ids;
 	}
 
-	public static String direction (SortDirectionType sortDirection) {
+	public static String direction(SortDirectionType sortDirection) {
 		String direction = "";
 		if (sortDirection != null) {
 			switch (sortDirection) {
-			case SortDirectionTypeDescending:
-				direction = "-";
-				break;
-			default:
-				break;
+				case SortDirectionTypeDescending:
+					direction = "-";
+					break;
+				default:
+					break;
 			}
 		}
 
@@ -200,6 +203,7 @@ public class PersistenceHelper {
 
 	/**
 	 * Takes a query and adds pagination parameters
+	 * 
 	 * @param filter
 	 * @param start
 	 * @param count
@@ -208,7 +212,7 @@ public class PersistenceHelper {
 	 * @param sortDirection
 	 * @return
 	 */
-	public static <T, E extends Enum<E>> List<T> pagedAndSorted (Query<T> query,
+	public static <T, E extends Enum<E>> List<T> pagedAndSorted(Query<T> query,
 			Integer start, Integer count, E sortBy, ISortable<E> sortable,
 			SortDirectionType sortDirection) {
 		if (start != null) {
@@ -227,7 +231,7 @@ public class PersistenceHelper {
 		return query.list();
 	}
 
-	private static <T> Field key (Class<T> c) {
+	private static <T> Field key(Class<T> c) {
 		Field k = null;
 
 		Field[] fs = c.getDeclaredFields();
@@ -259,31 +263,33 @@ public class PersistenceHelper {
 		return k;
 	}
 
-	public static <T> T one (Query<T> q) {
+	public static <T> T one(Query<T> q) {
 		return q.limit(1).first().now();
 	}
 
 	/**
 	 * Creates a new instance of a type for serialisation with id only
+	 * 
 	 * @param c
 	 * @param t
 	 * @param k
 	 * @return
 	 */
-	public static <T> T slim (Class<T> c, T t, Key<T> k) {
+	public static <T> T slim(Class<T> c, T t, Key<T> k) {
 		T id = null;
 
 		try {
 			Field f = key(c);
 			if (t != null && f != null && f.get(t) != null) {
-				id = c.newInstance();
+				id = c.getDeclaredConstructor().newInstance();
 				f.set(id, f.get(t));
 			} else if (k != null) {
 				id = type(c, k, f);
 			} else {
 				// something is not right
 			}
-		} catch (InstantiationException | IllegalAccessException ex) {
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException ex) {
 			throw new RuntimeException(ex);
 		}
 
@@ -291,7 +297,7 @@ public class PersistenceHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <S, T> S id (T t) {
+	public static <S, T> S id(T t) {
 		try {
 			return t == null ? null : (S) key(t.getClass()).get(t);
 		} catch (IllegalArgumentException | IllegalAccessException ex) {
@@ -299,11 +305,11 @@ public class PersistenceHelper {
 		}
 	}
 
-	public static Long id (DataType t) {
+	public static Long id(DataType t) {
 		return t.id;
 	}
 
-	public static <T> List<T> batchLookupKeys (BatchGetter<T> batcher,
+	public static <T> List<T> batchLookupKeys(BatchGetter<T> batcher,
 			Iterable<Key<T>> keys) {
 		Map<Object, T> map = PersistenceHelper
 				.typeMap(batcher.get(PersistenceHelper.keysToIds(keys)));
@@ -318,7 +324,7 @@ public class PersistenceHelper {
 	 * @param id
 	 * @return
 	 */
-	public static <T> T id (LoadType<T> load, Long id) {
+	public static <T> T id(LoadType<T> load, Long id) {
 		return load.id(id.longValue()).now();
 	}
 }
