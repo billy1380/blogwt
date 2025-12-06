@@ -24,20 +24,28 @@ public final class GetTagsActionHandler
 	private static final Logger LOG = Logger
 			.getLogger(GetTagsActionHandler.class.getName());
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
 	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
+	 * com.willshex.gson.web.service.shared.Response)
+	 */
 	@Override
-	protected void handle (GetTagsRequest input, GetTagsResponse output)
+	protected void handle(GetTagsRequest input, GetTagsResponse output)
 			throws Exception {
 		ApiValidator.request(input, GetTagsRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-		output.session = input.session = SessionValidator
-				.lookupCheckAndExtend(input.session, "input.session");
+		if (input.session != null) {
+			try {
+				output.session = input.session = SessionValidator
+						.lookupCheckAndExtend(input.session, "input.session");
+			} catch (Exception e) {
+				output.session = input.session = null;
+			}
+		}
 
 		output.tags = TagServiceProvider.provide().getTags();
 
@@ -49,19 +57,23 @@ public final class GetTagsActionHandler
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput()
+	 */
 	@Override
-	protected GetTagsResponse newOutput () {
+	protected GetTagsResponse newOutput() {
 		return new GetTagsResponse();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger()
+	 */
 	@Override
-	protected Logger logger () {
+	protected Logger logger() {
 		return LOG;
 	}
 }

@@ -24,20 +24,28 @@ public final class GetArchiveEntriesActionHandler extends
 	private static final Logger LOG = Logger
 			.getLogger(GetArchiveEntriesActionHandler.class.getName());
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
 	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
+	 * com.willshex.gson.web.service.shared.Response)
+	 */
 	@Override
-	protected void handle (GetArchiveEntriesRequest input,
+	protected void handle(GetArchiveEntriesRequest input,
 			GetArchiveEntriesResponse output) throws Exception {
 		ApiValidator.request(input, GetArchiveEntriesRequest.class);
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
-		output.session = input.session = SessionValidator
-				.lookupCheckAndExtend(input.session, "input.session");
+		if (input.session != null) {
+			try {
+				output.session = input.session = SessionValidator
+						.lookupCheckAndExtend(input.session, "input.session");
+			} catch (Exception e) {
+				output.session = input.session = null;
+			}
+		}
 
 		output.archive = ArchiveEntryServiceProvider.provide()
 				.getArchiveEntries();
@@ -51,19 +59,23 @@ public final class GetArchiveEntriesActionHandler extends
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
+	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput()
+	 */
 	@Override
-	protected GetArchiveEntriesResponse newOutput () {
+	protected GetArchiveEntriesResponse newOutput() {
 		return new GetArchiveEntriesResponse();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
+	 * @see com.willshex.gson.web.service.server.ActionHandler#logger()
+	 */
 	@Override
-	protected Logger logger () {
+	protected Logger logger() {
 		return LOG;
 	}
 
