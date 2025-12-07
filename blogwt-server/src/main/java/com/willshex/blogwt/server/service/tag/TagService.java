@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
@@ -33,21 +34,21 @@ import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PostHelper;
 
 final class TagService implements ITagService {
-	public String getName () {
+	public String getName() {
 		return NAME;
 	}
 
 	@Override
-	public Tag getTag (Long id) {
+	public Tag getTag(Long id) {
 		return id(load(), id);
 	}
 
-	private LoadType<Tag> load () {
+	private LoadType<Tag> load() {
 		return provide().load().type(Tag.class);
 	}
 
 	@Override
-	public Tag addTag (Tag tag) {
+	public Tag addTag(Tag tag) {
 		if (tag.created == null) {
 			tag.created = new Date();
 		}
@@ -61,7 +62,7 @@ final class TagService implements ITagService {
 					tag.postKeys = new ArrayList<Key<Post>>();
 				}
 
-				tag.postKeys.add(Key.create(post));
+				tag.postKeys.add(ObjectifyService.key(post));
 			}
 		}
 
@@ -72,23 +73,27 @@ final class TagService implements ITagService {
 	}
 
 	@Override
-	public void deleteTag (Tag tag) {
+	public void deleteTag(Tag tag) {
 		provide().delete().entity(tag).now();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.server.service.tag.ITagService#getTags() */
+	 * @see com.willshex.blogwt.server.service.tag.ITagService#getTags()
+	 */
 	@Override
-	public List<Tag> getTags () {
+	public List<Tag> getTags() {
 		return load().list();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.server.service.tag.ITagService#generateTags() */
+	 * @see com.willshex.blogwt.server.service.tag.ITagService#generateTags()
+	 */
 	@Override
-	public void generateTags () {
+	public void generateTags() {
 		Map<String, Tag> tagLookup = new HashMap<String, Tag>();
 		List<Post> posts;
 		Tag tag;
@@ -128,12 +133,14 @@ final class TagService implements ITagService {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.tag.ITagService#addTagBatch(java.
-	 * util.Collection) */
+	 * util.Collection)
+	 */
 	@Override
-	public void addTagBatch (Collection<Tag> tags) {
+	public void addTagBatch(Collection<Tag> tags) {
 		for (Tag tag : tags) {
 			if (tag.created == null) {
 				tag.created = new Date();
@@ -148,7 +155,7 @@ final class TagService implements ITagService {
 						tag.postKeys = new ArrayList<Key<Post>>();
 					}
 
-					tag.postKeys.add(Key.create(post));
+					tag.postKeys.add(ObjectifyService.key(post));
 				}
 			}
 		}
@@ -156,26 +163,30 @@ final class TagService implements ITagService {
 		provide().save().entities(tags).now();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.tag.ITagService#getSlugTag(java.
-	 * lang.String) */
+	 * lang.String)
+	 */
 	@Override
-	public Tag getSlugTag (String slug) {
+	public Tag getSlugTag(String slug) {
 		return PersistenceHelper.one(load().filter("slug", slug));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.tag.ITagService#addTagPost(com.
 	 * willshex .blogwt.shared.api.datatype.Tag,
-	 * com.willshex.blogwt.shared.api.datatype.Post) */
+	 * com.willshex.blogwt.shared.api.datatype.Post)
+	 */
 	@Override
-	public void addTagPost (final Tag tag, final Post post) {
+	public void addTagPost(final Tag tag, final Post post) {
 		provide().transact(new Work<Void>() {
 
 			@Override
-			public Void run () {
+			public Void run() {
 				Tag latest = getTag(tag.id);
 
 				if (latest.postKeys == null) {
@@ -184,14 +195,14 @@ final class TagService implements ITagService {
 
 				boolean found = false;
 				for (Key<Post> key : latest.postKeys) {
-					if (DataTypeHelper.<Post> same(key, post)) {
+					if (DataTypeHelper.<Post>same(key, post)) {
 						found = true;
 						break;
 					}
 				}
 
 				if (!found) {
-					latest.postKeys.add(Key.create(post));
+					latest.postKeys.add(ObjectifyService.key(post));
 				}
 
 				provide().save().entity(latest).now();
@@ -201,17 +212,19 @@ final class TagService implements ITagService {
 		});
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.tag.ITagService#removeTagPost(com
 	 * .willshex.blogwt.shared.api.datatype.Tag,
-	 * com.willshex.blogwt.shared.api.datatype.Post) */
+	 * com.willshex.blogwt.shared.api.datatype.Post)
+	 */
 	@Override
-	public void removeTagPost (final Tag tag, final Post post) {
+	public void removeTagPost(final Tag tag, final Post post) {
 		provide().transact(new Work<Void>() {
 
 			@Override
-			public Void run () {
+			public Void run() {
 				Tag latest = getTag(tag.id);
 
 				if (latest.postKeys == null) {
@@ -220,7 +233,7 @@ final class TagService implements ITagService {
 
 				Key<Post> foundKey = null;
 				for (Key<Post> key : latest.postKeys) {
-					if (DataTypeHelper.<Post> same(key, post)) {
+					if (DataTypeHelper.<Post>same(key, post)) {
 						foundKey = key;
 						break;
 					}

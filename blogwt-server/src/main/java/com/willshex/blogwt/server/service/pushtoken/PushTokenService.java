@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.shared.api.datatype.PushToken;
@@ -22,30 +23,30 @@ import com.willshex.blogwt.shared.api.datatype.PushTokenSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 
 final class PushTokenService implements IPushTokenService {
-	public String getName () {
+	public String getName() {
 		return NAME;
 	}
 
 	@Override
-	public PushToken getPushToken (Long id) {
+	public PushToken getPushToken(Long id) {
 		return id(load(), id);
 	}
 
 	/**
 	 * @return
 	 */
-	private LoadType<PushToken> load () {
+	private LoadType<PushToken> load() {
 		return provide().load().type(PushToken.class);
 	}
 
 	@Override
-	public PushToken addPushToken (PushToken pushToken) {
+	public PushToken addPushToken(PushToken pushToken) {
 		if (pushToken.created == null) {
 			pushToken.created = new Date();
 		}
 
 		if (pushToken.user != null) {
-			pushToken.userKey = Key.create(pushToken.user);
+			pushToken.userKey = ObjectifyService.key(pushToken.user);
 		}
 
 		Key<PushToken> key = provide().save().entity(pushToken).now();
@@ -55,36 +56,40 @@ final class PushTokenService implements IPushTokenService {
 	}
 
 	@Override
-	public PushToken updatePushToken (PushToken pushToken) {
+	public PushToken updatePushToken(PushToken pushToken) {
 		provide().save().entity(pushToken).now();
 
 		return pushToken;
 	}
 
 	@Override
-	public void deletePushToken (PushToken pushToken) {
+	public void deletePushToken(PushToken pushToken) {
 		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.pushtoken.IPushTokenService#
 	 * getUserPlatformPushToken(com.willshex.blogwt.shared.api.datatype.User,
-	 * java.lang.String) */
+	 * java.lang.String)
+	 */
 	@Override
-	public PushToken getUserPlatformPushToken (User user, String platform) {
+	public PushToken getUserPlatformPushToken(User user, String platform) {
 		return PersistenceHelper.one(load()
 				.filter(map(PushTokenSortType.PushTokenSortTypeUser), user)
 				.filter(map(PushTokenSortType.PushTokenSortTypePlatform),
 						platform));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.pushtoken.IPushTokenService#
-	 * getUserPushTokens(com.willshex.blogwt.shared.api.datatype.User) */
+	 * getUserPushTokens(com.willshex.blogwt.shared.api.datatype.User)
+	 */
 	@Override
-	public List<PushToken> getUserPushTokens (User user) {
+	public List<PushToken> getUserPushTokens(User user) {
 		return load().filter(map(PushTokenSortType.PushTokenSortTypeUser), user)
 				.list();
 	}

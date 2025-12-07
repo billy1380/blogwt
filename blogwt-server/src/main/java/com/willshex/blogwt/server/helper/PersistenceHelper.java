@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
@@ -39,7 +40,7 @@ public class PersistenceHelper {
 	}
 
 	public static <T> Key<T> idToKey(Class<? extends T> kindClass, Long id) {
-		return Key.create(kindClass, id.longValue());
+		return ObjectifyService.key(kindClass, id.longValue());
 	}
 
 	public static <T> List<Long> keysToIds(Iterable<Key<T>> keys) {

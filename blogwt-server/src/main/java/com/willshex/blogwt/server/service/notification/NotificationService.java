@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.shared.api.SortDirectionType;
@@ -26,35 +27,35 @@ import com.willshex.blogwt.shared.api.datatype.NotificationSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 
 final class NotificationService implements INotificationService {
-	public String getName () {
+	public String getName() {
 		return NAME;
 	}
 
 	@Override
-	public Notification getNotification (Long id) {
+	public Notification getNotification(Long id) {
 		return id(load(), id);
 	}
 
-	private LoadType<Notification> load () {
+	private LoadType<Notification> load() {
 		return provide().load().type(Notification.class);
 	}
 
 	@Override
-	public Notification addNotification (Notification notification) {
+	public Notification addNotification(Notification notification) {
 		if (notification.created == null) {
 			notification.created = new Date();
 		}
 
 		if (notification.meta != null) {
-			notification.metaKey = Key.create(notification.meta);
+			notification.metaKey = ObjectifyService.key(notification.meta);
 		}
 
 		if (notification.target != null) {
-			notification.targetKey = Key.create(notification.target);
+			notification.targetKey = ObjectifyService.key(notification.target);
 		}
 
 		if (notification.sender != null) {
-			notification.senderKey = Key.create(notification.sender);
+			notification.senderKey = ObjectifyService.key(notification.sender);
 		}
 
 		Key<Notification> key = provide().save().entity(notification).now();
@@ -64,18 +65,18 @@ final class NotificationService implements INotificationService {
 	}
 
 	@Override
-	public Notification updateNotification (Notification notification) {
+	public Notification updateNotification(Notification notification) {
 		throw new UnsupportedOperationException(
 				"Notifications cannot be updated");
 	}
 
 	@Override
-	public void deleteNotification (Notification notification) {
+	public void deleteNotification(Notification notification) {
 		provide().delete().entity(notification).now();
 	}
 
 	@Override
-	public List<Notification> getUserNotifications (User user, Integer start,
+	public List<Notification> getUserNotifications(User user, Integer start,
 			Integer count, NotificationSortType sortBy,
 			SortDirectionType sortDirection) {
 		return PersistenceHelper.pagedAndSorted(load().filter(
@@ -83,21 +84,23 @@ final class NotificationService implements INotificationService {
 				start, count, sortBy, this, sortDirection);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.notification.INotificationService#
-	 * updateNotificationSettings(java.util.Collection) */
+	 * updateNotificationSettings(java.util.Collection)
+	 */
 	@Override
-	public List<NotificationSetting> updateNotificationSettings (
+	public List<NotificationSetting> updateNotificationSettings(
 			Collection<NotificationSetting> notificationSettings) {
 		for (NotificationSetting setting : notificationSettings) {
 			if (setting.user != null) {
-				setting.userKey = Key.create(setting.user);
+				setting.userKey = ObjectifyService.key(setting.user);
 			}
 
 			if (setting.meta != null) {
-				setting.metaKey = Key.create(setting.meta);
+				setting.metaKey = ObjectifyService.key(setting.meta);
 			}
 		}
 		provide().save().entities(notificationSettings).now();

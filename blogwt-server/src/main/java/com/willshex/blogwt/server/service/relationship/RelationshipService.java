@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
@@ -25,31 +26,31 @@ import com.willshex.blogwt.shared.api.datatype.RelationshipTypeType;
 import com.willshex.blogwt.shared.api.datatype.User;
 
 final class RelationshipService implements IRelationshipService {
-	public String getName () {
+	public String getName() {
 		return NAME;
 	}
 
 	@Override
-	public Relationship getRelationship (Long id) {
+	public Relationship getRelationship(Long id) {
 		return id(load(), id);
 	}
 
-	private LoadType<Relationship> load () {
+	private LoadType<Relationship> load() {
 		return provide().load().type(Relationship.class);
 	}
 
 	@Override
-	public Relationship addRelationship (Relationship relationship) {
+	public Relationship addRelationship(Relationship relationship) {
 		if (relationship.created == null) {
 			relationship.created = new Date();
 		}
 
 		if (relationship.one != null) {
-			relationship.oneKey = Key.create(relationship.one);
+			relationship.oneKey = ObjectifyService.key(relationship.one);
 		}
 
 		if (relationship.another != null) {
-			relationship.anotherKey = Key.create(relationship.another);
+			relationship.anotherKey = ObjectifyService.key(relationship.another);
 		}
 
 		Key<Relationship> key = provide().save().entity(relationship).now();
@@ -58,13 +59,13 @@ final class RelationshipService implements IRelationshipService {
 	}
 
 	@Override
-	public Relationship updateRelationship (Relationship relationship) {
+	public Relationship updateRelationship(Relationship relationship) {
 		if (relationship.one != null) {
-			relationship.oneKey = Key.create(relationship.one);
+			relationship.oneKey = ObjectifyService.key(relationship.one);
 		}
 
 		if (relationship.another != null) {
-			relationship.anotherKey = Key.create(relationship.another);
+			relationship.anotherKey = ObjectifyService.key(relationship.another);
 		}
 
 		provide().save().entity(relationship).now();
@@ -73,19 +74,21 @@ final class RelationshipService implements IRelationshipService {
 	}
 
 	@Override
-	public void deleteRelationship (Relationship relationship) {
+	public void deleteRelationship(Relationship relationship) {
 		provide().delete().entity(relationship).now();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.relationship.IRelationshipService#
 	 * deleteUsersRelationship(com.willshex.blogwt.shared.api.datatype.User,
 	 * com.willshex.blogwt.shared.api.datatype.User,
-	 * com.willshex.blogwt.shared.api.datatype.RelationshipTypeType) */
+	 * com.willshex.blogwt.shared.api.datatype.RelationshipTypeType)
+	 */
 	@Override
-	public void deleteUsersRelationship (User user, User other,
+	public void deleteUsersRelationship(User user, User other,
 			RelationshipTypeType type) {
 		Relationship relationship = getUsersRelationship(user, other, type);
 
@@ -94,15 +97,17 @@ final class RelationshipService implements IRelationshipService {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.relationship.IRelationshipService#
 	 * getUsersRelationship(com.willshex.blogwt.shared.api.datatype.User,
 	 * com.willshex.blogwt.shared.api.datatype.User,
-	 * com.willshex.blogwt.shared.api.datatype.RelationshipTypeType) */
+	 * com.willshex.blogwt.shared.api.datatype.RelationshipTypeType)
+	 */
 	@Override
-	public Relationship getUsersRelationship (User user, User other,
+	public Relationship getUsersRelationship(User user, User other,
 			RelationshipTypeType type) {
 		return PersistenceHelper.one(load()
 				.filter(RelationshipSortType.RelationshipSortTypeOne.toString()
@@ -113,15 +118,17 @@ final class RelationshipService implements IRelationshipService {
 						.toString(), type));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.relationship.IRelationshipService#
 	 * addUsersRelationship(com.willshex.blogwt.shared.api.datatype.User,
 	 * com.willshex.blogwt.shared.api.datatype.User,
-	 * com.willshex.blogwt.shared.api.datatype.RelationshipTypeType) */
+	 * com.willshex.blogwt.shared.api.datatype.RelationshipTypeType)
+	 */
 	@Override
-	public Relationship addUsersRelationship (User user, User other,
+	public Relationship addUsersRelationship(User user, User other,
 			RelationshipTypeType type) {
 		Relationship relationship = getUsersRelationship(user, other, type);
 
@@ -135,7 +142,8 @@ final class RelationshipService implements IRelationshipService {
 		return relationship;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.relationship.IRelationshipService#
@@ -143,9 +151,10 @@ final class RelationshipService implements IRelationshipService {
 	 * com.willshex.blogwt.shared.api.datatype.RelationshipTypeType,java.lang.
 	 * Integer, java.lang.Integer,
 	 * com.willshex.blogwt.shared.api.datatype.RelationshipSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	 * com.willshex.blogwt.shared.api.SortDirectionType)
+	 */
 	@Override
-	public List<Relationship> getUserRelationships (User user,
+	public List<Relationship> getUserRelationships(User user,
 			RelationshipTypeType type, Integer start, Integer count,
 			RelationshipSortType sortBy, SortDirectionType sortDirection) {
 		Query<Relationship> query = load()
@@ -167,11 +176,11 @@ final class RelationshipService implements IRelationshipService {
 
 			if (sortDirection != null) {
 				switch (sortDirection) {
-				case SortDirectionTypeDescending:
-					condition = "-" + condition;
-					break;
-				default:
-					break;
+					case SortDirectionTypeDescending:
+						condition = "-" + condition;
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -181,7 +190,8 @@ final class RelationshipService implements IRelationshipService {
 		return query.list();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.relationship.IRelationshipService#
@@ -189,9 +199,10 @@ final class RelationshipService implements IRelationshipService {
 	 * com.willshex.blogwt.shared.api.datatype.RelationshipTypeType,
 	 * java.lang.Integer, java.lang.Integer,
 	 * com.willshex.blogwt.shared.api.datatype.RelationshipSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	 * com.willshex.blogwt.shared.api.SortDirectionType)
+	 */
 	@Override
-	public List<Relationship> getWithUserRelationships (User user,
+	public List<Relationship> getWithUserRelationships(User user,
 			RelationshipTypeType type, Integer start, Integer count,
 			RelationshipSortType sortBy, SortDirectionType sortDirection) {
 		Query<Relationship> query = load()
@@ -213,11 +224,11 @@ final class RelationshipService implements IRelationshipService {
 
 			if (sortDirection != null) {
 				switch (sortDirection) {
-				case SortDirectionTypeDescending:
-					condition = "-" + condition;
-					break;
-				default:
-					break;
+					case SortDirectionTypeDescending:
+						condition = "-" + condition;
+						break;
+					default:
+						break;
 				}
 			}
 

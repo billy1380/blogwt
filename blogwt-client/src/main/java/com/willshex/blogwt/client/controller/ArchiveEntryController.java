@@ -26,7 +26,7 @@ import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 public class ArchiveEntryController extends ListDataProvider<ArchiveEntry> {
 	private static ArchiveEntryController one = null;
 
-	public static ArchiveEntryController get () {
+	public static ArchiveEntryController get() {
 		if (one == null) {
 			one = new ArchiveEntryController();
 		}
@@ -37,7 +37,7 @@ public class ArchiveEntryController extends ListDataProvider<ArchiveEntry> {
 	private Map<Integer, List<ArchiveEntry>> years = new HashMap<Integer, List<ArchiveEntry>>();
 	private Map<Integer, Integer> yearPostCount = new HashMap<Integer, Integer>();
 
-	public ArchiveEntryController () {
+	public ArchiveEntryController() {
 		String archiveEntriesJson = Window.get().getArchiveEntries();
 
 		if (archiveEntriesJson != null) {
@@ -76,7 +76,7 @@ public class ArchiveEntryController extends ListDataProvider<ArchiveEntry> {
 	/**
 	 * @return
 	 */
-	public Collection<Integer> getYears () {
+	public Collection<Integer> getYears() {
 		return years.keySet();
 	}
 
@@ -84,7 +84,7 @@ public class ArchiveEntryController extends ListDataProvider<ArchiveEntry> {
 	 * @param year
 	 * @return
 	 */
-	public int getYearPostCount (Integer year) {
+	public int getYearPostCount(Integer year) {
 		return yearPostCount.get(year).intValue();
 	}
 
@@ -92,7 +92,7 @@ public class ArchiveEntryController extends ListDataProvider<ArchiveEntry> {
 	 * @param value
 	 * @return
 	 */
-	public List<ArchiveEntry> getYearArchiveEntries (Integer value) {
+	public List<ArchiveEntry> getYearArchiveEntries(Integer value) {
 		return years.get((Integer) value);
 	}
 }

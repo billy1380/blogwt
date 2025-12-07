@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.shared.api.SortDirectionType;
@@ -24,27 +25,27 @@ import com.willshex.blogwt.shared.api.datatype.RatingSortType;
 import com.willshex.blogwt.shared.api.datatype.User;
 
 final class RatingService implements IRatingService {
-	public String getName () {
+	public String getName() {
 		return NAME;
 	}
 
 	@Override
-	public Rating getRating (Long id) {
+	public Rating getRating(Long id) {
 		return id(load(), id);
 	}
 
-	private LoadType<Rating> load () {
+	private LoadType<Rating> load() {
 		return provide().load().type(Rating.class);
 	}
 
 	@Override
-	public Rating addRating (Rating rating) {
+	public Rating addRating(Rating rating) {
 		if (rating.created == null) {
 			rating.created = new Date();
 		}
 
 		if (rating.by != null) {
-			rating.byKey = Key.create(rating.by);
+			rating.byKey = ObjectifyService.key(rating.by);
 		}
 
 		Key<Rating> key = provide().save().entity(rating).now();
@@ -54,9 +55,9 @@ final class RatingService implements IRatingService {
 	}
 
 	@Override
-	public Rating updateRating (Rating rating) {
+	public Rating updateRating(Rating rating) {
 		if (rating.by != null) {
-			rating.byKey = Key.create(rating.by);
+			rating.byKey = ObjectifyService.key(rating.by);
 		}
 
 		provide().save().entity(rating).now();
@@ -65,49 +66,55 @@ final class RatingService implements IRatingService {
 	}
 
 	@Override
-	public void deleteRating (Rating rating) {
+	public void deleteRating(Rating rating) {
 		provide().delete().entity(rating).now();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.rating.IRatingService#getRatings(java.
 	 * lang.Integer, java.lang.Integer,
 	 * com.willshex.blogwt.shared.api.datatype.RatingSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	 * com.willshex.blogwt.shared.api.SortDirectionType)
+	 */
 	@Override
-	public List<Rating> getRatings (Integer start, Integer count,
+	public List<Rating> getRatings(Integer start, Integer count,
 			RatingSortType sortBy, SortDirectionType sortDirection) {
 		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
 				this, sortDirection);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.server.service.rating.IRatingService#getUserRatings(
 	 * com.willshex.blogwt.shared.api.datatype.User, java.lang.Integer,
 	 * java.lang.Integer,
 	 * com.willshex.blogwt.shared.api.datatype.RatingSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	 * com.willshex.blogwt.shared.api.SortDirectionType)
+	 */
 	@Override
-	public List<Rating> getUserRatings (User user, Integer start, Integer count,
+	public List<Rating> getUserRatings(User user, Integer start, Integer count,
 			RatingSortType sortBy, SortDirectionType sortDirection) {
 		return PersistenceHelper.pagedAndSorted(
 				load().filter(map(RatingSortType.RatingSortTypeBy), user),
 				start, count, sortBy, this, sortDirection);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.willshex.blogwt.server.service.rating.IRatingService#
 	 * getSubjectRatings(java.lang.Long, java.lang.String, java.lang.Integer,
 	 * java.lang.Integer,
 	 * com.willshex.blogwt.shared.api.datatype.RatingSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType) */
+	 * com.willshex.blogwt.shared.api.SortDirectionType)
+	 */
 	@Override
-	public List<Rating> getSubjectRatings (Long subjectId, String subjectType,
+	public List<Rating> getSubjectRatings(Long subjectId, String subjectType,
 			Integer start, Integer count, RatingSortType sortBy,
 			SortDirectionType sortDirection) {
 		return PersistenceHelper.pagedAndSorted(
