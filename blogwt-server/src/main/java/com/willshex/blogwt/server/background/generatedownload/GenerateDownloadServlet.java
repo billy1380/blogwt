@@ -43,12 +43,6 @@ public class GenerateDownloadServlet extends ContextAwareServlet
 	private static final String GENERATE_DOWNLOAD_ACTION = "Generate";
 
 	public static final String URL = "/generatedownload";
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.server.ContextAwareServlet#doGet()
-	 */
 	@Override
 	protected void doGet() throws ServletException, IOException {
 		super.doGet();
@@ -59,23 +53,10 @@ public class GenerateDownloadServlet extends ContextAwareServlet
 			throw new ServletException(e);
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.server.ContextAwareServlet#doPost()
-	 */
 	@Override
 	protected void doPost() throws ServletException, IOException {
 		doGet();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.helper.QueueHelper.HasQueueAction#
-	 * processAction(java.lang.String, com.google.gson.JsonObject)
-	 */
 	@Override
 	public void processAction(String action, JsonObject json)
 			throws ServiceException {

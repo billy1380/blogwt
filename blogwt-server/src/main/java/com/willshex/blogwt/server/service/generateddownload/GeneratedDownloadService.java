@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.background.generatedownload.GenerateDownloadServlet;
 import com.willshex.blogwt.server.helper.GcsHelper;
@@ -52,7 +51,7 @@ final class GeneratedDownloadService implements IGeneratedDownloadService,
 			generatedDownload.created = new Date();
 		}
 
-		generatedDownload.userKey = ObjectifyService.key(generatedDownload.user);
+		generatedDownload.userKey = Key.create(generatedDownload.user);
 		generatedDownload.status = GeneratedDownloadStatusType.GeneratedDownloadStatusTypeGenerating;
 
 		Key<GeneratedDownload> generatedKey = provide().save()
@@ -78,16 +77,6 @@ final class GeneratedDownloadService implements IGeneratedDownloadService,
 
 		provide().delete().entity(generatedDownload).now();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.generateddownload.
-	 * IGeneratedDownloadService#getUserGeneratedDownloads(com.willshex.blogwt.
-	 * shared.api.datatype.User, java.lang.Integer, java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.GeneratedDownloadSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<GeneratedDownload> getUserGeneratedDownloads(User user,
 			Integer start, Integer count, GeneratedDownloadSortType sortBy,
@@ -96,12 +85,6 @@ final class GeneratedDownloadService implements IGeneratedDownloadService,
 				map(GeneratedDownloadSortType.GeneratedDownloadSortTypeUser),
 				user), start, count, sortBy, this, sortDirection);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.ISortable#map(java.lang.Enum)
-	 */
 	@Override
 	public String map(GeneratedDownloadSortType sortBy) {
 		String mapped = sortBy.toString();
@@ -112,16 +95,6 @@ final class GeneratedDownloadService implements IGeneratedDownloadService,
 
 		return mapped;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.generateddownload.
-	 * IGeneratedDownloadService#getGeneratedDownloads(java.lang.Integer,
-	 * java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.GeneratedDownloadSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<GeneratedDownload> getGeneratedDownloads(Integer start,
 			Integer count, GeneratedDownloadSortType sortBy,

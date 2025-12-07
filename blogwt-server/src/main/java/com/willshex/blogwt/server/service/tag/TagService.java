@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
@@ -62,7 +61,7 @@ final class TagService implements ITagService {
 					tag.postKeys = new ArrayList<Key<Post>>();
 				}
 
-				tag.postKeys.add(ObjectifyService.key(post));
+				tag.postKeys.add(Key.create(post));
 			}
 		}
 
@@ -76,22 +75,10 @@ final class TagService implements ITagService {
 	public void deleteTag(Tag tag) {
 		provide().delete().entity(tag).now();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.tag.ITagService#getTags()
-	 */
 	@Override
 	public List<Tag> getTags() {
 		return load().list();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.tag.ITagService#generateTags()
-	 */
 	@Override
 	public void generateTags() {
 		Map<String, Tag> tagLookup = new HashMap<String, Tag>();
@@ -132,13 +119,6 @@ final class TagService implements ITagService {
 		}
 
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.tag.ITagService#addTagBatch(java.
-	 * util.Collection)
-	 */
 	@Override
 	public void addTagBatch(Collection<Tag> tags) {
 		for (Tag tag : tags) {
@@ -155,32 +135,17 @@ final class TagService implements ITagService {
 						tag.postKeys = new ArrayList<Key<Post>>();
 					}
 
-					tag.postKeys.add(ObjectifyService.key(post));
+					tag.postKeys.add(Key.create(post));
 				}
 			}
 		}
 
 		provide().save().entities(tags).now();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.tag.ITagService#getSlugTag(java.
-	 * lang.String)
-	 */
 	@Override
 	public Tag getSlugTag(String slug) {
 		return PersistenceHelper.one(load().filter("slug", slug));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.tag.ITagService#addTagPost(com.
-	 * willshex .blogwt.shared.api.datatype.Tag,
-	 * com.willshex.blogwt.shared.api.datatype.Post)
-	 */
 	@Override
 	public void addTagPost(final Tag tag, final Post post) {
 		provide().transact(new Work<Void>() {
@@ -202,7 +167,7 @@ final class TagService implements ITagService {
 				}
 
 				if (!found) {
-					latest.postKeys.add(ObjectifyService.key(post));
+					latest.postKeys.add(Key.create(post));
 				}
 
 				provide().save().entity(latest).now();
@@ -211,14 +176,6 @@ final class TagService implements ITagService {
 			}
 		});
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.tag.ITagService#removeTagPost(com
-	 * .willshex.blogwt.shared.api.datatype.Tag,
-	 * com.willshex.blogwt.shared.api.datatype.Post)
-	 */
 	@Override
 	public void removeTagPost(final Tag tag, final Post post) {
 		provide().transact(new Work<Void>() {

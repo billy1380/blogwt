@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.shared.api.datatype.PushToken;
@@ -46,7 +45,7 @@ final class PushTokenService implements IPushTokenService {
 		}
 
 		if (pushToken.user != null) {
-			pushToken.userKey = ObjectifyService.key(pushToken.user);
+			pushToken.userKey = Key.create(pushToken.user);
 		}
 
 		Key<PushToken> key = provide().save().entity(pushToken).now();
@@ -66,14 +65,6 @@ final class PushTokenService implements IPushTokenService {
 	public void deletePushToken(PushToken pushToken) {
 		throw new UnsupportedOperationException();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.pushtoken.IPushTokenService#
-	 * getUserPlatformPushToken(com.willshex.blogwt.shared.api.datatype.User,
-	 * java.lang.String)
-	 */
 	@Override
 	public PushToken getUserPlatformPushToken(User user, String platform) {
 		return PersistenceHelper.one(load()
@@ -81,13 +72,6 @@ final class PushTokenService implements IPushTokenService {
 				.filter(map(PushTokenSortType.PushTokenSortTypePlatform),
 						platform));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.pushtoken.IPushTokenService#
-	 * getUserPushTokens(com.willshex.blogwt.shared.api.datatype.User)
-	 */
 	@Override
 	public List<PushToken> getUserPushTokens(User user) {
 		return load().filter(map(PushTokenSortType.PushTokenSortTypeUser), user)

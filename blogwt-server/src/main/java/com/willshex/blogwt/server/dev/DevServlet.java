@@ -58,22 +58,10 @@ public class DevServlet extends ContextAwareServlet {
 	public static final String URL = "/dev";
 
 	private Map<String, DevAction> actions;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.server.ContextAwareServlet#doPost()
-	 */
 	@Override
 	protected void doPost() throws ServletException, IOException {
 		doGet();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.service.ContextAwareServlet#doGet()
-	 */
 	@Override
 	protected void doGet() throws ServletException, IOException {
 		super.doGet();

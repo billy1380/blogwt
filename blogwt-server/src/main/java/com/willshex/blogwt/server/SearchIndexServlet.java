@@ -35,12 +35,6 @@ public class SearchIndexServlet extends ContextAwareServlet {
 
 	private static final Logger LOG = Logger
 			.getLogger(SearchIndexServlet.class.getName());
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.service.ContextAwareServlet#doGet()
-	 */
 	@Override
 	protected void doGet() throws ServletException, IOException {
 		super.doGet();
@@ -83,12 +77,6 @@ public class SearchIndexServlet extends ContextAwareServlet {
 			}
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.service.ContextAwareServlet#doPost()
-	 */
 	@Override
 	protected void doPost() throws ServletException, IOException {
 		doGet();

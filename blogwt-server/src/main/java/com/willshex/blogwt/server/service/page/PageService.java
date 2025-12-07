@@ -24,7 +24,6 @@ import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
@@ -60,15 +59,15 @@ final class PageService implements IPageService {
 			page.created = new Date();
 		}
 
-		page.ownerKey = ObjectifyService.key(page.owner);
+		page.ownerKey = Key.create(page.owner);
 
 		page.postKeys = new ArrayList<Key<Post>>();
 		for (Post post : page.posts) {
-			page.postKeys.add(ObjectifyService.key(post));
+			page.postKeys.add(Key.create(post));
 		}
 
 		if (page.parent != null) {
-			page.parentKey = ObjectifyService.key(page.parent);
+			page.parentKey = Key.create(page.parent);
 		}
 
 		Key<Page> key = provide().save().entity(page).now();
@@ -78,14 +77,6 @@ final class PageService implements IPageService {
 
 		return page;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.search.IIndex#toDocument(java.lang.
-	 * Object)
-	 */
 	@Override
 	public Document toDocument(Page page) {
 		Document document = null;
@@ -129,11 +120,11 @@ final class PageService implements IPageService {
 	public Page updatePage(Page page) {
 		page.postKeys = new ArrayList<Key<Post>>();
 		for (Post post : page.posts) {
-			page.postKeys.add(ObjectifyService.key(post));
+			page.postKeys.add(Key.create(post));
 		}
 
 		if (page.parent != null) {
-			page.parentKey = ObjectifyService.key(page.parent);
+			page.parentKey = Key.create(page.parent);
 		} else {
 			page.parentKey = null;
 		}
@@ -151,14 +142,6 @@ final class PageService implements IPageService {
 
 		SearchHelper.deleteSearch(this, getName() + page.id.toString());
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.page.IPageService#getSlugPage(java
-	 * .lang.String, java.lang.Boolean)
-	 */
 	@Override
 	public Page getSlugPage(String slug, Boolean includePostContents) {
 		Page page = PersistenceHelper.one(
@@ -170,16 +153,6 @@ final class PageService implements IPageService {
 
 		return page;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.page.IPageService#getPages(java.lang
-	 * .Boolean, java.lang.Integer, java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.PageSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<Page> getPages(Boolean includePostContents, Integer start,
 			Integer count, PageSortType sortBy,
@@ -223,14 +196,6 @@ final class PageService implements IPageService {
 			page.posts = pagePosts;
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.page.IPageService#getPage(java.lang
-	 * .Long, java.lang.Boolean)
-	 */
 	@Override
 	public Page getPage(Long id, Boolean includePostContents) {
 		Page page = getPage(id);
@@ -241,12 +206,6 @@ final class PageService implements IPageService {
 
 		return page;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.search.IIndex#indexAll()
-	 */
 	@Override
 	public void indexAll() {
 		SearchHelper.indexAll(getName(),
@@ -255,16 +214,6 @@ final class PageService implements IPageService {
 								Boolean.FALSE, start, count, sortBy,
 								sortDirection));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.page.IPageService#getPartialSlugPages
-	 * (java.lang.String, java.lang.Boolean, java.lang.Integer,
-	 * java.lang.Integer, com.willshex.blogwt.shared.api.datatype.PageSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<Page> getPartialSlugPages(String partialSlug,
 			Boolean includePostContents, Integer start, Integer count,
@@ -285,25 +234,10 @@ final class PageService implements IPageService {
 
 		return pages;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.search.IIndex#index(java.lang.Long)
-	 */
 	@Override
 	public void index(Long id) {
 		SearchHelper.indexDocument(this, getName(), toDocument(getPage(id)));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.search.ISearch#search(java.lang.
-	 * String, java.lang.Integer, java.lang.Integer, java.lang.String,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<Page> search(String query, Integer start, Integer count,
 			String sortBy, SortDirectionType direction) {
@@ -331,14 +265,6 @@ final class PageService implements IPageService {
 
 		return pages;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.search.ISearch#search(java.util.
-	 * Collection, java.lang.String, java.lang.String, java.lang.Integer,
-	 * java.lang.String, com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public String search(Collection<Page> resultHolder, String query,
 			String next, Integer count, String sortBy,

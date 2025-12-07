@@ -57,12 +57,6 @@ public final class DownloadJsonServlet extends JsonServlet {
 		}
 		return output;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.JsonServlet#doGet()
-	 */
 	@Override
 	protected void doGet() throws IOException {
 		String action = REQUEST.get().getParameter("action");

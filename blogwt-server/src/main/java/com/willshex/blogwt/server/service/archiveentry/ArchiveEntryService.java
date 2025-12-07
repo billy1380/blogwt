@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Work;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
@@ -43,13 +42,6 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	public String getName() {
 		return NAME;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
-	 * #getArchiveEntry(java.lang.Long)
-	 */
 	@Override
 	public ArchiveEntry getArchiveEntry(Long id) {
 		return id(load(), id);
@@ -61,13 +53,6 @@ final class ArchiveEntryService implements IArchiveEntryService {
 	private LoadType<ArchiveEntry> load() {
 		return provide().load().type(ArchiveEntry.class);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
-	 * #addArchiveEntry(com.willshex.blogwt.shared.api.datatype.ArchiveEntry)
-	 */
 	@Override
 	public ArchiveEntry addArchiveEntry(ArchiveEntry archiveEntry) {
 		if (archiveEntry.created == null) {
@@ -76,7 +61,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 
 		archiveEntry.postKeys = new ArrayList<Key<Post>>();
 		for (Post post : archiveEntry.posts) {
-			archiveEntry.postKeys.add(ObjectifyService.key(post));
+			archiveEntry.postKeys.add(Key.create(post));
 		}
 
 		Key<ArchiveEntry> key = provide().save().entity(archiveEntry).now();
@@ -84,37 +69,14 @@ final class ArchiveEntryService implements IArchiveEntryService {
 
 		return archiveEntry;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
-	 * #updateArchiveEntry(com.willshex.blogwt.shared.api.datatype.
-	 * ArchiveEntry)
-	 */
 	@Override
 	public ArchiveEntry updateArchiveEntry(ArchiveEntry archiveEntry) {
 		throw new UnsupportedOperationException();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
-	 * #deleteArchiveEntry(com.willshex.blogwt.shared.api.datatype.
-	 * ArchiveEntry)
-	 */
 	@Override
 	public void deleteArchiveEntry(ArchiveEntry archiveEntry) {
 		throw new UnsupportedOperationException();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
-	 * #archivePost(com.willshex.blogwt.shared.api.datatype.Post)
-	 */
 	@Override
 	public void archivePost(Post post) {
 		if (Boolean.TRUE.equals(post.listed) && post.published != null) {
@@ -134,13 +96,6 @@ final class ArchiveEntryService implements IArchiveEntryService {
 			}
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
-	 * #getMonthArchiveEntry(java.lang.Integer, java.lang.Integer)
-	 */
 	@Override
 	public ArchiveEntry getMonthArchiveEntry(Integer month, Integer year) {
 		return PersistenceHelper
@@ -155,13 +110,6 @@ final class ArchiveEntryService implements IArchiveEntryService {
 
 		return calendar.get();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
-	 * #getArchiveEntries()
-	 */
 	@Override
 	public List<ArchiveEntry> getArchiveEntries() {
 		return load().list();
@@ -212,13 +160,6 @@ final class ArchiveEntryService implements IArchiveEntryService {
 			addArchiveEntryBatch(archiveEntryLookup.values());
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
-	 * #addArchiveEntryBatch(java.util.Collection)
-	 */
 	@Override
 	public void addArchiveEntryBatch(Collection<ArchiveEntry> archiveEntries) {
 		for (ArchiveEntry archiveEntry : archiveEntries) {
@@ -232,20 +173,13 @@ final class ArchiveEntryService implements IArchiveEntryService {
 						archiveEntry.postKeys = new ArrayList<Key<Post>>();
 					}
 
-					archiveEntry.postKeys.add(ObjectifyService.key(post));
+					archiveEntry.postKeys.add(Key.create(post));
 				}
 			}
 		}
 
 		provide().save().entities(archiveEntries).now();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.archiveentry.IArchiveEntryService
-	 * #getDateArchiveEntry(java.util.Date)
-	 */
 	@Override
 	public ArchiveEntry getDateArchiveEntry(Date date) {
 		Calendar c = ensureCalendar();
@@ -281,7 +215,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 					}
 
 					if (!found) {
-						latest.postKeys.add(ObjectifyService.key(post));
+						latest.postKeys.add(Key.create(post));
 					}
 
 					provide().save().entity(latest).now();
@@ -300,7 +234,7 @@ final class ArchiveEntryService implements IArchiveEntryService {
 			ArchiveEntry latest = getArchiveEntry(archiveEntry.id);
 
 			if (latest != null) {
-				latest.postKeys.remove(ObjectifyService.key(post));
+				latest.postKeys.remove(Key.create(post));
 
 				if (latest.postKeys.size() == 0) {
 					provide().delete().entities(latest).now();

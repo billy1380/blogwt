@@ -353,12 +353,6 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 
 		currentResourceRow.add(image);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach()
-	 */
 	@Override
 	protected void onAttach() {
 		super.onAttach();
@@ -402,12 +396,6 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 			updateTimer.schedule(1000);
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onDetach()
-	 */
 	@Override
 	protected void onDetach() {
 		updateTimer.cancel();
@@ -625,16 +613,6 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 						.loadingButton("Submitting... ",
 								Resources.RES.primaryLoader().getSafeUri()));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler
-	 * #updatePostSuccess
-	 * (com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse)
-	 */
 	@Override
 	public void updatePostSuccess(UpdatePostRequest input,
 			UpdatePostResponse output) {
@@ -653,30 +631,10 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 
 		ready();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler
-	 * #updatePostFailure
-	 * (com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest,
-	 * java.lang.Throwable)
-	 */
 	@Override
 	public void updatePostFailure(UpdatePostRequest input, Throwable caught) {
 		ready();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.CreatePostEventHandler
-	 * #createPostSuccess
-	 * (com.willshex.blogwt.shared.api.blog.call.CreatePostRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.CreatePostResponse)
-	 */
 	@Override
 	public void createPostSuccess(CreatePostRequest input,
 			CreatePostResponse output) {
@@ -695,16 +653,6 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 
 		ready();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.CreatePostEventHandler
-	 * #createPostFailure
-	 * (com.willshex.blogwt.shared.api.blog.call.CreatePostRequest,
-	 * java.lang.Throwable)
-	 */
 	@Override
 	public void createPostFailure(CreatePostRequest input, Throwable caught) {
 		ready();
@@ -767,12 +715,6 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		return resources == null ? resources = new HashMap<String, Resource>()
 				: resources;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset()
-	 */
 	@Override
 	protected void reset() {
 		super.reset();

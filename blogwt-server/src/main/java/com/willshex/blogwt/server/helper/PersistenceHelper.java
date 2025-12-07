@@ -40,7 +40,7 @@ public class PersistenceHelper {
 	}
 
 	public static <T> Key<T> idToKey(Class<? extends T> kindClass, Long id) {
-		return ObjectifyService.key(kindClass, id.longValue());
+		return Key.create(kindClass, id.longValue());
 	}
 
 	public static <T> List<Long> keysToIds(Iterable<Key<T>> keys) {

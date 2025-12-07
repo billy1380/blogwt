@@ -23,15 +23,6 @@ public final class GetArchiveEntriesActionHandler extends
 		ActionHandler<GetArchiveEntriesRequest, GetArchiveEntriesResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetArchiveEntriesActionHandler.class.getName());
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response)
-	 */
 	@Override
 	protected void handle(GetArchiveEntriesRequest input,
 			GetArchiveEntriesResponse output) throws Exception {
@@ -58,22 +49,10 @@ public final class GetArchiveEntriesActionHandler extends
 		}
 
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput()
-	 */
 	@Override
 	protected GetArchiveEntriesResponse newOutput() {
 		return new GetArchiveEntriesResponse();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger()
-	 */
 	@Override
 	protected Logger logger() {
 		return LOG;

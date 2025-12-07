@@ -10,8 +10,8 @@ package com.willshex.blogwt.server.service.persistence;
 import javax.servlet.annotation.WebFilter;
 
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.ObjectifyFilter;
 import com.googlecode.objectify.impl.translate.TranslatorFactory;
 import com.willshex.blogwt.server.helper.EnvironmentHelper;
 import com.willshex.blogwt.server.service.persistence.translator.NotificationModeTypeTranslatorFactory;
@@ -44,15 +44,16 @@ import com.willshex.blogwt.shared.api.datatype.User;
 public class PersistenceServiceProvider {
 
 	public static interface Registrar {
-		<T> void register (Class<T> type);
+		<T> void register(Class<T> type);
 	}
 
 	public static interface TranslatorAdder {
-		void add (TranslatorFactory<?, ?> trans);
+		void add(TranslatorFactory<?, ?> trans);
 	}
 
 	@WebFilter(filterName = "ObjectifyFilter", urlPatterns = "/*")
-	public static final class PersistenceFilter extends ObjectifyFilter {}
+	public static final class PersistenceFilter extends ObjectifyFilter {
+	}
 
 	static {
 		registerCoreTranslators();
@@ -62,25 +63,26 @@ public class PersistenceServiceProvider {
 		registerOtherClasses();
 	}
 
-	public static Objectify provide () {
+	public static Objectify provide() {
 		return provide(false);
 	}
 
-	public static Objectify provide (boolean shared) {
+	public static Objectify provide(boolean shared) {
 		EnvironmentHelper.selectNamespace(shared);
 		return ObjectifyService.ofy();
 	}
 
-	private static void registerCoreTranslators () {
+	private static void registerCoreTranslators() {
 		translator().add(new PermissionTypeTypeTranslatorFactory());
 		translator().add(new RelationshipTypeTypeTranslatorFactory());
 		translator().add(new ResourceTypeTypeTranslatorFactory());
 		translator().add(new NotificationModeTypeTranslatorFactory());
 	}
 
-	private static void registerOtherTranslators () {}
+	private static void registerOtherTranslators() {
+	}
 
-	private static void registerCoreClasses () {
+	private static void registerCoreClasses() {
 		registrar().register(User.class);
 		registrar().register(Session.class);
 		registrar().register(Post.class);
@@ -101,13 +103,14 @@ public class PersistenceServiceProvider {
 		registrar().register(GeneratedDownload.class);
 	}
 
-	private static void registerOtherClasses () {}
+	private static void registerOtherClasses() {
+	}
 
-	private static Registrar registrar () {
+	private static Registrar registrar() {
 		return ObjectifyService.factory()::register;
 	}
 
-	private static TranslatorAdder translator () {
+	private static TranslatorAdder translator() {
 		return ObjectifyService.factory().getTranslators()::add;
 	}
 

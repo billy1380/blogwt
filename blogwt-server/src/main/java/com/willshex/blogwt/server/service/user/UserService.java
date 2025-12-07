@@ -63,13 +63,6 @@ final class UserService implements IUserService {
 	private LoadType<User> load() {
 		return provide().load().type(User.class);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.user.IUserService#addUser
-	 * (com.willshex.blogwt.shared.api.datatypes.User)
-	 */
 	@Override
 	public User addUser(User user) {
 		if (user.created == null) {
@@ -82,14 +75,14 @@ final class UserService implements IUserService {
 			user.roleKeys = new ArrayList<Key<Role>>();
 
 			for (Role role : user.roles) {
-				user.roleKeys.add(ObjectifyService.key(role));
+				user.roleKeys.add(Key.create(role));
 			}
 		}
 
 		if (user.permissions != null) {
 			user.permissionKeys = new ArrayList<Key<Permission>>();
 			for (Permission permission : user.permissions) {
-				user.permissionKeys.add(ObjectifyService.key(permission));
+				user.permissionKeys.add(Key.create(permission));
 			}
 		}
 
@@ -100,13 +93,6 @@ final class UserService implements IUserService {
 
 		return user;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.user.IUserService#updateUser
-	 * (com.willshex.blogwt.shared.api.datatypes.User)
-	 */
 	@Override
 	public User updateUser(User user) {
 		provide().save().entity(user).now();
@@ -115,41 +101,18 @@ final class UserService implements IUserService {
 
 		return addAvatar(user);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.user.IUserService#deleteUser
-	 * (com.willshex.blogwt.shared.api.datatypes.User)
-	 */
 	@Override
 	public void deleteUser(User user) {
 		provide().delete().entity(user);
 
 		SearchHelper.deleteSearch(this, getName() + user.id.toString());
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.user.IUserService#getUsers
-	 * (java.lang.Integer, java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatypes.UserSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<User> getUsers(Integer start, Integer count,
 			UserSortType sortBy, SortDirectionType sortDirection) {
 		return addAvatars(PersistenceHelper.pagedAndSorted(load(), start, count,
 				sortBy, this, sortDirection));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.user.IUserService#getLoginUser
-	 * (java.lang.String, java.lang.String)
-	 */
 	@Override
 	public User getLoginUser(String username, String password) {
 		User user = PersistenceHelper.one(load()
@@ -161,13 +124,6 @@ final class UserService implements IUserService {
 
 		return addAvatar(user);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.user.IUserService#
-	 * updateUserIdLastLoggedIn(java.lang.Long)
-	 */
 	@Override
 	public void updateUserIdLastLoggedIn(Long userId) {
 		updateUser(getUser(userId).lastLoggedIn(new Date()));
@@ -203,14 +159,14 @@ final class UserService implements IUserService {
 				user.roleKeys = new ArrayList<Key<Role>>();
 
 				for (Role role : user.roles) {
-					user.roleKeys.add(ObjectifyService.key(role));
+					user.roleKeys.add(Key.create(role));
 				}
 			}
 
 			if (user.permissions != null) {
 				user.permissionKeys = new ArrayList<Key<Permission>>();
 				for (Permission permission : user.permissions) {
-					user.permissionKeys.add(ObjectifyService.key(permission));
+					user.permissionKeys.add(Key.create(permission));
 				}
 			}
 
@@ -219,25 +175,11 @@ final class UserService implements IUserService {
 
 		provide().save().entities(users).now();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.user.IUserService#getUsernameUser
-	 * (java.lang.String)
-	 */
 	@Override
 	public User getUsernameUser(String username) {
 		return addAvatar(PersistenceHelper.one(load()
 				.filter(map(UserSortType.UserSortTypeUsername), username)));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.user.IUserService#verifyPassword(
-	 * com.willshex.blogwt.shared.api.datatype.User, java.lang.String)
-	 */
 	@Override
 	public Boolean verifyPassword(User user, String password) {
 		return Boolean.valueOf(user != null
@@ -247,26 +189,10 @@ final class UserService implements IUserService {
 	private boolean mismatch(User user, String password) {
 		return !Boolean.TRUE.equals(verifyPassword(user, password));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.user.IUserService#generatePassword
-	 * (java.lang.String)
-	 */
 	@Override
 	public String generatePassword(String password) {
 		return StringUtils.sha1Hash(password + getSalt());
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.user.IUserService#
-	 * addUserRolesAndPermissions(com.willshex.blogwt.shared.api.datatype.User,
-	 * java.util.List, java.util.List)
-	 */
 	@Override
 	public User addUserRolesAndPermissions(final User user,
 			final List<Role> roles, final List<Permission> permissions) {
@@ -326,15 +252,6 @@ final class UserService implements IUserService {
 			}
 		});
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.user.IUserService#
-	 * removeUserRolesAndPermissions
-	 * (com.willshex.blogwt.shared.api.datatype.User, java.util.List,
-	 * java.util.List)
-	 */
 	@Override
 	public User removeUserRolesAndPermissions(final User user,
 			final List<Role> roles, final List<Permission> permissions) {
@@ -390,26 +307,10 @@ final class UserService implements IUserService {
 			}
 		});
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.user.IUserService#resetPassword(com
-	 * .willshex.blogwt.shared.api.datatype.User)
-	 */
 	@Override
 	public void resetPassword(User user) {
 		sendActionEmail(user, "changepassword/reset", "reset your password");
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.user.IUserService#verifyAccount(com
-	 * .willshex.blogwt.shared.api.datatype.User)
-	 */
 	@Override
 	public void verifyAccount(User user) {
 		sendActionEmail(user, "verifyaccount", "verify your account");
@@ -442,27 +343,11 @@ final class UserService implements IUserService {
 				InflatorHelper.inflate(values, ACTION_EMAIL_TEMPLATE), false);
 
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.user.IUserService#getActionCodeUser
-	 * (java.lang.String)
-	 */
 	@Override
 	public User getActionCodeUser(String actionCode) {
 		return addAvatar(PersistenceHelper.one(load()
 				.filter(map(UserSortType.UserSortTypeActionCode), actionCode)));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.user.IUserService#getEmailUser(java
-	 * .lang.String)
-	 */
 	@Override
 	public User getEmailUser(String email) {
 		return addAvatar(PersistenceHelper.one(
@@ -479,14 +364,6 @@ final class UserService implements IUserService {
 
 		return salt;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.search.IIndex#toDocument(java.lang.
-	 * Object)
-	 */
 	@Override
 	public Document toDocument(User user) {
 		Document document = null;
@@ -541,47 +418,18 @@ final class UserService implements IUserService {
 
 		return document;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.user.IUserService#indexAll()
-	 */
 	@Override
 	public void indexAll() {
 		SearchHelper.indexAll(getName(), this::getUsers);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.user.IUserService#getIdUserBatch(java.
-	 * lang.Iterable)
-	 */
 	@Override
 	public List<User> getIdUserBatch(Iterable<Long> ids) {
 		return addAvatars(new ArrayList<User>(load().ids(ids).values()));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.search.IIndex#index(java.lang.Long)
-	 */
 	@Override
 	public void index(Long id) {
 		SearchHelper.indexDocument(this, getName(), toDocument(getUser(id)));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.search.ISearch#search(java.lang.
-	 * String, java.lang.Integer, java.lang.Integer, java.lang.String,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<User> search(String query, Integer start, Integer count,
 			String sortBy, SortDirectionType direction) {
@@ -609,14 +457,6 @@ final class UserService implements IUserService {
 
 		return users;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.user.IUserService#getEmailLoginUser(
-	 * java.lang.String, java.lang.String)
-	 */
 	@Override
 	public User getEmailLoginUser(String email, String password) {
 		User user = getEmailUser(email);
@@ -627,28 +467,12 @@ final class UserService implements IUserService {
 
 		return user;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.search.ISearch#search(java.util.
-	 * Collection, java.lang.String, java.lang.String, java.lang.Integer,
-	 * java.lang.String, com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public String search(Collection<User> resultHolder, String query,
 			String next, Integer count, String sortBy,
 			SortDirectionType direction) {
 		throw new UnsupportedOperationException();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
-	 * get(java.lang.Iterable)
-	 */
 	@Override
 	public List<User> get(Iterable<Long> ids) {
 		return getIdUserBatch(ids);

@@ -92,12 +92,6 @@ public class MainServlet extends ContextAwareServlet {
 			throw new RuntimeException(e);
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.service.ContextAwareServlet#doGet()
-	 */
 	@Override
 	protected void doGet() throws ServletException, IOException {
 		super.doGet();

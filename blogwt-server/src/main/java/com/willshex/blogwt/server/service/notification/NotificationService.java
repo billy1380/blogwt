@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.shared.api.SortDirectionType;
@@ -47,15 +46,15 @@ final class NotificationService implements INotificationService {
 		}
 
 		if (notification.meta != null) {
-			notification.metaKey = ObjectifyService.key(notification.meta);
+			notification.metaKey = Key.create(notification.meta);
 		}
 
 		if (notification.target != null) {
-			notification.targetKey = ObjectifyService.key(notification.target);
+			notification.targetKey = Key.create(notification.target);
 		}
 
 		if (notification.sender != null) {
-			notification.senderKey = ObjectifyService.key(notification.sender);
+			notification.senderKey = Key.create(notification.sender);
 		}
 
 		Key<Notification> key = provide().save().entity(notification).now();
@@ -83,24 +82,16 @@ final class NotificationService implements INotificationService {
 				map(NotificationSortType.NotificationSortTypeTarget), user),
 				start, count, sortBy, this, sortDirection);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.notification.INotificationService#
-	 * updateNotificationSettings(java.util.Collection)
-	 */
 	@Override
 	public List<NotificationSetting> updateNotificationSettings(
 			Collection<NotificationSetting> notificationSettings) {
 		for (NotificationSetting setting : notificationSettings) {
 			if (setting.user != null) {
-				setting.userKey = ObjectifyService.key(setting.user);
+				setting.userKey = Key.create(setting.user);
 			}
 
 			if (setting.meta != null) {
-				setting.metaKey = ObjectifyService.key(setting.meta);
+				setting.metaKey = Key.create(setting.meta);
 			}
 		}
 		provide().save().entities(notificationSettings).now();

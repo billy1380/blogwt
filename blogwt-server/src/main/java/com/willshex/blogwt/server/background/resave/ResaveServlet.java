@@ -75,22 +75,10 @@ public class ResaveServlet extends ContextAwareServlet
 	static {
 		// RESAVERS.put();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.server.ContextAwareServlet#doPost()
-	 */
 	@Override
 	protected void doPost() throws ServletException, IOException {
 		doGet();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.server.ContextAwareServlet#doGet()
-	 */
 	@Override
 	protected void doGet() throws ServletException, IOException {
 		super.doGet();
@@ -101,13 +89,6 @@ public class ResaveServlet extends ContextAwareServlet
 			throw new ServletException(e);
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.helper.QueueHelper.HasQueueAction#
-	 * processAction(java.lang.String, com.google.gson.JsonObject)
-	 */
 	@Override
 	public void processAction(String action, JsonObject json)
 			throws Exception {

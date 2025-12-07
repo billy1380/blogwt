@@ -24,7 +24,6 @@ import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
@@ -51,36 +50,14 @@ import com.willshex.blogwt.shared.helper.UserHelper;
  *
  */
 final class PostService implements IPostService, ISearch<Post> {
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.spacehopperstudios.service.IService#getName()
-	 */
 	@Override
 	public String getName() {
 		return NAME;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#getPost(java.lang
-	 * .Long)
-	 */
 	@Override
 	public Post getPost(Long id) {
 		return id(load(), id);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#addPost(com.willshex
-	 * .blogwt.shared.api.datatype.Post)
-	 */
 	@Override
 	public Post addPost(Post post) {
 		if (post.created == null) {
@@ -89,7 +66,7 @@ final class PostService implements IPostService, ISearch<Post> {
 
 		post.slug = nextPostSlug(PostHelper.slugify(post.title));
 
-		post.authorKey = ObjectifyService.key(post.author);
+		post.authorKey = Key.create(post.author);
 
 		if (post.content.created == null) {
 			post.content.created = post.created;
@@ -137,14 +114,6 @@ final class PostService implements IPostService, ISearch<Post> {
 				null);
 		return PostHelper.nextPostSlug(posts, slug);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.search.IIndex#toDocument(java.lang.
-	 * Object)
-	 */
 	@Override
 	public Document toDocument(Post post) {
 		Document document = null;
@@ -199,13 +168,6 @@ final class PostService implements IPostService, ISearch<Post> {
 
 		return document;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.post.IPostService#updatePost(com.
-	 * willshex.blogwt.shared.api.datatype.Post, java.lang.Iterable)
-	 */
 	@Override
 	public Post updatePost(Post post, Iterable<String> removedTags) {
 		post.slug = PostHelper.slugify(post.title);
@@ -216,7 +178,7 @@ final class PostService implements IPostService, ISearch<Post> {
 			}
 
 			if (post.content.postKey == null) {
-				post.content.postKey = ObjectifyService.key(post);
+				post.content.postKey = Key.create(post);
 			}
 
 			provide().save().entity(post.content).now();
@@ -318,13 +280,6 @@ final class PostService implements IPostService, ISearch<Post> {
 	private LoadType<PostContent> loadContent() {
 		return provide().load().type(PostContent.class);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.post.IPostService#deletePost(com.
-	 * willshex.blogwt.shared.api.datatype.Post)
-	 */
 	@Override
 	public void deletePost(Post post) {
 		deleteFromTags(post, post.tags);
@@ -379,17 +334,6 @@ final class PostService implements IPostService, ISearch<Post> {
 			}
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#getUserViewablePosts
-	 * (com.willshex.blogwt.shared.api.datatype.User, java.lang.Boolean,
-	 * java.lang.Boolean, java.lang.Integer, java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.PostSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<Post> getUserViewablePosts(User user, Boolean showAll,
 			Boolean includeContents, Integer start, Integer count,
@@ -449,16 +393,6 @@ final class PostService implements IPostService, ISearch<Post> {
 
 		return posts;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#getPosts(java.lang
-	 * .Boolean, java.lang.Boolean, java.lang.Integer, java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.PostSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<Post> getPosts(Boolean showAll, Boolean includeContents,
 			Integer start, Integer count, PostSortType sortBy,
@@ -466,62 +400,23 @@ final class PostService implements IPostService, ISearch<Post> {
 		return getUserViewablePosts(null, showAll, includeContents, start,
 				count, sortBy, sortDirection);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#getSlugPost(java
-	 * .lang.String)
-	 */
 	@Override
 	public Post getSlugPost(String slug) {
 		return PersistenceHelper.one(
 				load().filter(PostSortType.PostSortTypeSlug.toString(), slug));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.post.IPostService#
-	 * getUserViewablePostsCount(com.willshex.blogwt.shared.api.datatype.User,
-	 * java.lang.Boolean)
-	 */
 	@Override
 	public Long getUserViewablePostsCount(User user, Boolean showAll) {
 		throw new UnsupportedOperationException();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#getPostsCount(java
-	 * .lang.Boolean)
-	 */
 	@Override
 	public Long getPostsCount(Boolean showAll) {
 		return getUserViewablePostsCount(null, showAll);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.post.IPostService#getPostContent(
-	 * com.willshex.blogwt.shared.api.datatype.Post)
-	 */
 	@Override
 	public PostContent getPostContent(Post post) {
 		return loadContent().id(post.contentKey.getId()).now();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#getIdPostBatch(java.
-	 * lang.Iterable)
-	 */
 	@Override
 	public List<Post> getIdPostBatch(Iterable<Long> ids) {
 		return new ArrayList<Post>(load().ids(ids).values());
@@ -568,12 +463,6 @@ final class PostService implements IPostService, ISearch<Post> {
 			}
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.search.IIndex#indexAll()
-	 */
 	@Override
 	public void indexAll() {
 		SearchHelper.indexAll(getName(),
@@ -582,17 +471,6 @@ final class PostService implements IPostService, ISearch<Post> {
 								Boolean.FALSE, Boolean.FALSE, start, count,
 								sortBy, sortDirection));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#getPartialSlugPosts
-	 * (java.lang.String, java.lang.Boolean, java.lang.Boolean,
-	 * java.lang.Integer, java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.PostSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<Post> getPartialSlugPosts(String partialSlug, Boolean showAll,
 			Boolean includeContents, Integer start, Integer count,
@@ -600,17 +478,6 @@ final class PostService implements IPostService, ISearch<Post> {
 		return getUserViewablePartialSlugPosts(partialSlug, null, showAll,
 				includeContents, start, count, sortBy, sortDirection);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.post.IPostService#
-	 * getUserViewablePartialSlugPosts(java.lang.String,
-	 * com.willshex.blogwt.shared.api.datatype.User, java.lang.Boolean,
-	 * java.lang.Boolean, java.lang.Integer, java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.PostSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<Post> getUserViewablePartialSlugPosts(String partialSlug,
 			User user, Boolean showAll, Boolean includeContents, Integer start,
@@ -675,14 +542,6 @@ final class PostService implements IPostService, ISearch<Post> {
 
 		return posts;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.post.IPostService#getLastPublishedPost
-	 * ()
-	 */
 	@Override
 	public Post getLastPublishedPost() {
 		Post last = null;
@@ -698,12 +557,6 @@ final class PostService implements IPostService, ISearch<Post> {
 
 		return last;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.post.IPostService#linkAll()
-	 */
 	@Override
 	public void linkAll() {
 		Pager pager = PagerHelper.createDefaultPager();
@@ -745,12 +598,6 @@ final class PostService implements IPostService, ISearch<Post> {
 			PagerHelper.moveForward(pager);
 		} while (posts != null && posts.size() >= pager.count.intValue());
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.post.IPostService#clearLinks()
-	 */
 	@Override
 	public void clearLinks() {
 		Pager pager = PagerHelper.createDefaultPager();
@@ -773,25 +620,10 @@ final class PostService implements IPostService, ISearch<Post> {
 			PagerHelper.moveForward(pager);
 		} while (posts != null && posts.size() >= pager.count.intValue());
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.search.IIndex#index(java.lang.Long)
-	 */
 	@Override
 	public void index(Long id) {
 		SearchHelper.indexDocument(this, toDocument(getPost(id)));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.search.ISearch#search(java.lang.
-	 * String, java.lang.Integer, java.lang.Integer, java.lang.String,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<Post> search(String query, Integer start, Integer count,
 			String sortBy, SortDirectionType direction) {
@@ -819,28 +651,12 @@ final class PostService implements IPostService, ISearch<Post> {
 
 		return posts;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.search.ISearch#search(java.util.
-	 * Collection, java.lang.String, java.lang.String, java.lang.Integer,
-	 * java.lang.String, com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public String search(Collection<Post> resultHolder, String query,
 			String next, Integer count, String sortBy,
 			SortDirectionType direction) {
 		throw new UnsupportedOperationException();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
-	 * get(java.lang.Iterable)
-	 */
 	@Override
 	public List<Post> get(Iterable<Long> ids) {
 		return getIdPostBatch(ids);

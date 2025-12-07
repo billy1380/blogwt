@@ -45,11 +45,11 @@ final class NotificationSettingService implements INotificationSettingService {
 		}
 
 		if (notificationSetting.meta != null) {
-			notificationSetting.metaKey = ObjectifyService.key(notificationSetting.meta);
+			notificationSetting.metaKey = Key.create(notificationSetting.meta);
 		}
 
 		if (notificationSetting.user != null) {
-			notificationSetting.userKey = ObjectifyService.key(notificationSetting.user);
+			notificationSetting.userKey = Key.create(notificationSetting.user);
 		}
 
 		Key<NotificationSetting> key = provide().save()
@@ -71,16 +71,6 @@ final class NotificationSettingService implements INotificationSettingService {
 			NotificationSetting notificationSetting) {
 		throw new UnsupportedOperationException();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.notificationsetting.
-	 * INotificationSettingService#getUserNotificationSettings(com.willshex.
-	 * blogwt.shared.api.datatype.User, java.lang.Integer, java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.NotificationSettingSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<NotificationSetting> getUserNotificationSettings(User user,
 			Integer start, Integer count, NotificationSettingSortType sortBy,
@@ -89,15 +79,6 @@ final class NotificationSettingService implements INotificationSettingService {
 				NotificationSettingSortType.NotificationSettingSortTypeUser),
 				user), start, count, sortBy, this, sortDirection);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.notificationsetting.
-	 * INotificationSettingService#getMetaUserNotificationSetting(com.willshex.
-	 * blogwt.shared.api.datatype.MetaNotification,
-	 * com.willshex.blogwt.shared.api.datatype.User)
-	 */
 	@Override
 	public NotificationSetting getMetaUserNotificationSetting(
 			MetaNotification metaNotification, User user) {

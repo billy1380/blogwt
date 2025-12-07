@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
@@ -59,7 +58,7 @@ final class RoleService implements IRoleService {
 			role.permissionKeys = new ArrayList<>();
 
 			for (Permission permission : role.permissions) {
-				role.permissionKeys.add(ObjectifyService.key(permission));
+				role.permissionKeys.add(Key.create(permission));
 			}
 		}
 
@@ -78,52 +77,19 @@ final class RoleService implements IRoleService {
 		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
 				this, sortDirection);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.role.IRoleService#getRolesCount()
-	 */
 	@Override
 	public Long getRolesCount() {
 		throw new UnsupportedOperationException();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.role.IRoleService#getIdRoleBatch(java.
-	 * lang.Iterable)
-	 */
 	@Override
 	public List<Role> getIdRoleBatch(Iterable<Long> roleIds) {
 		return new ArrayList<Role>(load().ids(roleIds).values());
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.role.IRoleService#getCodeRole(java
-	 * .lang.String)
-	 */
 	@Override
 	public Role getCodeRole(String code) {
 		return PersistenceHelper
 				.one(load().filter(map(RoleSortType.RoleSortTypeCode), code));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.role.IRoleService#getPartialNameRoles
-	 * (java.lang.String, java.lang.Integer, java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.RoleSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType)
-	 */
 	@Override
 	public List<Role> getPartialNameRoles(String partialName, Integer start,
 			Integer count, RoleSortType sortBy,
@@ -133,14 +99,6 @@ final class RoleService implements IRoleService {
 				SearchHelper.addStartsWith("name", partialName, load()), start,
 				count, sortBy, this, sortDirection);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
-	 * get(java.lang.Iterable)
-	 */
 	@Override
 	public List<Role> get(Iterable<Long> ids) {
 		return getIdRoleBatch(ids);

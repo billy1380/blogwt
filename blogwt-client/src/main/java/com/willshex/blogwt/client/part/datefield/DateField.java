@@ -55,12 +55,6 @@ public class DateField extends Composite
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 		showIcon(CALENDAR);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
-	 */
 	@Override
 	protected void onAttach() {
 		super.onAttach();
@@ -68,14 +62,6 @@ public class DateField extends Composite
 		this.removeStyleName("input-group");
 		this.addStyleName("input-group");
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.event.logical.shared.HasValueChangeHandlers#
-	 * addValueChangeHandler(com.google.gwt.event.logical.shared.
-	 * ValueChangeHandler)
-	 */
 	@Override
 	public HandlerRegistration addValueChangeHandler(
 			ValueChangeHandler<Date> handler) {
@@ -101,22 +87,10 @@ public class DateField extends Composite
 	public boolean isEmpty() {
 		return ctlDate.getTextBox().getValue().trim().isEmpty();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasValue#getValue()
-	 */
 	@Override
 	public Date getValue() {
 		return ctlDate.getValue();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object)
-	 */
 	@Override
 	public void setValue(Date value) {
 		ctlDate.setValue(value);
@@ -127,13 +101,6 @@ public class DateField extends Composite
 			showIcon(CLOSE);
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object,
-	 * boolean)
-	 */
 	@Override
 	public void setValue(Date value, boolean fireEvents) {
 		ctlDate.setValue(value, fireEvents);

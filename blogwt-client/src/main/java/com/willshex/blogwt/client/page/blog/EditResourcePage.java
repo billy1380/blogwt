@@ -284,12 +284,6 @@ public class EditResourcePage extends Page
 			}
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach()
-	 */
 	@Override
 	protected void onAttach() {
 		super.onAttach();
@@ -406,16 +400,6 @@ public class EditResourcePage extends Page
 
 		return headingText;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.UpdateResourceEventHandler
-	 * #updateResourceSuccess(com.willshex.blogwt.shared.api.blog.call.
-	 * UpdateResourceRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.UpdateResourceResponse)
-	 */
 	@Override
 	public void updateResourceSuccess(UpdateResourceRequest input,
 			UpdateResourceResponse output) {
@@ -425,31 +409,12 @@ public class EditResourcePage extends Page
 
 		ready();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.UpdateResourceEventHandler
-	 * #updateResourceFailure(com.willshex.blogwt.shared.api.blog.call.
-	 * UpdateResourceRequest, java.lang.Throwable)
-	 */
 	@Override
 	public void updateResourceFailure(UpdateResourceRequest input,
 			Throwable caught) {
 		GWT.log("updateResourceFailure", caught);
 		ready();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.GetResourceEventHandler
-	 * #getResourceSuccess
-	 * (com.willshex.blogwt.shared.api.blog.call.GetResourceRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.GetResourceResponse)
-	 */
 	@Override
 	public void getResourceSuccess(GetResourceRequest input,
 			GetResourceResponse output) {
@@ -459,16 +424,6 @@ public class EditResourcePage extends Page
 
 		ready();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.GetResourceEventHandler
-	 * #getResourceFailure
-	 * (com.willshex.blogwt.shared.api.blog.call.GetResourceRequest,
-	 * java.lang.Throwable)
-	 */
 	@Override
 	public void getResourceFailure(GetResourceRequest input,
 			Throwable caught) {

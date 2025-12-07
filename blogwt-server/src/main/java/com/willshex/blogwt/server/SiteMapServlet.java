@@ -42,12 +42,6 @@ public class SiteMapServlet extends ContextAwareServlet {
 
 	private static final String MIME_TYPE = "application/xml; charset=UTF-8";
 	private static final String LOC_FORMAT = "    <url><loc>%s/%s</loc></url>";
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.service.ContextAwareServlet#doGet()
-	 */
 	@Override
 	protected void doGet() throws ServletException, IOException {
 		super.doGet();

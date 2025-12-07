@@ -14,7 +14,6 @@ import static com.willshex.blogwt.server.service.persistence.PersistenceServiceP
 import java.util.Date;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
@@ -35,20 +34,13 @@ final class SessionService implements ISessionService {
 	private LoadType<Session> load() {
 		return provide().load().type(Session.class);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.session.ISessionService
-	 * #addSession(com.willshex.blogwt.shared.api.datatypes.Session)
-	 */
 	@Override
 	public Session addSession(Session session) {
 		if (session.created == null) {
 			session.created = new Date();
 		}
 
-		session.userKey = ObjectifyService.key(session.user);
+		session.userKey = Key.create(session.user);
 
 		if (session.longTerm == null) {
 			session.longTerm = Boolean.FALSE;
@@ -65,50 +57,21 @@ final class SessionService implements ISessionService {
 
 		return session;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.session.ISessionService
-	 * #updateSession(com.willshex.blogwt.shared.api.datatypes.Session )
-	 */
 	@Override
 	public Session updateSession(Session session) {
 		provide().save().entity(session);
 		return session;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.session.ISessionService
-	 * #deleteSession(com.willshex.blogwt.shared.api.datatypes.Session )
-	 */
 	@Override
 	public void deleteSession(Session session) {
 		provide().delete().entity(session);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.session.ISessionService
-	 * #createUserSession(com.willshex.blogwt.shared.api.datatypes .User,
-	 * java.lang.Boolean)
-	 */
 	@Override
 	public Session createUserSession(User user, Boolean longTerm) {
 		return addSession(new Session().expires(DateTimeHelper.millisFromNow(
 				Boolean.TRUE.equals(longTerm) ? MILLIS_DAYS : MILLIS_MINUTES))
 				.longTerm(longTerm).user(user));
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.session.ISessionService
-	 * #getUserSession(com.willshex.blogwt.shared.api.datatypes.User)
-	 */
 	@Override
 	public Session getUserSession(User user) {
 		Session session = PersistenceHelper.one(load().filter("userKey", user));

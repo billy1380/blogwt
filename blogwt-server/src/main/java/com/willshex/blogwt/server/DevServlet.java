@@ -81,22 +81,10 @@ public class DevServlet extends ContextAwareServlet {
 		List<T> get(Integer start, Integer count, E sortBy,
 				SortDirectionType sortDirection);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.server.ContextAwareServlet#doPost()
-	 */
 	@Override
 	protected void doPost() throws ServletException, IOException {
 		doGet();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.service.ContextAwareServlet#doGet()
-	 */
 	@Override
 	protected void doGet() throws ServletException, IOException {
 		super.doGet();

@@ -65,12 +65,6 @@ public class FeedServlet extends ContextAwareServlet {
 		defaultFeedType = (defaultFeedType != null) ? defaultFeedType
 				: "atom_0.3";
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.willshex.service.ContextAwareServlet#doGet()
-	 */
 	@Override
 	protected void doGet() throws ServletException, IOException {
 		super.doGet();

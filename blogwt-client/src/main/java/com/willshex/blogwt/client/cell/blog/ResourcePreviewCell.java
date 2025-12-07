@@ -68,15 +68,6 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 			NativeEvent event, ValueUpdater<Resource> valueUpdater) {
 		RENDERER.onBrowserEvent(this, event, parent, value);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client
-	 * .Cell.Context, java.lang.Object,
-	 * com.google.gwt.safehtml.shared.SafeHtmlBuilder)
-	 */
 	@Override
 	public void render(com.google.gwt.cell.client.Cell.Context context,
 			Resource value, SafeHtmlBuilder sb) {
