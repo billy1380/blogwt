@@ -45,10 +45,24 @@ public class ResourceUploadAction extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String uploadUrl = blobstoreService.createUploadUrl(Upload.PATH);
-		resp.setStatus(HttpServletResponse.SC_OK);
-		resp.setContentType("text/plain");
-		resp.getWriter().print(uploadUrl);
+		String blobKey = req.getParameter("blob-key");
+
+		if (blobKey != null && !blobKey.isEmpty()) {
+			BlobKey key;
+			// heuristic to detect GCS object path (bucket/object vs legacy blob key)
+			if (blobKey.contains("/")) {
+				key = blobstoreService.createGsBlobKey("/gs/" + blobKey);
+			} else {
+				key = new BlobKey(blobKey);
+			}
+
+			blobstoreService.serve(key, resp);
+		} else {
+			String uploadUrl = blobstoreService.createUploadUrl(Upload.PATH);
+			resp.setStatus(HttpServletResponse.SC_OK);
+			resp.setContentType("text/plain");
+			resp.getWriter().print(uploadUrl);
+		}
 	}
 
 	@Override
