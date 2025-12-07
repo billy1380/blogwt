@@ -61,10 +61,6 @@ public class TagPage extends Page {
 
 		PostController.get().addDataDisplay(clPosts);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		register(PostHelper.handlePluginContentReady());

@@ -24,13 +24,6 @@ public final class VerifyAccountActionHandler
 		extends ActionHandler<VerifyAccountRequest, VerifyAccountResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(VerifyAccountActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (VerifyAccountRequest input,
 			VerifyAccountResponse output) throws Exception {
@@ -72,18 +65,10 @@ public final class VerifyAccountActionHandler
 			output.session.user = user;
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected VerifyAccountResponse newOutput () {
 		return new VerifyAccountResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

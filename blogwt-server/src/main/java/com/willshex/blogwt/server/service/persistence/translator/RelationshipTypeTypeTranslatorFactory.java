@@ -32,14 +32,6 @@ public class RelationshipTypeTypeTranslatorFactory
 	protected ValueTranslator<RelationshipTypeType, String> createValueTranslator (
 			TypeKey<RelationshipTypeType> tk, CreateContext ctx, Path path) {
 		return new ValueTranslator<RelationshipTypeType, String>(String.class) {
-
-			/* (non-Javadoc)
-			 * 
-			 * @see
-			 * com.googlecode.objectify.impl.translate.ValueTranslator#saveValue
-			 * (java.lang.Object, boolean,
-			 * com.googlecode.objectify.impl.translate.SaveContext,
-			 * com.googlecode.objectify.impl.Path) */
 			@Override
 			protected String saveValue (RelationshipTypeType pojo,
 					boolean index, SaveContext ctx, Path path)

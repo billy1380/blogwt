@@ -30,13 +30,6 @@ public final class CreatePostActionHandler
 		extends ActionHandler<CreatePostRequest, CreatePostResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(CreatePostActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (CreatePostRequest input, CreatePostResponse output)
 			throws Exception {
@@ -68,28 +61,14 @@ public final class CreatePostActionHandler
 
 		output.post = PostServiceProvider.provide().addPost(input.post);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected CreatePostResponse newOutput () {
 		return new CreatePostResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.api.ActionHandler#clearSensitiveFields(com.
-	 * willshex.blogwt.shared.api.Response) */
 	@Override
 	public void clearSensitiveFields (CreatePostResponse output) {
 		super.clearSensitiveFields(output);

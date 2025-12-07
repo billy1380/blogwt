@@ -111,12 +111,6 @@ public class ResourceController extends AsyncDataProvider<Resource> {
 
 				});
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google
-	 * .gwt.view.client.HasData) */
 	@Override
 	protected void onRangeChanged (HasData<Resource> display) {
 		Range range = display.getVisibleRange();

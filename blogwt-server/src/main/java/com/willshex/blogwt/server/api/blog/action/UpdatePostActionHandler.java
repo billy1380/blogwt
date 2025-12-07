@@ -29,13 +29,6 @@ public final class UpdatePostActionHandler
 		extends ActionHandler<UpdatePostRequest, UpdatePostResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(UpdatePostActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (UpdatePostRequest input, UpdatePostResponse output)
 			throws Exception {
@@ -88,18 +81,10 @@ public final class UpdatePostActionHandler
 		output.post = PostServiceProvider.provide().updatePost(input.post,
 				removedTags);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected UpdatePostResponse newOutput () {
 		return new UpdatePostResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

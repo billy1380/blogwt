@@ -28,13 +28,6 @@ public final class GetPageActionHandler
 		extends ActionHandler<GetPageRequest, GetPageResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetPageActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (GetPageRequest input, GetPageResponse output)
 			throws Exception {
@@ -67,18 +60,10 @@ public final class GetPageActionHandler
 		output.page.owner = UserHelper.stripSensitive(UserServiceProvider
 				.provide().getUser(keyToId(output.page.ownerKey)));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected GetPageResponse newOutput () {
 		return new GetPageResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

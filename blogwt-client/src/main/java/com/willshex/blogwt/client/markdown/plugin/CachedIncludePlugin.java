@@ -46,11 +46,6 @@ public class CachedIncludePlugin extends IncludePlugin {
 	public CachedIncludePlugin (HandlerManager manager) {
 		super(manager);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see org.markdown4j.client.IncludePlugin#emit(java.lang.StringBuilder,
-	 * java.util.List, java.util.Map) */
 	@Override
 	public void emit (StringBuilder out, List<String> lines,
 			Map<String, String> params) {
@@ -73,11 +68,6 @@ public class CachedIncludePlugin extends IncludePlugin {
 	protected Map<String, String> ensureCache () {
 		return (cache == null ? cache = new HashMap<String, String>() : cache);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see org.markdown4j.client.IncludePlugin#getContent(java.lang.String,
-	 * java.lang.String, java.util.List, java.util.Map) */
 	@Override
 	protected void getContent (final String src, final String id,
 			final List<String> lines, final Map<String, String> params)
@@ -97,12 +87,6 @@ public class CachedIncludePlugin extends IncludePlugin {
 			}
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see org.markdown4j.client.IncludePlugin#gotContent(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String, java.util.List,
-	 * java.util.Map) */
 	@Override
 	protected void gotContent (String content, String processed, String src,
 			String id, List<String> lines, Map<String, String> params) {

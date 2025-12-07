@@ -107,10 +107,6 @@ public class ChangeDetailsPage extends Page
 			h3Username.setInnerHTML(username);
 		});
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -209,14 +205,6 @@ public class ChangeDetailsPage extends Page
 			pnlDetails.setUser(user);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler
-	 * #getUserDetailsSuccess(com.willshex.blogwt.shared.api.user.call.
-	 * GetUserDetailsRequest,
-	 * com.willshex.blogwt.shared.api.user.call.GetUserDetailsResponse) */
 	@Override
 	public void getUserDetailsSuccess (GetUserDetailsRequest input,
 			GetUserDetailsResponse output) {
@@ -227,13 +215,6 @@ public class ChangeDetailsPage extends Page
 
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.GetUserDetailsEventHandler
-	 * #getUserDetailsFailure(com.willshex.blogwt.shared.api.user.call.
-	 * GetUserDetailsRequest, java.lang.Throwable) */
 	@Override
 	public void getUserDetailsFailure (GetUserDetailsRequest input,
 			Throwable caught) {
@@ -345,14 +326,6 @@ public class ChangeDetailsPage extends Page
 			break;
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.
-	 * ChangeUserDetailsEventHandler
-	 * #changeUserDetailsSuccess(com.willshex.blogwt.shared.api.user.call.
-	 * ChangeUserDetailsRequest,
-	 * com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse) */
 	@Override
 	public void changeUserDetailsSuccess (ChangeUserDetailsRequest input,
 			ChangeUserDetailsResponse output) {
@@ -362,13 +335,6 @@ public class ChangeDetailsPage extends Page
 
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.
-	 * ChangeUserDetailsEventHandler
-	 * #changeUserDetailsFailure(com.willshex.blogwt.shared.api.user.call.
-	 * ChangeUserDetailsRequest, java.lang.Throwable) */
 	@Override
 	public void changeUserDetailsFailure (ChangeUserDetailsRequest input,
 			Throwable caught) {
@@ -376,10 +342,6 @@ public class ChangeDetailsPage extends Page
 
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
 	@Override
 	protected void reset () {
 		frmDetails.reset();
@@ -392,14 +354,6 @@ public class ChangeDetailsPage extends Page
 
 		super.reset();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.RegisterUserEventHandler
-	 * #registerUserSuccess
-	 * (com.willshex.blogwt.shared.api.user.call.RegisterUserRequest,
-	 * com.willshex.blogwt.shared.api.user.call.RegisterUserResponse) */
 	@Override
 	public void registerUserSuccess (RegisterUserRequest input,
 			RegisterUserResponse output) {
@@ -415,14 +369,6 @@ public class ChangeDetailsPage extends Page
 
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.RegisterUserEventHandler
-	 * #registerUserFailure
-	 * (com.willshex.blogwt.shared.api.user.call.RegisterUserRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void registerUserFailure (RegisterUserRequest input,
 			Throwable caught) {
@@ -430,10 +376,6 @@ public class ChangeDetailsPage extends Page
 
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
 	@Override
 	public String getTitle () {
 		return UiHelper.pageTitle(getHeadingText());

@@ -40,10 +40,6 @@ public class RegisteringComposite extends Composite {
 			}
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
 	@Override
 	protected void onDetach () {
 		unregisterAll();

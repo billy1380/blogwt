@@ -37,13 +37,6 @@ public final class RegisterUserActionHandler
 		extends ActionHandler<RegisterUserRequest, RegisterUserResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(RegisterUserActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (RegisterUserRequest input,
 			RegisterUserResponse output) throws Exception {
@@ -118,28 +111,14 @@ public final class RegisterUserActionHandler
 		output.user = UserServiceProvider.provide().addUser(input.user);
 		UserServiceProvider.provide().verifyAccount(output.user);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected RegisterUserResponse newOutput () {
 		return new RegisterUserResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.api.ActionHandler#clearSensitiveFields(com.
-	 * willshex.blogwt.shared.api.Response) */
 	@Override
 	public void clearSensitiveFields (RegisterUserResponse output) {
 		super.clearSensitiveFields(output);

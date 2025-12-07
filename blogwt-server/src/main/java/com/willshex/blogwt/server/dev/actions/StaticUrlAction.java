@@ -35,7 +35,7 @@ public class StaticUrlAction implements DevAction {
                             .replace(":image", ":\"image").replace("}", "\"}");
                 }
 
-                object = new JsonParser().parse(resource.properties)
+                object = JsonParser.parseString(resource.properties)
                         .getAsJsonObject();
             } else {
                 object = new JsonObject();

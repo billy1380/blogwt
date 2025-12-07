@@ -30,13 +30,6 @@ public class PageSummaryCell extends AbstractCell<Page> {
 
 	private static PageSummaryCellRenderer RENDERER = GWT
 			.create(PageSummaryCellRenderer.class);
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client
-	 * .Cell.Context, java.lang.Object,
-	 * com.google.gwt.safehtml.shared.SafeHtmlBuilder) */
 	@Override
 	public void render (com.google.gwt.cell.client.Cell.Context context,
 			Page page, SafeHtmlBuilder sb) {

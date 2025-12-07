@@ -22,10 +22,6 @@ public abstract class ElementAnimation extends Animation {
 
 	public Element e;
 	public Complete c;
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.animation.client.Animation#onComplete() */
 	@Override
 	protected void onComplete () {
 		super.onComplete();

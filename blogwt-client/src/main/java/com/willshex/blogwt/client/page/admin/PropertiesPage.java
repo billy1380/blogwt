@@ -66,10 +66,6 @@ public class PropertiesPage extends Page implements
 	public PropertiesPage () {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -175,10 +171,6 @@ public class PropertiesPage extends Page implements
 
 		return propertyWidget;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
 	@Override
 	protected void reset () {
 		super.reset();
@@ -220,14 +212,6 @@ public class PropertiesPage extends Page implements
 
 		// disable properties
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.UpdatePropertiesEventHandler
-	 * #updatePropertiesSuccess(com.willshex.blogwt.shared.api.blog.call.
-	 * UpdatePropertiesRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse) */
 	@Override
 	public void updatePropertiesSuccess (UpdatePropertiesRequest input,
 			UpdatePropertiesResponse output) {
@@ -236,24 +220,11 @@ public class PropertiesPage extends Page implements
 		// FIXME: this is a work around for refreshing properties and tags - can probably do better
 		Window.Location.replace("/");
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.UpdatePropertiesEventHandler
-	 * #updatePropertiesFailure(com.willshex.blogwt.shared.api.blog.call.
-	 * UpdatePropertiesRequest, java.lang.Throwable) */
 	@Override
 	public void updatePropertiesFailure (UpdatePropertiesRequest input,
 			Throwable caught) {
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.event.logical.shared.ValueChangeHandler#onValueChange
-	 * (com.google.gwt.event.logical.shared.ValueChangeEvent) */
 	@Override
 	public void onValueChange (ValueChangeEvent<String> event) {
 		String name = null;

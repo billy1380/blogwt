@@ -406,10 +406,6 @@ public class SparseArray<E> implements /* Cloneable */ Iterable<E> {
 
 		return list;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see java.lang.Iterable#iterator() */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<E> iterator () {

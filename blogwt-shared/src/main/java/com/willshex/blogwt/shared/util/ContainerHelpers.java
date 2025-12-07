@@ -27,18 +27,10 @@ class ContainerHelpers {
 			this.ref = ref;
 			this.size = size;
 		}
-
-		/* (non-Javadoc)
-		 * 
-		 * @see java.util.Iterator#hasNext() */
 		@Override
 		public boolean hasNext () {
 			return i < size;
 		}
-
-		/* (non-Javadoc)
-		 * 
-		 * @see java.util.Iterator#next() */
 		@Override
 		public E next () {
 			return ref[i++];

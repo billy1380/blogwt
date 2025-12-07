@@ -33,10 +33,6 @@ public class WidgetTestPage extends Page {
 	public WidgetTestPage () {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();

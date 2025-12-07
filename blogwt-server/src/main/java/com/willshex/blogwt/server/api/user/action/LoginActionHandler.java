@@ -29,13 +29,6 @@ public final class LoginActionHandler
 		extends ActionHandler<LoginRequest, LoginResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(LoginActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (LoginRequest input, LoginResponse output)
 			throws Exception {
@@ -115,18 +108,10 @@ public final class LoginActionHandler
 					output.session.user.permissionKeys);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected LoginResponse newOutput () {
 		return new LoginResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

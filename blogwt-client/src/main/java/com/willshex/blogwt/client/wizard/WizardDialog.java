@@ -92,10 +92,6 @@ public class WizardDialog extends Composite {
 
 		setPlan(plan);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
 	@Override
 	protected void onDetach () {
 		super.onDetach();

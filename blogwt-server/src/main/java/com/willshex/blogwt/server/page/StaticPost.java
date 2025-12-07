@@ -27,11 +27,6 @@ class StaticPost extends StaticTemplate {
 	public StaticPost (Stack stack) {
 		super(stack);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
-	 * StringBuffer) */
 	@Override
 	protected void appendPage (StringBuffer markup) {
 		Post post = ensurePost();
@@ -69,10 +64,6 @@ class StaticPost extends StaticTemplate {
 		}
 
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.page.StaticTemplate#title() */
 	@Override
 	protected String title () {
 		Post post;
@@ -92,10 +83,6 @@ class StaticPost extends StaticTemplate {
 				.post(new Post().slug(stack.getAction()));
 		output = (new GetPostActionHandler()).handle(input);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.page.PageMarkup#canCreate() */
 	@Override
 	public boolean canCreate () {
 		return stack != null && stack.hasAction()

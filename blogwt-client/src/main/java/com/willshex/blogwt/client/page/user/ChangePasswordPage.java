@@ -79,10 +79,6 @@ public class ChangePasswordPage extends Page
 
 		elReset.removeFromParent();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -161,14 +157,6 @@ public class ChangePasswordPage extends Page
 		txtNewPassword.setEnabled(true);
 		txtConfirmPassword.setEnabled(true);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler
-	 * #changePasswordSuccess(com.willshex.blogwt.shared.api.user.call.
-	 * ChangePasswordRequest,
-	 * com.willshex.blogwt.shared.api.user.call.ChangePasswordResponse) */
 	@Override
 	public void changePasswordSuccess (ChangePasswordRequest input,
 			ChangePasswordResponse output) {
@@ -191,13 +179,6 @@ public class ChangePasswordPage extends Page
 
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.ChangePasswordEventHandler
-	 * #changePasswordFailure(com.willshex.blogwt.shared.api.user.call.
-	 * ChangePasswordRequest, java.lang.Throwable) */
 	@Override
 	public void changePasswordFailure (ChangePasswordRequest input,
 			Throwable caught) {
@@ -223,10 +204,6 @@ public class ChangePasswordPage extends Page
 		pnlNewPassword.removeStyleName("has-error");
 		pnlNewPasswordNote.setVisible(false);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
 	@Override
 	protected void reset () {
 		frmPasswords.reset();

@@ -44,11 +44,6 @@ public class TagCell extends AbstractSafeHtmlCell<Tag> {
 			this.displayLabel = displayLabel;
 			this.displayCount = displayCount;
 		}
-
-		/* (non-Javadoc)
-		 * 
-		 * @see
-		 * com.google.gwt.text.shared.SafeHtmlRenderer#render(java.lang.Object) */
 		@Override
 		public SafeHtml render (Tag object) {
 			SafeHtmlBuilder builder = new SafeHtmlBuilder();
@@ -76,13 +71,6 @@ public class TagCell extends AbstractSafeHtmlCell<Tag> {
 	public TagCell (boolean displayLabel, boolean displayCount) {
 		super(new TagCellRenderer(displayLabel, displayCount));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.cell.client.AbstractSafeHtmlCell#render(com.google.gwt
-	 * .cell.client.Cell.Context, com.google.gwt.safehtml.shared.SafeHtml,
-	 * com.google.gwt.safehtml.shared.SafeHtmlBuilder) */
 	@Override
 	protected void render (com.google.gwt.cell.client.Cell.Context context,
 			SafeHtml data, SafeHtmlBuilder sb) {

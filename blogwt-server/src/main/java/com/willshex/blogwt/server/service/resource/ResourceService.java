@@ -24,20 +24,10 @@ import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.ResourceSortType;
 
 final class ResourceService implements IResourceService {
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.spacehopperstudios.service.IService#getName() */
 	@Override
 	public String getName () {
 		return NAME;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.resource.IResourceService#getResource
-	 * (java.lang.Long) */
 	@Override
 	public Resource getResource (Long id) {
 		return id(load(), id);
@@ -46,12 +36,6 @@ final class ResourceService implements IResourceService {
 	private LoadType<Resource> load () {
 		return provide().load().type(Resource.class);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.resource.IResourceService#addResource
-	 * (com.willshex.blogwt.shared.api.datatype.Resource) */
 	@Override
 	public Resource addResource (Resource resource) {
 		if (resource.created == null) {
@@ -63,54 +47,25 @@ final class ResourceService implements IResourceService {
 
 		return resource;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.resource.IResourceService#
-	 * updateResource (com.willshex.blogwt.shared.api.datatype.Resource) */
 	@Override
 	public Resource updateResource (Resource resource) {
 		provide().save().entity(resource).now();
 		return resource;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.resource.IResourceService#
-	 * deleteResource (com.willshex.blogwt.shared.api.datatype.Resource) */
 	@Override
 	public void deleteResource (Resource resource) {
 		provide().delete().entity(resource).now();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.resource.IResourceService#getResrouces
-	 * (java.lang.Integer, java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.ResourceSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
 	public List<Resource> getResources (Integer start, Integer count,
 			ResourceSortType sortBy, SortDirectionType sortDirection) {
 		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
 				this, sortDirection);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.resource.IResourceService#
-	 * getIdResourceBatch(java.lang.Iterable) */
 	@Override
 	public List<Resource> getIdResourceBatch (Iterable<Long> ids) {
 		return new ArrayList<Resource>(load().ids(ids).values());
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
-	 * get(java.lang.Iterable) */
 	@Override
 	public List<Resource> get (Iterable<Long> ids) {
 		return getIdResourceBatch(ids);

@@ -62,43 +62,21 @@ final class PermissionService implements IPermissionService {
 	public void deletePermission (Permission permission) {
 		provide().delete().entity(permission).now();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.permission.IPermissionService#
-	 * getPermissions(java.lang.Integer, java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.PermissionSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
 	public List<Permission> getPermissions (Integer start, Integer count,
 			PermissionSortType sortBy, SortDirectionType sortDirection) {
 		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
 				this, sortDirection);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.permission.IPermissionService#
-	 * getPermissionsCount() */
 	@Override
 	public Long getPermissionsCount () {
 		throw new UnsupportedOperationException();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.permission.IPermissionService#
-	 * getIdPermissionBatch(java.lang.Iterable) */
 	@Override
 	public List<Permission> getIdPermissionBatch (
 			Iterable<Long> permissionIds) {
 		return new ArrayList<Permission>(load().ids(permissionIds).values());
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.permission.IPermissionService#
-	 * getCodePermission(java.lang.String) */
 	@Override
 	public Permission getCodePermission (String code) {
 		return PersistenceHelper.one(load().filter(
@@ -112,11 +90,6 @@ final class PermissionService implements IPermissionService {
 	private LoadType<Permission> load () {
 		return provide().load().type(Permission.class);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.permission.IPermissionService#
-	 * getRolePermissions(com.willshex.blogwt.shared.api.datatype.Role) */
 	@Override
 	public List<Permission> getRolePermissions (Role role) {
 		if (role.permissionKeys == null) {
@@ -125,14 +98,6 @@ final class PermissionService implements IPermissionService {
 
 		return PersistenceHelper.batchLookupKeys(this, role.permissionKeys);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.permission.IPermissionService#
-	 * getPartialNamePermissions(java.lang.String, java.lang.Integer,
-	 * java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.PermissionSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
 	public List<Permission> getPartialNamePermissions (String partialName,
 			Integer start, Integer count, PermissionSortType sortBy,
@@ -143,12 +108,6 @@ final class PermissionService implements IPermissionService {
 						partialName, load()),
 				start, count, sortBy, this, sortDirection);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
-	 * get(java.lang.Iterable) */
 	@Override
 	public List<Permission> get (Iterable<Long> ids) {
 		return getIdPermissionBatch(ids);

@@ -61,14 +61,6 @@ final class MetaNotificationService implements IMetaNotificationService {
 	public void deleteMetaNotification (MetaNotification metaNotification) {
 		provide().delete().entity(metaNotification).now();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.metanotification.
-	 * IMetaNotificationService#getMetaNotifictions(java.lang.Integer,
-	 * java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.MetaNotificationSortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
 	public List<MetaNotification> getMetaNotifications (Integer start,
 			Integer count, MetaNotificationSortType sortBy,
@@ -76,34 +68,17 @@ final class MetaNotificationService implements IMetaNotificationService {
 		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
 				this, sortDirection);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.metanotification.
-	 * IMetaNotificationService#getIdMetaNotificationBatch(java.lang.
-	 * Iterable) */
 	@Override
 	public List<MetaNotification> getIdMetaNotificationBatch (
 			Iterable<Long> ids) {
 		return new ArrayList<MetaNotification>(load().ids(ids).values());
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.metanotification.
-	 * IMetaNotificationService#getCodeMetaNotification(java.lang.String) */
 	@Override
 	public MetaNotification getCodeMetaNotification (String code) {
 		return PersistenceHelper.one(load().filter(
 				map(MetaNotificationSortType.MetaNotificationSortTypeCode),
 				code));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.service.persistence.batch.Batcher.BatchGetter#
-	 * get(java.lang.Iterable) */
 	@Override
 	public List<MetaNotification> get (Iterable<Long> ids) {
 		return getIdMetaNotificationBatch(ids);

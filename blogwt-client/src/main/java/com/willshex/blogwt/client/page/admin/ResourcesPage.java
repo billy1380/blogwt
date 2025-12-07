@@ -76,14 +76,6 @@ public class ResourcesPage extends Page
 				DeleteResourceEventHandler.TYPE, ResourceController.get(),
 				this));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.DeleteResourceEventHandler
-	 * #deleteResourceSuccess(com.willshex.blogwt.shared.api.blog.call.
-	 * DeleteResourceRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.DeleteResourceResponse) */
 	@Override
 	public void deleteResourceSuccess (DeleteResourceRequest input,
 			DeleteResourceResponse output) {
@@ -92,37 +84,14 @@ public class ResourcesPage extends Page
 					clResources.getVisibleRange(), true);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.DeleteResourceEventHandler
-	 * #deleteResourceFailure(com.willshex.blogwt.shared.api.blog.call.
-	 * DeleteResourceRequest, java.lang.Throwable) */
 	@Override
 	public void deleteResourceFailure (DeleteResourceRequest input,
 			Throwable caught) {
 		GWT.log("Error deleting resource", caught);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.GetResourcesEventHandler
-	 * #getResourcesSuccess
-	 * (com.willshex.blogwt.shared.api.blog.call.GetResourcesRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.GetResourcesResponse) */
 	@Override
 	public void getResourcesSuccess (GetResourcesRequest input,
 			GetResourcesResponse output) {}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.GetResourcesEventHandler
-	 * #getResourcesFailure
-	 * (com.willshex.blogwt.shared.api.blog.call.GetResourcesRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void getResourcesFailure (GetResourcesRequest input,
 			Throwable caught) {

@@ -113,10 +113,6 @@ public class DownloadsPage extends Page implements
 
 		pgrDownloads.setDisplay(tblDownloads);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -217,12 +213,6 @@ public class DownloadsPage extends Page implements
 		tblDownloads.addColumn(download);
 		tblDownloads.addColumn(delete);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged(com.willshex.blogwt.shared.page.Stack,
-	 * com.willshex.blogwt.shared.page.Stack) */
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
 		if (current.getParameterCount() > 0) {
@@ -241,24 +231,12 @@ public class DownloadsPage extends Page implements
 	void onRefreshClicked (ClickEvent ce) {
 		refresh();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
 	@Override
 	protected void reset () {
 		super.reset();
 
 		stopTimer();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.api.download.event.
-	 * GetGeneratedDownloadsEventHandler#getGeneratedDownloadsSuccess(com.
-	 * willshex.blogwt.shared.api.download.call.GetGeneratedDownloadsRequest,
-	 * com.willshex.blogwt.shared.api.download.call.
-	 * GetGeneratedDownloadsResponse) */
 	@Override
 	public void getGeneratedDownloadsSuccess (
 			GetGeneratedDownloadsRequest input,
@@ -282,13 +260,6 @@ public class DownloadsPage extends Page implements
 			}
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.api.download.event.
-	 * GetGeneratedDownloadsEventHandler#getGeneratedDownloadsFailure(com.
-	 * willshex.blogwt.shared.api.download.call.GetGeneratedDownloadsRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void getGeneratedDownloadsFailure (
 			GetGeneratedDownloadsRequest input, Throwable caught) {}
@@ -304,14 +275,6 @@ public class DownloadsPage extends Page implements
 			timer.cancel();
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.api.download.event.
-	 * DeleteGeneratedDownloadsEventHandler#deleteGeneratedDownloadsSuccess(com.
-	 * willshex.blogwt.shared.api.download.call.DeleteGeneratedDownloadsRequest,
-	 * com.willshex.blogwt.shared.api.download.call.
-	 * DeleteGeneratedDownloadsResponse) */
 	@Override
 	public void deleteGeneratedDownloadsSuccess (
 			DeleteGeneratedDownloadsRequest input,
@@ -320,13 +283,6 @@ public class DownloadsPage extends Page implements
 			refresh();
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.api.download.event.
-	 * DeleteGeneratedDownloadsEventHandler#deleteGeneratedDownloadsFailure(com.
-	 * willshex.blogwt.shared.api.download.call.DeleteGeneratedDownloadsRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void deleteGeneratedDownloadsFailure (
 			DeleteGeneratedDownloadsRequest input, Throwable caught) {}

@@ -31,20 +31,10 @@ public interface NavigationChangedEventHandler extends EventHandler {
 			stack = current;
 			this.previous = previous;
 		}
-
-		/* (non-Javadoc)
-		 * 
-		 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
 		@Override
 		public com.google.gwt.event.shared.GwtEvent.Type<NavigationChangedEventHandler> getAssociatedType () {
 			return TYPE;
 		}
-
-		/* (non-Javadoc)
-		 * 
-		 * @see
-		 * com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.
-		 * shared.EventHandler) */
 		@Override
 		protected void dispatch (NavigationChangedEventHandler handler) {
 			handler.navigationChanged(previous, stack);

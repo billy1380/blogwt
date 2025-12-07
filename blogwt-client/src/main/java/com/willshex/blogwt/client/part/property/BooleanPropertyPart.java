@@ -39,11 +39,6 @@ public class BooleanPropertyPart extends AbstractPropertyPart {
 	void onCheckBoxValueChanged (ValueChangeEvent<Boolean> vce) {
 		setValue(vce.getValue().toString(), true);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object,
-	 * boolean) */
 	@Override
 	public void setValue (String value, boolean fireEvents) {
 		if (value == null) {
@@ -60,18 +55,10 @@ public class BooleanPropertyPart extends AbstractPropertyPart {
 			ValueChangeEvent.fire(this, value);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasName#setName(java.lang.String) */
 	@Override
 	public void setName (String name) {
 		elName.setInnerText(name);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasName#getName() */
 	@Override
 	public String getName () {
 		return elName.getInnerText();

@@ -33,10 +33,6 @@ public class ScrollWindow extends Animation {
 	public ScrollWindow (int top, Interpolation easing) {
 		this(Window.getScrollLeft(), top, easing);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.animation.client.Animation#onUpdate(double) */
 	@Override
 	protected void onUpdate (double progress) {
 		Window.scrollTo(

@@ -110,10 +110,6 @@ public class LoginPage extends Page implements LoginEventHandler {
 		UiHelper.removeError(pnlUsername, pnlUsernameNote);
 		UiHelper.removeError(pnlPassword, pnlPasswordNote);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -179,12 +175,6 @@ public class LoginPage extends Page implements LoginEventHandler {
 			showErrors();
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler#
-	 * loginSuccess (com.willshex.blogwt.shared.api.user.call.LoginRequest,
-	 * com.willshex.blogwt.shared.api.user.call.LoginResponse) */
 	@Override
 	public void loginSuccess (LoginRequest input, LoginResponse output) {
 		if (output.status == StatusType.StatusTypeFailure) {
@@ -200,12 +190,6 @@ public class LoginPage extends Page implements LoginEventHandler {
 
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler#
-	 * loginFailure (com.willshex.blogwt.shared.api.user.call.LoginRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void loginFailure (LoginRequest input, Throwable caught) {
 		ready();
@@ -219,10 +203,6 @@ public class LoginPage extends Page implements LoginEventHandler {
 	private void showErrors () {
 
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
 	@Override
 	protected void reset () {
 		frmLogin.reset();
@@ -232,26 +212,14 @@ public class LoginPage extends Page implements LoginEventHandler {
 
 		btnRegister.setHref(PageTypeHelper.REGISTER_PAGE_HREF);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
 	@Override
 	public String getTitle () {
 		return UiHelper.pageTitle("Sign in");
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#hasHeader() */
 	@Override
 	public boolean hasHeader () {
 		return false;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#getHeader() */
 	@Override
 	public Composite getHeader () {
 		return LoginHeaderPart.get();

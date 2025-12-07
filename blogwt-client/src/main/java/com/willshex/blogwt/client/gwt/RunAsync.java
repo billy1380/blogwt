@@ -15,10 +15,6 @@ import com.google.gwt.core.client.GWT;
  */
 @FunctionalInterface
 public interface RunAsync extends com.google.gwt.core.client.RunAsyncCallback {
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.core.client.RunAsyncCallback#onFailure(java.lang.
-	 * Throwable) */
 	@Override
 	default void onFailure (Throwable reason) {
 		GWT.log("GWT async runnable failed to load", reason);

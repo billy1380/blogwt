@@ -153,10 +153,6 @@ public class DetailsPart extends RegisteringComposite
 	void onUsernameChanged (ValueChangeEvent<String> vce) {
 		fireEvent(new UsernameChanged(vce.getValue()));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -164,14 +160,6 @@ public class DetailsPart extends RegisteringComposite
 		register(DefaultEventBus.get().addHandlerToSource(
 				GetEmailAvatarEventHandler.TYPE, UserController.get(), this));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler
-	 * #getEmailAvatarSuccess(com.willshex.blogwt.shared.api.user.call.
-	 * GetEmailAvatarRequest,
-	 * com.willshex.blogwt.shared.api.user.call.GetEmailAvatarResponse) */
 	@Override
 	public void getEmailAvatarSuccess (GetEmailAvatarRequest input,
 			GetEmailAvatarResponse output) {
@@ -180,13 +168,6 @@ public class DetailsPart extends RegisteringComposite
 					+ UserHelper.AVATAR_LARGE_SIZE + "&default=retro"));
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.GetEmailAvatarEventHandler
-	 * #getEmailAvatarFailure(com.willshex.blogwt.shared.api.user.call.
-	 * GetEmailAvatarRequest, java.lang.Throwable) */
 	@Override
 	public void getEmailAvatarFailure (GetEmailAvatarRequest input,
 			Throwable caught) {

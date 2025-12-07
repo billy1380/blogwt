@@ -115,10 +115,6 @@ public class PostDetailPage extends Page
 			PostController.get().deletePost(post);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		register(DefaultEventBus.get().addHandlerToSource(
@@ -148,12 +144,6 @@ public class PostDetailPage extends Page
 
 		super.onAttach();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler#
-	 * getPostSuccess(com.willshex.blogwt.shared.api.blog.call.GetPostRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.GetPostResponse) */
 	@Override
 	public void getPostSuccess (GetPostRequest input, GetPostResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
@@ -248,12 +238,6 @@ public class PostDetailPage extends Page
 
 		refreshTitle();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler#
-	 * getPostFailure(com.willshex.blogwt.shared.api.blog.call.GetPostRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void getPostFailure (GetPostRequest input, Throwable caught) {}
 
@@ -269,10 +253,6 @@ public class PostDetailPage extends Page
 
 	@Override
 	public void deletePostFailure (DeletePostRequest input, Throwable caught) {}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
 	@Override
 	protected void reset () {
 		super.reset();
@@ -295,10 +275,6 @@ public class PostDetailPage extends Page
 
 		pnlUserSummaryRow.setVisible(false);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
 	@Override
 	public String getTitle () {
 		return post == null ? super.getTitle() : UiHelper.pageTitle(post.title);

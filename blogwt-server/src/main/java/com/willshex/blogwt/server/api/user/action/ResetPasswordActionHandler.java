@@ -23,13 +23,6 @@ public final class ResetPasswordActionHandler
 		extends ActionHandler<ResetPasswordRequest, ResetPasswordResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(ResetPasswordActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (ResetPasswordRequest input,
 			ResetPasswordResponse output) throws Exception {
@@ -55,18 +48,10 @@ public final class ResetPasswordActionHandler
 
 		UserServiceProvider.provide().resetPassword(user);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected ResetPasswordResponse newOutput () {
 		return new ResetPasswordResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

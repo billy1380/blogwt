@@ -105,10 +105,6 @@ public class BackToTop extends RegisteringComposite {
 	public static void go () {
 		new ScrollWindow(0, Interpolation.pow4).run(300);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -124,10 +120,6 @@ public class BackToTop extends RegisteringComposite {
 			fadeOutComplete(btnBackToTop.getElement());
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
 	@Override
 	protected void onDetach () {
 		super.onDetach();

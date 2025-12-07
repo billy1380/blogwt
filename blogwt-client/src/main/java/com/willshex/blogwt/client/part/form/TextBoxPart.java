@@ -35,10 +35,6 @@ public class TextBoxPart extends Composite implements FormField {
 	public TextBoxPart () {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.part.form.FormField#isValid() */
 	@Override
 	public boolean isValid () {
 		boolean valid = true;
@@ -54,10 +50,6 @@ public class TextBoxPart extends Composite implements FormField {
 
 		return valid;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.part.form.FormField#showError() */
 	@Override
 	public void showError () {
 		if (error != null) {
@@ -66,28 +58,16 @@ public class TextBoxPart extends Composite implements FormField {
 			addStyleName("has-error");
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.part.form.FormField#hideError() */
 	@Override
 	public void hideError () {
 		error = null;
 		pnlValidationNote.setVisible(false);
 		removeStyleName("has-error");
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.part.form.FormField#value() */
 	@Override
 	public String value () {
 		return txtValue.getValue();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.part.form.FormField#name() */
 	@Override
 	public String name () {
 		return elName.getInnerText();

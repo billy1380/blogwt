@@ -39,13 +39,6 @@ public class UserOracle extends SuggestOracle<User> {
 
 	private User user;
 	private com.google.gwt.http.client.Request getUsersRequest;
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.oracle.SuggestOracle#lookup(com.google.gwt
-	 * .user.client.ui.SuggestOracle.Request,
-	 * com.google.gwt.user.client.ui.SuggestOracle.Callback) */
 	@Override
 	protected void lookup (final Request request, final Callback callback) {
 		final GetUsersRequest input = ApiHelper
@@ -85,12 +78,6 @@ public class UserOracle extends SuggestOracle<User> {
 					}
 				});
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.oracle.SuggestOracle#getDisplayString(java
-	 * .lang.Object) */
 	@Override
 	protected String getDisplayString (User item) {
 		return Templates.INSTANCE.displayString(
@@ -98,20 +85,11 @@ public class UserOracle extends SuggestOracle<User> {
 						+ UserHelper.AVATAR_HEADER_SIZE + "&default=retro"),
 				UserHelper.name(item)).asString();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.oracle.SuggestOracle#getReplacementString
-	 * (java.lang.Object) */
 	@Override
 	protected String getReplacementString (User item) {
 		user = item;
 		return item.getClass().getSimpleName() + ":" + item.id;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.SuggestOracle#isDisplayStringHTML() */
 	@Override
 	public boolean isDisplayStringHTML () {
 		return true;

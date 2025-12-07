@@ -150,12 +150,6 @@ public class AlertBox extends Composite implements HasCloseHandlers<AlertBox> {
 
 		CloseEvent.fire(this, this, true);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.event.logical.shared.HasCloseHandlers#addCloseHandler(
-	 * com.google.gwt.event.logical.shared.CloseHandler) */
 	@Override
 	public HandlerRegistration addCloseHandler (CloseHandler<AlertBox> handler) {
 		return this.addHandler(handler, CloseEvent.getType());
@@ -180,10 +174,6 @@ public class AlertBox extends Composite implements HasCloseHandlers<AlertBox> {
 
 		timer.schedule(delay);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.UIObject#setVisible(boolean) */
 	@Override
 	public void setVisible (boolean visible) {
 		super.setVisible(visible);

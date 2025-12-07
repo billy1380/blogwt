@@ -32,13 +32,6 @@ public class UserSummaryCell extends AbstractCell<User> {
 
 	private static UserSummaryCellRenderer RENDERER = GWT
 			.create(UserSummaryCellRenderer.class);
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client
-	 * .Cell.Context, java.lang.Object,
-	 * com.google.gwt.safehtml.shared.SafeHtmlBuilder) */
 	@Override
 	public void render (com.google.gwt.cell.client.Cell.Context context,
 			User user, SafeHtmlBuilder sb) {

@@ -23,11 +23,6 @@ class StaticTag extends StaticPosts {
 	public StaticTag (Stack stack) {
 		super(stack);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
-	 * StringBuffer) */
 	@Override
 	protected void appendPage (StringBuffer markup) {
 		String tag;
@@ -49,18 +44,10 @@ class StaticTag extends StaticPosts {
 			}
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.page.StaticTemplate#title() */
 	@Override
 	protected String title () {
 		return "Tag '" + stack.getAction() + "'";
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.page.StaticPosts#canCreate() */
 	@Override
 	public boolean canCreate () {
 		return stack != null && stack.hasAction()

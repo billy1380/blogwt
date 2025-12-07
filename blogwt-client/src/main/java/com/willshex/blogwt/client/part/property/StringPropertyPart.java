@@ -69,11 +69,6 @@ public class StringPropertyPart extends AbstractPropertyPart implements
 	void onTextValueChanged (ValueChangeEvent<String> vce) {
 		setValue(vce.getValue(), true);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object,
-	 * boolean) */
 	@Override
 	public void setValue (String value, boolean fireEvents) {
 		if (value == null) {
@@ -90,50 +85,26 @@ public class StringPropertyPart extends AbstractPropertyPart implements
 			ValueChangeEvent.fire(this, value);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasName#getName() */
 	@Override
 	public String getName () {
 		return elName.getInnerText();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasName#setName(java.lang.String) */
 	@Override
 	public void setName (String name) {
 		elName.setInnerText(name);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Focusable#getTabIndex() */
 	@Override
 	public int getTabIndex () {
 		return textBox().getTabIndex();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Focusable#setAccessKey(char) */
 	@Override
 	public void setAccessKey (char key) {
 		textBox().setAccessKey(key);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Focusable#setFocus(boolean) */
 	@Override
 	public void setFocus (boolean focused) {
 		textBox().setFocus(focused);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Focusable#setTabIndex(int) */
 	@Override
 	public void setTabIndex (int index) {
 		textBox().setTabIndex(index);

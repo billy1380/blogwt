@@ -42,78 +42,41 @@ public class SelectPostWizardPage extends Composite implements WizardPage<Post> 
 
 		BootstrapGwtSuggestBox.INSTANCE.styles().ensureInjected();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#isRepeatable() */
 	@Override
 	public boolean isRepeatable () {
 		return true;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getData() */
 	@Override
 	public Post getData () {
 		return new Post().slug(txtPost.getValue());
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.wizard.WizardPage#setData(java.lang.Object) */
 	@Override
 	public void setData (Post data) {
 		if (data != null) {
 			txtPost.setText(data.slug == null ? data.id.toString() : data.slug);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getPageTitle() */
 	@Override
 	public String getPageTitle () {
 		return "Add Post";
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getPageDescription() */
 	@Override
 	public String getPageDescription () {
 		return PostHelper
 				.makeMarkup("Enter the id or slug of an existing post to add it as a section on the page.");
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getBody() */
 	@Override
 	public Widget getBody () {
 		return this;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#another() */
 	@Override
 	public WizardPage<?> another () {
 		return new SelectPostWizardPage();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#validate() */
 	@Override
 	public boolean isValid () {
 		return true;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getAutoFocusField() */
 	@Override
 	public Focusable getAutoFocusField () {
 		return txtPost;

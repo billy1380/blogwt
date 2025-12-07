@@ -19,13 +19,6 @@ public final class ForgotPasswordActionHandler
 		extends ActionHandler<ForgotPasswordRequest, ForgotPasswordResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(ForgotPasswordActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (ForgotPasswordRequest input,
 			ForgotPasswordResponse output) throws Exception {
@@ -35,18 +28,10 @@ public final class ForgotPasswordActionHandler
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected ForgotPasswordResponse newOutput () {
 		return new ForgotPasswordResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

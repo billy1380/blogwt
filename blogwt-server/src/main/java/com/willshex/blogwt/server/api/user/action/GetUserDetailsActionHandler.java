@@ -26,13 +26,6 @@ public final class GetUserDetailsActionHandler
 		extends ActionHandler<GetUserDetailsRequest, GetUserDetailsResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetUserDetailsActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (GetUserDetailsRequest input,
 			GetUserDetailsResponse output) throws Exception {
@@ -55,28 +48,14 @@ public final class GetUserDetailsActionHandler
 
 		UserHelper.populateRolesAndPermissionsFromKeys(output.user);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected GetUserDetailsResponse newOutput () {
 		return new GetUserDetailsResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.api.ActionHandler#clearSensitiveFields(com.
-	 * willshex.blogwt.shared.api.Response) */
 	@Override
 	public void clearSensitiveFields (GetUserDetailsResponse output) {
 		super.clearSensitiveFields(output);

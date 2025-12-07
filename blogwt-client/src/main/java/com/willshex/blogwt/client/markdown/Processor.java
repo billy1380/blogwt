@@ -52,10 +52,6 @@ public class Processor extends MarkdownProcessor {
 	private static final String OPEN = "<md>", CLOSE = "</md>";
 	private static final int OPEN_LENGTH = OPEN.length(),
 			CLOSE_LENGTH = CLOSE.length();
-
-	/* (non-Javadoc)
-	 * 
-	 * @see org.markdown4j.client.MarkdownProcessor#emojiEmitter() */
 	@Override
 	protected EmojiEmitter emojiEmitter () {
 		String enableEmoji = PropertyController.get()
@@ -100,10 +96,6 @@ public class Processor extends MarkdownProcessor {
 			}
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see org.markdown4j.client.MarkdownProcessor#registerPlugins() */
 	@Override
 	protected void registerPlugins () {
 		CachedIncludePlugin includePlugin = new CachedIncludePlugin(
@@ -130,11 +122,6 @@ public class Processor extends MarkdownProcessor {
 
 		ExtDecorator decorator;
 		setDecorator(decorator = new ExtDecorator() {
-			/* (non-Javadoc)
-			 * 
-			 * @see
-			 * org.markdown4j.ExtDecorator#openImage(java.lang.StringBuilder,
-			 * java.lang.String, java.lang.String) */
 			@Override
 			public void openImage (StringBuilder out, String link,
 					String title) {
@@ -142,12 +129,6 @@ public class Processor extends MarkdownProcessor {
 				out.append(" class=\"img-responsive "
 						+ Resources.RES.styles().image() + "\" ");
 			}
-
-			/* (non-Javadoc)
-			 * 
-			 * @see
-			 * org.markdown4j.ExtDecorator#openLink(java.lang.StringBuilder,
-			 * java.lang.String, java.lang.String) */
 			@Override
 			public void openLink (StringBuilder out, String link,
 					String title) {
@@ -169,10 +150,6 @@ public class Processor extends MarkdownProcessor {
 		});
 		decorator.addStyleClass("text-justify", "p");
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see org.markdown4j.client.MarkdownProcessor#process(java.lang.String) */
 	@Override
 	public String process (String markdown) {
 		StringBuffer b = new StringBuffer(markdown);

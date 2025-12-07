@@ -76,10 +76,6 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 			PageController.get().deletePage(page);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -126,14 +122,6 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 				DeletePageEventHandler.TYPE, PageController.get(), this));
 		register(PostHelper.handlePluginContentReady());
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler
-	 * #deletePageSuccess
-	 * (com.willshex.blogwt.shared.api.page.call.DeletePageRequest,
-	 * com.willshex.blogwt.shared.api.page.call.DeletePageResponse) */
 	@Override
 	public void deletePageSuccess (DeletePageRequest input,
 			DeletePageResponse output) {
@@ -143,22 +131,8 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler
-	 * #deletePageFailure
-	 * (com.willshex.blogwt.shared.api.page.call.DeletePageRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void deletePageFailure (DeletePageRequest input, Throwable caught) {}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler#
-	 * getPageSuccess(com.willshex.blogwt.shared.api.page.call.GetPageRequest,
-	 * com.willshex.blogwt.shared.api.page.call.GetPageResponse) */
 	@Override
 	public void getPageSuccess (GetPageRequest input, GetPageResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
@@ -167,12 +141,6 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 			NavigationController.get().lost();
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler#
-	 * getPageFailure(com.willshex.blogwt.shared.api.page.call.GetPageRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void getPageFailure (GetPageRequest input, Throwable caught) {}
 
@@ -196,10 +164,6 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 
 		refreshTitle();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
 	@Override
 	protected void reset () {
 		super.reset();
@@ -210,10 +174,6 @@ public class PageDetailPage extends com.willshex.blogwt.client.page.Page
 		pnlContent.clear();
 		pnlLoading.setVisible(true);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
 	@Override
 	public String getTitle () {
 		return page == null ? super.getTitle() : UiHelper.pageTitle(page.title);

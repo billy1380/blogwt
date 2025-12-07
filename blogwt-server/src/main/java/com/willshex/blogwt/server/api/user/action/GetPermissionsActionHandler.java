@@ -25,13 +25,6 @@ public final class GetPermissionsActionHandler
 		extends ActionHandler<GetPermissionsRequest, GetPermissionsResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetPermissionsActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (GetPermissionsRequest input,
 			GetPermissionsResponse output) throws Exception {
@@ -53,18 +46,10 @@ public final class GetPermissionsActionHandler
 
 		output.pager = PagerHelper.moveForward(input.pager);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected GetPermissionsResponse newOutput () {
 		return new GetPermissionsResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

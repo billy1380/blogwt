@@ -32,14 +32,6 @@ public class NotificationModeTypeTranslatorFactory
 	protected ValueTranslator<NotificationModeType, String> createValueTranslator (
 			TypeKey<NotificationModeType> tk, CreateContext ctx, Path path) {
 		return new ValueTranslator<NotificationModeType, String>(String.class) {
-
-			/* (non-Javadoc)
-			 * 
-			 * @see
-			 * com.googlecode.objectify.impl.translate.ValueTranslator#saveValue
-			 * (java.lang.Object, boolean,
-			 * com.googlecode.objectify.impl.translate.SaveContext,
-			 * com.googlecode.objectify.impl.Path) */
 			@Override
 			protected String saveValue (NotificationModeType pojo,
 					boolean index, SaveContext ctx, Path path)

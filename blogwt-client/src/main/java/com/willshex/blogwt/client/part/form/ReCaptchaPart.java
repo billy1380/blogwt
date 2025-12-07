@@ -81,10 +81,6 @@ public class ReCaptchaPart extends Composite implements FormField {
 	public native void reset (String id) /*-{
 	$wnd.grecaptcha.reset(id);
 	}-*/;
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.part.form.FormField#isValid() */
 	@Override
 	public boolean isValid () {
 		boolean valid = true;
@@ -95,34 +91,18 @@ public class ReCaptchaPart extends Composite implements FormField {
 
 		return valid;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.part.form.FormField#showError() */
 	@Override
 	public void showError () {}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.part.form.FormField#hideError() */
 	@Override
 	public void hideError () {
 		error = null;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.part.form.FormField#value() */
 	@Override
 	public String value () {
 		TextAreaElement valueHolder = getWidget().getElement().getFirstChild()
 				.getFirstChild().getNextSibling().<TextAreaElement> cast();
 		return valueHolder.getValue();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.part.form.FormField#name() */
 	@Override
 	public String name () {
 		return null;

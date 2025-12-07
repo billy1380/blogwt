@@ -14,9 +14,6 @@ import com.willshex.blogwt.client.animation.gdx.math.Interpolation;
  *
  */
 public class FadeOut extends ElementAnimation {
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.animation.client.Animation#onUpdate(double) */
 	@Override
 	protected void onUpdate (double progress) {
 		e.getStyle()

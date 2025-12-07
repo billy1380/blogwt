@@ -48,18 +48,10 @@ public class BlogPropertiesWizardPage extends Composite implements
 				"Extended Title (Short Description)");
 		UiHelper.addPlaceholder(txtCopyrightHolder, "Copyright Holder Name");
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#isRepeatable() */
 	@Override
 	public boolean isRepeatable () {
 		return false;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getData() */
 	@Override
 	public List<Property> getData () {
 		List<Property> properties = new ArrayList<Property>();
@@ -74,58 +66,30 @@ public class BlogPropertiesWizardPage extends Composite implements
 
 		return properties;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getPageTitle() */
 	@Override
 	public String getPageTitle () {
 		return "Properties";
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getBody() */
 	@Override
 	public Widget getBody () {
 		return this;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#another() */
 	@Override
 	public WizardPage<?> another () {
 		throw new UnsupportedOperationException();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#validate() */
 	@Override
 	public boolean isValid () {
 		return true;
 	}
-
-	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#setData(java.lang.Object)
-	 */
 	@Override
 	public void setData (List<Property> data) {
 		
 	}
-
-	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getPageDescription()
-	 */
 	@Override
 	public String getPageDescription () {
 		return "Enter some blog details to start. You can change these properties and others later from the admin pages.";
 	}
-
-	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getAutoFocusField()
-	 */
 	@Override
 	public Focusable getAutoFocusField () {
 		return txtTitle;

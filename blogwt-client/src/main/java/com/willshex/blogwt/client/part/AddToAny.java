@@ -64,10 +64,6 @@ public class AddToAny extends Composite {
 		this.url = url;
 		refresh();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.UIObject#setTitle(java.lang.String) */
 	@Override
 	public void setTitle (String title) {
 		this.title = title;

@@ -20,13 +20,6 @@ public final class LogoutActionHandler
 		extends ActionHandler<LogoutRequest, LogoutResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(LogoutActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (LogoutRequest input, LogoutResponse output)
 			throws Exception {
@@ -37,18 +30,10 @@ public final class LogoutActionHandler
 
 		SessionServiceProvider.provide().deleteSession(input.session);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected LogoutResponse newOutput () {
 		return new LogoutResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

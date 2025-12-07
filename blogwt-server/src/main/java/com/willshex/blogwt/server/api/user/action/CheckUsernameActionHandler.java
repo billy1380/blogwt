@@ -18,13 +18,6 @@ public final class CheckUsernameActionHandler
 		extends ActionHandler<CheckUsernameRequest, CheckUsernameResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(CheckUsernameActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (CheckUsernameRequest input,
 			CheckUsernameResponse output) throws Exception {
@@ -32,18 +25,10 @@ public final class CheckUsernameActionHandler
 		ApiValidator.accessCode(input.accessCode, "input.accessCode");
 
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected CheckUsernameResponse newOutput () {
 		return new CheckUsernameResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

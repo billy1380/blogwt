@@ -24,68 +24,34 @@ public final class DeferredWizardPage<T> implements WizardPage<T> {
 	public DeferredWizardPage (DeferredWizardPageDelegate delegate) {
 		this.delegate = delegate;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#isRepeatable() */
 	@Override
 	public boolean isRepeatable () {
 		return false;
 	}
-
-
-	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getData()
-	 */
 	@Override
 	public T getData () {
 		return null;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.spacehopperstudios.gwt.wizard.WizardPage#getPageTitle() */
 	@Override
 	public String getPageTitle () {
 		return null;
 	}
-
-	
-	/* (non-Javadoc)
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getPageDescription()
-	 */
 	@Override
 	public String getPageDescription () {
 		return null;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.spacehopperstudios.gwt.wizard.WizardPage#getBody() */
 	@Override
 	public Widget getBody () {
 		return null;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.spacehopperstudios.gwt.wizard.WizardPage#another() */
 	@Override
 	public WizardPage<?> another () {
 		return null;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.spacehopperstudios.gwt.wizard.WizardPage#validate() */
 	@Override
 	public boolean isValid () {
 		return false;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.spacehopperstudios.gwt.wizard.WizardPage#getAutoFocusField() */
 	@Override
 	public Focusable getAutoFocusField () {
 		return null;
@@ -99,11 +65,6 @@ public final class DeferredWizardPage<T> implements WizardPage<T> {
 	public List<WizardPage<?>> getPages (List<WizardPage<?>> pages, int current) {
 		return delegate == null ? null : delegate.getPages(pages, current);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.spacehopperstudios.gwt.wizard.WizardPage#setData(java.lang.Object) */
 	@Override
 	public void setData (Object data) {}
 

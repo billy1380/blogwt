@@ -358,14 +358,6 @@ public class FormPart extends RegisteringComposite
 		btnSubmit.getElement().setInnerSafeHtml(
 				WizardDialog.WizardDialogTemplates.INSTANCE.nextButton("Send"));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.page.call.event.SubmitFormEventHandler
-	 * #submitFormSuccess
-	 * (com.willshex.blogwt.shared.api.page.call.SubmitFormRequest,
-	 * com.willshex.blogwt.shared.api.page.call.SubmitFormResponse) */
 	@Override
 	public void submitFormSuccess (SubmitFormRequest input,
 			SubmitFormResponse output) {
@@ -387,14 +379,6 @@ public class FormPart extends RegisteringComposite
 
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.page.call.event.SubmitFormEventHandler
-	 * #submitFormFailure
-	 * (com.willshex.blogwt.shared.api.page.call.SubmitFormRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void submitFormFailure (SubmitFormRequest input, Throwable caught) {
 		ready();
@@ -407,10 +391,6 @@ public class FormPart extends RegisteringComposite
 			reCaptcha.reset();
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();

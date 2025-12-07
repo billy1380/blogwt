@@ -55,10 +55,6 @@ public class VerifyAccountPage extends Page
 	public VerifyAccountPage () {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -77,14 +73,6 @@ public class VerifyAccountPage extends Page
 		register(DefaultEventBus.get().addHandlerToSource(
 				VerifyAccountEventHandler.TYPE, UserController.get(), this));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.VerifyAccountEventHandler
-	 * #verifyAccountSuccess
-	 * (com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest,
-	 * com.willshex.blogwt.shared.api.user.call.VerifyAccountResponse) */
 	@Override
 	public void verifyAccountSuccess (VerifyAccountRequest input,
 			VerifyAccountResponse output) {
@@ -97,49 +85,25 @@ public class VerifyAccountPage extends Page
 					+ "]");
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.VerifyAccountEventHandler
-	 * #verifyAccountFailure
-	 * (com.willshex.blogwt.shared.api.user.call.VerifyAccountRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void verifyAccountFailure (VerifyAccountRequest input,
 			Throwable caught) {
 		GWT.log("verifyAccount", caught);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
 	@Override
 	protected void reset () {
 		elActionCode.setInnerSafeHtml(SafeHtmlUtils.EMPTY_SAFE_HTML);
 
 		super.reset();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
 	@Override
 	public String getTitle () {
 		return UiHelper.pageTitle("Verify email");
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#hasHeader() */
 	@Override
 	public boolean hasHeader () {
 		return false;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#getHeader() */
 	@Override
 	public Composite getHeader () {
 		return LoginHeaderPart.get();

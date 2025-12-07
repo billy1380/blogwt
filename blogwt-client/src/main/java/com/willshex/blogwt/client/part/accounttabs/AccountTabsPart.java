@@ -80,10 +80,6 @@ public class AccountTabsPart extends RegisteringComposite
 		//				elNotificationsPage);
 
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -92,12 +88,6 @@ public class AccountTabsPart extends RegisteringComposite
 				NavigationChangedEventHandler.TYPE, NavigationController.get(),
 				this));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.event.NavigationChangedEventHandler#
-	 * navigationChanged(com.willshex.blogwt.shared.page.Stack,
-	 * com.willshex.blogwt.shared.page.Stack) */
 	@Override
 	public void navigationChanged (Stack previous, Stack current) {
 		for (Element e : items.values()) {

@@ -21,13 +21,6 @@ public final class GetEmailAvatarActionHandler
 		extends ActionHandler<GetEmailAvatarRequest, GetEmailAvatarResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetEmailAvatarActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (GetEmailAvatarRequest input,
 			GetEmailAvatarResponse output) throws Exception {
@@ -47,18 +40,10 @@ public final class GetEmailAvatarActionHandler
 
 		output.avatar = UserHelper.emailGravatar(input.email);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected GetEmailAvatarResponse newOutput () {
 		return new GetEmailAvatarResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

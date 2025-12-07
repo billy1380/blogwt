@@ -38,34 +38,16 @@ public abstract class SuggestOracle<T> extends
 		public Suggestion (T item) {
 			this.item = item;
 		}
-
-		/* (non-Javadoc)
-		 * 
-		 * @see
-		 * com.google.gwt.user.client.ui.SuggestOracle.Suggestion#getDisplayString
-		 * () */
 		@Override
 		public String getDisplayString () {
 			return SuggestOracle.this.getDisplayString(item);
 		}
-
-		/* (non-Javadoc)
-		 * 
-		 * @see com.google.gwt.user.client.ui.SuggestOracle.Suggestion#
-		 * getReplacementString() */
 		@Override
 		public String getReplacementString () {
 			return SuggestOracle.this.getReplacementString(item);
 		}
 
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.user.client.ui.SuggestOracle#requestSuggestions(com.google
-	 * .gwt.user.client.ui.SuggestOracle.Request,
-	 * com.google.gwt.user.client.ui.SuggestOracle.Callback) */
 	@Override
 	public void requestSuggestions (Request request, Callback callback) {
 		if (request.getQuery().length() >= getQueryMinLength()) {

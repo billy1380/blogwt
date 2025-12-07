@@ -27,11 +27,6 @@ class StaticPage extends StaticTemplate {
 	public StaticPage (Stack stack) {
 		super(stack);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
-	 * StringBuffer) */
 	@Override
 	protected void appendPage (StringBuffer markup) {
 		Page page = ensurePage();
@@ -69,19 +64,11 @@ class StaticPage extends StaticTemplate {
 
 		output = (new GetPageActionHandler()).handle(input);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.page.StaticTemplate#title() */
 	@Override
 	protected String title () {
 		Page page = ensurePage();
 		return page == null ? "Error" : page.title;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.page.StaticTemplate#isValidStack() */
 	@Override
 	public boolean canCreate () {
 		if (PageType

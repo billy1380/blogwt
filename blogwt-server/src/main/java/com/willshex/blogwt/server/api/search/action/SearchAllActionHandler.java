@@ -35,13 +35,6 @@ public final class SearchAllActionHandler
 		extends ActionHandler<SearchAllRequest, SearchAllResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(SearchAllActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void handle (SearchAllRequest input, SearchAllResponse output)
@@ -97,12 +90,6 @@ public final class SearchAllActionHandler
 				Integer.valueOf(0), SearchHelper.SHORT_SEARCH_LIMIT, null,
 				null);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.IClearSensitive#clearSensitiveFields(com.
-	 * willshex.blogwt.shared.api.Response) */
 	@Override
 	public void clearSensitiveFields (SearchAllResponse output) {
 		super.clearSensitiveFields(output);
@@ -119,18 +106,10 @@ public final class SearchAllActionHandler
 			}
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected SearchAllResponse newOutput () {
 		return new SearchAllResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

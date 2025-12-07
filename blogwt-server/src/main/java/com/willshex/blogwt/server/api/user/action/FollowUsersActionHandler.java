@@ -33,13 +33,6 @@ public final class FollowUsersActionHandler
 		extends ActionHandler<FollowUsersRequest, FollowUsersResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(FollowUsersActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (FollowUsersRequest input, FollowUsersResponse output)
 			throws Exception {
@@ -97,18 +90,10 @@ public final class FollowUsersActionHandler
 			}
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected FollowUsersResponse newOutput () {
 		return new FollowUsersResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

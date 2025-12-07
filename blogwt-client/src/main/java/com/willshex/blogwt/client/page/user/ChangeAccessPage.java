@@ -309,24 +309,12 @@ public class ChangeAccessPage extends Page
 	private void ready () {
 
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
 	@Override
 	protected void reset () {
 		frmChangeAccess.reset();
 		canManage(false);
 		super.reset();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.
-	 * ChangeUserAccessEventHandler
-	 * #changeUserAccessSuccess(com.willshex.blogwt.shared.api.user.call.
-	 * ChangeUserAccessRequest,
-	 * com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse) */
 	@Override
 	public void changeUserAccessSuccess (ChangeUserAccessRequest input,
 			ChangeUserAccessResponse output) {
@@ -346,13 +334,6 @@ public class ChangeAccessPage extends Page
 			ready();
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.
-	 * ChangeUserAccessEventHandler
-	 * #changeUserAccessFailure(com.willshex.blogwt.shared.api.user.call.
-	 * ChangeUserAccessRequest, java.lang.Throwable) */
 	@Override
 	public void changeUserAccessFailure (ChangeUserAccessRequest input,
 			Throwable caught) {

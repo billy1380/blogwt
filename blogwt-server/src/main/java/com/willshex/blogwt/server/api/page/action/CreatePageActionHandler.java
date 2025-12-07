@@ -26,13 +26,6 @@ public final class CreatePageActionHandler
 		extends ActionHandler<CreatePageRequest, CreatePageResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(CreatePageActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (CreatePageRequest input, CreatePageResponse output)
 			throws Exception {
@@ -52,18 +45,10 @@ public final class CreatePageActionHandler
 
 		output.page = PageServiceProvider.provide().addPage(input.page);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected CreatePageResponse newOutput () {
 		return new CreatePageResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

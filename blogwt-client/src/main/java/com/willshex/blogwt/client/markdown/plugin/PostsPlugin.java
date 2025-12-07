@@ -36,11 +36,6 @@ public class PostsPlugin extends AbstractAsyncPlugin {
 	public PostsPlugin (HandlerManager manager) {
 		super("posts", manager);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see org.markdown4j.Plugin#emit(java.lang.StringBuilder, java.util.List,
-	 * java.util.Map) */
 	@Override
 	public void emit (StringBuilder out, List<String> lines,
 			Map<String, String> params) {

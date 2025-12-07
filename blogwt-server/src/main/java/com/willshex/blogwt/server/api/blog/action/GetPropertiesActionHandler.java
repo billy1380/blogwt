@@ -58,12 +58,6 @@ public final class GetPropertiesActionHandler
 
 		output.pager = PagerHelper.moveForward(input.pager);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#clearSensitiveFields(
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	public void clearSensitiveFields (GetPropertiesResponse output) {
 		super.clearSensitiveFields(output);

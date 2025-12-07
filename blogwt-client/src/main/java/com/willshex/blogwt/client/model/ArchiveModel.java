@@ -49,14 +49,6 @@ public class ArchiveModel implements TreeViewModel {
 		public TextWithBadgeCell (SafeHtmlRenderer<T> renderer) {
 			super(renderer);
 		}
-
-		/* (non-Javadoc)
-		 * 
-		 * @see
-		 * com.google.gwt.cell.client.AbstractSafeHtmlCell#render(com.google
-		 * .gwt.cell.client.Cell.Context,
-		 * com.google.gwt.safehtml.shared.SafeHtml,
-		 * com.google.gwt.safehtml.shared.SafeHtmlBuilder) */
 		@Override
 		protected void render (com.google.gwt.cell.client.Cell.Context context,
 				SafeHtml data, SafeHtmlBuilder sb) {
@@ -79,11 +71,6 @@ public class ArchiveModel implements TreeViewModel {
 			return o1.month.compareTo(o2.month);
 		}
 	};
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.view.client.TreeViewModel#getNodeInfo(java.lang.Object ) */
 	@Override
 	public <T> NodeInfo<?> getNodeInfo (final T value) {
 		NodeInfo<?> info = null;
@@ -127,10 +114,6 @@ public class ArchiveModel implements TreeViewModel {
 
 		return info;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.view.client.TreeViewModel#isLeaf(java.lang.Object) */
 	@Override
 	public boolean isLeaf (Object value) {
 		return value instanceof Post;

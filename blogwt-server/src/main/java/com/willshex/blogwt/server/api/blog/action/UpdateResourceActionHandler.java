@@ -26,13 +26,6 @@ public final class UpdateResourceActionHandler
 		extends ActionHandler<UpdateResourceRequest, UpdateResourceResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(UpdateResourceActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (UpdateResourceRequest input,
 			UpdateResourceResponse output) throws Exception {
@@ -59,18 +52,10 @@ public final class UpdateResourceActionHandler
 		output.resource = ResourceServiceProvider.provide()
 				.updateResource(input.resource);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected UpdateResourceResponse newOutput () {
 		return new UpdateResourceResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

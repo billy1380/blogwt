@@ -173,10 +173,6 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 		tblPosts.addColumn(edit);
 		tblPosts.addColumn(delete);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -188,10 +184,6 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 		PostController.get().addDataDisplay(tblPosts);
 		pgrPosts.setDisplay(tblPosts);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onDetach() */
 	@Override
 	protected void onDetach () {
 		super.onDetach();
@@ -200,14 +192,6 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 		PostController.get().removeDataDisplay(tblPosts);
 		pgrPosts.setDisplay(null);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.DeletePostEventHandler#
-	 * deletePostSuccess(com.willshex.blogwt.shared.api.blog.call.
-	 * DeletePostRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.DeletePostResponse) */
 	@Override
 	public void deletePostSuccess (DeletePostRequest input,
 			DeletePostResponse output) {
@@ -216,13 +200,6 @@ public class PostsPage extends Page implements DeletePostEventHandler {
 					true);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.DeletePostEventHandler#
-	 * deletePostFailure(com.willshex.blogwt.shared.api.blog.call.
-	 * DeletePostRequest, java.lang.Throwable) */
 	@Override
 	public void deletePostFailure (DeletePostRequest input, Throwable caught) {}
 

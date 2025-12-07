@@ -24,9 +24,6 @@ import com.willshex.utility.StringUtils;
  *
  */
 public abstract class Page extends RegisteringComposite {
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -39,10 +36,6 @@ public abstract class Page extends RegisteringComposite {
 					GoogleAnalyticsHelper.sendPageView("#" + c.toString());
 				}));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
 	@Override
 	protected void onDetach () {
 		super.onDetach();

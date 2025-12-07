@@ -37,13 +37,6 @@ public class RoleOracle extends SuggestOracle<Role> {
 	}
 
 	private com.google.gwt.http.client.Request getRolesRequest;
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.oracle.SuggestOracle#lookup(com.google.gwt
-	 * .user.client.ui.SuggestOracle.Request,
-	 * com.google.gwt.user.client.ui.SuggestOracle.Callback) */
 	@Override
 	protected void lookup (final Request request, final Callback callback) {
 		final GetRolesRequest input = ApiHelper
@@ -81,39 +74,19 @@ public class RoleOracle extends SuggestOracle<Role> {
 					}
 				});
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.oracle.SuggestOracle#getDisplayString(java
-	 * .lang.Object) */
 	@Override
 	protected String getDisplayString (Role item) {
 		return NameDescriptionTemplates.INSTANCE.description(item.name,
 				item.description).asString();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.oracle.SuggestOracle#getReplacementString
-	 * (java.lang.Object) */
 	@Override
 	protected String getReplacementString (Role item) {
 		return item.code;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.SuggestOracle#isDisplayStringHTML() */
 	@Override
 	public boolean isDisplayStringHTML () {
 		return true;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.oracle.SuggestOracle#getQueryMinLength() */
 	@Override
 	protected int getQueryMinLength () {
 		return 0;

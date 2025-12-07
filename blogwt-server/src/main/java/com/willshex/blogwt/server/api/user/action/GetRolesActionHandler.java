@@ -26,13 +26,6 @@ public final class GetRolesActionHandler
 		extends ActionHandler<GetRolesRequest, GetRolesResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetRolesActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (GetRolesRequest input, GetRolesResponse output)
 			throws Exception {
@@ -53,18 +46,10 @@ public final class GetRolesActionHandler
 
 		output.pager = PagerHelper.moveForward(input.pager);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected GetRolesResponse newOutput () {
 		return new GetRolesResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

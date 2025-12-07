@@ -34,13 +34,6 @@ public final class SetupBlogActionHandler
 		extends ActionHandler<SetupBlogRequest, SetupBlogResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(SetupBlogActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (SetupBlogRequest input, SetupBlogResponse output)
 			throws Exception {
@@ -82,18 +75,10 @@ public final class SetupBlogActionHandler
 
 		UserServiceProvider.provide().addUserBatch(input.users);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected SetupBlogResponse newOutput () {
 		return new SetupBlogResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

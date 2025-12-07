@@ -29,13 +29,6 @@ public final class UpdatePageActionHandler
 		extends ActionHandler<UpdatePageRequest, UpdatePageResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(UpdatePageActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (UpdatePageRequest input, UpdatePageResponse output)
 			throws Exception {
@@ -67,18 +60,10 @@ public final class UpdatePageActionHandler
 
 		output.page = PageServiceProvider.provide().updatePage(input.page);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected UpdatePageResponse newOutput () {
 		return new UpdatePageResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

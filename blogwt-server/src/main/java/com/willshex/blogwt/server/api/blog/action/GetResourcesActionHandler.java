@@ -23,13 +23,6 @@ public final class GetResourcesActionHandler
 		extends ActionHandler<GetResourcesRequest, GetResourcesResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetResourcesActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (GetResourcesRequest input,
 			GetResourcesResponse output) throws Exception {
@@ -49,18 +42,10 @@ public final class GetResourcesActionHandler
 
 		output.pager = PagerHelper.moveForward(input.pager);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected GetResourcesResponse newOutput () {
 		return new GetResourcesResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

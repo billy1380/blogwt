@@ -28,13 +28,6 @@ public final class SubmitFormActionHandler
 		extends ActionHandler<SubmitFormRequest, SubmitFormResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(SubmitFormActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (SubmitFormRequest input, SubmitFormResponse output)
 			throws Exception {
@@ -72,18 +65,10 @@ public final class SubmitFormActionHandler
 					ApiError.FailedToSendEmail, "input.form");
 
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected SubmitFormResponse newOutput () {
 		return new SubmitFormResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

@@ -47,10 +47,6 @@ public class EditPagePage extends WizardDialogPage
 	public EditPagePage () {
 		super(PageType.EditPagePageType);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		register(DefaultEventBus.get().addHandlerToSource(
@@ -93,11 +89,6 @@ public class EditPagePage extends WizardDialogPage
 
 		super.onAttach();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onfinished
-	 * (java.util.List) */
 	@Override
 	public void onfinished (List<WizardPage<?>> pages) {
 		Page page = null;
@@ -125,22 +116,8 @@ public class EditPagePage extends WizardDialogPage
 			PageController.get().updatePage(page);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onCancelled(
-	 * ) */
 	@Override
 	public void onCancelled () {}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.page.call.event.CreatePageEventHandler
-	 * #createPageSuccess
-	 * (com.willshex.blogwt.shared.api.page.call.CreatePageRequest,
-	 * com.willshex.blogwt.shared.api.page.call.CreatePageResponse) */
 	@Override
 	public void createPageSuccess (CreatePageRequest input,
 			CreatePageResponse output) {
@@ -148,24 +125,10 @@ public class EditPagePage extends WizardDialogPage
 			PageTypeHelper.show(PageType.PageDetailPageType, input.page.slug);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.page.call.event.CreatePageEventHandler
-	 * #createPageFailure
-	 * (com.willshex.blogwt.shared.api.page.call.CreatePageRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void createPageFailure (CreatePageRequest input, Throwable caught) {
 		GWT.log("createPageFailure", caught);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler#
-	 * getPageSuccess(com.willshex.blogwt.shared.api.page.call.GetPageRequest,
-	 * com.willshex.blogwt.shared.api.page.call.GetPageResponse) */
 	@Override
 	public void getPageSuccess (GetPageRequest input, GetPageResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
@@ -187,22 +150,8 @@ public class EditPagePage extends WizardDialogPage
 					.addFinishedHandler(this).build());
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.page.call.event.GetPageEventHandler#
-	 * getPageFailure(com.willshex.blogwt.shared.api.page.call.GetPageRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void getPageFailure (GetPageRequest input, Throwable caught) {}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler
-	 * #updatePageSuccess
-	 * (com.willshex.blogwt.shared.api.page.call.UpdatePageRequest,
-	 * com.willshex.blogwt.shared.api.page.call.UpdatePageResponse) */
 	@Override
 	public void updatePageSuccess (UpdatePageRequest input,
 			UpdatePageResponse output) {
@@ -210,14 +159,6 @@ public class EditPagePage extends WizardDialogPage
 			PageTypeHelper.show(PageType.PageDetailPageType, input.page.slug);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.page.call.event.UpdatePageEventHandler
-	 * #updatePageFailure
-	 * (com.willshex.blogwt.shared.api.page.call.UpdatePageRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void updatePageFailure (UpdatePageRequest input, Throwable caught) {}
 

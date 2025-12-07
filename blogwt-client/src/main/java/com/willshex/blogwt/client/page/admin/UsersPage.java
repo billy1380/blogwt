@@ -191,10 +191,6 @@ public class UsersPage extends Page implements ChangeUserAccessEventHandler {
 		tblUsers.addColumn(admin);
 		tblUsers.addColumn(suspend);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -211,26 +207,11 @@ public class UsersPage extends Page implements ChangeUserAccessEventHandler {
 	void onRefreshClicked (ClickEvent ce) {
 		refresh();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.api.user.event.ChangeUserAccessEventHandler#
-	 * changeUserAccessSuccess(com.willshex.blogwt.shared.api.user.call.
-	 * ChangeUserAccessRequest,
-	 * com.willshex.blogwt.shared.api.user.call.ChangeUserAccessResponse) */
 	@Override
 	public void changeUserAccessSuccess (ChangeUserAccessRequest input,
 			ChangeUserAccessResponse output) {
 		refresh();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.api.user.event.ChangeUserAccessEventHandler#
-	 * changeUserAccessFailure(com.willshex.blogwt.shared.api.user.call.
-	 * ChangeUserAccessRequest, java.lang.Throwable) */
 	@Override
 	public void changeUserAccessFailure (ChangeUserAccessRequest input,
 			Throwable caught) {}

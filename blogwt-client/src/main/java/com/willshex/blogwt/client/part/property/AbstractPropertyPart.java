@@ -22,29 +22,15 @@ public abstract class AbstractPropertyPart extends Composite implements
 		HasValue<String>, HasName {
 
 	protected String value;
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.event.logical.shared.HasValueChangeHandlers#
-	 * addValueChangeHandler
-	 * (com.google.gwt.event.logical.shared.ValueChangeHandler) */
 	@Override
 	public HandlerRegistration addValueChangeHandler (
 			ValueChangeHandler<String> handler) {
 		return addHandler(handler, ValueChangeEvent.getType());
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object) */
 	@Override
 	public void setValue (String value) {
 		setValue(value, false);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasValue#getValue() */
 	@Override
 	public String getValue () {
 		return value;

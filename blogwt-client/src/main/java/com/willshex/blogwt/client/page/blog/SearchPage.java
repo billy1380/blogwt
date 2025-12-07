@@ -62,10 +62,6 @@ public class SearchPage extends Page {
 
 		SearchController.get().addDataDisplay(clResults);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
 	@Override
 	protected void onAttach () {
 		register(PostHelper.handlePluginContentReady());

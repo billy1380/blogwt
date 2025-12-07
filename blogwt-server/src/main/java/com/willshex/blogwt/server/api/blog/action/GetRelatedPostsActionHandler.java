@@ -19,13 +19,6 @@ public final class GetRelatedPostsActionHandler
 		extends ActionHandler<GetRelatedPostsRequest, GetRelatedPostsResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetRelatedPostsActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (GetRelatedPostsRequest input,
 			GetRelatedPostsResponse output) throws Exception {
@@ -35,18 +28,10 @@ public final class GetRelatedPostsActionHandler
 		output.session = input.session = SessionValidator
 				.lookupCheckAndExtend(input.session, "input.session");
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected GetRelatedPostsResponse newOutput () {
 		return new GetRelatedPostsResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

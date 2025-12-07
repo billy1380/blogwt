@@ -26,47 +26,25 @@ public class Markdown extends Widget implements HasHTML, HasSafeHtml {
 	public Markdown () {
 		setElement(Document.get().createDivElement());
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasText#getText() */
 	@Override
 	public String getText () {
 		return markdown;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasText#setText(java.lang.String) */
 	@Override
 	public void setText (String markdown) {
 		this.markdown = markdown;
 		getElement().setInnerHTML(getHTML());
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.safehtml.client.HasSafeHtml#setHTML(com.google.gwt.safehtml
-	 * .shared.SafeHtml) */
 	@Override
 	public void setHTML (SafeHtml markdown) {
 		this.markdown = markdown.asString();
 		getElement().setInnerHTML(getHTML());
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasHTML#getHTML() */
 	@Override
 	public String getHTML () {
 		return markdown == null ? SafeHtmlUtils.EMPTY_SAFE_HTML.asString()
 				: PostHelper.makeMarkup(markdown);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.HasHTML#setHTML(java.lang.String) */
 	@Override
 	public void setHTML (String markdown) {
 		this.markdown = markdown;

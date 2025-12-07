@@ -32,14 +32,6 @@ public class PermissionTypeTypeTranslatorFactory
 	protected ValueTranslator<PermissionTypeType, String> createValueTranslator (
 			TypeKey<PermissionTypeType> tk, CreateContext ctx, Path path) {
 		return new ValueTranslator<PermissionTypeType, String>(String.class) {
-
-			/* (non-Javadoc)
-			 * 
-			 * @see
-			 * com.googlecode.objectify.impl.translate.ValueTranslator#saveValue
-			 * (java.lang.Object, boolean,
-			 * com.googlecode.objectify.impl.translate.SaveContext,
-			 * com.googlecode.objectify.impl.Path) */
 			@Override
 			protected String saveValue (PermissionTypeType pojo, boolean index,
 					SaveContext ctx, Path path) throws SkipException {

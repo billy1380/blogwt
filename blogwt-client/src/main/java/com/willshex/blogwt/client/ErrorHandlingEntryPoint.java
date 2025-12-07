@@ -16,10 +16,6 @@ import com.google.gwt.core.client.GWT;
  * 
  */
 public abstract class ErrorHandlingEntryPoint implements EntryPoint {
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.core.client.EntryPoint#onModuleLoad() */
 	@Override
 	public void onModuleLoad () {
 		GWT.setUncaughtExceptionHandler(

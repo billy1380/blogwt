@@ -54,10 +54,6 @@ public class RelatedPart extends RegisteringComposite
 
 		SearchController.get().addDataDisplay(clPosts);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -65,10 +61,6 @@ public class RelatedPart extends RegisteringComposite
 		registration = DefaultEventBus.get().addHandlerToSource(
 				GetPostEventHandler.TYPE, PostController.get(), this);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onDetach() */
 	@Override
 	protected void onDetach () {
 		if (registration != null) {
@@ -77,12 +69,6 @@ public class RelatedPart extends RegisteringComposite
 
 		super.onDetach();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler#
-	 * getPostSuccess(com.willshex.blogwt.shared.api.blog.call.GetPostRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.GetPostResponse) */
 	@Override
 	public void getPostSuccess (GetPostRequest input, GetPostResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess && output.post != null
@@ -105,12 +91,6 @@ public class RelatedPart extends RegisteringComposite
 			SearchController.get().setQuery(query.toString());
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.blog.call.event.GetPostEventHandler#
-	 * getPostFailure(com.willshex.blogwt.shared.api.blog.call.GetPostRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void getPostFailure (GetPostRequest input, Throwable caught) {
 

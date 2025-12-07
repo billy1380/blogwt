@@ -53,14 +53,6 @@ public class SetupBlogPage extends WizardDialogPage implements
 				.addPage(new AddUserWizardPage()).setName("Setup Blog")
 				.addFinishedHandler(this).build());
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler
-	 * #setupBlogSuccess
-	 * (com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.SetupBlogResponse) */
 	@Override
 	public void setupBlogSuccess (SetupBlogRequest input,
 			SetupBlogResponse output) {
@@ -68,24 +60,10 @@ public class SetupBlogPage extends WizardDialogPage implements
 			Window.Location.reload();
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.blog.call.event.SetupBlogEventHandler
-	 * #setupBlogFailure
-	 * (com.willshex.blogwt.shared.api.blog.call.SetupBlogRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void setupBlogFailure (SetupBlogRequest input, Throwable caught) {
 		GWT.log("setupBlogFailure", caught);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onfinished
-	 * (java.util.List) */
 	@Override
 	public void onfinished (List<WizardPage<?>> pages) {
 		List<User> users = null;
@@ -104,11 +82,6 @@ public class SetupBlogPage extends WizardDialogPage implements
 
 		PropertyController.get().setupBlog(properties, users);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.wizard.PagePlanFinishedHandler#onCancelled() */
 	@Override
 	public void onCancelled () {
 

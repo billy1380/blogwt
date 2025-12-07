@@ -44,13 +44,6 @@ public final class GetUsersActionHandler
 		extends ActionHandler<GetUsersRequest, GetUsersResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetUsersActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (GetUsersRequest input, GetUsersResponse output)
 			throws Exception {
@@ -172,28 +165,14 @@ public final class GetUsersActionHandler
 
 		return relatedUsers;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected GetUsersResponse newOutput () {
 		return new GetUsersResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.api.ActionHandler#clearSensitiveFields(com.
-	 * willshex.blogwt.shared.api.Response) */
 	@Override
 	public void clearSensitiveFields (GetUsersResponse output) {
 		super.clearSensitiveFields(output);

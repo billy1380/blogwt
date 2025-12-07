@@ -120,10 +120,6 @@ public class PostsPage extends Page {
 		PostController.get().clearTag();
 		clPosts.setVisibleRangeAndClearData(clPosts.getVisibleRange(), true);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
 	@Override
 	public String getTitle () {
 		return UiHelper.pageTitle("Blog");

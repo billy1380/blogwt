@@ -44,11 +44,6 @@ public class MapPlugin extends AbstractAsyncPlugin {
 		DefaultEventBus.get().addHandler(MapsReadyEventHandler.TYPE,
 				this::mapsInitialised);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see org.markdown4j.Plugin#emit(java.lang.StringBuilder, java.util.List,
-	 * java.util.Map) */
 	@Override
 	public void emit (StringBuilder out, final List<String> lines,
 			final Map<String, String> params) {

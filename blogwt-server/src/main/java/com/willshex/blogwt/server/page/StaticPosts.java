@@ -34,11 +34,6 @@ class StaticPosts extends StaticTemplate {
 	public StaticPosts (Stack stack) {
 		super(stack);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.page.StaticTemplate#appendPage(java.lang.
-	 * StringBuffer) */
 	@Override
 	protected void appendPage (StringBuffer markup) {
 		markup.append("<h2>Blog</h2>");
@@ -91,18 +86,10 @@ class StaticPosts extends StaticTemplate {
 			markup.append("\">Read More</a></div>");
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.page.StaticTemplate#title() */
 	@Override
 	protected String title () {
 		return "Blog";
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.page.PageMarkup#canCreate() */
 	@Override
 	public boolean canCreate () {
 		return true;

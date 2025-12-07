@@ -45,12 +45,6 @@ public final class SubmitRatingActionHandler
 
 		output.rating = RatingServiceProvider.provide().addRating(input.rating);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.server.api.ActionHandler#clearSensitiveFields(com.
-	 * willshex.blogwt.shared.api.Response) */
 	@Override
 	public void clearSensitiveFields (SubmitRatingResponse output) {
 		super.clearSensitiveFields(output);

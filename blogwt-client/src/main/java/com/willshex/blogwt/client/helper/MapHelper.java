@@ -44,20 +44,10 @@ public class MapHelper {
 		public void mapsReady ();
 
 		public class MapsReadyEvent extends GwtEvent<MapsReadyEventHandler> {
-
-			/* (non-Javadoc)
-			 * 
-			 * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
 			@Override
 			public com.google.gwt.event.shared.GwtEvent.Type<MapsReadyEventHandler> getAssociatedType () {
 				return TYPE;
 			}
-
-			/* (non-Javadoc)
-			 * 
-			 * @see
-			 * com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.
-			 * event. shared.EventHandler) */
 			@Override
 			protected void dispatch (MapsReadyEventHandler handler) {
 				handler.mapsReady();

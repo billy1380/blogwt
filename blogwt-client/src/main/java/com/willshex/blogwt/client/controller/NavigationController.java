@@ -183,12 +183,6 @@ public class NavigationController implements ValueChangeHandler<String> {
 	public Stack getStack () {
 		return stack;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.event.logical.shared.ValueChangeHandler#onValueChange(
-	 * com.google.gwt.event.logical.shared.ValueChangeEvent) */
 	@Override
 	public void onValueChange (ValueChangeEvent<String> event) {
 		addPage(event.getValue());

@@ -76,12 +76,6 @@ import com.willshex.gson.web.service.shared.StatusType;
 public class UserController extends AsyncDataProvider<User> {
 
 	private AsyncDataProvider<Role> USER_ROLES_PROVIDER = new AsyncDataProvider<Role>() {
-
-		/* (non-Javadoc)
-		 * 
-		 * @see
-		 * com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com
-		 * .google.gwt.view.client.HasData) */
 		@Override
 		protected void onRangeChanged (HasData<Role> display) {
 			UserController.this.fetchUserRolesAndPremissions();
@@ -90,12 +84,6 @@ public class UserController extends AsyncDataProvider<User> {
 	};
 
 	private AsyncDataProvider<Permission> USER_PERMISSIONS_PROVIDER = new AsyncDataProvider<Permission>() {
-
-		/* (non-Javadoc)
-		 * 
-		 * @see
-		 * com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com
-		 * .google.gwt.view.client.HasData) */
 		@Override
 		protected void onRangeChanged (HasData<Permission> display) {
 			UserController.this.fetchUserRolesAndPremissions();
@@ -177,12 +165,6 @@ public class UserController extends AsyncDataProvider<User> {
 					}
 				});
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google
-	 * .gwt.view.client.HasData) */
 	@Override
 	protected void onRangeChanged (HasData<User> display) {
 		Range range = display.getVisibleRange();

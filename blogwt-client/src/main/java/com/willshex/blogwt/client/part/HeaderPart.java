@@ -364,10 +364,6 @@ public class HeaderPart extends RegisteringComposite
 		ensureOpenables().put(key, item);
 		item.getFirstChildElement().setInnerSafeHtml(title);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -544,22 +540,10 @@ public class HeaderPart extends RegisteringComposite
 					.remove("blogwt_administration_menu_reserved_slug");
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.LogoutEventHandler#
-	 * logoutSuccess(com.willshex.blogwt.shared.api.user.call.LogoutRequest,
-	 * com.willshex.blogwt.shared.api.user.call.LogoutResponse) */
 	@Override
 	public void logoutSuccess (LogoutRequest input, LogoutResponse output) {
 		configureNavBar(false);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.LogoutEventHandler#
-	 * logoutFailure(com.willshex.blogwt.shared.api.user.call.LogoutRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void logoutFailure (LogoutRequest input, Throwable caught) {
 		GWT.log("logoutFailure - input:"
@@ -573,23 +557,11 @@ public class HeaderPart extends RegisteringComposite
 			setLoggedInUser(output.session.user);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.LoginEventHandler#
-	 * loginFailure (com.willshex.blogwt.shared.api.user.call.LoginRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void loginFailure (LoginRequest input, Throwable caught) {
 		GWT.log("loginFailure - input:"
 				+ (input == null ? null : input.toString()), caught);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
-	 * .dom.client.ClickEvent) */
 	@Override
 	public void onClick (ClickEvent ce) {
 		openableClick(((Widget) ce.getSource()).getElement());
@@ -618,14 +590,6 @@ public class HeaderPart extends RegisteringComposite
 				+ "&default=retro");
 		elUserName.setInnerText(user.forename + " " + user.surname);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.
-	 * ChangeUserDetailsEventHandler
-	 * #changeUserDetailsSuccess(com.willshex.blogwt.shared.api.user.call.
-	 * ChangeUserDetailsRequest,
-	 * com.willshex.blogwt.shared.api.user.call.ChangeUserDetailsResponse) */
 	@Override
 	public void changeUserDetailsSuccess (ChangeUserDetailsRequest input,
 			ChangeUserDetailsResponse output) {
@@ -637,13 +601,6 @@ public class HeaderPart extends RegisteringComposite
 			}
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.shared.api.user.call.event.
-	 * ChangeUserDetailsEventHandler
-	 * #changeUserDetailsFailure(com.willshex.blogwt.shared.api.user.call.
-	 * ChangeUserDetailsRequest, java.lang.Throwable) */
 	@Override
 	public void changeUserDetailsFailure (ChangeUserDetailsRequest input,
 			Throwable caught) {}

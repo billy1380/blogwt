@@ -86,10 +86,6 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 		PageController.get().addDataDisplay(tblPages);
 		pgrPages.setDisplay(tblPages);
 	}
-	
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -196,14 +192,6 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 		tblPages.addColumn(edit);
 		tblPages.addColumn(delete);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler
-	 * #deletePageSuccess
-	 * (com.willshex.blogwt.shared.api.page.call.DeletePageRequest,
-	 * com.willshex.blogwt.shared.api.page.call.DeletePageResponse) */
 	@Override
 	public void deletePageSuccess (DeletePageRequest input,
 			DeletePageResponse output) {
@@ -212,14 +200,6 @@ public class PagesPage extends com.willshex.blogwt.client.page.Page
 					true);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.page.call.event.DeletePageEventHandler
-	 * #deletePageFailure
-	 * (com.willshex.blogwt.shared.api.page.call.DeletePageRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void deletePageFailure (DeletePageRequest input, Throwable caught) {}
 

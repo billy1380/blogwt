@@ -34,11 +34,6 @@ final class PropertyService implements IPropertyService {
 	private LoadType<Property> load () {
 		return provide().load().type(Property.class);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.property.IPropertyService
-	 * #addProperty(com.willshex.blogwt.shared.api.datatypes.Property ) */
 	@Override
 	public Property addProperty (Property property) {
 		if (property.created == null) {
@@ -49,39 +44,19 @@ final class PropertyService implements IPropertyService {
 		property.id = keyToId(key);
 		return property;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.property.IPropertyService
-	 * #updateProperty(com.willshex.blogwt.shared.api.datatypes .Property) */
 	@Override
 	public Property updateProperty (Property property) {
 		provide().save().entity(property).now();
 		return property;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.property.IPropertyService
-	 * #deleteProperty(com.willshex.blogwt.shared.api.datatypes .Property) */
 	@Override
 	public void deleteProperty (Property property) {
 		provide().delete().entity(property).now();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.services.property.IPropertyService
-	 * #getNamedProperty(java.lang.String) */
 	@Override
 	public Property getNamedProperty (String name) {
 		return PersistenceHelper.one(load().filter("name", name));
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.property.IPropertyService#
-	 * addPropertyBatch (java.util.Collection) */
 	@Override
 	public void addPropertyBatch (Collection<Property> properties) {
 		for (Property property : properties) {
@@ -92,24 +67,12 @@ final class PropertyService implements IPropertyService {
 
 		provide().save().entities(properties).now();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.property.IPropertyService#
-	 * getProperties(java.lang.Integer, java.lang.Integer,
-	 * com.willshex.blogwt.shared.api.datatype.PropertySortType,
-	 * com.willshex.blogwt.shared.api.SortDirectionType) */
 	@Override
 	public List<Property> getProperties (Integer start, Integer count,
 			PropertySortType sortBy, SortDirectionType sortDirection) {
 		return PersistenceHelper.pagedAndSorted(load(), start, count, sortBy,
 				this, sortDirection);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.server.service.property.IPropertyService#
-	 * getValueProperties(java.lang.String) */
 	@Override
 	public List<Property> getValueProperties (String value) {
 		return load().filter(map(PropertySortType.PropertySortTypeValue), value)

@@ -130,10 +130,6 @@ public class CollapseButton extends RegisteringComposite {
 			complete.schedule(TRANSITION_DURATION);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();

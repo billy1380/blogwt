@@ -29,11 +29,6 @@ public class GalleryPlugin extends AbstractAsyncPlugin {
 	public GalleryPlugin (HandlerManager manager) {
 		super("gallery", manager);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see org.markdown4j.Plugin#emit(java.lang.StringBuilder, java.util.List,
-	 * java.util.Map) */
 	@Override
 	public void emit (StringBuilder out, final List<String> lines,
 			final Map<String, String> params) {

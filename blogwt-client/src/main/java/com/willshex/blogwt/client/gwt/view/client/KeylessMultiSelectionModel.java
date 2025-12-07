@@ -28,21 +28,10 @@ public class KeylessMultiSelectionModel<T extends DataType>
 		super(DataTypeHelper::id);
 		this.enabled = enabled;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.view.client.SelectionModel#isSelected(java.lang.Object) */
 	@Override
 	public boolean isSelected (T object) {
 		return selection.containsKey(object.id.longValue());
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.view.client.SelectionModel#setSelected(java.lang.Object,
-	 * boolean) */
 	@Override
 	public void setSelected (T object, boolean selected) {
 		if (enabled.test(object)) {

@@ -117,10 +117,6 @@ public class MetaNotificationDetailPage extends Page
 		pnlDefault.setVisible(cboDefaultEmail.isVisible()
 				|| cboDefaultSms.isVisible() || cboDefaultPush.isVisible());
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -231,10 +227,6 @@ public class MetaNotificationDetailPage extends Page
 		cboDefaultPush.setEnabled(enabled);
 		btnUpdate.setEnabled(enabled);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
 	@Override
 	protected void reset () {
 		super.reset();
@@ -347,15 +339,6 @@ public class MetaNotificationDetailPage extends Page
 
 		cboDefault.setValue(Boolean.FALSE);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.api.notification.event.
-	 * UpdateMetaNotificationEventHandler#updateMetaNotificationSuccess(com.
-	 * willshex.blogwt.shared.api.notification.call.
-	 * UpdateMetaNotificationRequest,
-	 * com.willshex.blogwt.shared.api.notification.call.
-	 * UpdateMetaNotificationResponse) */
 	@Override
 	public void updateMetaNotificationSuccess (
 			UpdateMetaNotificationRequest input,
@@ -367,26 +350,11 @@ public class MetaNotificationDetailPage extends Page
 
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.api.notification.event.
-	 * UpdateMetaNotificationEventHandler#updateMetaNotificationFailure(com.
-	 * willshex.blogwt.shared.api.notification.call.
-	 * UpdateMetaNotificationRequest, java.lang.Throwable) */
 	@Override
 	public void updateMetaNotificationFailure (
 			UpdateMetaNotificationRequest input, Throwable caught) {
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.api.notification.event.
-	 * AddMetaNotificationEventHandler#addMetaNotificationSuccess(com.willshex.
-	 * blogwt.shared.api.notification.call.AddMetaNotificationRequest,
-	 * com.willshex.blogwt.shared.api.notification.call.
-	 * AddMetaNotificationResponse) */
 	@Override
 	public void addMetaNotificationSuccess (AddMetaNotificationRequest input,
 			AddMetaNotificationResponse output) {
@@ -397,26 +365,11 @@ public class MetaNotificationDetailPage extends Page
 
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.api.notification.event.
-	 * AddMetaNotificationEventHandler#addMetaNotificationFailure(com.willshex.
-	 * blogwt.shared.api.notification.call.AddMetaNotificationRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void addMetaNotificationFailure (AddMetaNotificationRequest input,
 			Throwable caught) {
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.api.notification.event.
-	 * GetMetaNotificationEventHandler#getMetaNotificationSuccess(com.willshex.
-	 * blogwt.shared.api.notification.call.GetMetaNotificationRequest,
-	 * com.willshex.blogwt.shared.api.notification.call.
-	 * GetMetaNotificationResponse) */
 	@Override
 	public void getMetaNotificationSuccess (GetMetaNotificationRequest input,
 			GetMetaNotificationResponse output) {
@@ -427,13 +380,6 @@ public class MetaNotificationDetailPage extends Page
 
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.api.notification.event.
-	 * GetMetaNotificationEventHandler#getMetaNotificationFailure(com.willshex.
-	 * blogwt.shared.api.notification.call.GetMetaNotificationRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void getMetaNotificationFailure (GetMetaNotificationRequest input,
 			Throwable caught) {

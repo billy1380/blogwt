@@ -32,14 +32,6 @@ public class ResourceTypeTypeTranslatorFactory
 	protected ValueTranslator<ResourceTypeType, String> createValueTranslator (
 			TypeKey<ResourceTypeType> tk, CreateContext ctx, Path path) {
 		return new ValueTranslator<ResourceTypeType, String>(String.class) {
-
-			/* (non-Javadoc)
-			 * 
-			 * @see
-			 * com.googlecode.objectify.impl.translate.ValueTranslator#saveValue
-			 * (java.lang.Object, boolean,
-			 * com.googlecode.objectify.impl.translate.SaveContext,
-			 * com.googlecode.objectify.impl.Path) */
 			@Override
 			protected String saveValue (ResourceTypeType pojo, boolean index,
 					SaveContext ctx, Path path) throws SkipException {

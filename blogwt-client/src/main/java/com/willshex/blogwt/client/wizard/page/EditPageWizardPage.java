@@ -53,18 +53,10 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 
 		BootstrapGwtSuggestBox.INSTANCE.styles().ensureInjected();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#isRepeatable() */
 	@Override
 	public boolean isRepeatable () {
 		return false;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getData() */
 	@Override
 	public Page getData () {
 		if (page == null) {
@@ -92,11 +84,6 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 
 		return page;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.wizard.WizardPage#setData(java.lang.Object) */
 	@Override
 	public void setData (Page data) {
 		page = data;
@@ -118,18 +105,10 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 			txtTitle.setValue(page.title);
 		}
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getPageTitle() */
 	@Override
 	public String getPageTitle () {
 		return "Page Details";
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getPageDescription() */
 	@Override
 	public String getPageDescription () {
 		return PostHelper
@@ -139,34 +118,18 @@ public class EditPageWizardPage extends Composite implements WizardPage<Page> {
 						+ "__There can be no overlap between page slugs and native page identifiers. "
 						+ "Native pages will win, except in the case of the home page__.");
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getBody() */
 	@Override
 	public Widget getBody () {
 		return this;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#another() */
 	@Override
 	public WizardPage<?> another () {
 		throw new UnsupportedOperationException();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#validate() */
 	@Override
 	public boolean isValid () {
 		return true;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.wizard.WizardPage#getAutoFocusField() */
 	@Override
 	public Focusable getAutoFocusField () {
 		return txtTitle;

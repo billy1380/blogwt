@@ -26,13 +26,6 @@ import com.willshex.gson.web.service.shared.StatusType;
 public class PostOracle extends SuggestOracle<Post> {
 
 	private com.google.gwt.http.client.Request getPostsRequest;
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.oracle.SuggestOracle#lookup(com.google.gwt
-	 * .user.client.ui.SuggestOracle.Request,
-	 * com.google.gwt.user.client.ui.SuggestOracle.Callback) */
 	@Override
 	protected void lookup (final Request request, final Callback callback) {
 		final GetPostsRequest input = ApiHelper
@@ -72,22 +65,10 @@ public class PostOracle extends SuggestOracle<Post> {
 					}
 				});
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.oracle.SuggestOracle#getDisplayString(java
-	 * .lang.Object) */
 	@Override
 	protected String getDisplayString (Post item) {
 		return item.title;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.client.oracle.SuggestOracle#getReplacementString
-	 * (java.lang.Object) */
 	@Override
 	protected String getReplacementString (Post item) {
 		return item.slug;

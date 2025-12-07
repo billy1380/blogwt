@@ -56,10 +56,6 @@ public class ResetPasswordPage extends Page implements
 		UiHelper.addPlaceholder(txtEmail, "e.g. johnny@smith.com");
 		UiHelper.autoFocus(txtEmail);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
 	@Override
 	protected void onAttach () {
 		super.onAttach();
@@ -119,14 +115,6 @@ public class ResetPasswordPage extends Page implements
 		pnlEmail.removeStyleName("has-error");
 		pnlEmailNote.setVisible(false);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler
-	 * #resetPasswordSuccess
-	 * (com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest,
-	 * com.willshex.blogwt.shared.api.user.call.ResetPasswordResponse) */
 	@Override
 	public void resetPasswordSuccess (ResetPasswordRequest input,
 			ResetPasswordResponse output) {
@@ -141,48 +129,24 @@ public class ResetPasswordPage extends Page implements
 
 		ready();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.blogwt.shared.api.user.call.event.ResetPasswordEventHandler
-	 * #resetPasswordFailure
-	 * (com.willshex.blogwt.shared.api.user.call.ResetPasswordRequest,
-	 * java.lang.Throwable) */
 	@Override
 	public void resetPasswordFailure (ResetPasswordRequest input,
 			Throwable caught) {
 		GWT.log("resetPasswordFailure", caught);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
 	@Override
 	protected void reset () {
 		frmReset.reset();
 		super.reset();
 	}
-	
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#getTitle() */
 	@Override
 	public String getTitle () {
 		return UiHelper.pageTitle("Forgot password");
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#hasHeader() */
 	@Override
 	public boolean hasHeader () {
 		return false;
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.blogwt.client.page.Page#getHeader() */
 	@Override
 	public Composite getHeader () {
 		return LoginHeaderPart.get();

@@ -22,13 +22,6 @@ public class ResultSummaryCell extends AbstractCell<SearchResult> {
 	private static final PostSummaryCell POST_CELL = new PostSummaryCell();
 	private static final UserSummaryCell USER_CELL = new UserSummaryCell();
 	private static final PageSummaryCell PAGE_CELL = new PageSummaryCell();
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client
-	 * .Cell.Context, java.lang.Object,
-	 * com.google.gwt.safehtml.shared.SafeHtmlBuilder) */
 	@Override
 	public void render (com.google.gwt.cell.client.Cell.Context context,
 			SearchResult value, SafeHtmlBuilder sb) {

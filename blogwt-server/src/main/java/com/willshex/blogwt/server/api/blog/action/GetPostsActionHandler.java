@@ -45,13 +45,6 @@ public final class GetPostsActionHandler
 		extends ActionHandler<GetPostsRequest, GetPostsResponse> {
 	private static final Logger LOG = Logger
 			.getLogger(GetPostsActionHandler.class.getName());
-
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.willshex.gson.web.service.server.ActionHandler#handle(com.willshex.
-	 * gson.web.service.shared.Request,
-	 * com.willshex.gson.web.service.shared.Response) */
 	@Override
 	protected void handle (GetPostsRequest input, GetPostsResponse output)
 			throws Exception {
@@ -165,18 +158,10 @@ public final class GetPostsActionHandler
 
 		output.pager = PagerHelper.moveForward(input.pager);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#newOutput() */
 	@Override
 	protected GetPostsResponse newOutput () {
 		return new GetPostsResponse();
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see com.willshex.gson.web.service.server.ActionHandler#logger() */
 	@Override
 	protected Logger logger () {
 		return LOG;

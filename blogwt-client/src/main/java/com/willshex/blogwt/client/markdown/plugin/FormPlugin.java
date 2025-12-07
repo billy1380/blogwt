@@ -28,11 +28,6 @@ public class FormPlugin extends AbstractAsyncPlugin {
 	public FormPlugin (HandlerManager manager) {
 		super("form", manager);
 	}
-
-	/* (non-Javadoc)
-	 * 
-	 * @see org.markdown4j.Plugin#emit(java.lang.StringBuilder, java.util.List,
-	 * java.util.Map) */
 	@Override
 	public void emit (StringBuilder out, final List<String> lines,
 			final Map<String, String> params) {
