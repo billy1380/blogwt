@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.blobstore.BlobInfo;
 import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
@@ -82,39 +83,39 @@ public class ResourceUploadAction extends HttpServlet {
 			for (BlobKey blobKey : blobKeys) {
 				resource = new Resource();
 				resource.created = now;
-				resource.data = "gs://"
-						+ new BlobInfoFactory().loadBlobInfo(blobKey)
-								.getGsObjectName().replace("/gs/", "");
-				resource.description = "New uploaded file "
-						+ new BlobInfoFactory().loadBlobInfo(blobKey)
-								.getFilename();
 
-				resource.name = resource.description;
+				BlobInfo info = new BlobInfoFactory().loadBlobInfo(blobKey);
+				String gsObjectName = null;
 
-				JsonObject object = new JsonObject();
-				object.addProperty("contentType", new BlobInfoFactory()
-						.loadBlobInfo(blobKey).getContentType());
+				if (info != null) {
+					gsObjectName = info.getGsObjectName();
+					resource.description = "New uploaded file " + info.getFilename();
+					resource.name = resource.description;
 
-				try {
-					object.addProperty("staticUrl", ImagesServiceFactory
-							.getImagesService()
-							.getServingUrl(ServingUrlOptions.Builder
-									.withBlobKey(blobKey))
-							.replaceFirst("https:\\/\\/", "//")
-							.replaceFirst("http:\\/\\/", "//"));
-				} catch (Throwable e) {
+					JsonObject object = new JsonObject();
+					object.addProperty("contentType", info.getContentType());
+
+					try {
+						object.addProperty("staticUrl", ImagesServiceFactory
+								.getImagesService()
+								.getServingUrl(ServingUrlOptions.Builder
+										.withBlobKey(blobKey))
+								.replaceFirst("https:\\/\\/", "//")
+								.replaceFirst("http:\\/\\/", "//"));
+					} catch (Throwable e) {
+					}
+					resource.properties = object.toString();
 				}
 
-				resource.properties = object.toString();
+				if (gsObjectName != null && !gsObjectName.isEmpty()) {
+					resource.data = "gs://" + gsObjectName.replace("/gs/", "");
+				} else {
+					resource.data = blobKey.getKeyString();
+				}
 
 				resource = ResourceServiceProvider.provide()
 						.addResource(resource);
 
-				// if (resourcesJson.length() != 0) {
-				// resourcesJson.append(" ");
-				// }
-				//
-				// resourcesJson.append(resource.id.toString());
 				resources.add(resource.toJson());
 			}
 		}

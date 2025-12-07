@@ -32,7 +32,7 @@
 						<label>Resource</label>
 						<g:HTMLPanel ui:field="pnlResourcePreview" styleName="{style.space}" />
 						<g:Label ui:field="lblDropZone" styleName="{style.drop-zone}">Drag and drop files here</g:Label>
-						<g:FileUpload ui:field="uplDragAndDrop" name="image" />
+						<g:FileUpload ui:field="uplDragAndDrop" name="image" visible="false" />
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="pnlName" styleName="form-group">

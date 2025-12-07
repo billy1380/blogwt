@@ -33,16 +33,16 @@ import com.willshex.blogwt.shared.page.PageType;
  */
 public class ResourcePreviewCell extends AbstractCell<Resource> {
 
-	public ResourcePreviewCell () {
+	public ResourcePreviewCell() {
 		super(BrowserEvents.CLICK);
 	}
 
 	interface ResourcePreviewCellRenderer extends UiRenderer {
-		void render (SafeHtmlBuilder sb, SafeHtml preview, SafeHtml download,
+		void render(SafeHtmlBuilder sb, SafeHtml preview, SafeHtml download,
 				String name, String description, SafeHtml edit,
 				SafeHtml delete);
 
-		void onBrowserEvent (ResourcePreviewCell resourcePreviewCell,
+		void onBrowserEvent(ResourcePreviewCell resourcePreviewCell,
 				NativeEvent event, Element parent, Resource value);
 	}
 
@@ -51,38 +51,41 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 
 		@Template("<a target=\"_blank\" href=\"" + Upload.PATH
 				+ "?blob-key={0}\" alt=\"{1}\" title=\"{2}\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-download\"></span></a>")
-		SafeHtml download (String key, String title, String fullText);
+		SafeHtml download(String key, String title, String fullText);
 
 		@Template("<img class=\"img-rounded img-responsive center-block\" src=\"/upload?blob-key={0}\" alt=\"{1}\" title=\"{1}\">")
-		SafeHtml image (String key, String title);
+		SafeHtml image(String key, String title);
 
 		@Template("<span class=\"glyphicon glyphicon-trash\"></span>")
-		SafeHtml delete ();
+		SafeHtml delete();
 	}
 
 	private static ResourcePreviewCellRenderer RENDERER = GWT
 			.create(ResourcePreviewCellRenderer.class);
 
 	@Override
-	public void onBrowserEvent (Context context, Element parent, Resource value,
+	public void onBrowserEvent(Context context, Element parent, Resource value,
 			NativeEvent event, ValueUpdater<Resource> valueUpdater) {
 		RENDERER.onBrowserEvent(this, event, parent, value);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client
 	 * .Cell.Context, java.lang.Object,
-	 * com.google.gwt.safehtml.shared.SafeHtmlBuilder) */
+	 * com.google.gwt.safehtml.shared.SafeHtmlBuilder)
+	 */
 	@Override
-	public void render (com.google.gwt.cell.client.Cell.Context context,
+	public void render(com.google.gwt.cell.client.Cell.Context context,
 			Resource value, SafeHtmlBuilder sb) {
+		String key = value.data.startsWith("gs://") ? value.data.substring(5)
+				: value.data;
 
 		RENDERER.render(sb,
-				Templates.INSTANCE.image(value.data.substring(5), value.name),
-				Templates.INSTANCE.download(
-						value.data.substring(5), value.name, value.data),
+				Templates.INSTANCE.image(key, value.name),
+				Templates.INSTANCE.download(key, value.name, value.data),
 				value.name, value.description,
 				UiHelper.TEMPLATES.edit(
 						PageTypeHelper.asHref(PageType.EditResourcePageType,
@@ -91,7 +94,7 @@ public class ResourcePreviewCell extends AbstractCell<Resource> {
 	}
 
 	@UiHandler("btnDelete")
-	void deleteClicked (ClickEvent event, Element parent, Resource value) {
+	void deleteClicked(ClickEvent event, Element parent, Resource value) {
 		if (Window.confirm("Are you sure you want to delete resource "
 				+ value.name + "?")) {
 			ResourceController.get().deleteResource(value);

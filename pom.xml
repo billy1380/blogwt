@@ -30,7 +30,7 @@
 		<appengine.version>1.9.53</appengine.version>
 
 		<!-- Blogwt -->
-		<blogwt.version>0v5</blogwt.version>
+		<blogwt.version>0v7</blogwt.version>
 
 		<!-- Maven -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -135,6 +135,10 @@ public class EditResourcePage extends Page
 		});
 
 		elemental2.dom.Element dropZone = Js.cast(lblDropZone.getElement());
+		dropZone.addEventListener("click", e -> {
+			Js.<HTMLInputElement>uncheckedCast(uplDragAndDrop.getElement()).click();
+		});
+
 		dropZone.addEventListener("dragover", e -> {
 			e.preventDefault();
 			e.stopPropagation();
@@ -267,6 +271,7 @@ public class EditResourcePage extends Page
 			txtProperties.setValue(resource.properties);
 			txtType.setValue(
 					resource.type == null ? "" : resource.type.toString());
+			lblDropZone.setVisible(false);
 			uplDragAndDrop.setVisible(false);
 
 			if (withImage) {
@@ -323,7 +328,8 @@ public class EditResourcePage extends Page
 		resource = null;
 		pnlResourcePreview.clear();
 
-		uplDragAndDrop.setVisible(true);
+		uplDragAndDrop.setVisible(false);
+		lblDropZone.setVisible(true);
 
 		super.reset();
 	}
