@@ -13,10 +13,17 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -40,12 +47,10 @@ import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
 import com.willshex.blogwt.shared.api.upload.Upload;
 import com.willshex.gson.web.service.shared.StatusType;
 
-import gwtupload.client.BaseUploadStatus;
-import gwtupload.client.IFileInput.FileInputType;
-import gwtupload.client.IUploadStatus.Status;
-import gwtupload.client.IUploader;
-import gwtupload.client.PreloadedImage;
-import gwtupload.client.SingleUploader;
+import elemental2.dom.FormData;
+import elemental2.dom.HTMLInputElement;
+import elemental2.dom.XMLHttpRequest;
+import jsinterop.base.Js;
 
 /**
  * @author billy1380
@@ -58,31 +63,53 @@ public class EditResourcePage extends Page
 			.create(EditResourcePageUiBinder.class);
 
 	interface EditResourcePageUiBinder
-			extends UiBinder<Widget, EditResourcePage> {}
+			extends UiBinder<Widget, EditResourcePage> {
+	}
 
-	@UiField Element elHeading;
-	@UiField FormPanel frmDetails;
-	@UiField HTMLPanel pnlResource;
-	@UiField HTMLPanel pnlResourcePreview;
+	@UiField
+	Element elHeading;
+	@UiField
+	FormPanel frmDetails;
+	@UiField
+	HTMLPanel pnlResource;
+	@UiField
+	HTMLPanel pnlResourcePreview;
 	// for now this is not drag and drop
-	@UiField(provided = true) SingleUploader uplDragAndDrop = new SingleUploader(
-			FileInputType.BROWSER_INPUT);
-	@UiField HTMLPanel pnlName;
-	@UiField TextBox txtName;
-	@UiField HTMLPanel pnlNameNote;
-	@UiField HTMLPanel pnlData;
-	@UiField TextBox txtData;
-	@UiField HTMLPanel pnlDescription;
-	@UiField TextArea txtDescription;
-	@UiField HTMLPanel pnlDescriptionNote;
-	@UiField HTMLPanel pnlType;
-	@UiField TextBox txtType;
-	@UiField HTMLPanel pnlTypeNote;
-	@UiField HTMLPanel pnlProperties;
-	@UiField TextArea txtProperties;
-	@UiField HTMLPanel pnlPropertiesNote;
+	@UiField
+	FileUpload uplDragAndDrop;
+	@UiField
+	Label lblDropZone;
+	@UiField
+	HTMLPanel pnlName;
+	@UiField
+	TextBox txtName;
+	@UiField
+	HTMLPanel pnlNameNote;
+	@UiField
+	HTMLPanel pnlData;
+	@UiField
+	TextBox txtData;
+	@UiField
+	HTMLPanel pnlDescription;
+	@UiField
+	TextArea txtDescription;
+	@UiField
+	HTMLPanel pnlDescriptionNote;
+	@UiField
+	HTMLPanel pnlType;
+	@UiField
+	TextBox txtType;
+	@UiField
+	HTMLPanel pnlTypeNote;
+	@UiField
+	HTMLPanel pnlProperties;
+	@UiField
+	TextArea txtProperties;
+	@UiField
+	HTMLPanel pnlPropertiesNote;
 
-	@UiField Button btnUpdate;
+	@UiField
+	Button btnUpdate;
 
 	private Resource resource;
 	private String actionText;
@@ -90,7 +117,7 @@ public class EditResourcePage extends Page
 	private static final String UPDATE_ACTION_TEXT = "Update";
 	private static final String ADD_ACTION_TEXT = "Add";
 
-	public EditResourcePage () {
+	public EditResourcePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		UiHelper.addPlaceholder(txtName, "Name");
@@ -99,85 +126,140 @@ public class EditResourcePage extends Page
 		UiHelper.addPlaceholder(txtType, "Type");
 		UiHelper.addPlaceholder(txtProperties, "Properties");
 
-		uplDragAndDrop.setAutoSubmit(true);
-		uplDragAndDrop.setAvoidRepeatFiles(true);
-		uplDragAndDrop.setValidExtensions("jpg", "jpeg", "png");
-		uplDragAndDrop.setServletPath(ApiHelper.UPLOAD_END_POINT);
+		uplDragAndDrop.getElement().setAttribute("accept",
+				"jpg,jpeg,png".replaceAll(",", ",."));
 
-		uplDragAndDrop.addOnFinishUploadHandler(
-				EditResourcePage.this::onImageUploadFinished);
-		uplDragAndDrop.setStatusWidget(new BaseUploadStatus());
+		uplDragAndDrop.addChangeHandler(e -> {
+			HTMLInputElement input = Js.cast(uplDragAndDrop.getElement());
+			upload(input.files);
+		});
+
+		elemental2.dom.Element dropZone = Js.cast(lblDropZone.getElement());
+		dropZone.addEventListener("dragover", e -> {
+			e.preventDefault();
+			e.stopPropagation();
+		});
+
+		dropZone.addEventListener("drop", e -> {
+			e.preventDefault();
+			e.stopPropagation();
+
+			elemental2.dom.DragEvent dragEvent = Js.cast(e);
+			upload(dragEvent.dataTransfer.files);
+		});
 	}
 
-	@SuppressWarnings("deprecation")
-	private void onImageUploadFinished (IUploader uploader) {
-		if (uploader.getStatus() == Status.SUCCESS) {
-			String msg = uploader.getServerMessage().getMessage();
-			if (msg != null && msg.startsWith("data:")) {
-				// NOTE: this does not happen
-				new PreloadedImage(msg,
-						EditResourcePage.this::onImagePreloaderFinished);
-			} else {
-				Resource resource = new Resource();
+	private void upload(elemental2.dom.FileList files) {
+		if (files.length > 0) {
+			RequestBuilder b = new RequestBuilder(RequestBuilder.GET,
+					ApiHelper.UPLOAD_END_POINT);
+			try {
+				b.sendRequest(null, new RequestCallback() {
 
-				if (uploader.getServerInfo().ctype.startsWith("image")) {
-					resource.type = ResourceTypeType.ResourceTypeTypeGoogleCloudServiceImage;
-				}
+					@Override
+					public void onResponseReceived(Request request,
+							Response response) {
+						if (200 == response.getStatusCode()) {
+							String url = response.getText();
 
-				for (String name : uploader.getServerMessage()
-						.getUploadedFileNames()) {
-					resource.name = name;
-					break;
-				}
+							FormData formData = new FormData();
+							formData.append("image", files.item(0));
 
-				resource.id = Long.valueOf(uploader.getServerInfo().message);
-				resource.description = "New uploaded file " + resource.name;
-				resource.properties = "{\"contentType\":"
-						+ uploader.getServerInfo().ctype + "}";
+							XMLHttpRequest xhr = new XMLHttpRequest();
+							xhr.open("POST", url);
+							xhr.onload = v -> {
+								if (xhr.status == 200) {
+									String json = xhr.responseText;
+									if (json != null && !json.isEmpty()) {
+										try {
+											com.google.gwt.json.client.JSONArray array = com.google.gwt.json.client.JSONParser
+													.parseStrict(json).isArray();
 
-				resource.data = "gs://" + uploader.getServerInfo().key;
+											if (array != null && array.size() > 0) {
+												com.google.gwt.json.client.JSONObject jsonResource = array.get(0)
+														.isObject();
 
-				if (EditResourcePage.this.resource == null) {
-					EditResourcePage.this.resource = resource;
-				} else {
-					// find out if the page status is new then delete the preciously uploaded resource
-				}
+												if (jsonResource.containsKey("id")) {
+													resource = new Resource();
+													resource.id = (long) jsonResource.get("id").isNumber()
+															.doubleValue();
+													if (jsonResource.containsKey("name")) {
+														resource.name = jsonResource.get("name").isString()
+																.stringValue();
+													}
+													if (jsonResource.containsKey("data")) {
+														resource.data = jsonResource.get("data").isString()
+																.stringValue();
+													}
+													if (jsonResource.containsKey("description")) {
+														resource.description = jsonResource.get("description")
+																.isString().stringValue();
+													}
 
-				uploader.getStatusWidget().setVisible(false);
+													if (resource != null) {
+														onImageUploadFinished(resource);
+													}
+												}
+											}
 
-				show(EditResourcePage.this.resource = resource);
-
-				if (resource.type == ResourceTypeType.ResourceTypeTypeGoogleCloudServiceImage) {
-					for (String url : uploader.getServerMessage()
-							.getUploadedFileUrls()) {
-						new PreloadedImage(url.replace(ApiHelper.BASE_URL, ""),
-								EditResourcePage.this::onImagePreloaderFinished);
-						break;
+										} catch (Exception e1) {
+											GWT.log("Error parsing upload response", e1);
+										}
+									}
+								}
+								// cleanup
+								// input.value = "";
+							};
+							xhr.send(formData);
+						}
 					}
-				}
+
+					@Override
+					public void onError(Request request,
+							Throwable exception) {
+					}
+				});
+			} catch (RequestException e1) {
+			}
+		}
+	}
+
+	private void onImageUploadFinished(Resource uploadedResource) {
+		if (uploadedResource != null) {
+			if (EditResourcePage.this.resource == null) {
+				EditResourcePage.this.resource = uploadedResource;
+			} else {
+				// find out if the page status is new then delete the preciously uploaded
+				// resource
 			}
 
-			actionText = UPDATE_ACTION_TEXT;
-			elHeading.setInnerText(getHeadingText());
-		} else {
-			// Failed :(
+			show(EditResourcePage.this.resource = uploadedResource);
+
+			if (uploadedResource.type == ResourceTypeType.ResourceTypeTypeGoogleCloudServiceImage) {
+				String url = uploadedResource.data.replace(ApiHelper.BASE_URL, "");
+				onImagePreloaderFinished(url);
+			}
 		}
+
+		actionText = UPDATE_ACTION_TEXT;
+		elHeading.setInnerText(getHeadingText());
 
 		ready();
 	}
 
-	public void onImagePreloaderFinished (PreloadedImage image) {
+	public void onImagePreloaderFinished(String url) {
+		Image image = new Image(url);
 		image.addStyleName("img-rounded");
 		image.addStyleName("img-responsive");
 		image.addStyleName("center-block");
 		pnlResourcePreview.add(image);
 	}
 
-	private void show (Resource resource) {
+	private void show(Resource resource) {
 		show(resource, false);
 	}
 
-	private void show (Resource resource, boolean withImage) {
+	private void show(Resource resource, boolean withImage) {
 		if (resource != null) {
 			txtName.setValue(resource.name);
 			txtData.setValue(resource.data);
@@ -198,11 +280,13 @@ public class EditResourcePage extends Page
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
+	 * @see com.willshex.blogwt.client.page.Page#onAttach()
+	 */
 	@Override
-	protected void onAttach () {
+	protected void onAttach() {
 		super.onAttach();
 
 		register(DefaultEventBus.get().addHandlerToSource(
@@ -232,7 +316,7 @@ public class EditResourcePage extends Page
 	}
 
 	@Override
-	protected void reset () {
+	protected void reset() {
 		frmDetails.reset();
 
 		actionText = UPDATE_ACTION_TEXT;
@@ -245,7 +329,7 @@ public class EditResourcePage extends Page
 	}
 
 	@UiHandler("btnUpdate")
-	void onUpdateClicked (ClickEvent ce) {
+	void onUpdateClicked(ClickEvent ce) {
 		if (isValid()) {
 			loading();
 
@@ -258,12 +342,12 @@ public class EditResourcePage extends Page
 		}
 	}
 
-	private boolean isValid () {
+	private boolean isValid() {
 		// do client validation
 		return true;
 	}
 
-	private void ready () {
+	private void ready() {
 		btnUpdate.getElement()
 				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
 						.nextButton(actionText));
@@ -273,11 +357,11 @@ public class EditResourcePage extends Page
 		txtName.setFocus(true);
 	}
 
-	private void showErrors () {
+	private void showErrors() {
 
 	}
 
-	private void loading () {
+	private void loading() {
 		btnUpdate.getElement()
 				.setInnerSafeHtml(WizardDialog.WizardDialogTemplates.INSTANCE
 						.loadingButton(getLoadingText(),
@@ -289,43 +373,45 @@ public class EditResourcePage extends Page
 		pnlNameNote.setVisible(false);
 	}
 
-	private String getLoadingText () {
+	private String getLoadingText() {
 		String loadingText = null;
 		switch (actionText) {
-		case UPDATE_ACTION_TEXT:
-			loadingText = "Updating... ";
-			break;
-		case ADD_ACTION_TEXT:
-			loadingText = "Adding... ";
-			break;
+			case UPDATE_ACTION_TEXT:
+				loadingText = "Updating... ";
+				break;
+			case ADD_ACTION_TEXT:
+				loadingText = "Adding... ";
+				break;
 		}
 
 		return loadingText;
 	}
 
-	private String getHeadingText () {
+	private String getHeadingText() {
 		String headingText = null;
 		switch (actionText) {
-		case UPDATE_ACTION_TEXT:
-			headingText = "Edit Resource";
-			break;
-		case ADD_ACTION_TEXT:
-			headingText = "Add Resource";
-			break;
+			case UPDATE_ACTION_TEXT:
+				headingText = "Edit Resource";
+				break;
+			case ADD_ACTION_TEXT:
+				headingText = "Add Resource";
+				break;
 		}
 
 		return headingText;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.shared.api.blog.call.event.UpdateResourceEventHandler
 	 * #updateResourceSuccess(com.willshex.blogwt.shared.api.blog.call.
 	 * UpdateResourceRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.UpdateResourceResponse) */
+	 * com.willshex.blogwt.shared.api.blog.call.UpdateResourceResponse)
+	 */
 	@Override
-	public void updateResourceSuccess (UpdateResourceRequest input,
+	public void updateResourceSuccess(UpdateResourceRequest input,
 			UpdateResourceResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			show(EditResourcePage.this.resource = output.resource, false);
@@ -334,28 +420,32 @@ public class EditResourcePage extends Page
 		ready();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.shared.api.blog.call.event.UpdateResourceEventHandler
 	 * #updateResourceFailure(com.willshex.blogwt.shared.api.blog.call.
-	 * UpdateResourceRequest, java.lang.Throwable) */
+	 * UpdateResourceRequest, java.lang.Throwable)
+	 */
 	@Override
-	public void updateResourceFailure (UpdateResourceRequest input,
+	public void updateResourceFailure(UpdateResourceRequest input,
 			Throwable caught) {
 		GWT.log("updateResourceFailure", caught);
 		ready();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.shared.api.blog.call.event.GetResourceEventHandler
 	 * #getResourceSuccess
 	 * (com.willshex.blogwt.shared.api.blog.call.GetResourceRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.GetResourceResponse) */
+	 * com.willshex.blogwt.shared.api.blog.call.GetResourceResponse)
+	 */
 	@Override
-	public void getResourceSuccess (GetResourceRequest input,
+	public void getResourceSuccess(GetResourceRequest input,
 			GetResourceResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			show(EditResourcePage.this.resource = output.resource, true);
@@ -364,15 +454,17 @@ public class EditResourcePage extends Page
 		ready();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.shared.api.blog.call.event.GetResourceEventHandler
 	 * #getResourceFailure
 	 * (com.willshex.blogwt.shared.api.blog.call.GetResourceRequest,
-	 * java.lang.Throwable) */
+	 * java.lang.Throwable)
+	 */
 	@Override
-	public void getResourceFailure (GetResourceRequest input,
+	public void getResourceFailure(GetResourceRequest input,
 			Throwable caught) {
 		GWT.log("getResourceFailure", caught);
 		ready();

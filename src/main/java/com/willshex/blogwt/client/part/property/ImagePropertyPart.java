@@ -14,27 +14,31 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.helper.ApiHelper;
 import com.willshex.blogwt.client.helper.UiHelper;
 import com.willshex.blogwt.shared.api.datatype.Resource;
-import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
 
-import gwtupload.client.BaseUploadStatus;
-import gwtupload.client.IUploadStatus.Status;
-import gwtupload.client.IUploader;
-import gwtupload.client.IUploader.OnFinishUploaderHandler;
-import gwtupload.client.PreloadedImage;
-import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
-import gwtupload.client.SingleUploader;
+import elemental2.dom.File;
+import elemental2.dom.FormData;
+import elemental2.dom.HTMLInputElement;
+import elemental2.dom.XMLHttpRequest;
+import jsinterop.base.Js;
 
 /**
  * @author billy1380
@@ -46,83 +50,131 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 			.create(ImagePropertyPartUiBinder.class);
 
 	interface ImagePropertyPartUiBinder
-			extends UiBinder<Widget, ImagePropertyPart> {}
+			extends UiBinder<Widget, ImagePropertyPart> {
+	}
 
-	@UiField Element elDescription;
-	@UiField Element elName;
-	@UiField TextBox txtValue;
-	@UiField SingleUploader uplDragAndDrop;
-	@UiField HTMLPanel pnlValueNote;
-	@UiField HTMLPanel pnlImagePreviews;
-	@UiField Button btnClear;
+	@UiField
+	Element elDescription;
+	@UiField
+	Element elName;
+	@UiField
+	TextBox txtValue;
+	@UiField
+	FileUpload uplDragAndDrop;
+	@UiField
+	HTMLPanel pnlValueNote;
+	@UiField
+	HTMLPanel pnlImagePreviews;
+	@UiField
+	Button btnClear;
 
 	private Map<String, Resource> resources;
 	private HTMLPanel currentResourceRow;
 
 	private static final int IMAGES_PER_ROW = 6;
-	private final OnLoadPreloadedImageHandler PRELOAD_HANDLER = new OnLoadPreloadedImageHandler() {
 
-		@Override
-		public void onLoad (PreloadedImage image) {
-			image.addStyleName("img-rounded");
-			image.addStyleName("col-xs-" + (int) (12 / IMAGES_PER_ROW));
-
-			if ((resources.size() - 1) % IMAGES_PER_ROW == 0) {
-				currentResourceRow = new HTMLPanel(
-						SafeHtmlUtils.EMPTY_SAFE_HTML);
-				currentResourceRow.addStyleName("row");
-				pnlImagePreviews.add(currentResourceRow);
-			}
-
-			currentResourceRow.add(image);
-		}
-	};
-
-	public ImagePropertyPart () {
+	public ImagePropertyPart() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		uplDragAndDrop.addOnFinishUploadHandler(new OnFinishUploaderHandler() {
+		uplDragAndDrop.addChangeHandler(e -> {
+			HTMLInputElement input = Js.cast(uplDragAndDrop.getElement());
 
-			@Override
-			public void onFinish (IUploader uploader) {
-				if (uploader.getStatus() == Status.SUCCESS) {
-					String msg = uploader.getServerMessage().getMessage();
-					if (msg != null && msg.startsWith("data:")) {
-						// NOTE: this does not happen
-						new PreloadedImage(msg, PRELOAD_HANDLER);
-					} else {
-						Resource resource = new Resource();
-						resource.type = ResourceTypeType.ResourceTypeTypeBlobStoreImage;
+			if (input.files.length > 0) {
+				File file = input.files.item(0);
 
-						for (String url : uploader.getServerMessage()
-								.getUploadedFileUrls()) {
-							resource.data = url.replace(ApiHelper.BASE_URL, "");
-							break;
+				RequestBuilder b = new RequestBuilder(RequestBuilder.GET,
+						ApiHelper.UPLOAD_END_POINT);
+				try {
+					b.sendRequest(null, new RequestCallback() {
+
+						@Override
+						public void onResponseReceived(Request request,
+								Response response) {
+							if (200 == response.getStatusCode()) {
+								String url = response.getText();
+
+								FormData formData = new FormData();
+								formData.append("image", file);
+
+								XMLHttpRequest xhr = new XMLHttpRequest();
+								xhr.open("POST", url);
+								xhr.onload = v -> {
+									if (xhr.status == 200) {
+										String json = xhr.responseText;
+										if (json != null && !json.isEmpty()) {
+											try {
+												com.google.gwt.json.client.JSONArray array = com.google.gwt.json.client.JSONParser
+														.parseStrict(json).isArray();
+
+												if (array != null && array.size() > 0) {
+													for (int i = 0; i < array.size(); i++) {
+														com.google.gwt.json.client.JSONObject jsonResource = array
+																.get(i).isObject();
+														if (jsonResource.containsKey("id")) {
+															Resource resource = new Resource();
+															resource.id = (long) jsonResource.get("id").isNumber()
+																	.doubleValue();
+
+															if (jsonResource.containsKey("name")) {
+																resource.name = jsonResource.get("name").isString()
+																		.stringValue();
+															}
+
+															if (jsonResource.containsKey("data")) {
+																resource.data = jsonResource.get("data").isString()
+																		.stringValue();
+															}
+
+															if (resource != null) {
+																ensureResources().put(resource.name, resource);
+																addImage(resource);
+																setValue(resource.data, true);
+															}
+														}
+													}
+												}
+
+											} catch (Exception e1) {
+												GWT.log("Error parsing upload response", e1);
+											}
+										}
+									}
+									// cleanup
+									input.value = "";
+								};
+								xhr.send(formData);
+							}
 						}
 
-						for (String name : uploader.getServerMessage()
-								.getUploadedFileNames()) {
-							resource.name = name;
-							break;
+						@Override
+						public void onError(Request request,
+								Throwable exception) {
 						}
-
-						ensureResources().put(resource.name, resource);
-						uploader.getStatusWidget().setVisible(false);
-						new PreloadedImage(resource.data, PRELOAD_HANDLER);
-						setValue(resource.data, true);
-					}
-				} else {
-					// Failed :(
+					});
+				} catch (RequestException e1) {
 				}
 			}
 		});
-		uplDragAndDrop.setStatusWidget(new BaseUploadStatus());
 
 		btnClear.getElement().setInnerHTML(
 				"<span class=\"glyphicon glyphicon-remove\"></span>");
 	}
 
-	private Map<String, Resource> ensureResources () {
+	private void addImage(Resource resource) {
+		Image image = new Image(resource.data);
+		image.addStyleName("img-rounded");
+		image.addStyleName("col-xs-" + (int) (12 / IMAGES_PER_ROW));
+
+		if ((resources.size() - 1) % IMAGES_PER_ROW == 0) {
+			currentResourceRow = new HTMLPanel(SafeHtmlUtils.EMPTY_SAFE_HTML);
+			currentResourceRow.addStyleName("row");
+			pnlImagePreviews.add(currentResourceRow);
+		}
+
+		currentResourceRow.add(image);
+	}
+
+	private Map<String, Resource> ensureResources() {
 		return resources == null ? resources = new HashMap<String, Resource>()
 				: resources;
 	}
@@ -130,33 +182,35 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 	/**
 	 * @param description
 	 */
-	public void setDescription (String description) {
+	public void setDescription(String description) {
 		elDescription.setInnerText(description);
 		UiHelper.addPlaceholder(txtValue, description);
 	}
 
 	/**
 	 */
-	public void setAutofocus () {
+	public void setAutofocus() {
 		UiHelper.autoFocus(txtValue);
 	}
 
 	@UiHandler("txtValue")
-	void onTextValueChanged (ValueChangeEvent<String> vce) {
+	void onTextValueChanged(ValueChangeEvent<String> vce) {
 		setValue(vce.getValue(), true);
 	}
 
 	@UiHandler("btnClear")
-	void onBtnClear (ClickEvent ce) {
+	void onBtnClear(ClickEvent ce) {
 		setValue(PropertyHelper.NONE_VALUE, true);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object,
-	 * boolean) */
+	 * boolean)
+	 */
 	@Override
-	public void setValue (String value, boolean fireEvents) {
+	public void setValue(String value, boolean fireEvents) {
 		if (value == null) {
 			value = "";
 		}
@@ -166,29 +220,36 @@ public class ImagePropertyPart extends AbstractPropertyPart {
 		txtValue.setValue(value);
 		this.value = value;
 
-		if (value.equals(oldValue)) { return; }
+		if (value.equals(oldValue)) {
+			return;
+		}
 		if (fireEvents) {
 			ValueChangeEvent.fire(this, value);
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.google.gwt.user.client.ui.HasName#getName() */
+	 * @see com.google.gwt.user.client.ui.HasName#getName()
+	 */
 	@Override
-	public String getName () {
+	public String getName() {
 		return elName.getInnerText();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.google.gwt.user.client.ui.HasName#setName(java.lang.String) */
+	 * @see com.google.gwt.user.client.ui.HasName#setName(java.lang.String)
+	 */
 	@Override
-	public void setName (String name) {
+	public void setName(String name) {
 		elName.setInnerText(name);
 	}
 
-	public void setValidExtensions (String extensions) {
-		uplDragAndDrop.setValidExtensions(extensions);
+	public void setValidExtensions(String extensions) {
+		uplDragAndDrop.getElement().setAttribute("accept",
+				extensions.replaceAll(",", ",."));
 	}
 }

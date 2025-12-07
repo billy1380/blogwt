@@ -6,7 +6,7 @@
 	<groupId>com.willshex</groupId>
 	<artifactId>blogwt</artifactId>
 	<packaging>war</packaging>
-	<version>0v4</version>
+	<version>${blogwt.version}</version>
 	<name>Blogwt</name>
 	<description>Blog application built with GWT on top of AppEngine</description>
 
@@ -22,11 +22,15 @@
 
 	<properties>
 		<!-- GWT -->
-		<gwt.version>2.8.2</gwt.version>
+		<gwt.version>2.12.2</gwt.version>
+		<gwt.plugin.version>2.10.0</gwt.plugin.version>
 		<gwt.style>OBF</gwt.style>
 
 		<!-- App Engine -->
 		<appengine.version>1.9.53</appengine.version>
+
+		<!-- Blogwt -->
+		<blogwt.version>0v5</blogwt.version>
 
 		<!-- Maven -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -187,7 +191,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
-				<version>${gwt.version}</version>
+				<version>${gwt.plugin.version}</version>
 				<configuration>
 					<strict>true</strict>
 
@@ -240,7 +244,7 @@
 						<jvmFlag>-Xmx3G</jvmFlag>
 					</jvmFlags>
 					<projectId>blogwtproject</projectId>
-					<version>0v4</version>
+					<version>${blogwt.version}</version>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -281,13 +285,13 @@
 
 		<!-- GWT -->
 		<dependency>
-			<groupId>com.google.gwt</groupId>
+			<groupId>org.gwtproject</groupId>
 			<artifactId>gwt-codeserver</artifactId>
 			<version>${gwt.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.gwt</groupId>
+			<groupId>org.gwtproject</groupId>
 			<artifactId>gwt-user</artifactId>
 			<version>${gwt.version}</version>
 		</dependency>
@@ -303,12 +307,24 @@
 			<groupId>org.commonjava.googlecode.markdown4j</groupId>
 			<artifactId>markdown4j-gwt</artifactId>
 			<version>1.1-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.gwt</groupId>
+					<artifactId>gwt-user</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>org.commonjava.googlecode.emoji</groupId>
 			<artifactId>emoji-gwt</artifactId>
 			<version>1.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.gwt</groupId>
+					<artifactId>gwt-user</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- Google App Engine -->
@@ -341,6 +357,12 @@
 		<!-- Other Dependencies -->
 
 		<dependency>
+			<groupId>com.google.appengine.tools</groupId>
+			<artifactId>appengine-gcs-client</artifactId>
+			<version>0.8</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.2.4</version>
@@ -363,11 +385,7 @@
 			<version>1.2.1</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.googlecode.gwtupload</groupId>
-			<artifactId>gwtupload-gae</artifactId>
-			<version>1.0.4-SNAPSHOT</version>
-		</dependency>
+
 
 		<dependency>
 			<groupId>com.rometools</groupId>
@@ -389,6 +407,12 @@
 			<groupId>com.willshex</groupId>
 			<artifactId>willshex-gson-web-service</artifactId>
 			<version>1.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.gwt</groupId>
+					<artifactId>gwt-user</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.willshex</groupId>

@@ -32,9 +32,7 @@
 				<g:Button ui:field="btnClear" styleName="btn btn-default" />
 			</span>
 		</div>
-		<gu:SingleUploader ui:field="uplDragAndDrop" autoSubmit="true"
-			avoidRepeatFiles="true" validExtensions="jpg,jpeg,png" servletPath="{UPLOAD_END_POINT}"
-			type="DROPZONE" />
+		<g:FileUpload ui:field="uplDragAndDrop" name="image" />
 		<g:HTMLPanel styleName="control-label small" ui:field="pnlValueNote"
 			visible="false" />
 		<g:HTMLPanel ui:field="pnlImagePreviews" />

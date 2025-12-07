@@ -5,6 +5,20 @@
 	.space {
 		margin-bottom: 10px;
 	}
+	
+	.drop-zone {
+		color: #ccc;
+		border-style: dashed;
+		border-color: #ccc;
+		line-height: 120px;
+		text-align: center;
+		height: 120px;
+		border-width: 2px;
+		display: block;
+		vertical-align: middle;
+		border-radius: 6px;
+		margin-bottom: 10px;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="container">
 		<div class="row">
@@ -17,7 +31,8 @@
 					<g:HTMLPanel ui:field="pnlResource" styleName="form-group">
 						<label>Resource</label>
 						<g:HTMLPanel ui:field="pnlResourcePreview" styleName="{style.space}" />
-						<gu:SingleUploader ui:field="uplDragAndDrop" />
+						<g:Label ui:field="lblDropZone" styleName="{style.drop-zone}">Drag and drop files here</g:Label>
+						<g:FileUpload ui:field="uplDragAndDrop" name="image" />
 					</g:HTMLPanel>
 
 					<g:HTMLPanel ui:field="pnlName" styleName="form-group">

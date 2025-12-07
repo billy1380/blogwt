@@ -20,6 +20,11 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -29,9 +34,12 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SubmitButton;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -68,7 +76,6 @@ import com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse;
 import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.Resource;
-import com.willshex.blogwt.shared.api.datatype.ResourceTypeType;
 import com.willshex.blogwt.shared.api.datatype.Tag;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.DateTimeHelper;
@@ -78,13 +85,10 @@ import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.gson.web.service.shared.StatusType;
 
-import gwtupload.client.BaseUploadStatus;
-import gwtupload.client.IFileInput.FileInputType;
-import gwtupload.client.IUploadStatus.Status;
-import gwtupload.client.IUploader;
-import gwtupload.client.MultiUploader;
-import gwtupload.client.PreloadedImage;
-import gwtupload.client.PreloadedImage.OnLoadPreloadedImageHandler;
+import elemental2.dom.FormData;
+import elemental2.dom.HTMLInputElement;
+import elemental2.dom.XMLHttpRequest;
+import jsinterop.base.Js;
 
 /**
  * @author William Shakour (billy1380)
@@ -96,17 +100,19 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	private static EditPostPageUiBinder uiBinder = GWT
 			.create(EditPostPageUiBinder.class);
 
-	interface EditPostPageUiBinder extends UiBinder<Widget, EditPostPage> {}
+	interface EditPostPageUiBinder extends UiBinder<Widget, EditPostPage> {
+	}
 
-	//	interface Style extends CssResource {
-	//		@ClassName("drop-zone")
-	//		String dropZone ();
-	//	}
+	// interface Style extends CssResource {
+	// @ClassName("drop-zone")
+	// String dropZone ();
+	// }
 
 	private static final int IMAGES_PER_ROW = 4;
 	private static final String CARET_BEFORE = " \\_\\:\\_this\\_is\\_the\\_tracking\\_cursor\\_\\:\\_ ";
 	private static final String CARET_AFTER = "_:_this_is_the_tracking_cursor_:_";
-	// private static final String CARET = " <span class=\"glyphicon glyphicon-pencil\"></span> ";
+	// private static final String CARET = " <span class=\"glyphicon
+	// glyphicon-pencil\"></span> ";
 	private static final String CARET_FINALLY = "<span class=\""
 			+ Resources.RES.styles().blink()
 			+ "\"><strong> &#9724; </strong></span>";
@@ -115,43 +121,69 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 
 	private Post post;
 
-	@UiField HTMLPanel pnlTitle;
-	@UiField TextBox txtTitle;
-	@UiField HTMLPanel pnlTitleNote;
-	@UiField HTMLPanel pnlSummary;
-	@UiField TextArea txtSummary;
-	@UiField HTMLPanel pnlContent;
-	@UiField TextArea txtContent;
-	@UiField HTMLPanel pnlTags;
-	@UiField TextBox txtTags;
-	@UiField HTMLPanel pnlTagsNote;
-	@UiField CheckBox cbxDirectOnly;
-	@UiField HTMLPanel pnlComments;
-	@UiField CheckBox cbxComments;
-	@UiField CheckBox cbxPublish;
-	@UiField SubmitButton btnSave;
-	@UiField SubmitButton btnSaveAndShow;
-	@UiField Element elHeading;
-	@UiField HTMLPanel pnlPreview;
-	@UiField LoadingPanel pnlLoading;
-	@UiField FormPanel frmEdit;
-	//	@UiField(provided = true) Label lblDropZone = new Label(
-	//			"Drag and Drop files here.");
-	//	@UiField(provided = true) Button btnUploadImage = new Button(
-	//			"Upload files...");
-	@UiField(provided = true) MultiUploader uplDragAndDrop = new MultiUploader(
-			FileInputType.BROWSER_INPUT
-	//			.with(btnUploadImage).withZone(lblDropZone)
-	);
-	@UiField HTMLPanel pnlImagePreviews;
-	@UiField MarkdownToolbar tbrSummary;
-	@UiField MarkdownToolbar tbrContent;
-	//	@UiField Style style;
+	@UiField
+	HTMLPanel pnlTitle;
+	@UiField
+	TextBox txtTitle;
+	@UiField
+	HTMLPanel pnlTitleNote;
+	@UiField
+	HTMLPanel pnlSummary;
+	@UiField
+	TextArea txtSummary;
+	@UiField
+	HTMLPanel pnlContent;
+	@UiField
+	TextArea txtContent;
+	@UiField
+	HTMLPanel pnlTags;
+	@UiField
+	TextBox txtTags;
+	@UiField
+	HTMLPanel pnlTagsNote;
+	@UiField
+	CheckBox cbxDirectOnly;
+	@UiField
+	HTMLPanel pnlComments;
+	@UiField
+	CheckBox cbxComments;
+	@UiField
+	CheckBox cbxPublish;
+	@UiField
+	SubmitButton btnSave;
+	@UiField
+	SubmitButton btnSaveAndShow;
+	@UiField
+	Element elHeading;
+	@UiField
+	HTMLPanel pnlPreview;
+	@UiField
+	LoadingPanel pnlLoading;
+	@UiField
+	FormPanel frmEdit;
+	// @UiField(provided = true) Label lblDropZone = new Label(
+	// "Drag and Drop files here.");
+	// @UiField(provided = true) Button btnUploadImage = new Button(
+	// "Upload files...");
+	@UiField
+	Label lblDropZone;
+	@UiField
+	FileUpload uplDragAndDrop;
+	@UiField
+	HTMLPanel pnlImagePreviews;
+	@UiField
+	MarkdownToolbar tbrSummary;
+	@UiField
+	MarkdownToolbar tbrContent;
+	// @UiField Style style;
 
-	@UiField ToggleButton btnLiveUpdate;
-	@UiField Button btnRefresh;
+	@UiField
+	ToggleButton btnLiveUpdate;
+	@UiField
+	Button btnRefresh;
 
-	@UiField(provided = true) CellList<Tag> clTags = new CellList<Tag>(
+	@UiField(provided = true)
+	CellList<Tag> clTags = new CellList<Tag>(
 			new TagCell(true, false), InlineBootstrapGwtCellList.INSTANCE);
 
 	private ListDataProvider<Tag> tagList = new ListDataProvider<Tag>();
@@ -162,34 +194,16 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	private boolean stop;
 	private boolean saveAndShow = false;
 
-	private final OnLoadPreloadedImageHandler PRELOAD_HANDLER = new OnLoadPreloadedImageHandler() {
-
-		@Override
-		public void onLoad (PreloadedImage image) {
-			image.addStyleName("img-rounded");
-			image.addStyleName("col-xs-" + (int) (12 / IMAGES_PER_ROW));
-
-			if ((resources.size() - 1) % IMAGES_PER_ROW == 0) {
-				currentResourceRow = new HTMLPanel(
-						SafeHtmlUtils.EMPTY_SAFE_HTML);
-				currentResourceRow.addStyleName("row");
-				pnlImagePreviews.add(currentResourceRow);
-			}
-
-			currentResourceRow.add(image);
-		}
-	};
-
 	private final Timer updateTimer = new Timer() {
 		@Override
-		public void run () {
+		public void run() {
 			updatePreview();
 		}
 	};
 
 	private final Timer saveTimer = new Timer() {
 		@Override
-		public void run () {
+		public void run() {
 			save(btnSave);
 		}
 
@@ -197,72 +211,156 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	private int changes;
 	private int changesAtSave;
 
-	public EditPostPage () {
+	public EditPostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-		//		lblDropZone.setStyleName(style.dropZone());
-		//		btnUploadImage.setStyleName("btn");
-		//		btnUploadImage.addStyleName("btn-default");
+		// lblDropZone.setStyleName(style.dropZone());
+		// btnUploadImage.setStyleName("btn");
+		// btnUploadImage.addStyleName("btn-default");
 		UiHelper.addPlaceholder(txtTitle, "Title");
 		UiHelper.autoFocus(txtTitle);
 		UiHelper.addPlaceholder(txtSummary, "Short Summary");
 		UiHelper.addPlaceholder(txtContent, "Article Content");
 		UiHelper.addPlaceholder(txtTags, "Comma Separated Tags");
-		uplDragAndDrop.setAutoSubmit(true);
-		uplDragAndDrop.setAvoidRepeatFiles(true);
-		uplDragAndDrop.setValidExtensions("jpg", "jpeg", "png");
-		uplDragAndDrop.setServletPath(ApiHelper.UPLOAD_END_POINT);
 
-		uplDragAndDrop.addOnFinishUploadHandler(
-				EditPostPage.this::finishedImageUpload);
-		uplDragAndDrop.setStatusWidget(new BaseUploadStatus());
+		uplDragAndDrop.getElement().setAttribute("multiple", "multiple");
+		uplDragAndDrop.getElement().setAttribute("accept",
+				"jpg,jpeg,png".replaceAll(",", ",."));
+
+		uplDragAndDrop.addChangeHandler(e -> {
+			HTMLInputElement input = Js.cast(uplDragAndDrop.getElement());
+			upload(input.files);
+		});
+
+		elemental2.dom.Element dropZone = Js.cast(lblDropZone.getElement());
+		dropZone.addEventListener("dragover", e -> {
+			e.preventDefault();
+			e.stopPropagation();
+		});
+
+		dropZone.addEventListener("drop", e -> {
+			e.preventDefault();
+			e.stopPropagation();
+
+			elemental2.dom.DragEvent dragEvent = Js.cast(e);
+			upload(dragEvent.dataTransfer.files);
+		});
 		tbrSummary.setText(txtSummary);
 		tbrContent.setText(txtContent);
 
 		tagList.addDataDisplay(clTags);
 
 		String commentsEnabled = PropertyController.get()
-				.stringProperty(PropertyHelper.POST_COMMENTS_ENABLED);
+				.stringProperty(
+						PropertyHelper.POST_COMMENTS_ENABLED);
 		pnlComments.setVisible(commentsEnabled != null
 				&& !PropertyHelper.NONE_VALUE.equals(commentsEnabled));
-
 	}
 
-	private void finishedImageUpload (IUploader uploader) {
-		if (uploader.getStatus() == Status.SUCCESS) {
-			String msg = uploader.getServerMessage().getMessage();
-			if (msg != null && msg.startsWith("data:")) {
-				// NOTE: this does not happen
-				new PreloadedImage(msg, PRELOAD_HANDLER);
-			} else {
-				Resource resource = new Resource();
-				resource.type = ResourceTypeType.ResourceTypeTypeBlobStoreImage;
+	private void upload(elemental2.dom.FileList files) {
+		if (files.length > 0) {
+			RequestBuilder b = new RequestBuilder(RequestBuilder.GET,
+					ApiHelper.UPLOAD_END_POINT);
+			try {
+				b.sendRequest(null, new RequestCallback() {
 
-				for (String url : uploader.getServerMessage()
-						.getUploadedFileUrls()) {
-					resource.data = url.replace(ApiHelper.BASE_URL, "/");
-					break;
-				}
+					@Override
+					public void onResponseReceived(Request request,
+							Response response) {
+						if (200 == response.getStatusCode()) {
+							String url = response.getText();
 
-				for (String name : uploader.getServerMessage()
-						.getUploadedFileNames()) {
-					resource.name = name;
-					break;
-				}
+							FormData formData = new FormData();
+							for (int i = 0; i < files.length; i++) {
+								formData.append("image", files.item(i));
+							}
 
-				ensureResources().put(resource.name, resource);
-				uploader.getStatusWidget().setVisible(false);
-				new PreloadedImage(resource.data, PRELOAD_HANDLER);
+							XMLHttpRequest xhr = new XMLHttpRequest();
+							xhr.open("POST", url);
+							xhr.onload = v -> {
+								if (xhr.status == 200) {
+									String json = xhr.responseText;
+									if (json != null && !json.isEmpty()) {
+										try {
+											com.google.gwt.json.client.JSONArray array = com.google.gwt.json.client.JSONParser
+													.parseStrict(json).isArray();
+
+											if (array != null && array.size() > 0) {
+												for (int i = 0; i < array.size(); i++) {
+													com.google.gwt.json.client.JSONObject jsonResource = array
+															.get(i).isObject();
+													if (jsonResource.containsKey("id")) {
+														Resource resource = new Resource();
+														resource.id = (long) jsonResource.get("id").isNumber()
+																.doubleValue();
+
+														if (jsonResource.containsKey("name")) {
+															resource.name = jsonResource.get("name").isString()
+																	.stringValue();
+														}
+
+														if (jsonResource.containsKey("data")) {
+															resource.data = jsonResource.get("data").isString()
+																	.stringValue();
+														}
+
+														if (resource != null) {
+															finishedImageUpload(resource);
+														}
+													}
+												}
+											}
+
+										} catch (Exception e1) {
+											GWT.log("Error parsing upload response", e1);
+										}
+									}
+								}
+								// cleanup
+								// input.value = "";
+							};
+							xhr.send(formData);
+						}
+					}
+
+					@Override
+					public void onError(Request request,
+							Throwable exception) {
+					}
+				});
+			} catch (RequestException e1) {
 			}
-		} else {
-			// Failed :(
 		}
 	}
 
-	/* (non-Javadoc)
+	private void finishedImageUpload(Resource resource) {
+		if (resource != null) {
+			ensureResources().put(resource.name, resource);
+			addImage(resource);
+		}
+	}
+
+	private void addImage(Resource resource) {
+		Image image = new Image(resource.data);
+		image.addStyleName("img-rounded");
+		image.addStyleName("col-xs-" + (int) (12 / IMAGES_PER_ROW));
+
+		if ((resources.size() - 1) % IMAGES_PER_ROW == 0) {
+			currentResourceRow = new HTMLPanel(
+					SafeHtmlUtils.EMPTY_SAFE_HTML);
+			currentResourceRow.addStyleName("row");
+			pnlImagePreviews.add(currentResourceRow);
+		}
+
+		currentResourceRow.add(image);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onAttach() */
+	 * @see com.willshex.blogwt.client.page.Page#onAttach()
+	 */
 	@Override
-	protected void onAttach () {
+	protected void onAttach() {
 		super.onAttach();
 
 		register(DefaultEventBus.get().addHandlerToSource(
@@ -298,18 +396,20 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		ready();
 	}
 
-	private void deferUpdate () {
+	private void deferUpdate() {
 		if (!stop) {
 			updateTimer.cancel();
 			updateTimer.schedule(1000);
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.client.page.Page#onDetach() */
+	 * @see com.willshex.blogwt.client.page.Page#onDetach()
+	 */
 	@Override
-	protected void onDetach () {
+	protected void onDetach() {
 		updateTimer.cancel();
 		saveTimer.cancel();
 
@@ -317,24 +417,24 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	}
 
 	@UiHandler({ "txtTitle", "txtSummary", "txtContent", "txtTags" })
-	void onTxtKeyUp (KeyUpEvent e) {
+	void onTxtKeyUp(KeyUpEvent e) {
 		deferUpdate();
 		changes++;
 	}
 
 	@UiHandler({ "cbxDirectOnly", "cbxComments", "cbxPublish" })
-	void onChecked (ValueChangeEvent<Boolean> vce) {
+	void onChecked(ValueChangeEvent<Boolean> vce) {
 		changes++;
 	}
 
 	@UiHandler({ "txtTitle", "txtSummary", "txtContent", "txtTags" })
-	void onClick (ClickEvent e) {
+	void onClick(ClickEvent e) {
 		deferUpdate();
 		this.current = (Focusable) e.getSource();
 	}
 
 	@UiHandler({ "btnLiveUpdate" })
-	void onLiveUpdateClicked (ClickEvent ce) {
+	void onLiveUpdateClicked(ClickEvent ce) {
 		stop = btnLiveUpdate.isDown();
 
 		btnRefresh.setVisible(stop);
@@ -347,11 +447,11 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	}
 
 	@UiHandler({ "btnRefresh" })
-	void onRefreshClicked (ClickEvent ce) {
+	void onRefreshClicked(ClickEvent ce) {
 		updatePreview();
 	}
 
-	private void updatePreview () {
+	private void updatePreview() {
 		pnlPreview.getElement().removeAllChildren();
 
 		Document d = Document.get();
@@ -412,7 +512,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	 * @param text
 	 * @return
 	 */
-	private String markup (ValueBoxBase<String> valueBox) {
+	private String markup(ValueBoxBase<String> valueBox) {
 		StringBuffer markdown = new StringBuffer(valueBox.getValue());
 		markdown.insert(valueBox.getCursorPos(), CARET_BEFORE);
 		return PostHelper.makeMarkup(markdown.toString())
@@ -421,11 +521,11 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	}
 
 	@UiHandler({ "btnSaveAndShow", "btnSave" })
-	void onBtnSubmitClicked (ClickEvent e) {
+	void onBtnSubmitClicked(ClickEvent e) {
 		save((SubmitButton) e.getSource());
 	}
 
-	private void save (SubmitButton source) {
+	private void save(SubmitButton source) {
 		if (isValid()) {
 			saveAndShow = (source == btnSaveAndShow);
 
@@ -464,7 +564,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		}
 	}
 
-	private void restoreFocus () {
+	private void restoreFocus() {
 		if (current == null) {
 			current = txtTitle;
 		}
@@ -472,7 +572,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		current.setFocus(true);
 	}
 
-	private void ready () {
+	private void ready() {
 		saveTimer.scheduleRepeating(SAVE_EVERY);
 
 		btnSaveAndShow.getElement()
@@ -494,7 +594,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		restoreFocus();
 	}
 
-	private void loading () {
+	private void loading() {
 		saveTimer.cancel();
 
 		txtTitle.setEnabled(false);
@@ -517,7 +617,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		pnlLoading.setVisible(true);
 	}
 
-	private void submitting () {
+	private void submitting() {
 		loading();
 
 		btnSaveAndShow.getElement()
@@ -526,15 +626,17 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 								Resources.RES.primaryLoader().getSafeUri()));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler
 	 * #updatePostSuccess
 	 * (com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse) */
+	 * com.willshex.blogwt.shared.api.blog.call.UpdatePostResponse)
+	 */
 	@Override
-	public void updatePostSuccess (UpdatePostRequest input,
+	public void updatePostSuccess(UpdatePostRequest input,
 			UpdatePostResponse output) {
 		if (output.status == StatusType.StatusTypeFailure) {
 			if (output.post != null) {
@@ -552,27 +654,31 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		ready();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.shared.api.blog.call.event.UpdatePostEventHandler
 	 * #updatePostFailure
 	 * (com.willshex.blogwt.shared.api.blog.call.UpdatePostRequest,
-	 * java.lang.Throwable) */
+	 * java.lang.Throwable)
+	 */
 	@Override
-	public void updatePostFailure (UpdatePostRequest input, Throwable caught) {
+	public void updatePostFailure(UpdatePostRequest input, Throwable caught) {
 		ready();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.shared.api.blog.call.event.CreatePostEventHandler
 	 * #createPostSuccess
 	 * (com.willshex.blogwt.shared.api.blog.call.CreatePostRequest,
-	 * com.willshex.blogwt.shared.api.blog.call.CreatePostResponse) */
+	 * com.willshex.blogwt.shared.api.blog.call.CreatePostResponse)
+	 */
 	@Override
-	public void createPostSuccess (CreatePostRequest input,
+	public void createPostSuccess(CreatePostRequest input,
 			CreatePostResponse output) {
 		if (output.status == StatusType.StatusTypeFailure) {
 			if (output.post != null) {
@@ -590,28 +696,30 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 		ready();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.willshex.blogwt.shared.api.blog.call.event.CreatePostEventHandler
 	 * #createPostFailure
 	 * (com.willshex.blogwt.shared.api.blog.call.CreatePostRequest,
-	 * java.lang.Throwable) */
+	 * java.lang.Throwable)
+	 */
 	@Override
-	public void createPostFailure (CreatePostRequest input, Throwable caught) {
+	public void createPostFailure(CreatePostRequest input, Throwable caught) {
 		ready();
 	}
 
-	private boolean isValid () {
+	private boolean isValid() {
 		// do client validation
 		return txtTitle.getValue().trim().length() > 0;
 	}
 
-	private void showErrors () {
+	private void showErrors() {
 
 	}
 
-	private void show (Post post) {
+	private void show(Post post) {
 		txtTitle.setText(post.title);
 
 		if (post.tags != null) {
@@ -642,7 +750,7 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	}
 
 	@Override
-	public void getPostSuccess (GetPostRequest input, GetPostResponse output) {
+	public void getPostSuccess(GetPostRequest input, GetPostResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			show(post = output.post);
 		} else {
@@ -651,20 +759,22 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 	}
 
 	@Override
-	public void getPostFailure (GetPostRequest input, Throwable caught) {
+	public void getPostFailure(GetPostRequest input, Throwable caught) {
 		ready();
 	}
 
-	private Map<String, Resource> ensureResources () {
+	private Map<String, Resource> ensureResources() {
 		return resources == null ? resources = new HashMap<String, Resource>()
 				: resources;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.willshex.blogwt.client.page.Page#reset() */
+	 * @see com.willshex.blogwt.client.page.Page#reset()
+	 */
 	@Override
-	protected void reset () {
+	protected void reset() {
 		super.reset();
 
 		frmEdit.reset();
