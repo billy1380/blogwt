@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
