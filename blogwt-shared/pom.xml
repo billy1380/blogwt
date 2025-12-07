@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.willshex</groupId>
+		<artifactId>blogwt</artifactId>
+		<version>${revision}</version>
+	</parent>
+
+	<artifactId>blogwt-shared</artifactId>
+	<packaging>jar</packaging>
+	<name>Blogwt Shared</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.willshex</groupId>
+			<artifactId>willshex-utility</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.willshex</groupId>
+			<artifactId>willshex-gson</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.willshex</groupId>
+			<artifactId>willshex-service</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.googlecode.objectify</groupId>
+			<artifactId>objectify</artifactId>
+			<version>5.1.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.willshex</groupId>
+			<artifactId>willshex-gson-web-service</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.gwt</groupId>
+					<artifactId>gwt-user</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<!-- GWT Dependencies that are source only for shared code compilation in GWT -->
+		<dependency>
+			<groupId>org.gwtproject</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>${gwt.version}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
