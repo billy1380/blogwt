@@ -27,7 +27,7 @@
 	<!-- mvn appengine:devserver_stop - stop web server -->
 
 	<properties>
-		<revision>0v8</revision>
+		<revision>0v10</revision>
 		
 		<!-- GWT -->
 		<gwt.version>2.12.2</gwt.version>

@@ -15,32 +15,54 @@ I will put a road map shortly on the wiki, maybe even with a "how to".
 ## Setup
 Make sure that you have __git__ and __maven__ installed before you start.
 
-- cd to a new folder where you are happy to install the project
-- run `git clone https://github.com/billy1380/blogwt.git`
-- cd to the folder created `cd blogwt`
-- allow the install install depenencies script to run by setting the executable flag on the file `chmod +x installdeps.sh`
-- run the installation script using `./installdeps.sh`. This script assumes that the maven files are stored under `~/.m2/repository` so if this is not the case, you might want to edit the file to reflect your setup
-- build and install the package using `mvn install`
-- build the gwt part using `mvn gwt:compile`
-- run the dev server using `mvn appengine:devserver`
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/billy1380/blogwt.git
+   cd blogwt
+   ```
 
-The site should now appear under `http://localhost:8888`
+2. **Install Dependencies:**
+   This project relies on several non-Maven dependencies which need to be installed into your local Maven repository. Run the provided script:
+   ```bash
+   chmod +x installdeps.sh
+   ./installdeps.sh
+   ```
+   *Note: This script installs dependencies into `~/.m2/repository`. Edit the script if your local repository is located elsewhere.*
 
-__Note:__ To change the gwt code on the fly the code server has to be running. To start the code server run `mvn gwt:run-codeserver`.
+3. **Build and Install:**
+   Compile the project and install artifacts to your local repository:
+   ```bash
+   mvn clean install
+   ```
 
-## Demo
-I have previously had issues with discrepancies between the appengine sdk behaviour and production so to use for testing and also for demo purposes I there is a relatively up to date version of the project running __[here](http://blogwtproject.appspot.com "Blogwt demo")__ so go have a look.
+4. **Run Locally:**
+   To verify the application locally:
+   ```bash
+   mvn appengine:devserver
+   ```
+   The site should be accessible at `http://localhost:8888`.
 
-### Build
-To build the project and generate the WAR file, run:
-```bash
-mvn clean package
-```
-This will compile the Java code, compile the GWT client-side code, and package everything into a WAR file in the `target` directory.
+   *Note: To change GWT client code on the fly, you also need to run the code server: `mvn gwt:run-codeserver`.*
 
-### Deploy
-To deploy the application to Google App Engine, run:
-```bash
-mvn appengine:deploy
-```
-This command will upload the application to the App Engine project configured in `pom.xml` (or `appengine-web.xml`).
+## Deployment
+To deploy the application to Google App Engine, ensure you have built the project dependencies first.
+
+1. **Build (skipping GWT for speed):**
+   ```bash
+   mvn install -Dgwt.compiler.skip=true -DskipTests
+   ```
+   *Note: This installs the parent and shared modules to your local repository. The `-Dgwt.compiler.skip=true` flag saves time by skipping the GWT JavaScript compilation if you don't need to update the client.*
+
+2. **Deploy:**
+   ```bash
+   cd blogwt-server
+   mvn appengine:deploy
+   ```
+This command uploads the application to the App Engine project configured in `pom.xml`.
+
+## Project Structure
+The project is a multi-module Maven project:
+- **blogwt-shared**: Common code shared between client and server (DTOs, Enums, Utils).
+- **blogwt-client**: GWT client-side code (UI, Layouts, Pages).
+- **blogwt-server**: App Engine server-side code (Servlets, API Actions, Persistence, Objectify logic).
+- **deps**: Folder created by `installdeps.sh` containing cloned dependencies.
