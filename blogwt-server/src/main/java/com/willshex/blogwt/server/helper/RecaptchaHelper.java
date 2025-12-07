@@ -37,7 +37,7 @@ public class RecaptchaHelper {
 
 	public static final String VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
-	public static boolean isHuman (String input, String key) {
+	public static boolean isHuman(String input, String key) {
 		boolean isHuman = false;
 
 		try {
@@ -58,7 +58,7 @@ public class RecaptchaHelper {
 					&& (responseText = getResponseBody(response)) != null
 					&& !"".equals(responseText)
 					&& !"null".equalsIgnoreCase(responseText)) {
-				JsonElement element = (new JsonParser()).parse(responseText);
+				JsonElement element = JsonParser.parseString(responseText);
 				JsonObject jsonObject;
 				if (element.isJsonObject()) {
 					jsonObject = element.getAsJsonObject();
@@ -79,7 +79,7 @@ public class RecaptchaHelper {
 		return isHuman;
 	}
 
-	private static String getResponseBody (HTTPResponse response)
+	private static String getResponseBody(HTTPResponse response)
 			throws UnsupportedEncodingException {
 		return new String(response.getContent(), ServletHelper.UTF8);
 	}

@@ -55,7 +55,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	/**
 	 * @return
 	 */
-	public static PropertyController get () {
+	public static PropertyController get() {
 		if (one == null) {
 			one = new PropertyController();
 		}
@@ -68,7 +68,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	private Pager pager = PagerHelper.createInfinitePager();
 	private Request getPropertiesRequest;
 
-	private PropertyController () {
+	private PropertyController() {
 		String propertiesJson = Window.get().getProperties();
 
 		if (propertiesJson != null) {
@@ -92,14 +92,14 @@ public class PropertyController extends ListDataProvider<Property> {
 		}
 	}
 
-	public List<Property> blog () {
+	public List<Property> blog() {
 		return getList() == null || getList().isEmpty() ? null : getList();
 	}
 
 	/**
 	 * @return
 	 */
-	public SafeUri copyrightHolderUrl () {
+	public SafeUri copyrightHolderUrl() {
 		Property p = propertyLookup.get(PropertyHelper.COPYRIGHT_URL);
 		return UriUtils.fromSafeConstant(
 				PropertyHelper.isEmpty(p) ? "https://www.willshex.com"
@@ -109,7 +109,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	/**
 	 * @return
 	 */
-	public String copyrightHolder () {
+	public String copyrightHolder() {
 		Property p = propertyLookup.get(PropertyHelper.COPYRIGHT_HOLDER);
 		return PropertyHelper.isEmpty(p) ? "WillShex Limited" : p.value;
 	}
@@ -117,7 +117,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	/**
 	 * @return
 	 */
-	public String title () {
+	public String title() {
 		Property p = propertyLookup.get(PropertyHelper.TITLE);
 		return PropertyHelper.isEmpty(p) ? "Blogwt" : p.value;
 	}
@@ -125,7 +125,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	/**
 	 * @return
 	 */
-	public String extendedTitle () {
+	public String extendedTitle() {
 		Property p = propertyLookup.get(PropertyHelper.EXTENDED_TITLE);
 		return PropertyHelper.isEmpty(p) ? "a blog is a blog" : p.value;
 	}
@@ -133,12 +133,12 @@ public class PropertyController extends ListDataProvider<Property> {
 	/**
 	 * @return
 	 */
-	public Date started () {
+	public Date started() {
 		Property p = propertyLookup.get(PropertyHelper.TITLE);
 		return PropertyHelper.isEmpty(p) ? new Date(1199188800000L) : p.created;
 	}
 
-	public void setupBlog (List<Property> properties, List<User> users) {
+	public void setupBlog(List<Property> properties, List<User> users) {
 		final SetupBlogRequest input = ApiHelper
 				.setAccessCode(new SetupBlogRequest()).properties(properties)
 				.users(users);
@@ -147,14 +147,14 @@ public class PropertyController extends ListDataProvider<Property> {
 		blogService.setupBlog(input, new AsyncCallback<SetupBlogResponse>() {
 
 			@Override
-			public void onSuccess (SetupBlogResponse output) {
+			public void onSuccess(SetupBlogResponse output) {
 				DefaultEventBus.get().fireEventFromSource(
 						new SetupBlogSuccess(input, output),
 						PropertyController.this);
 			}
 
 			@Override
-			public void onFailure (Throwable caught) {
+			public void onFailure(Throwable caught) {
 				DefaultEventBus.get().fireEventFromSource(
 						new SetupBlogFailure(input, caught),
 						PropertyController.this);
@@ -166,12 +166,12 @@ public class PropertyController extends ListDataProvider<Property> {
 	 * @param name
 	 * @return
 	 */
-	public String stringProperty (String name) {
+	public String stringProperty(String name) {
 		return name == null ? null
 				: PropertyHelper.value(propertyLookup.get(name));
 	}
 
-	public boolean updateProperties (Collection<Property> properties) {
+	public boolean updateProperties(Collection<Property> properties) {
 		List<Property> changed = null;
 
 		String existingPropertyValue;
@@ -211,7 +211,7 @@ public class PropertyController extends ListDataProvider<Property> {
 					new AsyncCallback<UpdatePropertiesResponse>() {
 
 						@Override
-						public void onSuccess (
+						public void onSuccess(
 								UpdatePropertiesResponse output) {
 							if (output != null
 									&& output.status == StatusType.StatusTypeSuccess) {
@@ -224,7 +224,7 @@ public class PropertyController extends ListDataProvider<Property> {
 						}
 
 						@Override
-						public void onFailure (Throwable caught) {
+						public void onFailure(Throwable caught) {
 							DefaultEventBus.get().fireEventFromSource(
 									new UpdatePropertiesFailure(input, caught),
 									PropertyController.this);
@@ -235,11 +235,11 @@ public class PropertyController extends ListDataProvider<Property> {
 		return updating;
 	}
 
-	public void refreshProperties () {
+	public void refreshProperties() {
 		fetchProperties();
 	}
 
-	private void fetchProperties () {
+	private void fetchProperties() {
 		final GetPropertiesRequest input = ApiHelper
 				.setAccessCode(new GetPropertiesRequest());
 		input.pager = pager;
@@ -253,7 +253,7 @@ public class PropertyController extends ListDataProvider<Property> {
 				new AsyncCallback<GetPropertiesResponse>() {
 
 					@Override
-					public void onSuccess (GetPropertiesResponse output) {
+					public void onSuccess(GetPropertiesResponse output) {
 						getPropertiesRequest = null;
 
 						if (output.status == StatusType.StatusTypeSuccess) {
@@ -277,7 +277,7 @@ public class PropertyController extends ListDataProvider<Property> {
 					}
 
 					@Override
-					public void onFailure (Throwable caught) {
+					public void onFailure(Throwable caught) {
 						getPropertiesRequest = null;
 
 						DefaultEventBus.get().fireEventFromSource(
@@ -292,7 +292,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	 * @param defaultValue
 	 * @return
 	 */
-	public boolean booleanProperty (String name, boolean defaultValue) {
+	public boolean booleanProperty(String name, boolean defaultValue) {
 		boolean value = defaultValue;
 
 		String stringValue = stringProperty(name);
@@ -308,7 +308,7 @@ public class PropertyController extends ListDataProvider<Property> {
 	 * @param values
 	 * @return
 	 */
-	public boolean isConfigured (Collection<Property> values) {
+	public boolean isConfigured(Collection<Property> values) {
 		boolean configured = true;
 
 		if (values != null) {

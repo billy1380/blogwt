@@ -81,10 +81,12 @@ public class DevServlet extends ContextAwareServlet {
 		List<T> get(Integer start, Integer count, E sortBy,
 				SortDirectionType sortDirection);
 	}
+
 	@Override
 	protected void doPost() throws ServletException, IOException {
 		doGet();
 	}
+
 	@Override
 	protected void doGet() throws ServletException, IOException {
 		super.doGet();
@@ -199,7 +201,7 @@ public class DevServlet extends ContextAwareServlet {
 								.replace("}", "\"}");
 					}
 
-					object = new JsonParser().parse(resource.properties)
+					object = JsonParser.parseString(resource.properties)
 							.getAsJsonObject();
 				} else {
 					object = new JsonObject();

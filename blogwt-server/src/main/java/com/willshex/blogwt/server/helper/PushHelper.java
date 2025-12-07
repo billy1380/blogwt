@@ -42,7 +42,7 @@ public class PushHelper {
 
 	private static final String PUSH_ENDPOINT = "https://fcm.googleapis.com/fcm/send";
 
-	public static void push (PushToken pushToken, String subject,
+	public static void push(PushToken pushToken, String subject,
 			String content, Jsonable data) {
 		if (LOG.isLoggable(Level.FINE)) {
 			LOG.fine(
@@ -56,12 +56,12 @@ public class PushHelper {
 		if (apiKey != null) {
 			Message message = null;
 			switch (pushToken.platform) {
-			case "android":
-				message = new AndroidMessage().title(subject).body(content);
-				break;
-			case "ios":
-				message = new IosMessage().title(subject).body(content);
-				break;
+				case "android":
+					message = new AndroidMessage().title(subject).body(content);
+					break;
+				case "ios":
+					message = new IosMessage().title(subject).body(content);
+					break;
 			}
 
 			Payload payload = buildPayload(pushToken, message, data);
@@ -82,7 +82,7 @@ public class PushHelper {
 				String payloadString;
 				request.setPayload((payloadString = JsonUtils
 						.cleanJson(payload.toJson().toString()))
-								.getBytes(ServletHelper.UTF8));
+						.getBytes(ServletHelper.UTF8));
 
 				URLFetchService client = URLFetchServiceFactory
 						.getURLFetchService();
@@ -114,8 +114,8 @@ public class PushHelper {
 						}
 
 						try {
-							JsonElement el = (new JsonParser())
-									.parse(responseText);
+							JsonElement el = JsonParser
+									.parseString(responseText);
 
 							if (el.isJsonObject()) {
 								JsonObject ro = el.getAsJsonObject();
@@ -164,7 +164,7 @@ public class PushHelper {
 		}
 	}
 
-	public static Payload buildPayload (PushToken pushToken, Message message,
+	public static Payload buildPayload(PushToken pushToken, Message message,
 			Jsonable data) {
 		return new Payload().to(pushToken.value).notification(message)
 				.data(data);
