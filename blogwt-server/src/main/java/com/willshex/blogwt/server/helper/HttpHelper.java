@@ -123,16 +123,20 @@ public class HttpHelper {
 	}
 
 	public static byte[] curl (String endpoint) {
-		return curl(endpoint, null);
+		return curl(endpoint, null, null, null);
 	}
 
 	public static byte[] curl (String endpoint, Map<String, String> headers) {
-		return curl(endpoint, HTTPMethod.POST, headers);
+		return curl(endpoint, null, HTTPMethod.POST, headers);
 	}
 
 	public static byte[] curl (String endpoint, HTTPMethod method,
 			Map<String, String> headers) {
 		return curl(endpoint, null, method, headers);
+	}
+
+	public static byte[] curl (String endpoint, HTTPMethod method) {
+		return curl(endpoint, null, method, null);
 	}
 
 }

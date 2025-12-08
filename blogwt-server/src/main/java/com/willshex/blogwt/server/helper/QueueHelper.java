@@ -31,6 +31,7 @@ public class QueueHelper {
 
 	public static final int RETRY_COUNT = 3;
 
+	@FunctionalInterface
 	public static interface HasQueueAction {
 		void processAction (String action, JsonObject json) throws Exception;
 	}

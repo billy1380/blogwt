@@ -10,10 +10,13 @@ package com.willshex.blogwt.client.part;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.blogwt.client.controller.PropertyController;
@@ -31,12 +34,31 @@ public class CookieNoticePart extends RegisteringComposite {
 			.create(CookieNoticePartUiBinder.class);
 
 	interface CookieNoticePartUiBinder
-			extends UiBinder<Widget, CookieNoticePart> {}
+			extends UiBinder<Widget, CookieNoticePart> {
+	}
+
+	interface Style extends CssResource {
+		String fixed ();
+	}
 
 	private static final String EU_COOKIE_NOTICE_KEY = "eu.cookie.notice";
 
 	@UiField Element elTitle;
 	@UiField InlineHyperlink btnSeeDetails;
+
+	@UiField Style style;
+
+	private Timer toggleFix = new Timer() {
+
+		@Override
+		public void run () {
+			if (shouldFix()) {
+				CookieNoticePart.this.addStyleName(style.fixed());
+			} else {
+				CookieNoticePart.this.removeStyleName(style.fixed());
+			}
+		}
+	};
 
 	public CookieNoticePart () {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -61,8 +83,10 @@ public class CookieNoticePart extends RegisteringComposite {
 	@UiHandler("btnGotIt")
 	void btnGotItClicked (ClickEvent ce) {
 		setCookie();
-
 		setVisible(false);
+		CookieNoticePart.this.removeStyleName(style.fixed());
+
+		unregisterAll();
 	}
 
 	private boolean isCookie () {
@@ -72,6 +96,27 @@ public class CookieNoticePart extends RegisteringComposite {
 	private void setCookie () {
 		Cookies.setCookie(EU_COOKIE_NOTICE_KEY, "Got It!", DateTimeHelper
 				.millisFromNow(DateTimeHelper.MILLIS_PER_DAY * 365L * 20L));
+	}
+	@Override
+	protected void onAttach () {
+		super.onAttach();
+
+		if (isVisible()) {
+			register(Window.addWindowScrollHandler(event -> {
+				toggleFix.cancel();
+				toggleFix.schedule(150);
+			}));
+		}
+	}
+	@Override
+	protected void onDetach () {
+		super.onDetach();
+
+		toggleFix.cancel();
+	}
+
+	private boolean shouldFix () {
+		return Window.getScrollTop() > this.getOffsetHeight() / 2;
 	}
 
 }
