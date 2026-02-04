@@ -12,7 +12,7 @@ import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.helper.PagerHelper;
-import com.willshex.blogwt.server.dev.DevServlet.AllPaged;
+import com.willshex.blogwt.server.DevServlet.AllPaged;
 
 public class DeletePostsAction implements DevAction {
 
