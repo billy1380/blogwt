@@ -25,7 +25,7 @@ import javax.servlet.annotation.WebServlet;
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.server.background.resave.input.QueueForResavingAction;
 import com.willshex.blogwt.server.background.resave.input.ResaveAction;
-import com.willshex.blogwt.server.dev.DevServlet.AllPaged;
+import com.willshex.blogwt.server.DevServlet.AllPaged;
 import com.willshex.blogwt.server.helper.QueueHelper;
 import com.willshex.blogwt.server.helper.QueueHelper.HasQueueAction;
 import com.willshex.blogwt.shared.api.Pager;
