@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import java.util.logging.Logger;
+
 import org.kamranzafar.jtar.TarEntry;
 import org.kamranzafar.jtar.TarHeader;
 import org.kamranzafar.jtar.TarOutputStream;
@@ -22,8 +24,6 @@ import com.jcraft.jzlib.GZIPOutputStream;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.Comment;
 import com.willshex.blogwt.shared.api.datatype.DataType;
-import com.willshex.blogwt.shared.api.datatype.Field;
-import com.willshex.blogwt.shared.api.datatype.Form;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownload;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.datatype.Notification;
@@ -45,6 +45,8 @@ import com.willshex.blogwt.shared.api.datatype.User;
 
 public class Exporter {
 
+	private static final Logger LOG = Logger.getLogger(Exporter.class.getName());
+
 	private OutputStream outputStream;
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -57,8 +59,6 @@ public class Exporter {
 				TarOutputStream tar = new TarOutputStream(gzip)) {
 			export(ArchiveEntry.class, this::convertKeysToIdsArchiveEntry, tar);
 			export(Comment.class, this::convertKeysToIdsComments, tar);
-			export(Field.class, null, tar);
-			export(Form.class, null, tar);
 			export(GeneratedDownload.class, this::convertKeysToIdsGeneratedDownloads, tar);
 			export(MetaNotification.class, null, tar);
 			export(Notification.class, this::convertKeysToIdsNotifications, tar);
@@ -83,7 +83,15 @@ public class Exporter {
 	private <T extends DataType> void export(Class<T> type,
 			Consumer<List<T>> hydrator, TarOutputStream tar)
 			throws IOException {
+		LOG.info("Exporting " + type.getSimpleName());
 		List<T> entities = provide().load().type(type).list();
+
+		if (entities.isEmpty()) {
+			LOG.info("No " + type.getSimpleName() + " entities found. Skipping.");
+			return;
+		}
+
+		LOG.info("Found " + entities.size() + " entities");
 
 		if (hydrator != null) {
 			hydrator.accept(entities);
@@ -92,7 +100,12 @@ public class Exporter {
 		String typeName = type.getSimpleName();
 		long maxId = 0;
 		for (T entity : entities) {
-			if (entity.id != null && entity.id.longValue() > maxId) {
+			if (entity.id == null) {
+				LOG.warning("Skipping " + typeName + " with null ID");
+				continue;
+			}
+
+			if (entity.id.longValue() > maxId) {
 				maxId = entity.id.longValue();
 			}
 
@@ -323,22 +336,21 @@ public class Exporter {
 			if (reaction.parentKey != null) {
 				reaction.parent = dataTypeFromKey(reaction.parentKey);
 			}
-
 		}
-	}
-
-	private MetaNotification metaNotificationFromKey(Key<MetaNotification> key) {
-		if (key == null)
-			return null;
-		MetaNotification instance = new MetaNotification();
-		instance.id = keyToId(key);
-		return instance;
 	}
 
 	private Reaction reactionFromKey(Key<Reaction> key) {
 		if (key == null)
 			return null;
 		Reaction instance = new Reaction();
+		instance.id = keyToId(key);
+		return instance;
+	}
+
+	private MetaNotification metaNotificationFromKey(Key<MetaNotification> key) {
+		if (key == null)
+			return null;
+		MetaNotification instance = new MetaNotification();
 		instance.id = keyToId(key);
 		return instance;
 	}

@@ -175,7 +175,7 @@ final class PageService implements IPageService {
 					PostServiceProvider.provide(), page.postKeys));
 		}
 
-		// FIXME: just load in one go (batcg)
+		// FIXME: just load in one go (batch)
 		for (Post post : posts) {
 			post.content = PostServiceProvider.provide().getPostContent(post);
 		}

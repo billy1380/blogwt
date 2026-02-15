@@ -19,6 +19,7 @@ import com.willshex.blogwt.server.service.persistence.translator.PermissionTypeT
 import com.willshex.blogwt.server.service.persistence.translator.RelationshipTypeTypeTranslatorFactory;
 import com.willshex.blogwt.server.service.persistence.translator.ResourceTypeTypeTranslatorFactory;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
+import com.willshex.blogwt.shared.api.datatype.Comment;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownload;
 import com.willshex.blogwt.shared.api.datatype.MetaNotification;
 import com.willshex.blogwt.shared.api.datatype.Notification;
@@ -30,6 +31,7 @@ import com.willshex.blogwt.shared.api.datatype.PostContent;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.api.datatype.PushToken;
 import com.willshex.blogwt.shared.api.datatype.Rating;
+import com.willshex.blogwt.shared.api.datatype.Reaction;
 import com.willshex.blogwt.shared.api.datatype.Relationship;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.datatype.Role;
@@ -101,6 +103,8 @@ public class PersistenceServiceProvider {
 		registrar().register(Relationship.class);
 		registrar().register(Rating.class);
 		registrar().register(GeneratedDownload.class);
+		registrar().register(Comment.class);
+		registrar().register(Reaction.class);
 	}
 
 	private static void registerOtherClasses() {
