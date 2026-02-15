@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.googlecode.objectify.Key;
 import com.willshex.blogwt.shared.api.datatype.ArchiveEntry;
 import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownload;
@@ -101,7 +102,7 @@ public class Exporter {
 			}
 
 			if (post.authorKey != null) {
-				post.author = fromKey(post.authorKey, User.class);
+				post.author = userFromKey(post.authorKey);
 			}
 		}
 
@@ -120,16 +121,16 @@ public class Exporter {
 			if (page.postKeys != null) {
 				page.posts = new ArrayList<>();
 				for (Key<Post> key : page.postKeys) {
-					page.posts.add(fromKey(key, Post.class));
+					page.posts.add(postFromKey(key));
 				}
 			}
 
 			if (page.parentKey != null) {
-				page.parent = fromKey(page.parentKey, Page.class);
+				page.parent = pageFromKey(page.parentKey);
 			}
 
 			if (page.ownerKey != null) {
-				page.owner = fromKey(page.ownerKey, User.class);
+				page.owner = userFromKey(page.ownerKey);
 			}
 		}
 	}
@@ -139,14 +140,14 @@ public class Exporter {
 			if (user.roleKeys != null) {
 				user.roles = new ArrayList<>();
 				for (Key<Role> key : user.roleKeys) {
-					user.roles.add(fromKey(key, Role.class));
+					user.roles.add(roleFromKey(key));
 				}
 			}
 
 			if (user.permissionKeys != null) {
 				user.permissions = new ArrayList<>();
 				for (Key<Permission> key : user.permissionKeys) {
-					user.permissions.add(fromKey(key, Permission.class));
+					user.permissions.add(permissionFromKey(key));
 				}
 			}
 		}
@@ -157,7 +158,7 @@ public class Exporter {
 			if (role.permissionKeys != null) {
 				role.permissions = new ArrayList<>();
 				for (Key<Permission> key : role.permissionKeys) {
-					role.permissions.add(fromKey(key, Permission.class));
+					role.permissions.add(permissionFromKey(key));
 				}
 			}
 		}
@@ -166,7 +167,7 @@ public class Exporter {
 	private void hydrateSessions (List<Session> sessions) {
 		for (Session session : sessions) {
 			if (session.userKey != null) {
-				session.user = fromKey(session.userKey, User.class);
+				session.user = userFromKey(session.userKey);
 			}
 		}
 	}
@@ -174,45 +175,60 @@ public class Exporter {
 	private void hydrateNotifications (List<Notification> notifications) {
 		for (Notification notification : notifications) {
 			if (notification.senderKey != null) {
-				notification.sender = fromKey(notification.senderKey, User.class);
-			}
-
-			if (notification.receiverKey != null) {
-				notification.receiver = fromKey(notification.receiverKey, User.class);
+				notification.sender = userFromKey(notification.senderKey);
 			}
 
 			if (notification.targetKey != null) {
-				// Notification target is a Key<DataType> but generic, 
-				// handling might vary, but for export we might just skip or 
-				// implement generic DataType hydration if needed.
-				// For now let's skip as DataType is abstract and we only need ID usually.
-				// If strictly needed, checking Key kind might be required.
+				notification.target = userFromKey(notification.targetKey);
 			}
 		}
 	}
 
 	private void hydrateRelationships (List<Relationship> relationships) {
 		for (Relationship relationship : relationships) {
-			if (relationship.subjectKey != null) {
-				relationship.subject = fromKey(relationship.subjectKey, User.class);
+			if (relationship.oneKey != null) {
+				relationship.one = userFromKey(relationship.oneKey);
 			}
 
-			if (relationship.objectKey != null) {
-				relationship.object = fromKey(relationship.objectKey, User.class);
+			if (relationship.anotherKey != null) {
+				relationship.another = userFromKey(relationship.anotherKey);
 			}
 		}
 	}
 
-	private <T extends DataType> T fromKey (Key<T> key, Class<T> type) {
+	private Role roleFromKey (Key<Role> key) {
 		if (key == null) return null;
-		
-		try {
-			T instance = type.newInstance();
-			instance.id = keyToId(key);
-			return instance;
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
+		Role instance = new Role();
+		instance.id = keyToId(key);
+		return instance;
+	}
+
+	private Permission permissionFromKey (Key<Permission> key) {
+		if (key == null) return null;
+		Permission instance = new Permission();
+		instance.id = keyToId(key);
+		return instance;
+	}
+
+	private User userFromKey (Key<User> key) {
+		if (key == null) return null;
+		User instance = new User();
+		instance.id = keyToId(key);
+		return instance;
+	}
+
+	private Post postFromKey (Key<Post> key) {
+		if (key == null) return null;
+		Post instance = new Post();
+		instance.id = keyToId(key);
+		return instance;
+	}
+
+	private Page pageFromKey (Key<Page> key) {
+		if (key == null) return null;
+		Page instance = new Page();
+		instance.id = keyToId(key);
+		return instance;
 	}
 
 }
