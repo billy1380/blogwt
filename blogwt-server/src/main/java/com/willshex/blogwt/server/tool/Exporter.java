@@ -3,14 +3,19 @@ package com.willshex.blogwt.server.tool;
 import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 import static com.willshex.blogwt.server.service.persistence.PersistenceServiceProvider.provide;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import org.kamranzafar.jtar.TarEntry;
+import org.kamranzafar.jtar.TarHeader;
+import org.kamranzafar.jtar.TarOutputStream;
+
+import com.jcraft.jzlib.GZIPOutputStream;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.googlecode.objectify.Key;
@@ -36,62 +41,70 @@ import com.willshex.blogwt.shared.api.datatype.User;
 
 public class Exporter {
 
-	private String path;
+	private OutputStream outputStream;
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-	public Exporter (String path) {
-		this.path = path;
+	public Exporter (OutputStream outputStream) {
+		this.outputStream = outputStream;
 	}
 
 	public void exportAll () throws IOException {
-		export(User.class, this::hydrateUsers);
-		export(Session.class, this::hydrateSessions);
-		export(Post.class, this::hydratePosts);
-		export(Resource.class, null);
-		export(Permission.class, null);
-		export(Role.class, this::hydrateRoles);
-		export(Property.class, null);
-		export(PostContent.class, null);
-		export(Page.class, this::hydratePages);
-		export(Tag.class, null);
-		export(ArchiveEntry.class, null);
-		export(Notification.class, this::hydrateNotifications);
-		export(MetaNotification.class, null);
-		export(PushToken.class, null);
-		export(NotificationSetting.class, null);
-		export(Relationship.class, this::hydrateRelationships);
-		export(Rating.class, null);
-		export(GeneratedDownload.class, null);
+		try (GZIPOutputStream gzip = new GZIPOutputStream(outputStream);
+				TarOutputStream tar = new TarOutputStream(gzip)) {
+			
+			export(User.class, this::hydrateUsers, tar);
+			export(Session.class, this::hydrateSessions, tar);
+			export(Post.class, this::hydratePosts, tar);
+			export(Resource.class, null, tar);
+			export(Permission.class, null, tar);
+			export(Role.class, this::hydrateRoles, tar);
+			export(Property.class, null, tar);
+			export(PostContent.class, null, tar);
+			export(Page.class, this::hydratePages, tar);
+			export(Tag.class, null, tar);
+			export(ArchiveEntry.class, null, tar);
+			export(Notification.class, this::hydrateNotifications, tar);
+			export(MetaNotification.class, null, tar);
+			export(PushToken.class, null, tar);
+			export(NotificationSetting.class, null, tar);
+			export(Relationship.class, this::hydrateRelationships, tar);
+			export(Rating.class, null, tar);
+			export(Rating.class, null, tar);
+			export(GeneratedDownload.class, null, tar);
+		}
 	}
 
-	private <T extends DataType> void export (Class<T> type, Consumer<List<T>> hydrator) throws IOException {
+	private <T extends DataType> void export (Class<T> type,
+			Consumer<List<T>> hydrator, TarOutputStream tar)
+			throws IOException {
 		List<T> entities = provide().load().type(type).list();
 
 		if (hydrator != null) {
 			hydrator.accept(entities);
 		}
 
-		File dir = new File(path, type.getSimpleName());
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-
+		String typeName = type.getSimpleName();
 		long maxId = 0;
 		for (T entity : entities) {
 			if (entity.id != null && entity.id.longValue() > maxId) {
 				maxId = entity.id.longValue();
 			}
 
-			File file = new File(dir, entity.id.toString() + ".json");
-			try (FileWriter writer = new FileWriter(file)) {
-				writer.write(gson.toJson(entity.toJson()));
-			}
+			byte[] data = gson.toJson(entity.toJson())
+					.getBytes(StandardCharsets.UTF_8);
+			String name = typeName + "/" + entity.id.toString() + ".json";
+
+			TarEntry entry = new TarEntry(TarHeader.createHeader(name, data.length, System.currentTimeMillis() / 1000, false, 0644));
+			tar.putNextEntry(entry);
+			tar.write(data);
 		}
 
-		File autoinc = new File(dir, "_.autoinc");
-		try (FileWriter writer = new FileWriter(autoinc)) {
-			writer.write(Long.toString(maxId));
-		}
+		byte[] autoincData = Long.toString(maxId)
+				.getBytes(StandardCharsets.UTF_8);
+		String autoincName = typeName + "/_.autoinc";
+		TarEntry autoincEntry = new TarEntry(TarHeader.createHeader(autoincName, autoincData.length, System.currentTimeMillis() / 1000, false, 0644));
+		tar.putNextEntry(autoincEntry);
+		tar.write(autoincData);
 	}
 
 	private void hydratePosts (List<Post> posts) {
