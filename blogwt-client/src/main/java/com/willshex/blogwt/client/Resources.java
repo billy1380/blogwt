@@ -33,8 +33,6 @@ public interface Resources extends ClientBundle {
 
 		String image ();
 
-		String emoji ();
-
 		String brand ();
 
 		String largeBrand ();

@@ -43,7 +43,6 @@ public class PropertyHelper {
 
 	public static final String POST_SHARE_ENABLED = "post.share.enabled";
 
-	public static final String POST_ENABLE_EMOJI = "post.enable.emoji";
 	public static final String POST_SHOW_AUTHOR = "post.show.author";
 	public static final String POST_SHOW_AUTHOR_SUMMARY = "post.show.author.summary";
 
@@ -100,7 +99,6 @@ public class PropertyHelper {
 
 	public static final String POST_SHARE_ENABLED_DESCRIPTION = "Enable sharing in posts";
 
-	public static final String POST_ENABLE_EMOJI_DESCRIPTION = "Enable emoji in posts and on pages";
 	public static final String POST_SHOW_AUTHOR_DESCRIPTION = "Show the authors on the post and post summaries";
 	public static final String POST_SHOW_AUTHOR_SUMMARY_DESCRIPTION = "Shows the author summary on post details";
 
@@ -137,9 +135,6 @@ public class PropertyHelper {
 	public static final String DOWNLOAD_ENABLED_DESCRIPTION = "Enable downloads";
 
 	public static final String NONE_VALUE = "none";
-	public static final String APPLE_VALUE = "apple";
-	public static final String NOTO_VALUE = "noto";
-	public static final String TWEMOJI_VALUE = "twemoji";
 
 	public static final String TITLE_VALUE = "title";
 	public static final String LOGO_VALUE = "logo";
@@ -181,12 +176,6 @@ public class PropertyHelper {
 		return new Property().name(PASSWORD_HASH_SALT)
 				.description(PASSWORD_HASH_SALT_DESCRIPTION).value(value)
 				.group("Setup").type("string");
-	}
-
-	public static Property createPostEnableEmoji (String value) {
-		return new Property().name(POST_ENABLE_EMOJI)
-				.description(POST_ENABLE_EMOJI_DESCRIPTION).value(value)
-				.group("Functional").type("string");
 	}
 
 	public static Property createPostCommentsEnabled (String value) {
@@ -390,7 +379,6 @@ public class PropertyHelper {
 			properties.add(createCopyrightHolder(null));
 			properties.add(createCopyrightUrl(null));
 			properties.add(createPasswordHashSalt(null));
-			properties.add(createPostEnableEmoji(null));
 			properties.add(createPostCommentsEnabled(null));
 			properties.add(createTitleInNavBar(null));
 			properties.add(createMarkdownMapsApiKey(null));
