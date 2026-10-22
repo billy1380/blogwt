@@ -13,7 +13,9 @@ I am also adding things that I think I might need as I go along, so if you think
 I will put a road map shortly on the wiki, maybe even with a "how to".
 
 ## Setup
-Make sure that you have __git__ and __maven__ installed before you start.
+Make sure that you have __git__, __maven__ (3.6.3 or newer) and __JDK 17__ installed before you start.
+
+Persistence uses [Objectify](https://github.com/objectify/objectify) 6, which talks to Datastore through the `google-cloud-datastore` client. `ObjectifyService.init()` is called once from the static block in `PersistenceServiceProvider`, so all entity access must go through `PersistenceServiceProvider.provide()`.
 
 1. **Clone the repository:**
    ```bash
@@ -36,13 +38,24 @@ Make sure that you have __git__ and __maven__ installed before you start.
    ```
 
 4. **Run Locally:**
-   To verify the application locally:
+   Objectify 6 talks to Datastore through the Cloud Datastore client, which the App Engine dev server no longer stubs, so a local Datastore emulator is needed. Install it once (`gcloud components install cloud-datastore-emulator`), then start it in its own terminal (the data is empty and in-memory):
    ```bash
-   mvn appengine:devserver
+   "$(gcloud info --format='value(installation.sdk_root)')/platform/cloud-datastore-emulator/cloud_datastore_emulator" \
+       start --host=localhost --port=8081 --consistency=1.0 --store_on_disk=false /tmp/datastore-emulator
    ```
+   The App Engine plugin is declared in `blogwt-server`, so run it from that module (running it from the root fails with "No plugin found for prefix 'appengine'"), pointing it at the emulator:
+   ```bash
+   cd blogwt-server
+   export DATASTORE_EMULATOR_HOST=localhost:8081
+   export DATASTORE_USE_CLOUD_DATASTORE=true
+   export DATASTORE_PROJECT_ID=blogwtproject
+   export DATASTORE_USE_PROJECT_ID_AS_APP_ID=true
+   mvn appengine:run
+   ```
+   Without `DATASTORE_EMULATOR_HOST` the Datastore client has no credentials and every request fails with `Unauthenticated`. The other three variables are needed because the legacy App Engine task queue (used when indexing a user or post) opens its own legacy Datastore handle, which refuses to start with an emulator host set unless it is told to use Cloud Datastore. Without them, logging in fails with an `IllegalStateException` from `DatastoreServiceGlobalConfig`.
    The site should be accessible at `http://localhost:8888`.
 
-   *Note: To change GWT client code on the fly, you also need to run the code server: `mvn gwt:run-codeserver`.*
+   *Note: To change GWT client code on the fly, you also need to run the code server from the client module (the GWT plugin is only declared there): `cd blogwt-client && mvn gwt:run-codeserver`.*
 
 ## Deployment
 To deploy the application to Google App Engine, ensure you have built the project dependencies first.

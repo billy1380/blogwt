@@ -7,6 +7,9 @@
 //
 package com.willshex.blogwt.server.service.persistence.translator;
 
+import com.google.cloud.datastore.StringValue;
+import com.google.cloud.datastore.Value;
+import com.google.cloud.datastore.ValueType;
 import com.googlecode.objectify.impl.Path;
 import com.googlecode.objectify.impl.translate.CreateContext;
 import com.googlecode.objectify.impl.translate.LoadContext;
@@ -31,24 +34,24 @@ public class ResourceTypeTypeTranslatorFactory
 	@Override
 	protected ValueTranslator<ResourceTypeType, String> createValueTranslator (
 			TypeKey<ResourceTypeType> tk, CreateContext ctx, Path path) {
-		return new ValueTranslator<ResourceTypeType, String>(String.class) {
+		return new ValueTranslator<ResourceTypeType, String>(ValueType.STRING) {
 			@Override
-			protected String saveValue (ResourceTypeType pojo, boolean index,
+			protected Value<String> saveValue (ResourceTypeType pojo,
 					SaveContext ctx, Path path) throws SkipException {
-				return pojo.toString();
+				return StringValue.newBuilder(pojo.toString()).build();
 			}
 
 			@Override
-			protected ResourceTypeType loadValue (String node, LoadContext ctx,
+			protected ResourceTypeType loadValue (Value<String> node, LoadContext ctx,
 					Path path) throws SkipException {
 				ResourceTypeType value = null;
 
-				if (node != null && node.length() > 0) {
-					value = ResourceTypeType.fromString(node);
+				if (node.get() != null && node.get().length() > 0) {
+					value = ResourceTypeType.fromString(node.get());
 
 					if (value == null) {
 						try {
-							value = Enum.valueOf(ResourceTypeType.class, node);
+							value = Enum.valueOf(ResourceTypeType.class, node.get());
 						} catch (IllegalArgumentException
 								| NullPointerException ex) {}
 					}

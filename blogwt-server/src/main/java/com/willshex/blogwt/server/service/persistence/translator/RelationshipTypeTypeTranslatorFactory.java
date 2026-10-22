@@ -7,6 +7,9 @@
 //
 package com.willshex.blogwt.server.service.persistence.translator;
 
+import com.google.cloud.datastore.StringValue;
+import com.google.cloud.datastore.Value;
+import com.google.cloud.datastore.ValueType;
 import com.googlecode.objectify.impl.Path;
 import com.googlecode.objectify.impl.translate.CreateContext;
 import com.googlecode.objectify.impl.translate.LoadContext;
@@ -31,26 +34,26 @@ public class RelationshipTypeTypeTranslatorFactory
 	@Override
 	protected ValueTranslator<RelationshipTypeType, String> createValueTranslator (
 			TypeKey<RelationshipTypeType> tk, CreateContext ctx, Path path) {
-		return new ValueTranslator<RelationshipTypeType, String>(String.class) {
+		return new ValueTranslator<RelationshipTypeType, String>(ValueType.STRING) {
 			@Override
-			protected String saveValue (RelationshipTypeType pojo,
-					boolean index, SaveContext ctx, Path path)
+			protected Value<String> saveValue (RelationshipTypeType pojo,
+					SaveContext ctx, Path path)
 					throws SkipException {
-				return pojo.toString();
+				return StringValue.newBuilder(pojo.toString()).build();
 			}
 
 			@Override
-			protected RelationshipTypeType loadValue (String node,
+			protected RelationshipTypeType loadValue (Value<String> node,
 					LoadContext ctx, Path path) throws SkipException {
 				RelationshipTypeType value = null;
 
-				if (node != null && node.length() > 0) {
-					value = RelationshipTypeType.fromString(node);
+				if (node.get() != null && node.get().length() > 0) {
+					value = RelationshipTypeType.fromString(node.get());
 
 					if (value == null) {
 						try {
 							value = Enum.valueOf(RelationshipTypeType.class,
-									node);
+									node.get());
 						} catch (IllegalArgumentException
 								| NullPointerException ex) {}
 					}

@@ -7,6 +7,9 @@
 //
 package com.willshex.blogwt.server.service.persistence.translator;
 
+import com.google.cloud.datastore.StringValue;
+import com.google.cloud.datastore.Value;
+import com.google.cloud.datastore.ValueType;
 import com.googlecode.objectify.impl.Path;
 import com.googlecode.objectify.impl.translate.CreateContext;
 import com.googlecode.objectify.impl.translate.LoadContext;
@@ -31,25 +34,25 @@ public class PermissionTypeTypeTranslatorFactory
 	@Override
 	protected ValueTranslator<PermissionTypeType, String> createValueTranslator (
 			TypeKey<PermissionTypeType> tk, CreateContext ctx, Path path) {
-		return new ValueTranslator<PermissionTypeType, String>(String.class) {
+		return new ValueTranslator<PermissionTypeType, String>(ValueType.STRING) {
 			@Override
-			protected String saveValue (PermissionTypeType pojo, boolean index,
+			protected Value<String> saveValue (PermissionTypeType pojo,
 					SaveContext ctx, Path path) throws SkipException {
-				return pojo.toString();
+				return StringValue.newBuilder(pojo.toString()).build();
 			}
 
 			@Override
-			protected PermissionTypeType loadValue (String node,
+			protected PermissionTypeType loadValue (Value<String> node,
 					LoadContext ctx, Path path) throws SkipException {
 				PermissionTypeType value = null;
 
-				if (node != null && node.length() > 0) {
-					value = PermissionTypeType.fromString(node);
+				if (node.get() != null && node.get().length() > 0) {
+					value = PermissionTypeType.fromString(node.get());
 
 					if (value == null) {
 						try {
 							value = Enum.valueOf(PermissionTypeType.class,
-									node);
+									node.get());
 						} catch (IllegalArgumentException
 								| NullPointerException ex) {}
 					}

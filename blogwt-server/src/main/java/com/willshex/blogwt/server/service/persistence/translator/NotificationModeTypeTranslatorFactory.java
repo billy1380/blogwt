@@ -7,6 +7,9 @@
 //
 package com.willshex.blogwt.server.service.persistence.translator;
 
+import com.google.cloud.datastore.StringValue;
+import com.google.cloud.datastore.Value;
+import com.google.cloud.datastore.ValueType;
 import com.googlecode.objectify.impl.Path;
 import com.googlecode.objectify.impl.translate.CreateContext;
 import com.googlecode.objectify.impl.translate.LoadContext;
@@ -31,26 +34,26 @@ public class NotificationModeTypeTranslatorFactory
 	@Override
 	protected ValueTranslator<NotificationModeType, String> createValueTranslator (
 			TypeKey<NotificationModeType> tk, CreateContext ctx, Path path) {
-		return new ValueTranslator<NotificationModeType, String>(String.class) {
+		return new ValueTranslator<NotificationModeType, String>(ValueType.STRING) {
 			@Override
-			protected String saveValue (NotificationModeType pojo,
-					boolean index, SaveContext ctx, Path path)
+			protected Value<String> saveValue (NotificationModeType pojo,
+					SaveContext ctx, Path path)
 					throws SkipException {
-				return pojo.toString();
+				return StringValue.newBuilder(pojo.toString()).build();
 			}
 
 			@Override
-			protected NotificationModeType loadValue (String node,
+			protected NotificationModeType loadValue (Value<String> node,
 					LoadContext ctx, Path path) throws SkipException {
 				NotificationModeType value = null;
 
-				if (node != null && node.length() > 0) {
-					value = NotificationModeType.fromString(node);
+				if (node.get() != null && node.get().length() > 0) {
+					value = NotificationModeType.fromString(node.get());
 
 					if (value == null) {
 						try {
 							value = Enum.valueOf(NotificationModeType.class,
-									node);
+									node.get());
 						} catch (IllegalArgumentException
 								| NullPointerException ex) {}
 					}

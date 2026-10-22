@@ -7,11 +7,13 @@
 //
 package com.willshex.blogwt.server.service.persistence;
 
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebFilter;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.ObjectifyFilter;
+import com.googlecode.objectify.ObjectifyService.FilterJavax;
 import com.googlecode.objectify.impl.translate.TranslatorFactory;
 import com.willshex.blogwt.server.helper.EnvironmentHelper;
 import com.willshex.blogwt.server.service.persistence.translator.NotificationModeTypeTranslatorFactory;
@@ -54,15 +56,28 @@ public class PersistenceServiceProvider {
 	}
 
 	@WebFilter(filterName = "ObjectifyFilter", urlPatterns = "/*")
-	public static final class PersistenceFilter extends ObjectifyFilter {
+	public static final class PersistenceFilter extends FilterJavax {
+		@Override
+		public void init(FilterConfig filterConfig) throws ServletException {
+			PersistenceServiceProvider.init();
+			super.init(filterConfig);
+		}
 	}
 
-	static {
-		registerCoreTranslators();
-		registerOtherTranslators();
+	private static boolean initialised = false;
 
-		registerCoreClasses();
-		registerOtherClasses();
+	public static synchronized void init() {
+		if (!initialised) {
+			ObjectifyService.init();
+
+			registerCoreTranslators();
+			registerOtherTranslators();
+
+			registerCoreClasses();
+			registerOtherClasses();
+
+			initialised = true;
+		}
 	}
 
 	public static Objectify provide() {
