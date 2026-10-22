@@ -38,9 +38,8 @@ public class Blogwt extends ErrorHandlingEntryPoint {
 		content = new HTMLPanel(SafeHtmlUtils.EMPTY_SAFE_HTML);
 		RootPanel.get().add(content);
 
+		content.add(CookieNoticePart.get());
 		content.add(NavigationController.get()
 				.setPageHolder(new HTMLPanel(SafeHtmlUtils.EMPTY_SAFE_HTML)));
-
-		content.add(CookieNoticePart.get());
 	}
 }
