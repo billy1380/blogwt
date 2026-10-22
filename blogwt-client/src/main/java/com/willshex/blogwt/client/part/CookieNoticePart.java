@@ -60,7 +60,17 @@ public class CookieNoticePart extends RegisteringComposite {
 		}
 	};
 
-	public CookieNoticePart () {
+	private static CookieNoticePart one = null;
+
+	public static CookieNoticePart get () {
+		if (one == null) {
+			one = new CookieNoticePart();
+		}
+
+		return one;
+	}
+
+	private CookieNoticePart () {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		elTitle.setInnerText(PropertyController.get().title());
