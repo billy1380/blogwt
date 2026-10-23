@@ -184,16 +184,6 @@ public class PropertyHelper {
 				.group("Functional").type("boolean").value(value);
 	}
 
-	// values stored before this was a boolean: "none" is off, a provider name is on
-	public static boolean isCommentsEnabled (String value) {
-		return value == null || !(NONE_VALUE.equals(value)
-				|| Boolean.FALSE.toString().equals(value));
-	}
-
-	public static String normaliseCommentsEnabled (String value) {
-		return Boolean.toString(isCommentsEnabled(value));
-	}
-
 	public static Property createPostShareEnabled (String value) {
 		return new Property().name(POST_SHARE_ENABLED)
 				.description(POST_SHARE_ENABLED_DESCRIPTION).group("Functional")

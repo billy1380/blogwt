@@ -209,8 +209,8 @@ public class PostDetailPage extends Page
 
 			String disqusId = PostController.disqusId();
 
-			if (!PropertyHelper.isCommentsEnabled(PropertyController.get()
-					.stringProperty(PropertyHelper.POST_COMMENTS_ENABLED))
+			if (!PropertyController.get().booleanProperty(
+					PropertyHelper.POST_COMMENTS_ENABLED, true)
 					|| disqusId == null || disqusId.trim().isEmpty()) {
 				dsqComments.removeFromParent();
 			} else if (Boolean.TRUE.equals(post.commentsEnabled)) {

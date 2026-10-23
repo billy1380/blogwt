@@ -43,7 +43,7 @@ public class FixPropertiesAction implements DevAction {
         }
 
         String before = comments.value;
-        String after = PropertyHelper.normaliseCommentsEnabled(before);
+        String after = toBoolean(before);
 
         if (after.equals(before) && "boolean".equals(comments.type)) {
             return log("[" + PropertyHelper.POST_COMMENTS_ENABLED
@@ -56,6 +56,13 @@ public class FixPropertiesAction implements DevAction {
 
         return log("changed [" + PropertyHelper.POST_COMMENTS_ENABLED
                 + "] from [" + before + "] to [" + after + "]");
+    }
+
+    private static String toBoolean(String legacy) {
+        boolean off = PropertyHelper.NONE_VALUE.equals(legacy)
+                || Boolean.FALSE.toString().equals(legacy);
+
+        return Boolean.toString(!off);
     }
 
     private String removeEmoji(IPropertyService service) {
