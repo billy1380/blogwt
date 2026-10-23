@@ -33,7 +33,6 @@ import com.willshex.blogwt.client.page.Page;
 import com.willshex.blogwt.client.part.property.AbstractPropertyPart;
 import com.willshex.blogwt.client.part.property.BooleanPropertyPart;
 import com.willshex.blogwt.client.part.property.CombinationPropertyPart;
-import com.willshex.blogwt.client.part.property.CommentPropertyPart;
 import com.willshex.blogwt.client.part.property.ImagePropertyPart;
 import com.willshex.blogwt.client.part.property.LongStringPropertyPart;
 import com.willshex.blogwt.client.part.property.ProtectedStringPropertyPart;
@@ -135,8 +134,6 @@ public class PropertiesPage extends Page implements
 
 		if (PropertyHelper.PASSWORD_HASH_SALT.equals(property.name)) {
 			propertyWidget = new ProtectedStringPropertyPart();
-		} else if (PropertyHelper.POST_COMMENTS_ENABLED.equals(property.name)) {
-			propertyWidget = new CommentPropertyPart();
 		} else if (PropertyHelper.SMALL_LOGO_URL.equals(property.name)
 				|| PropertyHelper.LARGE_LOGO_URL.equals(property.name)) {
 			propertyWidget = new ImagePropertyPart();

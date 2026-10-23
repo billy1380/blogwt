@@ -181,7 +181,17 @@ public class PropertyHelper {
 	public static Property createPostCommentsEnabled (String value) {
 		return new Property().name(POST_COMMENTS_ENABLED)
 				.description(POST_COMMENTS_ENABLED_DESCRIPTION)
-				.group("Functional").type("string").value(value);
+				.group("Functional").type("boolean").value(value);
+	}
+
+	// values stored before this was a boolean: "none" is off, a provider name is on
+	public static boolean isCommentsEnabled (String value) {
+		return value == null || !(NONE_VALUE.equals(value)
+				|| Boolean.FALSE.toString().equals(value));
+	}
+
+	public static String normaliseCommentsEnabled (String value) {
+		return Boolean.toString(isCommentsEnabled(value));
 	}
 
 	public static Property createPostShareEnabled (String value) {

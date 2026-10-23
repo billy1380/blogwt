@@ -29,6 +29,7 @@ import com.willshex.blogwt.server.dev.actions.DeletePostsAction;
 import com.willshex.blogwt.server.dev.actions.ExportAction;
 import com.willshex.blogwt.server.dev.actions.FixMetaNotificationsAction;
 import com.willshex.blogwt.server.dev.actions.FixPermissionsAction;
+import com.willshex.blogwt.server.dev.actions.FixPropertiesAction;
 import com.willshex.blogwt.server.dev.actions.FixRolesAction;
 import com.willshex.blogwt.server.dev.actions.GenAndShowDownloadAction;
 import com.willshex.blogwt.server.dev.actions.GenTagsAction;
@@ -84,6 +85,7 @@ public class DevServlet extends ContextAwareServlet {
 			actions.put("archiveall", new ArchiveAllAction());
 			actions.put("fixroles", new FixRolesAction());
 			actions.put("fixpermissions", new FixPermissionsAction());
+			actions.put("fixproperties", new FixPropertiesAction());
 			actions.put("getposts", new GetPostsAction());
 			actions.put("staticurl", new StaticUrlAction());
 			actions.put("fixmetanotifications",

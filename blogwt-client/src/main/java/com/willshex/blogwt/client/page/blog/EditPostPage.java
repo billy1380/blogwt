@@ -249,11 +249,9 @@ public class EditPostPage extends Page implements CreatePostEventHandler,
 
 		tagList.addDataDisplay(clTags);
 
-		String commentsEnabled = PropertyController.get()
-				.stringProperty(
-						PropertyHelper.POST_COMMENTS_ENABLED);
-		pnlComments.setVisible(commentsEnabled != null
-				&& !PropertyHelper.NONE_VALUE.equals(commentsEnabled));
+		pnlComments.setVisible(PropertyHelper.isCommentsEnabled(
+				PropertyController.get().stringProperty(
+						PropertyHelper.POST_COMMENTS_ENABLED)));
 	}
 
 	private void upload(elemental2.dom.FileList files) {

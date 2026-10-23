@@ -207,11 +207,11 @@ public class PostDetailPage extends Page
 
 			pnlContent.getElement().setInnerHTML(markup);
 
-			String comments = PropertyController.get()
-					.stringProperty(PropertyHelper.POST_COMMENTS_ENABLED);
+			String disqusId = PostController.disqusId();
 
-			if (comments == null
-					|| comments.equals(PropertyHelper.NONE_VALUE)) {
+			if (!PropertyHelper.isCommentsEnabled(PropertyController.get()
+					.stringProperty(PropertyHelper.POST_COMMENTS_ENABLED))
+					|| disqusId == null || disqusId.trim().isEmpty()) {
 				dsqComments.removeFromParent();
 			} else if (Boolean.TRUE.equals(post.commentsEnabled)) {
 				final String identifier = "post" + post.id.toString();
