@@ -62,6 +62,12 @@
                     "enumeration":false
                 },
                 {
+                    "name":"parentType",
+                    "type":"string",
+                    "collection":false,
+                    "enumeration":false
+                },
+                {
                     "name":"parent",
                     "type":"DataType",
                     "collection":false,
@@ -849,6 +855,12 @@
                     "enumeration":false
                 },
                 {
+                    "name":"reactionsEnabled",
+                    "type":"bool",
+                    "collection":false,
+                    "enumeration":false
+                },
+                {
                     "name":"previousSlug",
                     "type":"string",
                     "collection":false,
@@ -1033,6 +1045,12 @@
                 },
                 {
                     "name":"commentsModerated",
+                    "type":"bool",
+                    "collection":false,
+                    "enumeration":false
+                },
+                {
+                    "name":"reactionsEnabled",
                     "type":"bool",
                     "collection":false,
                     "enumeration":false
@@ -2482,9 +2500,9 @@
                     ],
                     "outputs":[
                         {
-                            "name":"comment",
-                            "type":"Comment",
-                            "collection":false,
+                            "name":"reactions",
+                            "type":"Reaction",
+                            "collection":true,
                             "enumeration":false
                         }
                     ],
@@ -2501,13 +2519,44 @@
                     ],
                     "outputs":[
                         {
+                            "name":"reactions",
+                            "type":"Reaction",
+                            "collection":true,
+                            "enumeration":false
+                        }
+                    ],
+                    "name":"DeleteReaction"
+                },
+                {
+                    "inputs":[
+                        {
+                            "name":"post",
+                            "type":"Post",
+                            "collection":false,
+                            "enumeration":false
+                        },
+                        {
+                            "name":"page",
+                            "type":"Page",
+                            "collection":false,
+                            "enumeration":false
+                        },
+                        {
                             "name":"comment",
                             "type":"Comment",
                             "collection":false,
                             "enumeration":false
                         }
                     ],
-                    "name":"DeleteReaction"
+                    "outputs":[
+                        {
+                            "name":"reactions",
+                            "type":"Reaction",
+                            "collection":true,
+                            "enumeration":false
+                        }
+                    ],
+                    "name":"GetReactions"
                 }
             ]
         },

@@ -79,3 +79,13 @@ The project is a multi-module Maven project:
 - **blogwt-client**: GWT client-side code (UI, Layouts, Pages).
 - **blogwt-server**: App Engine server-side code (Servlets, API Actions, Persistence, Objectify logic).
 - **deps**: Folder created by `installdeps.sh` containing cloned dependencies.
+
+## API Definition
+`docs/api_defintion.json` (the file name is spelled that way) is the code generator definition of the API: every data type (name, parent, variables) and every service with its operations (inputs and outputs). It is what the generator uses to produce the request, response and data type classes for the other clients, including the Dart ones in `blogwt_flutter_client`.
+
+**It has to be updated whenever the API changes**, in the same change as the Java:
+- a field added to, removed from or renamed on a data type in `blogwt-shared` (`api/datatype`): update that type's `variables`;
+- a new data type or enum: add it to `types`;
+- a call added, removed or changed (a `*Request` / `*Response` pair in `api/blog/call` and friends, its `*ActionHandler`, its entry in the servlet): update the matching service's `operations`, with `inputs` from the request fields and `outputs` from the response fields.
+
+Keep the file's formatting (4 space indent, no space after the colon) so a diff only shows what really changed.

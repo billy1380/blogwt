@@ -42,6 +42,12 @@ public final class CreatePageActionHandler
 
 		input.page = PageValidator.validate(input.page, "input.page");
 		input.page.slug = PostHelper.slugify(input.page.title);
+		input.page.commentsEnabled = (input.page.commentsEnabled == null
+				? Boolean.FALSE : input.page.commentsEnabled);
+		input.page.commentsModerated = (input.page.commentsModerated == null
+				? Boolean.FALSE : input.page.commentsModerated);
+		input.page.reactionsEnabled = (input.page.reactionsEnabled == null
+				? Boolean.FALSE : input.page.reactionsEnabled);
 
 		output.page = PageServiceProvider.provide().addPage(input.page);
 	}

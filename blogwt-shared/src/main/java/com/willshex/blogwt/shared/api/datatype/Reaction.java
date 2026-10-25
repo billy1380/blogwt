@@ -16,16 +16,18 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
+import com.googlecode.objectify.annotation.Index;
 
 @Entity
 @Cache
 public class Reaction extends DataType {
-	public String emoticon;
+	@Index public String emoticon;
+	@Index public String parentType;
 
-	public Key<DataType> parentKey;
+	@Index public Key<DataType> parentKey;
 	@Ignore public DataType parent;
 
-	public Key<User> ownerKey;
+	@Index public Key<User> ownerKey;
 	@Ignore public User owner;
 
 	@Override
@@ -39,6 +41,9 @@ public class Reaction extends DataType {
 		object.add("parent", jsonParent);
 		JsonElement jsonOwner = owner == null ? JsonNull.INSTANCE : owner.toJson();
 		object.add("owner", jsonOwner);
+		JsonElement jsonParentType = parentType == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(parentType);
+		object.add("parentType", jsonParentType);
 		return object;
 	}
 
@@ -63,6 +68,12 @@ public class Reaction extends DataType {
 			if (jsonOwner != null) {
 				owner = new User();
 				owner.fromJson(jsonOwner.getAsJsonObject());
+			}
+		}
+		if (jsonObject.has("parentType")) {
+			JsonElement jsonParentType = jsonObject.get("parentType");
+			if (jsonParentType != null && !jsonParentType.isJsonNull()) {
+				parentType = jsonParentType.getAsString();
 			}
 		}
 	}
@@ -97,6 +108,11 @@ public class Reaction extends DataType {
 	*/
 	public Reaction owner (User owner) {
 		this.owner = owner;
+		return this;
+	}
+
+	public Reaction parentType (String parentType) {
+		this.parentType = parentType;
 		return this;
 	}
 }

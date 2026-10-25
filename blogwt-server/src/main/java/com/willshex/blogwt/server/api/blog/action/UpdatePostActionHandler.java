@@ -51,6 +51,8 @@ public final class UpdatePostActionHandler
 		updatedPost = PostValidator.validate(updatedPost, "input.post");
 
 		input.post.commentsEnabled = updatedPost.commentsEnabled;
+		input.post.commentsModerated = updatedPost.commentsModerated;
+		input.post.reactionsEnabled = updatedPost.reactionsEnabled;
 		input.post.content.body = updatedPost.content.body;
 		input.post.listed = updatedPost.listed;
 		input.post.summary = updatedPost.summary;

@@ -20,19 +20,22 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
+import com.googlecode.objectify.annotation.Index;
 
 @Entity
 @Cache
 public class Comment extends DataType {
 	public String body;
+	@Index public Boolean approved;
+	@Index public String parentType;
 
-	public Key<User> ownerKey;
+	@Index public Key<User> ownerKey;
 	@Ignore public User owner;
 
 	public List<Key<Reaction>> reactionKeys;
 	@Ignore public List<Reaction> reactions;
 
-	public Key<DataType> parentKey;
+	@Index public Key<DataType> parentKey;
 	@Ignore public DataType parent;
 
 	public List<Key<Comment>> replyKeys;
@@ -70,6 +73,12 @@ public class Comment extends DataType {
 			}
 		}
 		object.add("replies", jsonReplies);
+		JsonElement jsonParentType = parentType == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(parentType);
+		object.add("parentType", jsonParentType);
+		JsonElement jsonApproved = approved == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(approved);
+		object.add("approved", jsonApproved);
 		return object;
 	}
 
@@ -126,6 +135,18 @@ public class Comment extends DataType {
 			}
 		}
 
+		if (jsonObject.has("parentType")) {
+			JsonElement jsonParentType = jsonObject.get("parentType");
+			if (jsonParentType != null && !jsonParentType.isJsonNull()) {
+				parentType = jsonParentType.getAsString();
+			}
+		}
+		if (jsonObject.has("approved")) {
+			JsonElement jsonApproved = jsonObject.get("approved");
+			if (jsonApproved != null && !jsonApproved.isJsonNull()) {
+				approved = Boolean.valueOf(jsonApproved.getAsBoolean());
+			}
+		}
 	}
 
 	/**
@@ -180,6 +201,16 @@ public class Comment extends DataType {
 	*/
 	public Comment replies (List<Comment> replies) {
 		this.replies = replies;
+		return this;
+	}
+
+	public Comment parentType (String parentType) {
+		this.parentType = parentType;
+		return this;
+	}
+
+	public Comment approved (Boolean approved) {
+		this.approved = approved;
 		return this;
 	}
 }

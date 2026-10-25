@@ -96,12 +96,29 @@ public class UserValidator extends ApiValidator {
 	}
 
 	public static boolean isAdmin (User user) {
+		return hasRole(user, RoleHelper.ADMIN);
+	}
+
+	/**
+	 * Comment moderators, and admins, who can do anything
+	 */
+	public static boolean isCommentModerator (User user) {
+		return isAdmin(user) || hasRole(user, RoleHelper.COMMENT_MODERATOR);
+	}
+
+	private static boolean hasRole (User user, String code) {
 		List<Role> roles = user.roles == null && user.roleKeys != null
 				? PersistenceHelper.batchLookupKeys(
 						RoleServiceProvider.provide(), user.roleKeys)
 				: user.roles;
 		return user != null && roles != null
-				&& RoleHelper.toLookup(roles).containsKey(RoleHelper.ADMIN);
+				&& RoleHelper.toLookup(roles).containsKey(code);
+	}
+
+	public static void commentModeration (User user, String name)
+			throws AuthorisationException {
+		if (!isCommentModerator(user))
+			throw new AuthorisationException(user, user.permissions, name);
 	}
 
 	/**

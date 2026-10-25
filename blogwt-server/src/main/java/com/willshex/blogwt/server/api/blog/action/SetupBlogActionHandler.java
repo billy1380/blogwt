@@ -58,6 +58,9 @@ public final class SetupBlogActionHandler
 		RoleServiceProvider.provide()
 				.addRole(RoleHelper.createFull(RoleHelper.ADMIN,
 						RoleHelper.ADMIN_NAME, RoleHelper.ADMIN_DESCRIPTION));
+		RoleServiceProvider.provide().addRole(RoleHelper.createFull(
+				RoleHelper.COMMENT_MODERATOR, RoleHelper.COMMENT_MODERATOR_NAME,
+				RoleHelper.COMMENT_MODERATOR_DESCRIPTION));
 		for (Permission permission : PermissionHelper.createAll()) {
 			PermissionServiceProvider.provide().addPermission(permission);
 		}

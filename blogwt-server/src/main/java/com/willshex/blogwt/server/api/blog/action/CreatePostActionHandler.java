@@ -58,6 +58,10 @@ public final class CreatePostActionHandler
 				: input.post.listed);
 		input.post.commentsEnabled = (input.post.commentsEnabled == null
 				? Boolean.FALSE : input.post.commentsEnabled);
+		input.post.commentsModerated = (input.post.commentsModerated == null
+				? Boolean.FALSE : input.post.commentsModerated);
+		input.post.reactionsEnabled = (input.post.reactionsEnabled == null
+				? Boolean.FALSE : input.post.reactionsEnabled);
 
 		output.post = PostServiceProvider.provide().addPost(input.post);
 	}

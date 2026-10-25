@@ -28,6 +28,10 @@ public class RoleHelper {
 	public static final String ADMIN_NAME = "System Administrator";
 	public static final String ADMIN_DESCRIPTION = "allows users to perform any action (implicitly contains all permissions)";
 
+	public static final String COMMENT_MODERATOR = "CMO";
+	public static final String COMMENT_MODERATOR_NAME = "Comment Moderator";
+	public static final String COMMENT_MODERATOR_DESCRIPTION = "allows users to review, approve and delete comments and reactions";
+
 	public static final Collection<Permission> ADMIN_PERMISSIONS = Collections
 			.unmodifiableCollection(new ArrayList<>());
 
@@ -37,6 +41,15 @@ public class RoleHelper {
 
 	public static Role createFullAdmin () {
 		return createFull(ADMIN, ADMIN_NAME, ADMIN_DESCRIPTION);
+	}
+
+	public static Role createCommentModerator () {
+		return create(COMMENT_MODERATOR);
+	}
+
+	public static Role createFullCommentModerator () {
+		return createFull(COMMENT_MODERATOR, COMMENT_MODERATOR_NAME,
+				COMMENT_MODERATOR_DESCRIPTION);
 	}
 
 	public static Map<String, Role> toLookup (Collection<Role> roles) {
@@ -68,6 +81,7 @@ public class RoleHelper {
 		List<Role> all = new ArrayList<Role>();
 
 		all.add(createAdmin());
+		all.add(createFullCommentModerator());
 
 		return all;
 	}

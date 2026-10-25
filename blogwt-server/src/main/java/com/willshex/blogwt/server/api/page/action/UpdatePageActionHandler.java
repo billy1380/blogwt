@@ -52,6 +52,9 @@ public final class UpdatePageActionHandler
 		updatedPage = PageValidator.validate(updatedPage, "input.page");
 
 		input.page.hasChildren = updatedPage.hasChildren;
+		input.page.commentsEnabled = updatedPage.commentsEnabled;
+		input.page.commentsModerated = updatedPage.commentsModerated;
+		input.page.reactionsEnabled = updatedPage.reactionsEnabled;
 		input.page.parent = updatedPage.parent;
 		input.page.posts = updatedPage.posts;
 		input.page.priority = updatedPage.priority;

@@ -45,6 +45,8 @@ public class Post extends DataType {
 
 	@Index(value = IfTrue.class) public Boolean listed;
 	public Boolean commentsEnabled;
+	public Boolean commentsModerated;
+	public Boolean reactionsEnabled;
 
 	public String previousSlug;
 	public String nextSlug;
@@ -92,6 +94,12 @@ public class Post extends DataType {
 		JsonElement jsonNextSlug = nextSlug == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(nextSlug);
 		object.add("nextSlug", jsonNextSlug);
+		JsonElement jsonCommentsModerated = commentsModerated == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(commentsModerated);
+		object.add("commentsModerated", jsonCommentsModerated);
+		JsonElement jsonReactionsEnabled = reactionsEnabled == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(reactionsEnabled);
+		object.add("reactionsEnabled", jsonReactionsEnabled);
 		return object;
 	}
 
@@ -175,6 +183,18 @@ public class Post extends DataType {
 				nextSlug = jsonNextSlug.getAsString();
 			}
 		}
+		if (jsonObject.has("commentsModerated")) {
+			JsonElement jsonCommentsModerated = jsonObject.get("commentsModerated");
+			if (jsonCommentsModerated != null && !jsonCommentsModerated.isJsonNull()) {
+				commentsModerated = Boolean.valueOf(jsonCommentsModerated.getAsBoolean());
+			}
+		}
+		if (jsonObject.has("reactionsEnabled")) {
+			JsonElement jsonReactionsEnabled = jsonObject.get("reactionsEnabled");
+			if (jsonReactionsEnabled != null && !jsonReactionsEnabled.isJsonNull()) {
+				reactionsEnabled = Boolean.valueOf(jsonReactionsEnabled.getAsBoolean());
+			}
+		}
 	}
 
 	public Post author (User author) {
@@ -229,6 +249,16 @@ public class Post extends DataType {
 
 	public Post nextSlug (String nextSlug) {
 		this.nextSlug = nextSlug;
+		return this;
+	}
+
+	public Post commentsModerated (Boolean commentsModerated) {
+		this.commentsModerated = commentsModerated;
+		return this;
+	}
+
+	public Post reactionsEnabled (Boolean reactionsEnabled) {
+		this.reactionsEnabled = reactionsEnabled;
 		return this;
 	}
 }

@@ -39,6 +39,9 @@ public class Page extends DataType {
 	@Ignore public Page parent;
 
 	public Boolean hasChildren;
+	public Boolean commentsEnabled;
+	public Boolean commentsModerated;
+	public Boolean reactionsEnabled;
 	@Index(value = IfNotNull.class) public Float priority;
 
 	@Override
@@ -72,6 +75,15 @@ public class Page extends DataType {
 		JsonElement jsonPriority = priority == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(priority);
 		object.add("priority", jsonPriority);
+		JsonElement jsonCommentsEnabled = commentsEnabled == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(commentsEnabled);
+		object.add("commentsEnabled", jsonCommentsEnabled);
+		JsonElement jsonCommentsModerated = commentsModerated == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(commentsModerated);
+		object.add("commentsModerated", jsonCommentsModerated);
+		JsonElement jsonReactionsEnabled = reactionsEnabled == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(reactionsEnabled);
+		object.add("reactionsEnabled", jsonReactionsEnabled);
 		return object;
 	}
 
@@ -131,6 +143,24 @@ public class Page extends DataType {
 				priority = Float.valueOf(jsonPriority.getAsFloat());
 			}
 		}
+		if (jsonObject.has("commentsEnabled")) {
+			JsonElement jsonCommentsEnabled = jsonObject.get("commentsEnabled");
+			if (jsonCommentsEnabled != null && !jsonCommentsEnabled.isJsonNull()) {
+				commentsEnabled = Boolean.valueOf(jsonCommentsEnabled.getAsBoolean());
+			}
+		}
+		if (jsonObject.has("commentsModerated")) {
+			JsonElement jsonCommentsModerated = jsonObject.get("commentsModerated");
+			if (jsonCommentsModerated != null && !jsonCommentsModerated.isJsonNull()) {
+				commentsModerated = Boolean.valueOf(jsonCommentsModerated.getAsBoolean());
+			}
+		}
+		if (jsonObject.has("reactionsEnabled")) {
+			JsonElement jsonReactionsEnabled = jsonObject.get("reactionsEnabled");
+			if (jsonReactionsEnabled != null && !jsonReactionsEnabled.isJsonNull()) {
+				reactionsEnabled = Boolean.valueOf(jsonReactionsEnabled.getAsBoolean());
+			}
+		}
 	}
 
 	public Page posts (List<Post> posts) {
@@ -165,6 +195,21 @@ public class Page extends DataType {
 
 	public Page priority (Float priority) {
 		this.priority = priority;
+		return this;
+	}
+
+	public Page commentsEnabled (Boolean commentsEnabled) {
+		this.commentsEnabled = commentsEnabled;
+		return this;
+	}
+
+	public Page commentsModerated (Boolean commentsModerated) {
+		this.commentsModerated = commentsModerated;
+		return this;
+	}
+
+	public Page reactionsEnabled (Boolean reactionsEnabled) {
+		this.reactionsEnabled = reactionsEnabled;
 		return this;
 	}
 }
