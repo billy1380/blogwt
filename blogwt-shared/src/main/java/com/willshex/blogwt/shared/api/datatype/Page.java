@@ -43,6 +43,7 @@ public class Page extends DataType {
 	public Boolean commentsModerated;
 	public Boolean reactionsEnabled;
 	@Index(value = IfNotNull.class) public Float priority;
+	public String icon;
 
 	@Override
 	public JsonObject toJson () {
@@ -84,6 +85,9 @@ public class Page extends DataType {
 		JsonElement jsonReactionsEnabled = reactionsEnabled == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(reactionsEnabled);
 		object.add("reactionsEnabled", jsonReactionsEnabled);
+		JsonElement jsonIcon = icon == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(icon);
+		object.add("icon", jsonIcon);
 		return object;
 	}
 
@@ -161,6 +165,12 @@ public class Page extends DataType {
 				reactionsEnabled = Boolean.valueOf(jsonReactionsEnabled.getAsBoolean());
 			}
 		}
+		if (jsonObject.has("icon")) {
+			JsonElement jsonIcon = jsonObject.get("icon");
+			if (jsonIcon != null && !jsonIcon.isJsonNull()) {
+				icon = jsonIcon.getAsString();
+			}
+		}
 	}
 
 	public Page posts (List<Post> posts) {
@@ -195,6 +205,11 @@ public class Page extends DataType {
 
 	public Page priority (Float priority) {
 		this.priority = priority;
+		return this;
+	}
+
+	public Page icon (String icon) {
+		this.icon = icon;
 		return this;
 	}
 

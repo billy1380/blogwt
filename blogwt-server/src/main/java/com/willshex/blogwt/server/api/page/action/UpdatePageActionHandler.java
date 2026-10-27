@@ -58,6 +58,7 @@ public final class UpdatePageActionHandler
 		input.page.parent = updatedPage.parent;
 		input.page.posts = updatedPage.posts;
 		input.page.priority = updatedPage.priority;
+		input.page.icon = updatedPage.icon;
 		input.page.title = updatedPage.title;
 		input.page.slug = PostHelper.slugify(input.page.title);
 
