@@ -9,10 +9,13 @@ package com.willshex.blogwt.server.api.page.action;
 
 import static com.willshex.blogwt.server.helper.PersistenceHelper.keyToId;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.googlecode.objectify.Key;
 import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
@@ -20,6 +23,7 @@ import com.willshex.blogwt.server.service.page.PageServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Page;
 import com.willshex.blogwt.shared.api.datatype.PageSortType;
+import com.willshex.blogwt.shared.api.datatype.Post;
 import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.api.page.call.GetPagesRequest;
 import com.willshex.blogwt.shared.api.page.call.GetPagesResponse;
@@ -77,6 +81,16 @@ public final class GetPagesActionHandler
 			if (page.parentKey != null) {
 				page.parent = new Page();
 				page.parent.id = keyToId(page.parentKey);
+			}
+
+			if (page.posts == null && page.postKeys != null) {
+				List<Post> parts = new ArrayList<Post>();
+				for (Key<Post> key : page.postKeys) {
+					Post part = new Post();
+					part.id = keyToId(key);
+					parts.add(part);
+				}
+				page.posts = parts;
 			}
 		}
 

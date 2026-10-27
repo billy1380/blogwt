@@ -171,8 +171,10 @@ final class PageService implements IPageService {
 		List<Post> posts = new ArrayList<Post>();
 
 		for (Page page : pages) {
-			posts.addAll(PersistenceHelper.batchLookupKeys(
-					PostServiceProvider.provide(), page.postKeys));
+			if (page.postKeys != null) {
+				posts.addAll(PersistenceHelper.batchLookupKeys(
+						PostServiceProvider.provide(), page.postKeys));
+			}
 		}
 
 		// FIXME: just load in one go (batch)
@@ -189,8 +191,10 @@ final class PageService implements IPageService {
 		for (Page page : pages) {
 			pagePosts = new ArrayList<Post>();
 
-			for (Key<Post> key : page.postKeys) {
-				pagePosts.add(postLookup.get(keyToId(key)));
+			if (page.postKeys != null) {
+				for (Key<Post> key : page.postKeys) {
+					pagePosts.add(postLookup.get(keyToId(key)));
+				}
 			}
 
 			page.posts = pagePosts;
