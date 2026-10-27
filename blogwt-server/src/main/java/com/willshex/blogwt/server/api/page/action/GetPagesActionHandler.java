@@ -73,6 +73,11 @@ public final class GetPagesActionHandler
 				owners.put(id, page.owner = UserHelper.stripSensitive(
 						UserServiceProvider.provide().getUser(id)));
 			}
+
+			if (page.parentKey != null) {
+				page.parent = new Page();
+				page.parent.id = keyToId(page.parentKey);
+			}
 		}
 
 		output.pager = PagerHelper.moveForward(input.pager);
