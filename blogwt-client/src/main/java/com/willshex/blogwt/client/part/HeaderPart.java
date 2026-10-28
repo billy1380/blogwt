@@ -9,9 +9,12 @@ package com.willshex.blogwt.client.part;
 
 import static com.willshex.blogwt.client.helper.UiHelper.activateItem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
@@ -162,83 +165,44 @@ public class HeaderPart extends RegisteringComposite
 		boolean foundBrandPage = false, addedBlog = false;
 		List<Page> pages;
 		SafeUri href;
-		Map<Long, Page> possibleParents = new HashMap<Long, Page>();
 		if ((pages = PageController.get().getHeaderPages()) != null) {
+			Set<Long> ids = new HashSet<Long>();
+			for (Page page : pages) {
+				ids.add(page.id);
+			}
+
+			Map<Long, List<Page>> children = new HashMap<Long, List<Page>>();
+			List<Page> roots = new ArrayList<Page>();
 			for (Page page : pages) {
 				if (page.priority != null && page.priority.floatValue() == 0.0f
 						&& !removedHome) {
 					btnHome.setHref(PageTypeHelper.slugToHref(page.slug));
 					foundBrandPage = true;
+				} else if (page.parent != null && page.parent.id != null
+						&& ids.contains(page.parent.id)) {
+					List<Page> siblings = children.get(page.parent.id);
+
+					if (siblings == null) {
+						children.put(page.parent.id,
+								siblings = new ArrayList<Page>());
+					}
+
+					siblings.add(page);
 				} else {
-					if (page.priority != null && page.priority.floatValue() > 2
-							&& (foundBrandPage || removedHome) && !addedBlog) {
-						href = PageTypeHelper.asHref(PageType.PostsPageType);
-						addItem(elNavLeft,
-								SafeHtmlUtils.fromSafeConstant("Blog"), href);
-						addedBlog = true;
-					}
-
-					Element el;
-					if (page.parent == null) {
-						href = PageTypeHelper.slugToHref(page.slug);
-
-						if (possibleParents.get(page.id) == null) {
-							addItem(elNavLeft,
-									SafeHtmlUtils.fromString(page.title), href);
-							possibleParents.put(page.id, page);
-						} else {
-							possibleParents.put(page.id, page);
-							swapTitle(
-									PageTypeHelper.slugToTargetHistoryToken(
-											"pageid_" + page.id),
-									HeaderTemplates.INSTANCE
-											.openableTitle(page.title),
-									href);
-						}
-					} else {
-						Page parent;
-						if ((parent = possibleParents
-								.get(page.parent.id)) != null) {
-							el = getOpenable(PageTypeHelper
-									.slugToTargetHistoryToken(parent.slug));
-
-							if (el == null) {
-								el = getOpenable(
-										PageTypeHelper.slugToTargetHistoryToken(
-												"pageid_" + parent.id));
-							}
-
-							if (el == null) {
-								el = getItem(PageTypeHelper
-										.slugToTargetHistoryToken(parent.slug));
-
-								if (el != null) {
-									el = convertItemToOpenable(
-											PageTypeHelper
-													.slugToTargetHistoryToken(
-															parent.slug),
-											HeaderTemplates.INSTANCE
-													.openableTitle(
-															parent.title));
-								}
-							}
-						} else {
-							String dummySlug = "pageid_" + page.parent.id;
-							el = addOpenable(elNavLeft,
-									HeaderTemplates.INSTANCE
-											.openableTitle(dummySlug),
-									PageTypeHelper.slugToHref(dummySlug));
-							possibleParents.put(page.parent.id, page.parent);
-						}
-
-						if (el != null) {
-							href = PageTypeHelper.slugToHref(page.slug);
-							addItem(el.getFirstChildElement()
-									.getNextSiblingElement(),
-									SafeHtmlUtils.fromString(page.title), href);
-						}
-					}
+					roots.add(page);
 				}
+			}
+
+			for (Page page : roots) {
+				if (page.priority != null && page.priority.floatValue() > 2
+						&& (foundBrandPage || removedHome) && !addedBlog) {
+					href = PageTypeHelper.asHref(PageType.PostsPageType);
+					addItem(elNavLeft, SafeHtmlUtils.fromSafeConstant("Blog"),
+							href);
+					addedBlog = true;
+				}
+
+				addPageItem(elNavLeft, page, children, 0);
 			}
 		}
 
@@ -274,6 +238,76 @@ public class HeaderPart extends RegisteringComposite
 		elAccount.removeFromParent();
 	}
 
+	/**
+	 * Adds [page] to [parent] and, under it, its children, to any depth: a page
+	 * with children is a drop down at the top and a submenu below that.
+	 */
+	private void addPageItem (Element parent, Page page,
+			Map<Long, List<Page>> children, int depth) {
+		SafeUri href = PageTypeHelper.slugToHref(page.slug);
+		List<Page> kids = children.get(page.id);
+
+		if (kids == null || kids.isEmpty()) {
+			addItem(parent, SafeHtmlUtils.fromString(page.title), href);
+		} else {
+			Element el = depth == 0
+					? addOpenable(parent,
+							HeaderTemplates.INSTANCE.openableTitle(page.title),
+							href)
+					: addSubmenu(parent, page.title);
+			Element list = el.getFirstChildElement().getNextSiblingElement();
+
+			for (Page kid : kids) {
+				addPageItem(list, kid, children, depth + 1);
+			}
+		}
+	}
+
+	private Element addSubmenu (Element parent, String title) {
+		final Element element = Document.get().createLIElement();
+		element.setClassName("dropdown-submenu");
+		parent.appendChild(element);
+
+		final Element a = Document.get().createAnchorElement();
+		element.appendChild(a);
+		a.setInnerText(title);
+		Event.sinkEvents(a, Event.ONCLICK);
+		Event.setEventListener(a, new EventListener() {
+
+			@Override
+			public void onBrowserEvent (Event event) {
+				submenuClick(element);
+				event.stopPropagation();
+			}
+		});
+
+		Element ul = Document.get().createULElement();
+		ul.addClassName("dropdown-menu");
+		element.appendChild(ul);
+
+		return element;
+	}
+
+	/**
+	 * Opens or closes a submenu, and closes the ones beside it. Hovering does
+	 * the same on a wide screen (see the stylesheet).
+	 */
+	private void submenuClick (Element submenu) {
+		boolean open = submenu.getClassName().contains(" open");
+
+		Element sibling = submenu.getParentElement().getFirstChildElement();
+		while (sibling != null) {
+			if (sibling != submenu) {
+				sibling.setClassName(
+						sibling.getClassName().replace(" open", ""));
+			}
+			sibling = sibling.getNextSiblingElement();
+		}
+
+		submenu.setClassName(open ? submenu.getClassName().replace(" open", "")
+				: submenu.getClassName() + " open");
+	}
+
 	private void addItem (Element parent, SafeHtml title, SafeUri href) {
 		String key = href.asString().replaceFirst("#", "");
 		Element element = getItem(key);
@@ -296,33 +330,6 @@ public class HeaderPart extends RegisteringComposite
 			element.removeFromParent();
 			ensureItems().remove(key);
 		}
-	}
-
-	private Element convertItemToOpenable (String key, SafeHtml title) {
-		activateItem(key, false, this::getItem);
-		Element element = getItem(key);
-		ensureItems().remove(key);
-		element.setClassName("dropdown");
-		final AnchorElement a = AnchorElement
-				.as(element.getFirstChildElement());
-		a.removeAttribute("href");
-		Event.sinkEvents(a, Event.ONCLICK);
-		Event.setEventListener(a, new EventListener() {
-
-			@Override
-			public void onBrowserEvent (Event event) {
-				openableClick(a);
-				event.stopPropagation();
-			}
-		});
-		a.addClassName("dropdown-toggle");
-		a.setInnerSafeHtml(title);
-		Element ul = Document.get().createULElement();
-		ul.addClassName("dropdown-menu");
-		element.appendChild(ul);
-		ensureOpenables().put(key, element);
-
-		return element;
 	}
 
 	private Element addOpenable (Element parent, SafeHtml title, SafeUri href) {
@@ -357,13 +364,6 @@ public class HeaderPart extends RegisteringComposite
 		return element;
 	}
 
-	private void swapTitle (String oldKey, SafeHtml title, SafeUri href) {
-		String key = href.asString().replaceFirst("#", "");
-		Element item = getOpenable(oldKey);
-		ensureOpenables().remove(oldKey);
-		ensureOpenables().put(key, item);
-		item.getFirstChildElement().setInnerSafeHtml(title);
-	}
 	@Override
 	protected void onAttach () {
 		super.onAttach();
