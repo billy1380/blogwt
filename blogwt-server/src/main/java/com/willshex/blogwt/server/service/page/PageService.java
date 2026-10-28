@@ -77,6 +77,7 @@ final class PageService implements IPageService {
 
 		return page;
 	}
+
 	@Override
 	public Document toDocument(Page page) {
 		Document document = null;
@@ -142,6 +143,7 @@ final class PageService implements IPageService {
 
 		SearchHelper.deleteSearch(this, getName() + page.id.toString());
 	}
+
 	@Override
 	public Page getSlugPage(String slug, Boolean includePostContents) {
 		Page page = PersistenceHelper.one(
@@ -153,6 +155,7 @@ final class PageService implements IPageService {
 
 		return page;
 	}
+
 	@Override
 	public List<Page> getPages(Boolean includePostContents, Integer start,
 			Integer count, PageSortType sortBy,
@@ -193,13 +196,18 @@ final class PageService implements IPageService {
 
 			if (page.postKeys != null) {
 				for (Key<Post> key : page.postKeys) {
-					pagePosts.add(postLookup.get(keyToId(key)));
+					Post post = postLookup.get(keyToId(key));
+
+					if (post != null) {
+						pagePosts.add(post);
+					}
 				}
 			}
 
 			page.posts = pagePosts;
 		}
 	}
+
 	@Override
 	public Page getPage(Long id, Boolean includePostContents) {
 		Page page = getPage(id);
@@ -210,6 +218,7 @@ final class PageService implements IPageService {
 
 		return page;
 	}
+
 	@Override
 	public void indexAll() {
 		SearchHelper.indexAll(getName(),
@@ -218,6 +227,7 @@ final class PageService implements IPageService {
 								Boolean.FALSE, start, count, sortBy,
 								sortDirection));
 	}
+
 	@Override
 	public List<Page> getPartialSlugPages(String partialSlug,
 			Boolean includePostContents, Integer start, Integer count,
@@ -238,10 +248,12 @@ final class PageService implements IPageService {
 
 		return pages;
 	}
+
 	@Override
 	public void index(Long id) {
 		SearchHelper.indexDocument(this, getName(), toDocument(getPage(id)));
 	}
+
 	@Override
 	public List<Page> search(String query, Integer start, Integer count,
 			String sortBy, SortDirectionType direction) {
@@ -269,6 +281,7 @@ final class PageService implements IPageService {
 
 		return pages;
 	}
+
 	@Override
 	public String search(Collection<Page> resultHolder, String query,
 			String next, Integer count, String sortBy,
