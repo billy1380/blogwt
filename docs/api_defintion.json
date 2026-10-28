@@ -1066,6 +1066,12 @@
                     "type":"string",
                     "collection":false,
                     "enumeration":false
+                },
+                {
+                    "name":"subtitle",
+                    "type":"string",
+                    "collection":false,
+                    "enumeration":false
                 }
             ],
             "parentName":"DataType"

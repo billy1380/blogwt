@@ -44,6 +44,7 @@ public class Page extends DataType {
 	public Boolean reactionsEnabled;
 	@Index(value = IfNotNull.class) public Float priority;
 	public String icon;
+	public String subtitle;
 
 	@Override
 	public JsonObject toJson () {
@@ -88,6 +89,9 @@ public class Page extends DataType {
 		JsonElement jsonIcon = icon == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(icon);
 		object.add("icon", jsonIcon);
+		JsonElement jsonSubtitle = subtitle == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(subtitle);
+		object.add("subtitle", jsonSubtitle);
 		return object;
 	}
 
@@ -171,6 +175,12 @@ public class Page extends DataType {
 				icon = jsonIcon.getAsString();
 			}
 		}
+		if (jsonObject.has("subtitle")) {
+			JsonElement jsonSubtitle = jsonObject.get("subtitle");
+			if (jsonSubtitle != null && !jsonSubtitle.isJsonNull()) {
+				subtitle = jsonSubtitle.getAsString();
+			}
+		}
 	}
 
 	public Page posts (List<Post> posts) {
@@ -210,6 +220,11 @@ public class Page extends DataType {
 
 	public Page icon (String icon) {
 		this.icon = icon;
+		return this;
+	}
+
+	public Page subtitle (String subtitle) {
+		this.subtitle = subtitle;
 		return this;
 	}
 
