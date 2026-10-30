@@ -61,7 +61,10 @@ public class PropertyHelper {
 
 	public static final String OUTGOING_EMAIL = "email.outgoing";
 	public static final String INCOMING_EMAIL = "email.incoming";
-	
+
+	public static final String BREVO_ENABLED = "email.brevo.enabled";
+	public static final String BREVO_API_KEY = "email.brevo.key";
+
 	public static final String FIREBASE_API_KEY = "notification.firebase.key";
 
 	public static final String COOKIE_DETAILS_PAGE_SLUG = "cookie.details.slug";
@@ -117,6 +120,8 @@ public class PropertyHelper {
 	public static final String FOOTER_SHOW_VERSION_DESCRIPTION = "Shows the blogwt version on the site footer";
 	public static final String OUTGOING_EMAIL_DESCRIPTION = "Appengine outgoing email address";
 	public static final String INCOMING_EMAIL_DESCRIPTION = "Incoming email address";
+	public static final String BREVO_ENABLED_DESCRIPTION = "Send email through Brevo instead of Appengine (the outgoing email address must be a verified Brevo sender)";
+	public static final String BREVO_API_KEY_DESCRIPTION = "Brevo API key (secret)";
 	
 	public static final String FIREBASE_API_KEY_DESCRIPTION = "Firebase push notification api key";
 
@@ -333,6 +338,18 @@ public class PropertyHelper {
 				.type("string").value(value);
 	}
 
+	public static Property createBrevoEnabled (Boolean value) {
+		return new Property().name(BREVO_ENABLED)
+				.description(BREVO_ENABLED_DESCRIPTION).group("Functional")
+				.type("boolean").value(value == null ? null : value.toString());
+	}
+
+	public static Property createBrevoApiKey (String value) {
+		return new Property().name(BREVO_API_KEY)
+				.description(BREVO_API_KEY_DESCRIPTION).group("Functional")
+				.type("string").value(value);
+	}
+
 	public static Property createFirebaseApiKey (String value) {
 		return new Property().name(FIREBASE_API_KEY).group("Functional")
 				.description(FIREBASE_API_KEY_DESCRIPTION).type("string")
@@ -405,6 +422,8 @@ public class PropertyHelper {
 			properties.add(createFaviconUrl(null));
 			properties.add(createOutgoingEmail(null));
 			properties.add(createIncomingEmail(null));
+			properties.add(createBrevoEnabled(null));
+			properties.add(createBrevoApiKey(null));
 			properties.add(createFirebaseApiKey(null));
 			properties.add(createCookieDetailsPageSlug(null));
 			properties.add(createRatingEnabled(null));
@@ -429,6 +448,7 @@ public class PropertyHelper {
 	public static boolean isSecretProperty (Property property) {
 		return PASSWORD_HASH_SALT.equals(property.name)
 				|| RECAPTCHA_API_KEY.equals(property.name)
+				|| BREVO_API_KEY.equals(property.name)
 				|| FIREBASE_API_KEY.equals(property.name);
 	}
 

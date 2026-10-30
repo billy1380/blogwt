@@ -51,62 +51,14 @@ public class EmailHelper {
 
 		if (!PropertyHelper.isEmpty(email)
 				&& !PropertyHelper.NONE_VALUE.equals(email.value)) {
-			Properties props = new Properties();
-			Session session = Session.getDefaultInstance(props, null);
-
-			try {
-				Message msg = new MimeMessage(session);
-
-				InternetAddress address = new InternetAddress(email.value,
-						PropertyServiceProvider.provide()
-								.getNamedProperty(PropertyHelper.TITLE).value);
-
-				msg.setFrom(address);
-				msg.addRecipient(Message.RecipientType.TO,
-						new InternetAddress(to, name));
-
-				msg.setSubject(subject);
-
-				if (attachments == null || attachments.size() == 0) {
-					if (isHtml) {
-						msg.setContent(body, "text/html");
-					} else {
-						msg.setText(body);
-					}
-				} else {
-					Multipart mp = new MimeMultipart();
-
-					MimeBodyPart content = new MimeBodyPart();
-					if (isHtml) {
-						content.setContent(body, "text/html");
-					} else {
-						content.setText(body);
-					}
-					mp.addBodyPart(content);
-
-					for (String key : attachments.keySet()) {
-						MimeBodyPart attachment = new MimeBodyPart();
-						InputStream attachmentDataStream = new ByteArrayInputStream(
-								attachments.get(key));
-						attachment.setFileName(key);
-						attachment.setContent(attachmentDataStream,
-								"application/pdf");
-						mp.addBodyPart(attachment);
-					}
-
-					msg.setContent(mp);
-				}
-
-				Transport.send(msg);
-
-				if (LOG.isLoggable(Level.INFO)) {
-					LOG.info("Email sent successfully.");
-				}
-
-				sent = true;
-			} catch (MessagingException | UnsupportedEncodingException e) {
-				LOG.log(Level.WARNING, "Error sending email ["
-						+ content(to, name, subject, body) + "]", e);
+			if (BrevoHelper.isEnabled()) {
+				sent = BrevoHelper.send(email.value,
+						PropertyHelper.value(PropertyServiceProvider.provide()
+								.getNamedProperty(PropertyHelper.TITLE)),
+						to, name, subject, body, isHtml, attachments);
+			} else {
+				sent = sendWithAppEngine(email.value, to, name, subject, body,
+						isHtml, attachments);
 			}
 		} else {
 			if (LOG.isLoggable(Level.INFO)) {
@@ -117,6 +69,72 @@ public class EmailHelper {
 
 		if (LOG.isLoggable(Level.FINE)) {
 			LOG.fine("Email [" + content(to, name, subject, body) + "]");
+		}
+
+		return sent;
+	}
+
+	private static boolean sendWithAppEngine (String from, String to,
+			String name, String subject, String body, boolean isHtml,
+			Map<String, byte[]> attachments) {
+		boolean sent = false;
+
+		Properties props = new Properties();
+		Session session = Session.getDefaultInstance(props, null);
+
+		try {
+			Message msg = new MimeMessage(session);
+
+			InternetAddress address = new InternetAddress(from,
+					PropertyServiceProvider.provide()
+							.getNamedProperty(PropertyHelper.TITLE).value);
+
+			msg.setFrom(address);
+			msg.addRecipient(Message.RecipientType.TO,
+					new InternetAddress(to, name));
+
+			msg.setSubject(subject);
+
+			if (attachments == null || attachments.size() == 0) {
+				if (isHtml) {
+					msg.setContent(body, "text/html");
+				} else {
+					msg.setText(body);
+				}
+			} else {
+				Multipart mp = new MimeMultipart();
+
+				MimeBodyPart content = new MimeBodyPart();
+				if (isHtml) {
+					content.setContent(body, "text/html");
+				} else {
+					content.setText(body);
+				}
+				mp.addBodyPart(content);
+
+				for (String key : attachments.keySet()) {
+					MimeBodyPart attachment = new MimeBodyPart();
+					InputStream attachmentDataStream = new ByteArrayInputStream(
+							attachments.get(key));
+					attachment.setFileName(key);
+					attachment.setContent(attachmentDataStream,
+							"application/pdf");
+					mp.addBodyPart(attachment);
+				}
+
+				msg.setContent(mp);
+			}
+
+			Transport.send(msg);
+
+			if (LOG.isLoggable(Level.INFO)) {
+				LOG.info("Email sent successfully.");
+			}
+
+			sent = true;
+		} catch (MessagingException | UnsupportedEncodingException e) {
+			LOG.log(Level.WARNING, "Error sending email ["
+					+ content(to, name, subject, body) + "]", e);
 		}
 
 		return sent;
