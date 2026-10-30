@@ -42,7 +42,10 @@ public class FieldValidator extends ApiValidator {
 			Property reCaptchaKey = PropertyServiceProvider.provide()
 					.getNamedProperty(PropertyHelper.RECAPTCHA_API_KEY);
 
-			if (!RecaptchaHelper.isHuman(field.value, reCaptchaKey.value))
+			// a captcha from reCAPTCHA Enterprise has its site key as the name
+			if (!RecaptchaHelper.isHuman(field.value,
+					reCaptchaKey == null ? null : reCaptchaKey.value,
+					field.name))
 				throwServiceError(InputValidationException.class,
 						ApiError.InvalidValueNull, TYPE + ": " + name);
 			break;
