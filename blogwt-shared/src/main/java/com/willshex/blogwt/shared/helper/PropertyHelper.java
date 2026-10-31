@@ -447,9 +447,20 @@ public class PropertyHelper {
 	 */
 	public static boolean isSecretProperty (Property property) {
 		return PASSWORD_HASH_SALT.equals(property.name)
-				|| RECAPTCHA_SITE_KEY.equals(property.name)
 				|| BREVO_API_KEY.equals(property.name)
 				|| FIREBASE_API_KEY.equals(property.name);
+	}
+
+	/**
+	 * Secret properties never leave the server. A masked property is sent to
+	 * clients, which show it as a password box.
+	 *
+	 * @param property
+	 * @return
+	 */
+	public static boolean isMaskedProperty (Property property) {
+		return isSecretProperty(property)
+				|| RECAPTCHA_SITE_KEY.equals(property.name);
 	}
 
 }

@@ -19,6 +19,6 @@ The Dart clients no longer ask for the parts to build the menu (`GetPages` sends
 Some values should be secret but still be sent to a client, for example the reCAPTCHA site key, which a form has to read to load the captcha.
 
 - Level 1, hidden: set from a client, then never leaves the server (the salt, the Brevo key).
-- Level 2, shown to admins: sent to the client so an admin can view and edit it, and shown as a password box that can be revealed, but never put in the public page script or sent to a signed-out caller.
-- Replace the boolean `isSecretProperty` with a level (for example an enum), so each property says which one it is, and apply it in `GetPropertiesActionHandler`, `MainServlet` and the Dart `PropertyHelper`, `backend_local` and both Properties screens.
-- Decide whether a form's site key could instead be public, which needs no change.
+- Level 2, masked: sent to the client like any property, shown as a password box in the Properties screens. `recaptcha.site.key` is this (the contact form needs it in the browser).
+- Done so far: `isSecretProperty` is level 1 and `isMaskedProperty` (level 1 plus the site key) drives the password boxes, in Java and Dart.
+- Still to do: a real level (for example an enum) on the property itself instead of a list of names; a way to reveal a masked value; and a level between the two that sends the value only to signed-in admins.

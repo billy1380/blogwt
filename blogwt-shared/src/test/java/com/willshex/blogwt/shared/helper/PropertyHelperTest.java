@@ -44,9 +44,13 @@ public class PropertyHelperTest {
 	}
 
 	@Test
-	public void testRecaptchaSiteKeyIsSecretAndInSetup () {
-		Assert.assertTrue(PropertyHelper.isSecretProperty(
+	public void testRecaptchaSiteKeyIsMaskedNotSecretAndInSetup () {
+		Assert.assertFalse(PropertyHelper.isSecretProperty(
 				PropertyHelper.createRecaptchaSiteKey("key")));
+		Assert.assertTrue(PropertyHelper.isMaskedProperty(
+				PropertyHelper.createRecaptchaSiteKey("key")));
+		Assert.assertTrue(PropertyHelper.isMaskedProperty(
+				PropertyHelper.createBrevoApiKey("key")));
 
 		Property listed = null;
 		for (Property property : PropertyHelper.properties()) {
