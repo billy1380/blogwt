@@ -44,6 +44,20 @@ public class PropertyHelperTest {
 	}
 
 	@Test
+	public void testRecaptchaSiteKeyIsPublicAndListed () {
+		Assert.assertFalse(PropertyHelper.isSecretProperty(
+				PropertyHelper.createRecaptchaSiteKey("key")));
+		Assert.assertTrue(PropertyHelper.isSecretProperty(
+				PropertyHelper.createRecaptchaApiKey("key")));
+
+		boolean listed = false;
+		for (Property property : PropertyHelper.properties()) {
+			listed |= PropertyHelper.RECAPTCHA_SITE_KEY.equals(property.name);
+		}
+		Assert.assertTrue(listed);
+	}
+
+	@Test
 	public void testBrevoSwitchIsBoolean () {
 		Property property = PropertyHelper.createBrevoEnabled(Boolean.TRUE);
 

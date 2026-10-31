@@ -88,6 +88,16 @@ public class RecaptchaHelper {
 	}
 
 	/**
+	 * The site key to check a token against: the one set in the properties
+	 * when there is one, so a client cannot choose it, otherwise the one sent
+	 * with the captcha field.
+	 */
+	public static String siteKey (String configured, String submitted) {
+		return configured != null && !configured.trim().isEmpty()
+				? configured.trim() : submitted;
+	}
+
+	/**
 	 * Verifies a token. With a site key the token comes from reCAPTCHA
 	 * Enterprise, which has no secret and is checked with the assessments api
 	 * as this app, otherwise it comes from the original checkbox and is checked

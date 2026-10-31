@@ -33,6 +33,7 @@ public class PropertyHelper {
 	public static final String MARKDOWN_MAPS_API_KEY = "markdown.maps.api.key";
 	public static final String MARKDOWN_PREFETCH_INCLUDES = "markdown.include.prefectch";
 	public static final String RECAPTCHA_API_KEY = "recaptcha.api.key";
+	public static final String RECAPTCHA_SITE_KEY = "recaptcha.site.key";
 
 	public static final String GOOGLE_ANALYTICS_KEY = "google.analytics.key";
 	public static final String GOOGLE_AD_SENSE_KEY = "google.adsense.key";
@@ -92,6 +93,7 @@ public class PropertyHelper {
 	public static final String MARKDOWN_MAPS_API_KEY_DESCRIPTION = "Google Maps API Key";
 	public static final String MARKDOWN_PREFETCH_INCLUDES_DESCIPTION = "Fetch markdown includes on the server before returning mardkown content";
 	public static final String RECAPTCHA_API_KEY_DESCRIPTION = "Server API key (secret)";
+	public static final String RECAPTCHA_SITE_KEY_DESCRIPTION = "reCAPTCHA Enterprise site key (public, used by forms with a captcha)";
 
 	public static final String GOOGLE_ANALYTICS_KEY_DESCRIPTION = "Google Analytics API Key";
 	public static final String GOOGLE_AD_SENSE_KEY_DESCRIPTION = "Google AdSense API Key";
@@ -204,6 +206,12 @@ public class PropertyHelper {
 	public static Property createRecaptchaApiKey (String value) {
 		return new Property().name(RECAPTCHA_API_KEY)
 				.description(RECAPTCHA_API_KEY_DESCRIPTION).value(value)
+				.group("Setup").type("string");
+	}
+
+	public static Property createRecaptchaSiteKey (String value) {
+		return new Property().name(RECAPTCHA_SITE_KEY)
+				.description(RECAPTCHA_SITE_KEY_DESCRIPTION).value(value)
 				.group("Setup").type("string");
 	}
 
@@ -346,7 +354,7 @@ public class PropertyHelper {
 
 	public static Property createBrevoApiKey (String value) {
 		return new Property().name(BREVO_API_KEY)
-				.description(BREVO_API_KEY_DESCRIPTION).group("Functional")
+				.description(BREVO_API_KEY_DESCRIPTION).group("Setup")
 				.type("string").value(value);
 	}
 
@@ -401,6 +409,7 @@ public class PropertyHelper {
 			properties.add(createMarkdownMapsApiKey(null));
 			properties.add(createDisqusId(null));
 			properties.add(createRecaptchaApiKey(null));
+			properties.add(createRecaptchaSiteKey(null));
 			properties.add(createGoogleAnalyticsApiKey(null));
 			properties.add(createGoogleAdSenseApiKey(null));
 			properties.add(createCategoryId(null));
