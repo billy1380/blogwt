@@ -452,6 +452,18 @@ public class PropertyHelper {
 	}
 
 	/**
+	 * A secret property with no value. Clients cannot read secrets back, so an
+	 * untouched secret field arrives empty and must not be saved over (or
+	 * create) the real value.
+	 *
+	 * @param property
+	 * @return
+	 */
+	public static boolean isBlankSecret (Property property) {
+		return isSecretProperty(property) && isEmpty(property);
+	}
+
+	/**
 	 * Secret properties never leave the server. A masked property is sent to
 	 * clients, which show it as a password box.
 	 *

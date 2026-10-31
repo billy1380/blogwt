@@ -20,6 +20,7 @@ import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesRequest;
 import com.willshex.blogwt.shared.api.blog.call.UpdatePropertiesResponse;
 import com.willshex.blogwt.shared.api.datatype.Property;
+import com.willshex.blogwt.shared.helper.PropertyHelper;
 import com.willshex.gson.web.service.server.InputValidationException;
 
 public final class UpdatePropertiesActionHandler extends
@@ -43,6 +44,14 @@ public final class UpdatePropertiesActionHandler extends
 		Property existingProperty = null;
 		boolean found;
 		for (Property property : updatedProperties) {
+			if (PropertyHelper.isBlankSecret(property)) {
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info("Property [" + property.name
+							+ "] is secret and empty. Not saving it.");
+				}
+				continue;
+			}
+
 			found = false;
 			try {
 				existingProperty = PropertyValidator.lookup(property,
@@ -52,7 +61,9 @@ public final class UpdatePropertiesActionHandler extends
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info("Property [" + property.name
 							+ "] does not exist. Will add with value ["
-							+ property.value + "].");
+							+ (PropertyHelper.isMaskedProperty(property)
+									? "hidden" : property.value)
+							+ "].");
 				}
 			}
 

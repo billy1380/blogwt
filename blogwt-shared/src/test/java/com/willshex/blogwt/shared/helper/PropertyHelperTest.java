@@ -64,6 +64,19 @@ public class PropertyHelperTest {
 	}
 
 	@Test
+	public void testBlankSecretIsNotSaved () {
+		Assert.assertTrue(PropertyHelper.isBlankSecret(
+				new Property().name(PropertyHelper.PASSWORD_HASH_SALT)
+						.value("")));
+		Assert.assertTrue(PropertyHelper.isBlankSecret(
+				new Property().name(PropertyHelper.BREVO_API_KEY)));
+		Assert.assertFalse(PropertyHelper.isBlankSecret(
+				PropertyHelper.createBrevoApiKey("key")));
+		Assert.assertFalse(PropertyHelper.isBlankSecret(
+				new Property().name(PropertyHelper.TITLE).value("")));
+	}
+
+	@Test
 	public void testBrevoSwitchIsBoolean () {
 		Property property = PropertyHelper.createBrevoEnabled(Boolean.TRUE);
 
