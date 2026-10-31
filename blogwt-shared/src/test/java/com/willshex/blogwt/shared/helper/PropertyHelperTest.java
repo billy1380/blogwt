@@ -44,17 +44,19 @@ public class PropertyHelperTest {
 	}
 
 	@Test
-	public void testRecaptchaSiteKeyIsPublicAndListed () {
-		Assert.assertFalse(PropertyHelper.isSecretProperty(
-				PropertyHelper.createRecaptchaSiteKey("key")));
+	public void testRecaptchaSiteKeyIsSecretAndInSetup () {
 		Assert.assertTrue(PropertyHelper.isSecretProperty(
-				PropertyHelper.createRecaptchaApiKey("key")));
+				PropertyHelper.createRecaptchaSiteKey("key")));
 
-		boolean listed = false;
+		Property listed = null;
 		for (Property property : PropertyHelper.properties()) {
-			listed |= PropertyHelper.RECAPTCHA_SITE_KEY.equals(property.name);
+			if (PropertyHelper.RECAPTCHA_SITE_KEY.equals(property.name)) {
+				listed = property;
+			}
+			Assert.assertNotEquals("recaptcha.api.key", property.name);
 		}
-		Assert.assertTrue(listed);
+		Assert.assertNotNull(listed);
+		Assert.assertEquals("Setup", listed.group);
 	}
 
 	@Test
