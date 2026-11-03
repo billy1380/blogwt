@@ -23,6 +23,7 @@ import com.willshex.blogwt.server.service.generateddownload.GeneratedDownloadSer
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownload;
 import com.willshex.blogwt.shared.api.datatype.Session;
 import com.willshex.blogwt.shared.api.download.Download;
+import com.willshex.blogwt.shared.helper.DataTypeHelper;
 import com.willshex.blogwt.shared.api.download.call.DeleteGeneratedDownloadsRequest;
 import com.willshex.blogwt.shared.api.download.call.GenerateDownloadRequest;
 import com.willshex.blogwt.shared.api.download.call.GetGeneratedDownloadsRequest;
@@ -82,8 +83,10 @@ public final class DownloadJsonServlet extends JsonServlet {
 					GeneratedDownload generatedDownload = GeneratedDownloadServiceProvider
 							.provide().getGeneratedDownload(id);
 
-					if (generatedDownload.userKey.getId() == userSession.userKey
-							.getId()) {
+					if (generatedDownload == null) {
+						RESPONSE.get().sendError(404, "No such download");
+					} else if (DataTypeHelper.same(generatedDownload.userKey,
+							userSession.userKey)) {
 						Filter filter = Filter.fromStack(
 								Stack.parse(generatedDownload.parameters));
 

@@ -31,8 +31,14 @@ public class DataTypeHelper {
 				&& a.getId() == b.id.longValue();
 	}
 
+	/**
+	 * Whether two keys have the same id. An id is a boxed <code>Long</code>, so
+	 * it is compared by value: <code>==</code> would compare the objects, which
+	 * differ for any id over 127 even when it is the same one.
+	 */
 	public static <T extends DataType> boolean same (Key<T> a, Key<T> b) {
-		return a != null && b != null && a.getId() == b.getId();
+		return a != null && b != null && a.getId() != null
+				&& a.getId().equals(b.getId());
 	}
 
 	public static <T extends DataType> boolean same (T a, Long id) {
