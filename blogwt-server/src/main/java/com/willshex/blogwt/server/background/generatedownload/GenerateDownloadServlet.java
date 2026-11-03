@@ -99,8 +99,8 @@ public class GenerateDownloadServlet extends ContextAwareServlet
 			}
 
 			generatedDownload.status = GeneratedDownloadStatusType.GeneratedDownloadStatusTypeReady;
-			generatedDownload.url = "/download?action=download&id="
-					+ generatedDownload.id;
+			generatedDownload.url = GeneratedDownloadHelper
+					.url(generatedDownload);
 
 			GeneratedDownloadServiceProvider.provide()
 					.updateGeneratedDownload(generatedDownload);

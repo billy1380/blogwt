@@ -28,6 +28,7 @@ import com.willshex.blogwt.shared.api.Pager;
 import com.willshex.blogwt.shared.api.datatype.DataType;
 import com.willshex.blogwt.shared.api.datatype.GeneratedDownload;
 import com.willshex.blogwt.shared.api.datatype.User;
+import com.willshex.blogwt.shared.api.download.Download;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.page.Stack;
 import com.willshex.blogwt.shared.page.search.Filter;
@@ -232,6 +233,14 @@ public class GeneratedDownloadHelper {
 
 		return filter.type + "/" + generatedDownload.id + "."
 				+ DownloadGeneratorProvider.extension(filter.type).get();
+	}
+
+	/**
+	 * The address a browser fetches the finished file from, which the download
+	 * servlet answers.
+	 */
+	public static String url (GeneratedDownload generatedDownload) {
+		return Download.PATH + "?action=download&id=" + generatedDownload.id;
 	}
 
 	public static String path (GeneratedDownload generatedDownload) {

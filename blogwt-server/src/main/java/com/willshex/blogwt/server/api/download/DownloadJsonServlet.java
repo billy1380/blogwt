@@ -31,8 +31,16 @@ import com.willshex.blogwt.shared.page.search.Filter;
 import com.willshex.gson.web.service.server.JsonServlet;
 import com.willshex.utility.StringUtils;
 
-@WebServlet(name = "Download API", urlPatterns = Download.PATH)
+@WebServlet(name = "Download API", urlPatterns = { Download.PATH,
+		DownloadJsonServlet.LEGACY_FILE_PATH })
 public final class DownloadJsonServlet extends JsonServlet {
+
+	/**
+	 * Generated downloads used to be given the address
+	 * <code>/download?action=download&amp;id=</code>, which is kept in the ones
+	 * already made, so it is still served here.
+	 */
+	public static final String LEGACY_FILE_PATH = "/download";
 
 	private static final String ENTITY_ID_KEY = "id";
 
