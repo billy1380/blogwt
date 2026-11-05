@@ -89,3 +89,6 @@ The project is a multi-module Maven project:
 - a call added, removed or changed (a `*Request` / `*Response` pair in `api/blog/call` and friends, its `*ActionHandler`, its entry in the servlet): update the matching service's `operations`, with `inputs` from the request fields and `outputs` from the response fields.
 
 Keep the file's formatting (4 space indent, no space after the colon) so a diff only shows what really changed.
+
+## Admin menu
+The admin menu is pages with a `route`, created at setup and by the `fixadminpages` dev action. See `docs/admin_pages.md`.

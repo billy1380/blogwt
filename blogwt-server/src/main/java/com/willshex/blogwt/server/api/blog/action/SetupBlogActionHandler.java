@@ -14,6 +14,7 @@ import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PropertyValidator;
 import com.willshex.blogwt.server.api.validation.RoleValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
+import com.willshex.blogwt.server.dev.actions.FixAdminPagesAction;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.property.IPropertyService;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
@@ -77,6 +78,11 @@ public final class SetupBlogActionHandler
 		}
 
 		UserServiceProvider.provide().addUserBatch(input.users);
+
+		// the admin menu is pages, owned by the first user added
+		if (!input.users.isEmpty() && input.users.get(0).id != null) {
+			FixAdminPagesAction.addMissing(input.users.get(0));
+		}
 	}
 	@Override
 	protected SetupBlogResponse newOutput () {

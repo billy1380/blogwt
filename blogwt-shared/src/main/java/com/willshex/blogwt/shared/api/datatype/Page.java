@@ -45,6 +45,12 @@ public class Page extends DataType {
 	@Index(value = IfNotNull.class) public Float priority;
 	public String icon;
 	public String subtitle;
+	/**
+	 * When set the page is an admin menu item rather than a content page: the
+	 * client route it opens (an empty route is a group that only folds its
+	 * children). Who may see it is decided by the client's rules for the route.
+	 */
+	public String route;
 
 	@Override
 	public JsonObject toJson () {
@@ -92,6 +98,9 @@ public class Page extends DataType {
 		JsonElement jsonSubtitle = subtitle == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(subtitle);
 		object.add("subtitle", jsonSubtitle);
+		JsonElement jsonRoute = route == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(route);
+		object.add("route", jsonRoute);
 		return object;
 	}
 
@@ -181,6 +190,12 @@ public class Page extends DataType {
 				subtitle = jsonSubtitle.getAsString();
 			}
 		}
+		if (jsonObject.has("route")) {
+			JsonElement jsonRoute = jsonObject.get("route");
+			if (jsonRoute != null && !jsonRoute.isJsonNull()) {
+				route = jsonRoute.getAsString();
+			}
+		}
 	}
 
 	public Page posts (List<Post> posts) {
@@ -225,6 +240,11 @@ public class Page extends DataType {
 
 	public Page subtitle (String subtitle) {
 		this.subtitle = subtitle;
+		return this;
+	}
+
+	public Page route (String route) {
+		this.route = route;
 		return this;
 	}
 

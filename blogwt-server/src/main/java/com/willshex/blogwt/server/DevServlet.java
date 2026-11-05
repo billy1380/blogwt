@@ -27,6 +27,7 @@ import com.willshex.blogwt.server.dev.actions.ClearSearchAction;
 import com.willshex.blogwt.server.dev.actions.ConvertStringsAction;
 import com.willshex.blogwt.server.dev.actions.DeletePostsAction;
 import com.willshex.blogwt.server.dev.actions.ExportAction;
+import com.willshex.blogwt.server.dev.actions.FixAdminPagesAction;
 import com.willshex.blogwt.server.dev.actions.FixMetaNotificationsAction;
 import com.willshex.blogwt.server.dev.actions.FixPermissionsAction;
 import com.willshex.blogwt.server.dev.actions.FixPropertiesAction;
@@ -86,6 +87,7 @@ public class DevServlet extends ContextAwareServlet {
 			actions.put("fixroles", new FixRolesAction());
 			actions.put("fixpermissions", new FixPermissionsAction());
 			actions.put("fixproperties", new FixPropertiesAction());
+			actions.put("fixadminpages", new FixAdminPagesAction());
 			actions.put("getposts", new GetPostsAction());
 			actions.put("staticurl", new StaticUrlAction());
 			actions.put("fixmetanotifications",

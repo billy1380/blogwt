@@ -1072,6 +1072,12 @@
                     "type":"string",
                     "collection":false,
                     "enumeration":false
+                },
+                {
+                    "name":"route",
+                    "type":"string",
+                    "collection":false,
+                    "enumeration":false
                 }
             ],
             "parentName":"DataType"
