@@ -16,8 +16,8 @@ import com.willshex.blogwt.shared.api.datatype.User;
 import com.willshex.blogwt.shared.helper.AdminPageHelper;
 
 /**
- * Adds any admin menu pages (see {@link AdminPageHelper}) that are missing.
- * Pages that exist are left alone, so this is safe to run again.
+ * Adds the admin menu pages (see {@link AdminPageHelper}) that are missing and
+ * resets the ones that exist to their definition. Safe to run again.
  */
 public class FixAdminPagesAction implements DevAction {
 	private static final Logger LOG = Logger
@@ -41,6 +41,10 @@ public class FixAdminPagesAction implements DevAction {
 	}
 
 	/**
+	 * Adds the admin pages that are missing and puts the ones that exist back
+	 * to their definition (title, icon, route, parent and priority), so a
+	 * change to the definition reaches a site by running this again.
+	 *
 	 * @param owner the user the new pages belong to
 	 * @return how many pages were added
 	 */
@@ -48,10 +52,8 @@ public class FixAdminPagesAction implements DevAction {
 		int added = 0;
 
 		for (Page page : AdminPageHelper.createAll()) {
-			if (PageServiceProvider.provide().getSlugPage(page.slug,
-					Boolean.FALSE) != null) {
-				continue;
-			}
+			Page existing = PageServiceProvider.provide()
+					.getSlugPage(page.slug, Boolean.FALSE);
 
 			if (page.parent != null) {
 				Page parent = PageServiceProvider.provide()
@@ -64,6 +66,22 @@ public class FixAdminPagesAction implements DevAction {
 				}
 
 				page.parent = parent;
+			}
+
+			if (existing != null) {
+				existing.title = page.title;
+				existing.icon = page.icon;
+				existing.route = page.route;
+				existing.subtitle = null;
+				existing.priority = page.priority;
+				existing.parent = page.parent;
+
+				if (existing.posts == null) {
+					existing.posts = new ArrayList<>();
+				}
+
+				PageServiceProvider.provide().updatePage(existing);
+				continue;
 			}
 
 			page.owner = owner;

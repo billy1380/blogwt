@@ -19,12 +19,20 @@ import com.willshex.blogwt.shared.api.datatype.Page;
  * page is a sub item, and an empty route is a group that only folds its
  * children.
  *
- * Setup and the <code>fixadminpages</code> dev action add whatever is missing
- * (by slug) and leave existing pages alone, so they can be edited afterwards.
+ * Setup adds the pages. The <code>fixadminpages</code> dev action adds whatever
+ * is missing (by slug) and resets the others to this definition, so a change
+ * here reaches an existing site by running it again.
  */
 public class AdminPageHelper {
 
 	public static final String PREFIX = "admin-";
+
+	/**
+	 * The parent of the admin menu: an admin page with an empty route, which
+	 * is the Admin menu itself. It is only shown to a user who may see one of
+	 * its parts.
+	 */
+	public static final String ADMIN = "admin";
 
 	public static final String PROPERTIES = PREFIX + "properties";
 	public static final String POSTS = PREFIX + "posts";
@@ -39,23 +47,24 @@ public class AdminPageHelper {
 	/**
 	 * Sets of pages that a site built on blogwt adds to the admin menu, each
 	 * called when the pages are created. A parent has to come before its
-	 * children, and may be any page already created (or in this list) by slug.
+	 * children, and may be any page already created (or in this list) by slug,
+	 * {@link #ADMIN} for the top level. A child's priority is its parent's plus
+	 * its place after the point, as in 3.1, 3.2 and, a level down, 3.11.
 	 */
 	public static final List<java.util.function.Supplier<Collection<Page>>> extensions = new ArrayList<>();
 
 	/**
-	 * @param slug unique, and begins with {@link #PREFIX}
+	 * @param slug unique, and begins with {@link #PREFIX} (or is {@link #ADMIN})
 	 * @param title
-	 * @param subtitle
 	 * @param icon name of an icon
 	 * @param route the client route, or empty for a group
 	 * @param parentSlug slug of the parent admin page, or <code>null</code>
 	 * @param priority the order among its siblings
 	 */
-	public static Page create (String slug, String title, String subtitle,
-			String icon, String route, String parentSlug, float priority) {
-		Page page = new Page().slug(slug).title(title).subtitle(subtitle)
-				.icon(icon).route(route).priority(Float.valueOf(priority));
+	public static Page create (String slug, String title, String icon,
+			String route, String parentSlug, float priority) {
+		Page page = new Page().slug(slug).title(title).icon(icon).route(route)
+				.priority(Float.valueOf(priority));
 
 		if (parentSlug != null) {
 			page.parent = new Page().slug(parentSlug);
@@ -76,25 +85,22 @@ public class AdminPageHelper {
 	public static Collection<Page> createAll () {
 		List<Page> all = new ArrayList<Page>();
 
-		all.add(create(PROPERTIES, "Properties", "Change properties",
-				"keyboard", "/properties", null, 1));
-		all.add(create(POSTS, "Posts", "View and edit posts", "edit",
-				"/posts", null, 2));
-		all.add(create(PAGES, "Pages", "View and edit pages", "book",
-				"/pages", null, 3));
-		all.add(create(USERS, "Users", "Manage users", "face", "/users",
-				null, 4));
-		all.add(create(ROLES, "Roles", "View roles", "group", "/roles",
-				null, 5));
-		all.add(create(PERMISSIONS, "Permissions", "View permissions",
-				"thumbs_up_down", "/permissions", null, 6));
-		all.add(create(RESOURCES, "Resources", "Add and delete resources",
-				"photo_album", "/resources", null, 7));
-		all.add(create(COMMENTS, "Comments", "Review and moderate comments",
-				"chat", "/comments", null, 8));
-		all.add(create(NOTIFICATIONS, "Notifications",
-				"View meta-notifications", "notifications",
-				"/metanotifications", null, 9));
+		all.add(create(ADMIN, "Admin", "admin", "", null, 3f));
+
+		all.add(create(PROPERTIES, "Properties", "keyboard", "/properties",
+				ADMIN, 3.1f));
+		all.add(create(POSTS, "Posts", "edit", "/posts", ADMIN, 3.2f));
+		all.add(create(PAGES, "Pages", "book", "/pages", ADMIN, 3.3f));
+		all.add(create(USERS, "Users", "face", "/users", ADMIN, 3.4f));
+		all.add(create(ROLES, "Roles", "group", "/roles", ADMIN, 3.5f));
+		all.add(create(PERMISSIONS, "Permissions", "thumbs_up_down",
+				"/permissions", ADMIN, 3.6f));
+		all.add(create(RESOURCES, "Resources", "photo_album", "/resources",
+				ADMIN, 3.7f));
+		all.add(create(COMMENTS, "Comments", "chat", "/comments", ADMIN,
+				3.8f));
+		all.add(create(NOTIFICATIONS, "Notifications", "notifications",
+				"/metanotifications", ADMIN, 3.9f));
 
 		for (java.util.function.Supplier<Collection<Page>> extension : extensions) {
 			all.addAll(extension.get());
