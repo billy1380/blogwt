@@ -73,6 +73,16 @@ To deploy the application to Google App Engine, ensure you have built the projec
    ```
 This command uploads the application to the App Engine project configured in `pom.xml`.
 
+## Using a named Datastore database
+
+By default the server uses the project's `(default)` Datastore database. To use a named database in the same project (for example a copy of live data called `test`), set the system property `datastore.database.id` before the server starts: `PersistenceServiceProvider.init` reads it and builds Objectify on that database. Unset, empty or `(default)` keeps the default database.
+
+- **On App Engine:** add `<property name="datastore.database.id" value="test"/>` to `<system-properties>` in `appengine-web.xml` of the version you deploy (deploy it without traffic, for example with `-Dapp.deploy.promote=false`, and use its `<version>-dot-<project>.appspot.com` address).
+- **Locally:** pass `-Ddatastore.database.id=test` to the dev server.
+- **Not covered:** the legacy App Engine APIs (the task queue, memcache) still use the default database. Check anything that depends on them before trusting a test run.
+- The properties page and every other setting are stored in the database, so a copy of live data also copies live settings: set outgoing email to none and use test payment keys on the copy.
+- The database must exist first (Datastore mode, for example created with `gcloud firestore databases create --database=test --type=datastore-mode --location=<same as default>`).
+
 ## Project Structure
 The project is a multi-module Maven project:
 - **blogwt-shared**: Common code shared between client and server (DTOs, Enums, Utils).

@@ -11,7 +11,9 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebFilter;
 
+import com.google.cloud.datastore.DatastoreOptions;
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.ObjectifyService.FilterJavax;
 import com.googlecode.objectify.impl.translate.TranslatorFactory;
@@ -64,11 +66,22 @@ public class PersistenceServiceProvider {
 		}
 	}
 
+	/** System property naming a Datastore database; unset means (default). */
+	public static final String DATABASE_ID_PROPERTY = "datastore.database.id";
+
 	private static boolean initialised = false;
 
 	public static synchronized void init() {
 		if (!initialised) {
-			ObjectifyService.init();
+			String databaseId = databaseId(
+					System.getProperty(DATABASE_ID_PROPERTY));
+			if (databaseId == null) {
+				ObjectifyService.init();
+			} else {
+				ObjectifyService.init(new ObjectifyFactory(DatastoreOptions
+						.newBuilder().setDatabaseId(databaseId).build()
+						.getService()));
+			}
 
 			registerCoreTranslators();
 			registerOtherTranslators();
@@ -78,6 +91,11 @@ public class PersistenceServiceProvider {
 
 			initialised = true;
 		}
+	}
+
+	static String databaseId(String value) {
+		return value == null || value.trim().isEmpty()
+				|| "(default)".equals(value.trim()) ? null : value.trim();
 	}
 
 	public static Objectify provide() {
