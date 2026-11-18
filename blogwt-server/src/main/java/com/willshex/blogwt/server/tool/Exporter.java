@@ -73,10 +73,47 @@ public class Exporter {
 			export(Reaction.class, this::convertKeysToIdsReactions, tar);
 			export(Relationship.class, this::convertKeysToIdsRelationships, tar);
 			export(Resource.class, null, tar);
+			exportResourceFiles(tar);
 			export(Role.class, this::convertKeysToIdsRoles, tar);
 			export(Session.class, this::convertKeysToIdsSessions, tar);
 			export(Tag.class, this::convertKeysToIdsTags, tar);
 			export(User.class, this::convertKeysToIdsUsers, tar);
+		}
+	}
+
+	/** What one export may hold of resource files: a download is limited. */
+	private static final long MAX_FILES_BYTES = 24L * 1024 * 1024;
+
+	/**
+	 * The files of the resources, as <code>ResourceFile/&lt;id&gt;</code>
+	 * entries that hold the bytes, until the export would get too big.
+	 */
+	private void exportResourceFiles(TarOutputStream tar) throws IOException {
+		long total = 0;
+
+		for (Resource resource : provide().load().type(Resource.class)
+				.list()) {
+			if (resource.id == null) continue;
+
+			byte[] data = ResourceFiles.read(resource);
+
+			if (data == null) {
+				LOG.warning("No file for resource " + resource.id);
+				continue;
+			}
+
+			if (total + data.length > MAX_FILES_BYTES) {
+				LOG.warning("Leaving out the file of resource " + resource.id
+						+ ": the export is full");
+				continue;
+			}
+
+			total += data.length;
+
+			tar.putNextEntry(new TarEntry(TarHeader.createHeader(
+					"ResourceFile/" + resource.id, data.length,
+					System.currentTimeMillis() / 1000, false, 0644)));
+			tar.write(data);
 		}
 	}
 
