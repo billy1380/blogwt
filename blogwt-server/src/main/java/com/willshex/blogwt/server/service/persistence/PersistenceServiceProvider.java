@@ -78,9 +78,15 @@ public class PersistenceServiceProvider {
 			if (databaseId == null) {
 				ObjectifyService.init();
 			} else {
-				ObjectifyService.init(new ObjectifyFactory(DatastoreOptions
-						.newBuilder().setDatabaseId(databaseId).build()
-						.getService()));
+				DatastoreOptions.Builder options = DatastoreOptions.newBuilder()
+						.setDatabaseId(databaseId);
+				// the bundled services report "s~project", which a named database rejects
+				String project = System.getenv("GOOGLE_CLOUD_PROJECT");
+				if (project != null && !project.isEmpty()) {
+					options.setProjectId(project);
+				}
+				ObjectifyService.init(
+						new ObjectifyFactory(options.build().getService()));
 			}
 
 			registerCoreTranslators();
