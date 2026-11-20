@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
+import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.service.property.PropertyServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.GetPropertiesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetPropertiesResponse;
@@ -63,11 +64,19 @@ public final class GetPropertiesActionHandler
 		super.clearSensitiveFields(output);
 
 		if (output.properties != null) {
+			boolean admin = output.session != null
+					&& UserValidator.isAdmin(output.session.user);
 			Property property;
+			String secrecy;
 			for (int i = output.properties.size() - 1; i >= 0; i--) {
 				property = output.properties.get(i);
-				if (PropertyHelper.isSecretProperty(property)) {
+				secrecy = PropertyHelper.secrecy(property);
+				if (PropertyHelper.SECRECY_HIDDEN.equals(secrecy)
+						|| (PropertyHelper.SECRECY_ADMIN.equals(secrecy)
+								&& !admin)) {
 					output.properties.remove(i);
+				} else {
+					property.secrecy = secrecy;
 				}
 			}
 		}

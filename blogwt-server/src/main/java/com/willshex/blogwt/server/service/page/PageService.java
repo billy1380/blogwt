@@ -180,10 +180,7 @@ final class PageService implements IPageService {
 			}
 		}
 
-		// FIXME: just load in one go (batch)
-		for (Post post : posts) {
-			post.content = PostServiceProvider.provide().getPostContent(post);
-		}
+		PostServiceProvider.provide().populateContents(posts);
 
 		Map<Long, Post> postLookup = new HashMap<Long, Post>();
 		for (Post post : posts) {

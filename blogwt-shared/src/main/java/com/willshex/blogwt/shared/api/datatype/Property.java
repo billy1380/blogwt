@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
@@ -23,6 +24,8 @@ public class Property extends DataType {
 	@Index public String value;
 	public String group;
 	public String type;
+	/** Who may read the value, see PropertyHelper.secrecy; not stored. */
+	@Ignore public String secrecy;
 
 	@Override
 	public JsonObject toJson () {
@@ -42,6 +45,9 @@ public class Property extends DataType {
 		JsonElement jsonType = type == null ? JsonNull.INSTANCE
 				: new JsonPrimitive(type);
 		object.add("type", jsonType);
+		JsonElement jsonSecrecy = secrecy == null ? JsonNull.INSTANCE
+				: new JsonPrimitive(secrecy);
+		object.add("secrecy", jsonSecrecy);
 		return object;
 	}
 
@@ -78,6 +84,12 @@ public class Property extends DataType {
 				type = jsonType.getAsString();
 			}
 		}
+		if (jsonObject.has("secrecy")) {
+			JsonElement jsonSecrecy = jsonObject.get("secrecy");
+			if (jsonSecrecy != null) {
+				secrecy = jsonSecrecy.getAsString();
+			}
+		}
 	}
 
 	public Property name (String name) {
@@ -102,6 +114,11 @@ public class Property extends DataType {
 
 	public Property type (String type) {
 		this.type = type;
+		return this;
+	}
+
+	public Property secrecy (String secrecy) {
+		this.secrecy = secrecy;
 		return this;
 	}
 }

@@ -143,6 +143,14 @@ public interface IPostService extends IService, BatchGetter<Post> {
 	public PostContent getPostContent (Post post);
 
 	/**
+	 * Loads the content of every post in one batch; posts without content are
+	 * left as they are.
+	 * 
+	 * @param posts
+	 */
+	public void populateContents (List<Post> posts);
+
+	/**
 	 * @param ids
 	 */
 	public List<Post> getIdPostBatch (Iterable<Long> ids);

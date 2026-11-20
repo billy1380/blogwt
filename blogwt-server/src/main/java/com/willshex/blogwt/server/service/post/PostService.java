@@ -378,17 +378,7 @@ final class PostService implements IPostService, ISearch<Post> {
 		List<Post> posts = query.list();
 
 		if (Boolean.TRUE.equals(includeContents)) {
-			List<Long> postContentIds = new ArrayList<Long>();
-
-			for (Post post : posts) {
-				postContentIds.add(keyToId(post.contentKey));
-			}
-
-			Map<Long, PostContent> contents = loadContent().ids(postContentIds);
-
-			for (Post post : posts) {
-				post.content = contents.get(keyToId(post.contentKey));
-			}
+			populateContents(posts);
 		}
 
 		return posts;
@@ -413,6 +403,29 @@ final class PostService implements IPostService, ISearch<Post> {
 	public Long getPostsCount(Boolean showAll) {
 		return getUserViewablePostsCount(null, showAll);
 	}
+	@Override
+	public void populateContents(List<Post> posts) {
+		List<Long> contentIds = new ArrayList<Long>();
+
+		for (Post post : posts) {
+			if (post.contentKey != null) {
+				contentIds.add(keyToId(post.contentKey));
+			}
+		}
+
+		if (contentIds.isEmpty()) {
+			return;
+		}
+
+		Map<Long, PostContent> contents = loadContent().ids(contentIds);
+
+		for (Post post : posts) {
+			if (post.contentKey != null) {
+				post.content = contents.get(keyToId(post.contentKey));
+			}
+		}
+	}
+
 	@Override
 	public PostContent getPostContent(Post post) {
 		return loadContent().id(post.contentKey.getId()).now();
@@ -527,17 +540,7 @@ final class PostService implements IPostService, ISearch<Post> {
 		List<Post> posts = query.list();
 
 		if (Boolean.TRUE.equals(includeContents)) {
-			List<Long> postContentIds = new ArrayList<Long>();
-
-			for (Post post : posts) {
-				postContentIds.add(keyToId(post.contentKey));
-			}
-
-			Map<Long, PostContent> contents = loadContent().ids(postContentIds);
-
-			for (Post post : posts) {
-				post.content = contents.get(keyToId(post.contentKey));
-			}
+			populateContents(posts);
 		}
 
 		return posts;

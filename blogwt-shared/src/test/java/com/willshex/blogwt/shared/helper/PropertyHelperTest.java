@@ -64,6 +64,19 @@ public class PropertyHelperTest {
 	}
 
 	@Test
+	public void testSecrecyLevels () {
+		Property admin = new Property().name("some.admin.key")
+				.secrecy(PropertyHelper.SECRECY_ADMIN);
+		Assert.assertFalse(PropertyHelper.isSecretProperty(admin));
+		Assert.assertTrue(PropertyHelper.isMaskedProperty(admin));
+		Assert.assertFalse(PropertyHelper.isBlankSecret(admin));
+
+		Property loosened = new Property().name(PropertyHelper.BREVO_API_KEY)
+				.secrecy(PropertyHelper.SECRECY_MASKED);
+		Assert.assertTrue(PropertyHelper.isSecretProperty(loosened));
+	}
+
+	@Test
 	public void testBlankSecretIsNotSaved () {
 		Assert.assertTrue(PropertyHelper.isBlankSecret(
 				new Property().name(PropertyHelper.PASSWORD_HASH_SALT)

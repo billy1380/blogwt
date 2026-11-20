@@ -441,20 +441,46 @@ public class PropertyHelper {
 		return property == null ? null : property.value;
 	}
 
+	/** Never leaves the server: set from a client, never read back. */
+	public static final String SECRECY_HIDDEN = "hidden";
+	/** Sent only to signed-in admins, shown as a password box. */
+	public static final String SECRECY_ADMIN = "admin";
+	/** Sent to every client like any property, shown as a password box. */
+	public static final String SECRECY_MASKED = "masked";
+
+	/**
+	 * Who may read the value: one of the SECRECY_ constants, or null for an
+	 * ordinary property. The name decides first, so a client cannot loosen it.
+	 *
+	 * @param property
+	 * @return
+	 */
+	public static String secrecy (Property property) {
+		if (PASSWORD_HASH_SALT.equals(property.name)
+				|| BREVO_API_KEY.equals(property.name)
+				|| FIREBASE_API_KEY.equals(property.name)) {
+			return SECRECY_HIDDEN;
+		}
+
+		if (RECAPTCHA_SITE_KEY.equals(property.name)) {
+			return SECRECY_MASKED;
+		}
+
+		return property.secrecy;
+	}
+
 	/**
 	 * @param property
 	 * @return
 	 */
 	public static boolean isSecretProperty (Property property) {
-		return PASSWORD_HASH_SALT.equals(property.name)
-				|| BREVO_API_KEY.equals(property.name)
-				|| FIREBASE_API_KEY.equals(property.name);
+		return SECRECY_HIDDEN.equals(secrecy(property));
 	}
 
 	/**
-	 * A secret property with no value. Clients cannot read secrets back, so an
-	 * untouched secret field arrives empty and must not be saved over (or
-	 * create) the real value.
+	 * A hidden property with no value. Clients cannot read it back, so an
+	 * untouched field arrives empty and must not be saved over (or create)
+	 * the real value.
 	 *
 	 * @param property
 	 * @return
@@ -464,15 +490,13 @@ public class PropertyHelper {
 	}
 
 	/**
-	 * Secret properties never leave the server. A masked property is sent to
-	 * clients, which show it as a password box.
+	 * Clients show a property of any secrecy as a password box.
 	 *
 	 * @param property
 	 * @return
 	 */
 	public static boolean isMaskedProperty (Property property) {
-		return isSecretProperty(property)
-				|| RECAPTCHA_SITE_KEY.equals(property.name);
+		return secrecy(property) != null;
 	}
 
 }

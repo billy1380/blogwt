@@ -1393,6 +1393,12 @@
                     "type":"string",
                     "collection":false,
                     "enumeration":false
+                },
+                {
+                    "name":"secrecy",
+                    "type":"string",
+                    "collection":false,
+                    "enumeration":false
                 }
             ],
             "parentName":"DataType"
