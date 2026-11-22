@@ -44,8 +44,9 @@ public final class UpdatePropertiesActionHandler extends
 		Property existingProperty = null;
 		boolean found;
 		for (Property property : updatedProperties) {
-			if (PropertyHelper.isBlankSecret(property)) {
-				if (LOG.isLoggable(Level.INFO)) {
+			if (shouldSkip(property)) {
+				if (LOG.isLoggable(Level.INFO)
+						&& PropertyHelper.isBlankSecret(property)) {
 					LOG.info("Property [" + property.name
 							+ "] is secret and empty. Not saving it.");
 				}
@@ -76,6 +77,11 @@ public final class UpdatePropertiesActionHandler extends
 			}
 		}
 	}
+	static boolean shouldSkip (Property property) {
+		return PropertyHelper.isBlankSecret(property)
+				|| PropertyHelper.VERSION.equals(property.name);
+	}
+
 	@Override
 	protected UpdatePropertiesResponse newOutput () {
 		return new UpdatePropertiesResponse();
