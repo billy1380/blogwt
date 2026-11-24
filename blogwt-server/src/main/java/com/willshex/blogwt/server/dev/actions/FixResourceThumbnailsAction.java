@@ -32,7 +32,8 @@ public class FixResourceThumbnailsAction implements DevAction {
 		int wanted = 0;
 
 		for (Resource resource : resources) {
-			if (resource.data == null || !resource.data.startsWith("gs://")) {
+			if (resource.data == null || resource.data.isEmpty()
+					|| ThumbnailHelper.notAnImage(resource)) {
 				continue;
 			}
 

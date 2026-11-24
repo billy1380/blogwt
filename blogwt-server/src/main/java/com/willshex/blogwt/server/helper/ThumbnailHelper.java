@@ -9,11 +9,13 @@ package com.willshex.blogwt.server.helper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.channels.Channels;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.appengine.api.blobstore.BlobInfo;
+import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreInputStream;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.images.Image;
 import com.google.appengine.api.images.ImagesService;
@@ -21,7 +23,6 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.api.images.Transform;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
-import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -47,11 +48,46 @@ public class ThumbnailHelper {
 	public static final String THUMBNAIL = "thumbnail";
 	public static final String THUMBNAIL_STATIC_URL = "thumbnailStaticUrl";
 
-	/** "bucket/object" of a stored resource, or null if it is not in cloud storage. */
+	/**
+	 * What follows <code>gs://</code> in a resource's data: either
+	 * "bucket/object" or, for resources uploaded through the blobstore, the
+	 * blob key.
+	 */
+	static String storedOf (Resource resource) {
+		if (resource == null || resource.data == null
+				|| resource.data.isEmpty()) {
+			return null;
+		}
+
+		return resource.data.startsWith("gs://")
+				? resource.data.substring("gs://".length())
+				: resource.data;
+	}
+
+	static BlobKey keyOf (String stored) {
+		return stored.contains("/")
+				? BlobstoreServiceFactory.getBlobstoreService()
+						.createGsBlobKey("/gs/" + stored)
+				: new BlobKey(stored);
+	}
+
+	/** "bucket/object" of a stored resource, or null if it cannot be found. */
 	static String gsPathOf (Resource resource) {
-		return resource == null || resource.data == null
-				|| !resource.data.startsWith("gs://") ? null
-						: resource.data.substring("gs://".length());
+		String stored = storedOf(resource);
+
+		if (stored == null) {
+			return null;
+		}
+
+		if (stored.contains("/")) {
+			return stored;
+		}
+
+		BlobInfo info = new BlobInfoFactory().loadBlobInfo(new BlobKey(stored));
+		String gsObjectName = info == null ? null : info.getGsObjectName();
+
+		return gsObjectName == null || gsObjectName.isEmpty() ? null
+				: gsObjectName.replaceFirst("^/gs/", "");
 	}
 
 	static GcsFilename filenameOf (String gsPath) {
@@ -67,12 +103,10 @@ public class ThumbnailHelper {
 				: JsonParser.parseString(resource.properties).getAsJsonObject();
 	}
 
-	static byte[] read (GcsFilename file) throws IOException {
-		GcsService gcs = GcsServiceFactory.createGcsService();
+	static byte[] read (BlobKey key) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-		try (InputStream in = Channels
-				.newInputStream(gcs.openReadChannel(file, 0))) {
+		try (InputStream in = new BlobstoreInputStream(key)) {
 			byte[] buffer = new byte[64 * 1024];
 			int read;
 
@@ -94,17 +128,26 @@ public class ThumbnailHelper {
 				.replaceFirst("http:\\/\\/", "//");
 	}
 
+	/** Whether the resource is known not to be an image; one with no content type is tried. */
+	public static boolean notAnImage (Resource resource) {
+		JsonObject properties = propertiesOf(resource);
+
+		return properties.has("contentType")
+				&& !properties.get("contentType").getAsString()
+						.startsWith("image/");
+	}
+
 	/** Makes the thumbnail, or makes it again; false if the resource has no stored image. */
 	public static boolean create (Resource resource) throws IOException {
+		String stored = storedOf(resource);
 		String gsPath = gsPathOf(resource);
 
-		if (gsPath == null) {
+		if (stored == null || notAnImage(resource) || gsPath == null) {
 			return false;
 		}
 
 		ImagesService images = ImagesServiceFactory.getImagesService();
-		Image original = ImagesServiceFactory
-				.makeImage(read(filenameOf(gsPath)));
+		Image original = ImagesServiceFactory.makeImage(read(keyOf(stored)));
 		Transform resize = ImagesServiceFactory.makeResize(SIZE, SIZE);
 		Image scaled = images.applyTransform(resize, original,
 				ImagesService.OutputEncoding.PNG);
