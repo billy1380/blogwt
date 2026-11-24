@@ -128,13 +128,18 @@ public class ThumbnailHelper {
 				.replaceFirst("http:\\/\\/", "//");
 	}
 
-	/** Whether the resource is known not to be an image; one with no content type is tried. */
+	/** Whether the resource is known not to be an image; no type or application/octet-stream is tried, the images service reads the bytes. */
 	public static boolean notAnImage (Resource resource) {
 		JsonObject properties = propertiesOf(resource);
 
-		return properties != null && properties.has("contentType")
-				&& !properties.get("contentType").getAsString()
-						.startsWith("image/");
+		if (properties == null || !properties.has("contentType")) {
+			return false;
+		}
+
+		String type = properties.get("contentType").getAsString();
+
+		return !type.isEmpty() && !type.startsWith("image/")
+				&& !"application/octet-stream".equals(type);
 	}
 
 	/** Makes the thumbnail, or makes it again; false if the resource has no stored image. */

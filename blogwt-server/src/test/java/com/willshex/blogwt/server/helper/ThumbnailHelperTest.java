@@ -37,5 +37,7 @@ public class ThumbnailHelperTest {
 				.notAnImage(resource("x", "{\"contentType\":\"image/png\"}")));
 		Assert.assertTrue(ThumbnailHelper.notAnImage(
 				resource("x", "{\"contentType\":\"application/pdf\"}")));
+		Assert.assertFalse(ThumbnailHelper.notAnImage(resource("x",
+				"{\"contentType\":\"application/octet-stream\"}")));
 	}
 }
