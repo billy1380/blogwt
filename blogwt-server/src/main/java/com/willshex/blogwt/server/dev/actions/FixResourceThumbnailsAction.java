@@ -15,7 +15,7 @@ import com.willshex.blogwt.shared.api.datatype.Resource;
 
 /**
  * Puts a thumbnail message on the queue for every resource that has a stored
- * image and no thumbnail. Without <code>apply=true</code> it only lists them.
+ * image and no thumbnail. With <code>dryrun=true</code> it only lists them.
  */
 public class FixResourceThumbnailsAction implements DevAction {
 	private static final Logger LOG = Logger
@@ -24,7 +24,7 @@ public class FixResourceThumbnailsAction implements DevAction {
 	@Override
 	public void handle (HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		boolean apply = "true".equals(request.getParameter("apply"));
+		boolean apply = !"true".equals(request.getParameter("dryrun"));
 		List<Resource> resources = ResourceServiceProvider.provide()
 				.getResources(Integer.valueOf(0),
 						Integer.valueOf(Integer.MAX_VALUE), null, null);
@@ -52,7 +52,7 @@ public class FixResourceThumbnailsAction implements DevAction {
 		}
 
 		out.insert(0, (apply ? "Queued " : "Would queue ") + wanted
-				+ " thumbnail(s)" + (apply ? "" : " (add apply=true)") + "\n");
+				+ " thumbnail(s)" + (apply ? "" : " (dry run)") + "\n");
 		LOG.info(out.toString());
 		response.setContentType("text/plain");
 		response.getWriter().print(out);
