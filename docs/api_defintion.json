@@ -2082,6 +2082,44 @@
                             "enumeration":false
                         }
                     ],
+                    "name":"CreateResourceThumbnail"
+                },
+                {
+                    "inputs":[
+                        {
+                            "name":"resource",
+                            "type":"Resource",
+                            "collection":false,
+                            "enumeration":false
+                        }
+                    ],
+                    "outputs":[
+                        {
+                            "name":"resource",
+                            "type":"Resource",
+                            "collection":false,
+                            "enumeration":false
+                        }
+                    ],
+                    "name":"DeleteResourceThumbnail"
+                },
+                {
+                    "inputs":[
+                        {
+                            "name":"resource",
+                            "type":"Resource",
+                            "collection":false,
+                            "enumeration":false
+                        }
+                    ],
+                    "outputs":[
+                        {
+                            "name":"resource",
+                            "type":"Resource",
+                            "collection":false,
+                            "enumeration":false
+                        }
+                    ],
                     "name":"GetResource"
                 },
                 {

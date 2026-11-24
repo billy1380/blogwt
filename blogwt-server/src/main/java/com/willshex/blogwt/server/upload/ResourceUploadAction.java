@@ -27,6 +27,7 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.willshex.blogwt.server.background.thumbnail.ThumbnailServlet;
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.upload.Upload;
@@ -115,6 +116,8 @@ public class ResourceUploadAction extends HttpServlet {
 
 				resource = ResourceServiceProvider.provide()
 						.addResource(resource);
+
+				ThumbnailServlet.queueCreate(resource.id);
 
 				resources.add(resource.toJson());
 			}

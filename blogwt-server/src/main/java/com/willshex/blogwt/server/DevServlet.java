@@ -38,6 +38,7 @@ import com.willshex.blogwt.server.dev.actions.GetPostsAction;
 import com.willshex.blogwt.server.dev.actions.IndexAction;
 import com.willshex.blogwt.server.dev.actions.LinkAllAction;
 import com.willshex.blogwt.server.dev.actions.ResaveAction;
+import com.willshex.blogwt.server.dev.actions.FixResourceThumbnailsAction;
 import com.willshex.blogwt.server.dev.actions.StaticUrlAction;
 import com.willshex.blogwt.shared.api.SortDirectionType;
 import com.willshex.server.ContextAwareServlet;
@@ -90,6 +91,8 @@ public class DevServlet extends ContextAwareServlet {
 			actions.put("fixadminpages", new FixAdminPagesAction());
 			actions.put("getposts", new GetPostsAction());
 			actions.put("staticurl", new StaticUrlAction());
+			actions.put("fixresourcethumbnails",
+					new FixResourceThumbnailsAction());
 			actions.put("fixmetanotifications",
 					new FixMetaNotificationsAction());
 			actions.put("admin", new AdminAction());

@@ -17,7 +17,9 @@ import com.willshex.blogwt.server.api.blog.action.CreatePostActionHandler;
 import com.willshex.blogwt.server.api.blog.action.DeleteCommentActionHandler;
 import com.willshex.blogwt.server.api.blog.action.DeletePostActionHandler;
 import com.willshex.blogwt.server.api.blog.action.DeleteReactionActionHandler;
+import com.willshex.blogwt.server.api.blog.action.CreateResourceThumbnailActionHandler;
 import com.willshex.blogwt.server.api.blog.action.DeleteResourceActionHandler;
+import com.willshex.blogwt.server.api.blog.action.DeleteResourceThumbnailActionHandler;
 import com.willshex.blogwt.server.api.blog.action.GetAllCommentsActionHandler;
 import com.willshex.blogwt.server.api.blog.action.GetArchiveEntriesActionHandler;
 import com.willshex.blogwt.server.api.blog.action.GetCommentsActionHandler;
@@ -43,7 +45,9 @@ import com.willshex.blogwt.shared.api.blog.call.CreatePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeleteCommentRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeletePostRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeleteReactionRequest;
+import com.willshex.blogwt.shared.api.blog.call.CreateResourceThumbnailRequest;
 import com.willshex.blogwt.shared.api.blog.call.DeleteResourceRequest;
+import com.willshex.blogwt.shared.api.blog.call.DeleteResourceThumbnailRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetAllCommentsRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetArchiveEntriesRequest;
 import com.willshex.blogwt.shared.api.blog.call.GetCommentsRequest;
@@ -117,6 +121,16 @@ public final class BlogJsonServlet extends JsonServlet {
 			UpdateResourceRequest input = new UpdateResourceRequest();
 			input.fromJson(request);
 			output = new UpdateResourceActionHandler().handle(input).toString();
+		} else if ("CreateResourceThumbnail".equals(action)) {
+			CreateResourceThumbnailRequest input = new CreateResourceThumbnailRequest();
+			input.fromJson(request);
+			output = new CreateResourceThumbnailActionHandler().handle(input)
+					.toString();
+		} else if ("DeleteResourceThumbnail".equals(action)) {
+			DeleteResourceThumbnailRequest input = new DeleteResourceThumbnailRequest();
+			input.fromJson(request);
+			output = new DeleteResourceThumbnailActionHandler().handle(input)
+					.toString();
 		} else if ("GetResource".equals(action)) {
 			GetResourceRequest input = new GetResourceRequest();
 			input.fromJson(request);
