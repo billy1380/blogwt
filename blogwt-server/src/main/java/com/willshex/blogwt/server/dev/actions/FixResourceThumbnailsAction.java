@@ -13,10 +13,7 @@ import com.willshex.blogwt.server.helper.ThumbnailHelper;
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 
-/**
- * Puts a thumbnail message on the queue for every resource that has a stored
- * image and no thumbnail. With <code>dryrun=true</code> it only lists them.
- */
+/** Queues a thumbnail for every image resource without one; `dryrun=true` only lists them. */
 public class FixResourceThumbnailsAction implements DevAction {
 	private static final Logger LOG = Logger
 			.getLogger(FixResourceThumbnailsAction.class.getName());
@@ -38,6 +35,11 @@ public class FixResourceThumbnailsAction implements DevAction {
 			}
 
 			JsonObject properties = ThumbnailHelper.propertiesOf(resource);
+
+			if (properties == null) {
+				out.append(resource.id).append(" skipped, properties are not JSON\n");
+				continue;
+			}
 
 			if (properties.has(ThumbnailHelper.THUMBNAIL_STATIC_URL)) {
 				continue;

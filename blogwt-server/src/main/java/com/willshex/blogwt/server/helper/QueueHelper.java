@@ -66,6 +66,7 @@ public class QueueHelper {
 		}
 
 		int retry = RETRY_COUNT;
+		boolean added = false;
 
 		do {
 			try {
@@ -76,6 +77,7 @@ public class QueueHelper {
 				}
 
 				// success no need to retry
+				added = true;
 				retry = 0;
 			} catch (TransientFailureException ex) {
 				if (LOG.isLoggable(Level.WARNING)) {
@@ -88,6 +90,10 @@ public class QueueHelper {
 				retry--;
 			}
 		} while (retry > 0);
+
+		if (!added) {
+			LOG.severe("Gave up queueing [" + action + "] for [" + url + "]");
+		}
 	}
 
 	/**

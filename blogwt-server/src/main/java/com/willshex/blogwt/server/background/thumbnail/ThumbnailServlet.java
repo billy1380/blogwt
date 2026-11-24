@@ -15,6 +15,7 @@ import javax.servlet.annotation.HttpConstraint;
 import javax.servlet.annotation.ServletSecurity;
 import javax.servlet.annotation.WebServlet;
 
+import com.google.appengine.api.images.ImagesServiceFailureException;
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.server.background.thumbnail.input.ThumbnailAction;
 import com.willshex.blogwt.server.helper.QueueHelper;
@@ -24,10 +25,7 @@ import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.server.ContextAwareServlet;
 
-/**
- * Makes and removes resource thumbnails from the default queue, one resource
- * to a message, so a failure is retried on its own.
- */
+/** Makes and removes resource thumbnails from the default queue, one resource to a message. */
 @WebServlet(name = "Thumbnail", description = "Makes and removes resource thumbnails", urlPatterns = {
 		ThumbnailServlet.URL, ThumbnailServlet.URL + "/*" })
 @ServletSecurity(value = @HttpConstraint(rolesAllowed = "admin"))
@@ -76,9 +74,16 @@ public class ThumbnailServlet extends ContextAwareServlet
 		}
 
 		if (CREATE_ACTION.equals(action)) {
-			if (!ThumbnailHelper.create(resource)) {
-				LOG.log(Level.INFO, "Resource [" + input.resourceId
-						+ "] has no stored image to make a thumbnail of");
+			try {
+				if (!ThumbnailHelper.create(resource)) {
+					LOG.log(Level.INFO, "Resource [" + input.resourceId
+							+ "] has no thumbnail to make");
+				}
+			} catch (ImagesServiceFailureException
+					| IllegalArgumentException e) {
+				// not a decodable image: retrying cannot help
+				LOG.log(Level.WARNING, "Resource [" + input.resourceId
+						+ "] could not be scaled", e);
 			}
 		} else if (DELETE_ACTION.equals(action)) {
 			ThumbnailHelper.delete(resource);

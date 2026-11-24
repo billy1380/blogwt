@@ -9,6 +9,7 @@ package com.willshex.blogwt.server.helper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,17 +26,12 @@ import com.google.appengine.api.images.Transform;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 
-/**
- * Makes and removes the thumbnail of an uploaded image resource: a scaled-down
- * copy, the same shape, stored next to the original. The resource's
- * <code>properties</code> then carry <code>thumbnail</code> (where it is
- * stored) and <code>thumbnailStaticUrl</code> (where it is served from) beside
- * <code>staticUrl</code>.
- */
+/** Makes and removes a resource's thumbnail (`thumbnail`, `thumbnailStaticUrl` in its properties). */
 public class ThumbnailHelper {
 
 	private static final Logger LOG = Logger
@@ -48,11 +44,7 @@ public class ThumbnailHelper {
 	public static final String THUMBNAIL = "thumbnail";
 	public static final String THUMBNAIL_STATIC_URL = "thumbnailStaticUrl";
 
-	/**
-	 * What follows <code>gs://</code> in a resource's data: either
-	 * "bucket/object" or, for resources uploaded through the blobstore, the
-	 * blob key.
-	 */
+	/** What follows gs://: "bucket/object" or a blob key. */
 	static String storedOf (Resource resource) {
 		if (resource == null || resource.data == null
 				|| resource.data.isEmpty()) {
@@ -97,10 +89,18 @@ public class ThumbnailHelper {
 				gsPath.substring(slash + 1));
 	}
 
+	/** The resource's properties, empty if it has none, null if they are not a JSON object. */
 	public static JsonObject propertiesOf (Resource resource) {
-		return resource.properties == null || resource.properties.isEmpty()
-				? new JsonObject()
-				: JsonParser.parseString(resource.properties).getAsJsonObject();
+		if (resource.properties == null || resource.properties.isEmpty()) {
+			return new JsonObject();
+		}
+
+		try {
+			return JsonParser.parseString(resource.properties)
+					.getAsJsonObject();
+		} catch (JsonParseException | IllegalStateException e) {
+			return null;
+		}
 	}
 
 	static byte[] read (BlobKey key) throws IOException {
@@ -132,7 +132,7 @@ public class ThumbnailHelper {
 	public static boolean notAnImage (Resource resource) {
 		JsonObject properties = propertiesOf(resource);
 
-		return properties.has("contentType")
+		return properties != null && properties.has("contentType")
 				&& !properties.get("contentType").getAsString()
 						.startsWith("image/");
 	}
@@ -142,7 +142,8 @@ public class ThumbnailHelper {
 		String stored = storedOf(resource);
 		String gsPath = gsPathOf(resource);
 
-		if (stored == null || notAnImage(resource) || gsPath == null) {
+		if (stored == null || notAnImage(resource) || gsPath == null
+				|| propertiesOf(resource) == null) {
 			return false;
 		}
 
@@ -156,12 +157,28 @@ public class ThumbnailHelper {
 		GcsHelper.save(scaled.getImageData(), () -> "image/png",
 				filenameOf(thumbnailPath));
 
-		JsonObject properties = propertiesOf(resource);
-		properties.addProperty(THUMBNAIL, "gs://" + thumbnailPath);
-		properties.addProperty(THUMBNAIL_STATIC_URL, servingUrl(thumbnailPath));
-		resource.properties = properties.toString();
+		return save(resource.id, properties -> {
+			properties.addProperty(THUMBNAIL, "gs://" + thumbnailPath);
+			properties.addProperty(THUMBNAIL_STATIC_URL,
+					servingUrl(thumbnailPath));
+		});
+	}
 
-		ResourceServiceProvider.provide().updateResource(resource);
+	/** Changes the properties of a fresh copy, so edits made meanwhile are kept; false if they are malformed. */
+	private static boolean save (Long id, Consumer<JsonObject> change) {
+		Resource fresh = ResourceServiceProvider.provide().getResource(id);
+		JsonObject properties = fresh == null ? null : propertiesOf(fresh);
+
+		if (properties == null) {
+			LOG.log(Level.WARNING,
+					"Resource [" + id + "] is gone or its properties are not JSON");
+
+			return false;
+		}
+
+		change.accept(properties);
+		fresh.properties = properties.toString();
+		ResourceServiceProvider.provide().updateResource(fresh);
 
 		return true;
 	}
@@ -170,7 +187,7 @@ public class ThumbnailHelper {
 	public static boolean delete (Resource resource) throws IOException {
 		JsonObject properties = propertiesOf(resource);
 
-		if (!properties.has(THUMBNAIL)) {
+		if (properties == null || !properties.has(THUMBNAIL)) {
 			return false;
 		}
 
@@ -191,13 +208,10 @@ public class ThumbnailHelper {
 					.delete(filenameOf(thumbnailPath));
 		}
 
-		properties.remove(THUMBNAIL);
-		properties.remove(THUMBNAIL_STATIC_URL);
-		resource.properties = properties.toString();
-
-		ResourceServiceProvider.provide().updateResource(resource);
-
-		return true;
+		return save(resource.id, fresh -> {
+			fresh.remove(THUMBNAIL);
+			fresh.remove(THUMBNAIL_STATIC_URL);
+		});
 	}
 
 }
