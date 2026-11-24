@@ -28,6 +28,8 @@ import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.willshex.blogwt.server.background.thumbnail.ThumbnailServlet;
+import com.willshex.blogwt.server.helper.GcsHelper;
+import com.willshex.blogwt.server.helper.ThumbnailHelper;
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 import com.willshex.blogwt.shared.api.upload.Upload;
@@ -51,8 +53,11 @@ public class ResourceUploadAction extends HttpServlet {
 
 		if (blobKey != null && !blobKey.isEmpty()) {
 			BlobKey key;
-			// heuristic to detect GCS object path (bucket/object vs legacy blob key)
-			if (blobKey.contains("/")) {
+			if (ThumbnailHelper.isName(blobKey)) {
+				key = blobstoreService.createGsBlobKey(
+						"/gs/" + System.getProperty(GcsHelper.BUCKET_NAME_PROPERTY_KEY)
+								+ "/" + blobKey);
+			} else if (blobKey.contains("/")) {
 				key = blobstoreService.createGsBlobKey("/gs/" + blobKey);
 			} else {
 				key = new BlobKey(blobKey);

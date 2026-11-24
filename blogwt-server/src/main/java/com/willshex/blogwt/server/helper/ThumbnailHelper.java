@@ -13,8 +13,6 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.appengine.api.blobstore.BlobInfo;
-import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreInputStream;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -31,7 +29,7 @@ import com.google.gson.JsonParser;
 import com.willshex.blogwt.server.service.resource.ResourceServiceProvider;
 import com.willshex.blogwt.shared.api.datatype.Resource;
 
-/** Makes and removes a resource's thumbnail (`thumbnail`, `thumbnailStaticUrl` in its properties). */
+/** Makes and removes a resource's thumbnail: the object `<id>-t.png` and `thumbnailStaticUrl` in its properties. */
 public class ThumbnailHelper {
 
 	private static final Logger LOG = Logger
@@ -40,8 +38,7 @@ public class ThumbnailHelper {
 	/** The longest side of a thumbnail in pixels. */
 	public static final int SIZE = 200;
 
-	public static final String SUFFIX = "-thumbnail.png";
-	public static final String THUMBNAIL = "thumbnail";
+	public static final String SUFFIX = "-t.png";
 	public static final String THUMBNAIL_STATIC_URL = "thumbnailStaticUrl";
 
 	/** What follows gs://: "bucket/object" or a blob key. */
@@ -63,23 +60,20 @@ public class ThumbnailHelper {
 				: new BlobKey(stored);
 	}
 
-	/** "bucket/object" of a stored resource, or null if it cannot be found. */
-	static String gsPathOf (Resource resource) {
-		String stored = storedOf(resource);
+	/** The name of a resource's thumbnail object, and what the upload servlet is asked for. */
+	public static String nameOf (Long id) {
+		return id + SUFFIX;
+	}
 
-		if (stored == null) {
-			return null;
-		}
+	/** Whether a blob-key asked of the upload servlet is a thumbnail's name. */
+	public static boolean isName (String blobKey) {
+		return blobKey.matches("\\d+" + SUFFIX.replace(".", "\\."));
+	}
 
-		if (stored.contains("/")) {
-			return stored;
-		}
-
-		BlobInfo info = new BlobInfoFactory().loadBlobInfo(new BlobKey(stored));
-		String gsObjectName = info == null ? null : info.getGsObjectName();
-
-		return gsObjectName == null || gsObjectName.isEmpty() ? null
-				: gsObjectName.replaceFirst("^/gs/", "");
+	/** "bucket/object" of a resource's thumbnail. */
+	public static String pathOf (Long id) {
+		return System.getProperty(GcsHelper.BUCKET_NAME_PROPERTY_KEY) + "/"
+				+ nameOf(id);
 	}
 
 	static GcsFilename filenameOf (String gsPath) {
@@ -145,9 +139,8 @@ public class ThumbnailHelper {
 	/** Makes the thumbnail, or makes it again; false if the resource has no stored image. */
 	public static boolean create (Resource resource) throws IOException {
 		String stored = storedOf(resource);
-		String gsPath = gsPathOf(resource);
 
-		if (stored == null || notAnImage(resource) || gsPath == null
+		if (stored == null || resource.id == null || notAnImage(resource)
 				|| propertiesOf(resource) == null) {
 			return false;
 		}
@@ -158,12 +151,11 @@ public class ThumbnailHelper {
 		Image scaled = images.applyTransform(resize, original,
 				ImagesService.OutputEncoding.PNG);
 
-		String thumbnailPath = gsPath + SUFFIX;
+		String thumbnailPath = pathOf(resource.id);
 		GcsHelper.save(scaled.getImageData(), () -> "image/png",
 				filenameOf(thumbnailPath));
 
 		return save(resource.id, properties -> {
-			properties.addProperty(THUMBNAIL, "gs://" + thumbnailPath);
 			properties.addProperty(THUMBNAIL_STATIC_URL,
 					servingUrl(thumbnailPath));
 		});
@@ -192,31 +184,25 @@ public class ThumbnailHelper {
 	public static boolean delete (Resource resource) throws IOException {
 		JsonObject properties = propertiesOf(resource);
 
-		if (properties == null || !properties.has(THUMBNAIL)) {
+		if (properties == null || resource.id == null
+				|| !properties.has(THUMBNAIL_STATIC_URL)) {
 			return false;
 		}
 
-		String stored = properties.get(THUMBNAIL).getAsString();
+		String thumbnailPath = pathOf(resource.id);
 
-		if (stored.startsWith("gs://")) {
-			String thumbnailPath = stored.substring("gs://".length());
-
-			try {
-				ImagesServiceFactory.getImagesService().deleteServingUrl(
-						BlobstoreServiceFactory.getBlobstoreService()
-								.createGsBlobKey("/gs/" + thumbnailPath));
-			} catch (RuntimeException e) {
-				LOG.log(Level.FINE, "No serving url to delete", e);
-			}
-
-			GcsServiceFactory.createGcsService()
-					.delete(filenameOf(thumbnailPath));
+		try {
+			ImagesServiceFactory.getImagesService()
+					.deleteServingUrl(BlobstoreServiceFactory
+							.getBlobstoreService()
+							.createGsBlobKey("/gs/" + thumbnailPath));
+		} catch (RuntimeException e) {
+			LOG.log(Level.FINE, "No serving url to delete", e);
 		}
 
-		return save(resource.id, fresh -> {
-			fresh.remove(THUMBNAIL);
-			fresh.remove(THUMBNAIL_STATIC_URL);
-		});
+		GcsServiceFactory.createGcsService().delete(filenameOf(thumbnailPath));
+
+		return save(resource.id, fresh -> fresh.remove(THUMBNAIL_STATIC_URL));
 	}
 
 }

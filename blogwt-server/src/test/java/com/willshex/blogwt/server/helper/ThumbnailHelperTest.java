@@ -40,4 +40,12 @@ public class ThumbnailHelperTest {
 		Assert.assertFalse(ThumbnailHelper.notAnImage(resource("x",
 				"{\"contentType\":\"application/octet-stream\"}")));
 	}
+
+	@Test
+	public void aThumbnailIsNamedAfterItsResource () {
+		Assert.assertEquals("42-t.png", ThumbnailHelper.nameOf(42L));
+		Assert.assertTrue(ThumbnailHelper.isName("42-t.png"));
+		Assert.assertFalse(ThumbnailHelper.isName("bucket/42-t.png"));
+		Assert.assertFalse(ThumbnailHelper.isName("AMIfv9key"));
+	}
 }
