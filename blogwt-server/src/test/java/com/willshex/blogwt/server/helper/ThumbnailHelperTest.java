@@ -41,6 +41,24 @@ public class ThumbnailHelperTest {
 				"{\"contentType\":\"application/octet-stream\"}")));
 	}
 
+	private static String scaled (String staticUrl) {
+		return ThumbnailHelper.scaledUrl(ThumbnailHelper.propertiesOf(
+				resource("x", "{\"staticUrl\":\"" + staticUrl + "\"}")));
+	}
+
+	@Test
+	public void onlyAGoogleServingUrlIsFetchedAtThumbnailSize () {
+		Assert.assertEquals("https://lh3.googleusercontent.com/a-B_1=s200",
+				scaled("//lh3.googleusercontent.com/a-B_1"));
+		Assert.assertEquals("https://lh3.ggpht.com/abc=s200",
+				scaled("http://lh3.ggpht.com/abc=s1600"));
+		Assert.assertNull(scaled("//example.com/abc"));
+		Assert.assertNull(scaled("//lh3.googleusercontent.com.example.com/abc"));
+		Assert.assertNull(scaled("//example.com/lh3.googleusercontent.com/abc"));
+		Assert.assertNull(ThumbnailHelper.scaledUrl(
+				ThumbnailHelper.propertiesOf(resource("x", null))));
+	}
+
 	@Test
 	public void aThumbnailIsNamedAfterItsResource () {
 		Assert.assertEquals("42-t.png", ThumbnailHelper.nameOf(42L));

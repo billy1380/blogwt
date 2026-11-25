@@ -9,9 +9,13 @@ package com.willshex.blogwt.server.helper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreInputStream;
@@ -23,6 +27,7 @@ import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.api.images.Transform;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
@@ -40,6 +45,10 @@ public class ThumbnailHelper {
 
 	public static final String SUFFIX = "-t.png";
 	public static final String THUMBNAIL_STATIC_URL = "thumbnailStaticUrl";
+
+	/** Google image serving URLs only: properties can be edited, and the server fetches this. */
+	private static final Pattern SERVING_URL = Pattern.compile(
+			"(?:https?:)?//([a-z0-9-]+\\.(?:googleusercontent|ggpht)\\.com/[\\w/-]+)(?:=.*)?");
 
 	/** What follows gs://: "bucket/object" or a blob key. */
 	static String storedOf (Resource resource) {
@@ -98,18 +107,65 @@ public class ThumbnailHelper {
 	}
 
 	static byte[] read (BlobKey key) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-
 		try (InputStream in = new BlobstoreInputStream(key)) {
-			byte[] buffer = new byte[64 * 1024];
-			int read;
+			return bytesOf(in);
+		}
+	}
 
-			while ((read = in.read(buffer)) != -1) {
-				out.write(buffer, 0, read);
-			}
+	private static byte[] bytesOf (InputStream in) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		byte[] buffer = new byte[64 * 1024];
+		int read;
+
+		while ((read = in.read(buffer)) != -1) {
+			out.write(buffer, 0, read);
 		}
 
 		return out.toByteArray();
+	}
+
+	/** The resource's serving URL at thumbnail size, or null if it has none. */
+	static String scaledUrl (JsonObject properties) {
+		JsonElement url = properties.get("staticUrl");
+
+		if (url == null || !url.isJsonPrimitive()) {
+			return null;
+		}
+
+		Matcher serving = SERVING_URL.matcher(url.getAsString());
+
+		return serving.matches() ? "https://" + serving.group(1) + "=s" + SIZE
+				: null;
+	}
+
+	/** The image to scale: the blob or, for old uploads that cannot be read, its serving URL; null if neither. */
+	private static byte[] sourceOf (Resource resource, String stored)
+			throws IOException {
+		try {
+			return read(keyOf(stored));
+		} catch (IOException e) {
+			LOG.log(Level.INFO, "Cannot read the blob of resource ["
+					+ resource.id + "], trying its serving url", e);
+
+			String url = scaledUrl(propertiesOf(resource));
+
+			return url == null ? null : fetch(url);
+		}
+	}
+
+	/** What is at the url, or null if the server refuses it, as asking again would not help. */
+	private static byte[] fetch (String url) throws IOException {
+		HttpURLConnection connection = (HttpURLConnection) new URL(url)
+				.openConnection();
+		int status = connection.getResponseCode();
+
+		if (status >= 400 && status < 500) {
+			return null;
+		}
+
+		try (InputStream in = connection.getInputStream()) {
+			return bytesOf(in);
+		}
 	}
 
 	static String servingUrl (String gsPath) {
@@ -136,7 +192,7 @@ public class ThumbnailHelper {
 				&& !"application/octet-stream".equals(type);
 	}
 
-	/** Makes the thumbnail, or makes it again; false if the resource has no stored image. */
+	/** Makes the thumbnail, or makes it again; false if the resource has no image that can be read. */
 	public static boolean create (Resource resource) throws IOException {
 		String stored = storedOf(resource);
 
@@ -145,8 +201,14 @@ public class ThumbnailHelper {
 			return false;
 		}
 
+		byte[] source = sourceOf(resource, stored);
+
+		if (source == null) {
+			return false;
+		}
+
 		ImagesService images = ImagesServiceFactory.getImagesService();
-		Image original = ImagesServiceFactory.makeImage(read(keyOf(stored)));
+		Image original = ImagesServiceFactory.makeImage(source);
 		Transform resize = ImagesServiceFactory.makeResize(SIZE, SIZE);
 		Image scaled = images.applyTransform(resize, original,
 				ImagesService.OutputEncoding.PNG);
