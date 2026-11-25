@@ -1431,6 +1431,10 @@
             "type":"enumeration",
             "variables":[
                 {
+                    "name":"created",
+                    "type":"string"
+                },
+                {
                     "name":"author",
                     "type":"string"
                 },
