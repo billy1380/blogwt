@@ -102,3 +102,6 @@ Keep the file's formatting (4 space indent, no space after the colon) so a diff 
 
 ## Admin menu
 The admin menu is pages with a `route`, created at setup and by the `fixadminpages` dev action. See `docs/admin_pages.md`.
+
+## Post embeds
+Posts can include other posts server-side with `<?post id="123" ?>`. Only posts by the **same author** are expanded; references to other authors, missing posts, cycles, or nesting past depth 5 are stripped. See `docs/post_embeds.md`.
