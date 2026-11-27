@@ -23,11 +23,11 @@ The directive is expanded at read and search-index time (`PostEmbedHelper` in `b
 
 ## Where expansion runs
 
-- `GetPostActionHandler` — expands unless `GetPostRequest.raw` is `true`.
+- `GetPostActionHandler` — expands unless `GetPostRequest.processTags` is `false` (defaults to `true` when omitted).
 - `GetPostsActionHandler` — expands when `includePostContents` is `true`.
 - `PageService.populatePostContents` — expands posts attached to pages (covering `GetPage`, `GetPages`, `StaticPage`, and page search indexing).
 - `PostService.toDocument` — indexes the expanded body into the searchable `body` field.
 
-## Editing (`GetPostRequest.raw`)
+## Editing (`GetPostRequest.processTags`)
 
-Pass `raw: true` on `GetPostRequest` when loading a post for editing so the server returns the original body with `<?post id="..." ?>` directives intact rather than overwriting them with the expanded text on save.
+Pass `processTags: false` on `GetPostRequest` when loading a post for editing so the server skips server-side tag processing and returns the original body with `<?post id="..." ?>` directives intact rather than overwriting them with the expanded text on save.

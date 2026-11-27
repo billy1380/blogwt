@@ -56,7 +56,7 @@ public final class GetPostActionHandler
 			output.post.content = PostServiceProvider.provide()
 					.getPostContent(output.post);
 
-			if (!Boolean.TRUE.equals(input.raw)) {
+			if (!Boolean.FALSE.equals(input.processTags)) {
 				PostEmbedHelper.expandInPlace(output.post);
 			}
 		}

@@ -2303,8 +2303,8 @@
                             "enumeration":false
                         },
                         {
-                            "name":"raw",
-                            "type":"Boolean",
+                            "name":"processTags",
+                            "type":"bool",
                             "collection":false,
                             "enumeration":false
                         }
