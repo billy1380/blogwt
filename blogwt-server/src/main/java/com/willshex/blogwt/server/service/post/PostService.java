@@ -27,6 +27,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
+import com.willshex.blogwt.server.helper.PostEmbedHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.service.archiveentry.ArchiveEntryServiceProvider;
 import com.willshex.blogwt.server.service.search.ISearch;
@@ -153,7 +154,7 @@ final class PostService implements IPostService, ISearch<Post> {
 
 			if (post.content != null) {
 				documentBuilder.addField(Field.newBuilder().setName("body")
-						.setText(post.content.body));
+						.setText(PostEmbedHelper.expand(post)));
 			}
 
 			if (post.tags != null) {

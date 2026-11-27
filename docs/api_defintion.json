@@ -2301,6 +2301,12 @@
                             "type":"Post",
                             "collection":false,
                             "enumeration":false
+                        },
+                        {
+                            "name":"raw",
+                            "type":"Boolean",
+                            "collection":false,
+                            "enumeration":false
                         }
                     ],
                     "outputs":[

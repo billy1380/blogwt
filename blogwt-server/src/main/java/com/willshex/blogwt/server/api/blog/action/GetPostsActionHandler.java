@@ -24,6 +24,7 @@ import com.willshex.blogwt.server.api.validation.PostValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
 import com.willshex.blogwt.server.api.validation.UserValidator;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
+import com.willshex.blogwt.server.helper.PostEmbedHelper;
 import com.willshex.blogwt.server.service.permission.PermissionServiceProvider;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.tag.TagServiceProvider;
@@ -142,6 +143,10 @@ public final class GetPostsActionHandler
 		}
 
 		if (output.posts != null) {
+			if (Boolean.TRUE.equals(input.includePostContents)) {
+				PostEmbedHelper.expandInPlace(output.posts);
+			}
+
 			Map<Key<User>, User> users = new HashMap<Key<User>, User>();
 
 			for (Post post : output.posts) {

@@ -27,6 +27,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
 import com.willshex.blogwt.server.helper.PersistenceHelper;
+import com.willshex.blogwt.server.helper.PostEmbedHelper;
 import com.willshex.blogwt.server.helper.SearchHelper;
 import com.willshex.blogwt.server.helper.UserHelper;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
@@ -181,6 +182,7 @@ final class PageService implements IPageService {
 		}
 
 		PostServiceProvider.provide().populateContents(posts);
+		PostEmbedHelper.expandInPlace(posts);
 
 		Map<Long, Post> postLookup = new HashMap<Long, Post>();
 		for (Post post : posts) {

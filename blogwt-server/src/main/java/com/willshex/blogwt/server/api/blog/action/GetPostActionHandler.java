@@ -15,6 +15,7 @@ import com.willshex.blogwt.server.api.ActionHandler;
 import com.willshex.blogwt.server.api.validation.ApiValidator;
 import com.willshex.blogwt.server.api.validation.PostValidator;
 import com.willshex.blogwt.server.api.validation.SessionValidator;
+import com.willshex.blogwt.server.helper.PostEmbedHelper;
 import com.willshex.blogwt.server.service.post.PostServiceProvider;
 import com.willshex.blogwt.server.service.user.UserServiceProvider;
 import com.willshex.blogwt.shared.api.blog.call.GetPostRequest;
@@ -54,6 +55,10 @@ public final class GetPostActionHandler
 
 			output.post.content = PostServiceProvider.provide()
 					.getPostContent(output.post);
+
+			if (!Boolean.TRUE.equals(input.raw)) {
+				PostEmbedHelper.expandInPlace(output.post);
+			}
 		}
 	}
 	@Override
