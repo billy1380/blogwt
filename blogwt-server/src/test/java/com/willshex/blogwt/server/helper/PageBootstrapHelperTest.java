@@ -46,7 +46,7 @@ public class PageBootstrapHelperTest {
 	}
 
 	@Test
-	public void rendersPostSeoHeadBootstrapJsonAndSsrBody () {
+	public void rendersPostSeoHeadAndBootstrapJson () {
 		BootstrapData data = baseData();
 		Post post = new Post().slug("hello-world").title("Say Hello")
 				.summary("Celebrating the *new* WillShex.")
@@ -78,12 +78,8 @@ public class PageBootstrapHelperTest {
 				JsonParser.parseString(json).getAsJsonObject()
 						.getAsJsonObject("post").getAsJsonObject("content")
 						.get("body").getAsString());
-		assertTrue(res.html.contains("<div id=\"ssr-content\""));
-		assertTrue(res.html.contains("<h1>Say Hello</h1>"));
-		assertTrue(res.html.contains("<h2>Intro</h2>"));
-		assertTrue(res.html.contains("href=\"/about\""));
-		assertFalse("Admin pages must not appear in SSR nav",
-				res.html.contains("href=\"/admin-posts\""));
+		assertTrue("The app draws the page, not the server",
+				res.html.contains("<body></body>"));
 	}
 
 	@Test
@@ -123,7 +119,6 @@ public class PageBootstrapHelperTest {
 		RenderResult missingRes = PageBootstrapHelper.renderHtml(TEMPLATE,
 				"https://www.willshex.com", "/post/does-not-exist", missing);
 		assertEquals(HttpServletResponse.SC_NOT_FOUND, missingRes.statusCode);
-		assertTrue(missingRes.html.contains("Page not found"));
 
 		BootstrapData pageData = baseData();
 		Page about = new Page().slug("about").title("About Us")
@@ -141,22 +136,5 @@ public class PageBootstrapHelperTest {
 		assertTrue(pageRes.html.contains(
 				"<link rel=\"canonical\" href=\"https://www.willshex.com/about\">"));
 		assertTrue(pageRes.html.contains("Welcome to WillShex."));
-	}
-
-	@Test
-	public void showsTheTextWhenAPluginBlockFails () {
-		BootstrapData data = baseData();
-		Post part = new Post();
-		part.content = new PostContent();
-		part.content.body = "%%% include src=nowhere\nx\n%%%";
-		data.page = new Page().slug("about").title("About").priority(1.0f);
-		data.page.posts = Collections.singletonList(part);
-
-		RenderResult res = PageBootstrapHelper.renderHtml(TEMPLATE,
-				"https://www.willshex.com", "/about", data);
-
-		assertEquals(HttpServletResponse.SC_OK, res.statusCode);
-		assertTrue(
-				res.html.contains("<section>%%% include src=nowhere"));
 	}
 }

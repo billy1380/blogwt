@@ -8,9 +8,6 @@ package com.willshex.blogwt.server.helper;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -25,9 +22,6 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.markdown4j.IncludePlugin;
-import org.markdown4j.Markdown4jProcessor;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -65,7 +59,6 @@ import com.willshex.blogwt.shared.api.validation.ApiError;
 import com.willshex.blogwt.shared.helper.AdminPageHelper;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
-import com.willshex.blogwt.shared.helper.UserHelper;
 import com.willshex.gson.web.service.shared.Error;
 import com.willshex.gson.web.service.shared.StatusType;
 
@@ -76,18 +69,13 @@ public class PageBootstrapHelper {
 			.getLogger(PageBootstrapHelper.class.getName());
 
 	public static final String BOOTSTRAP_SCRIPT_ID = "blogwt-bootstrap";
-	public static final String SSR_CONTAINER_ID = "ssr-content";
 
 	private static final Pattern TITLE_PATTERN = Pattern.compile(
 			"<title>.*?</title>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 	private static final Pattern HEAD_CLOSE_PATTERN = Pattern.compile(
 			"</head>", Pattern.CASE_INSENSITIVE);
-	private static final Pattern BODY_OPEN_PATTERN = Pattern.compile(
-			"<body[^>]*>", Pattern.CASE_INSENSITIVE);
 	private static final Pattern HTML_TAG_PATTERN = Pattern.compile("<[^>]+>");
 	private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
-	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE
-			.withZone(ZoneOffset.UTC);
 
 	/** First path segments of the web app's own screens; a site adds its own. */
 	public static final Set<String> appRoutes = new HashSet<>(Arrays.asList(
@@ -420,11 +408,8 @@ public class PageBootstrapHelper {
 					.append(bootstrapJson).append("</script>\n");
 		}
 
-		String ssrBody = buildSsrBody(siteTitle, extendedTitle, props, data);
-
 		String html = replaceTitle(indexTemplate, fullTitle);
 		html = injectBeforeHeadClose(html, headInject.toString());
-		html = injectAfterBodyOpen(html, ssrBody);
 
 		int status = data.notFound ? HttpServletResponse.SC_NOT_FOUND
 				: HttpServletResponse.SC_OK;
@@ -506,181 +491,6 @@ public class PageBootstrapHelper {
 		}
 
 		return root;
-	}
-
-	private static String buildSsrBody (String siteTitle, String extendedTitle,
-			Map<String, Property> props, BootstrapData data) {
-		Markdown4jProcessor md = new Markdown4jProcessor();
-		md.registerPlugins(new IncludePlugin());
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("\n  <div id=\"").append(SSR_CONTAINER_ID)
-				.append("\" class=\"container py-4\">\n");
-		sb.append("    <header class=\"mb-4\">\n");
-		sb.append("      <nav aria-label=\"Primary\">\n");
-		sb.append("        <a href=\"/\"><strong>")
-				.append(escapeHtml(siteTitle)).append("</strong></a>");
-
-		if (data.pages != null) {
-			for (Page page : data.pages) {
-				if (page == null || page.priority == null
-						|| AdminPageHelper.isAdminPage(page)
-						|| page.slug == null || page.slug.isEmpty()
-						|| page.priority.floatValue() == 0.0f
-						|| page.parent != null) {
-					continue;
-				}
-				sb.append(" · <a href=\"/").append(escapeAttr(page.slug))
-						.append("\">")
-						.append(escapeHtml(page.title == null ? page.slug
-								: page.title))
-						.append("</a>");
-			}
-		}
-		sb.append(" · <a href=\"/blog\">Blog</a>\n");
-		sb.append("      </nav>\n");
-		sb.append("    </header>\n");
-
-		sb.append("    <main>\n");
-		if (data.post != null) {
-			appendPostHtml(sb, md, data.post);
-		} else if (data.page != null) {
-			appendPageHtml(sb, md, data.page);
-		} else if (data.posts != null) {
-			String heading = data.tagSlug != null ? "Tag: " + data.tagSlug
-					: "Blog";
-			sb.append("      <h1>").append(escapeHtml(heading))
-					.append("</h1>\n");
-			for (Post post : data.posts) {
-				if (post == null || post.slug == null) {
-					continue;
-				}
-				sb.append("      <article class=\"mb-4\">\n");
-				sb.append("        <h2><a href=\"/post/")
-						.append(escapeAttr(post.slug)).append("\">")
-						.append(escapeHtml(post.title == null ? post.slug
-								: post.title))
-						.append("</a></h2>\n");
-				if (post.summary != null && !post.summary.isEmpty()) {
-					sb.append("        <div>")
-							.append(processMarkdown(md, post.summary))
-							.append("</div>\n");
-				}
-				sb.append("      </article>\n");
-			}
-		} else if (data.notFound) {
-			sb.append("      <h1>Page not found</h1>\n");
-		} else {
-			sb.append("      <h1>").append(escapeHtml(siteTitle))
-					.append("</h1>\n");
-			if (extendedTitle != null && !extendedTitle.isEmpty()) {
-				sb.append("      <p>").append(escapeHtml(extendedTitle))
-						.append("</p>\n");
-			}
-		}
-		sb.append("    </main>\n");
-
-		String holder = propValue(props, PropertyHelper.COPYRIGHT_HOLDER,
-				siteTitle);
-		String holderUrl = propValue(props, PropertyHelper.COPYRIGHT_URL, "/");
-		sb.append("    <footer class=\"mt-5 pt-3 border-top\">\n");
-		sb.append("      <small>Copyright &copy; <a href=\"")
-				.append(escapeAttr(holderUrl)).append("\">")
-				.append(escapeHtml(holder)).append("</a> ")
-				.append(LocalDate.now(ZoneOffset.UTC).getYear())
-				.append(".</small>\n");
-		sb.append("    </footer>\n");
-		sb.append("  </div>\n");
-
-		return sb.toString();
-	}
-
-	private static void appendPostHtml (StringBuilder sb,
-			Markdown4jProcessor md,
-			Post post) {
-		sb.append("      <article>\n");
-		sb.append("        <h1>")
-				.append(escapeHtml(post.title == null ? "" : post.title))
-				.append("</h1>\n");
-		if (post.published != null || post.author != null) {
-			sb.append("        <p>");
-			if (post.published != null) {
-				sb.append("<time datetime=\"")
-						.append(DATE_FORMAT.format(post.published.toInstant()))
-						.append("\">")
-						.append(DATE_FORMAT.format(post.published.toInstant()))
-						.append("</time>");
-			}
-			if (post.author != null) {
-				String handle = UserHelper.handle(post.author);
-				if (handle != null && !handle.isEmpty()) {
-					if (post.published != null) {
-						sb.append(" · ");
-					}
-					sb.append("by ").append(escapeHtml(handle));
-				}
-			}
-			sb.append("</p>\n");
-		}
-		if (post.content != null && post.content.body != null) {
-			sb.append("        <div>")
-					.append(processMarkdown(md, post.content.body))
-					.append("</div>\n");
-		} else if (post.summary != null) {
-			sb.append("        <div>")
-					.append(processMarkdown(md, post.summary))
-					.append("</div>\n");
-		}
-		if (post.tags != null && !post.tags.isEmpty()) {
-			sb.append("        <ul>");
-			for (String tag : post.tags) {
-				if (tag == null || tag.isEmpty()) {
-					continue;
-				}
-				sb.append("<li><a href=\"/tag/").append(escapeAttr(tag))
-						.append("\">").append(escapeHtml(tag))
-						.append("</a></li>");
-			}
-			sb.append("</ul>\n");
-		}
-		sb.append("      </article>\n");
-	}
-
-	private static void appendPageHtml (StringBuilder sb,
-			Markdown4jProcessor md,
-			Page page) {
-		if (page.title != null && !page.title.isEmpty()) {
-			sb.append("      <h1>").append(escapeHtml(page.title))
-					.append("</h1>\n");
-		}
-		if (page.subtitle != null && !page.subtitle.isEmpty()) {
-			sb.append("      <p>").append(escapeHtml(page.subtitle))
-					.append("</p>\n");
-		}
-		if (page.posts != null) {
-			for (Post part : page.posts) {
-				if (part != null && part.content != null
-						&& part.content.body != null) {
-					sb.append("      <section>")
-							.append(processMarkdown(md, part.content.body))
-							.append("</section>\n");
-				}
-			}
-		}
-	}
-
-	private static String processMarkdown (Markdown4jProcessor md,
-			String markdown) {
-		if (markdown == null || markdown.isEmpty()) {
-			return "";
-		}
-		try {
-			return md.process(markdown);
-		} catch (IOException | RuntimeException | LinkageError e) {
-			LOG.log(Level.WARNING, "Markdown rendering failed for SSR fallback",
-					e);
-			return escapeHtml(markdown);
-		}
 	}
 
 	private static String resolveRouteTitle (String siteTitle, String path,
@@ -844,15 +654,6 @@ public class PageBootstrapHelper {
 		if (m.find()) {
 			return m.replaceFirst(
 					Matcher.quoteReplacement(snippet + m.group()));
-		}
-		return html + snippet;
-	}
-
-	private static String injectAfterBodyOpen (String html, String snippet) {
-		Matcher m = BODY_OPEN_PATTERN.matcher(html);
-		if (m.find()) {
-			return m.replaceFirst(
-					Matcher.quoteReplacement(m.group() + snippet));
 		}
 		return html + snippet;
 	}
