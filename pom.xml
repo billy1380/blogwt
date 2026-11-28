@@ -8,12 +8,11 @@
 	<packaging>pom</packaging>
 	<version>${revision}</version>
 	<name>Blogwt</name>
-	<description>Blog application built with GWT on top of AppEngine</description>
+	<description>Blog application on top of AppEngine</description>
 
 	<modules>
 		<module>blogwt-shared</module>
 		<module>blogwt-server</module>
-		<module>blogwt-client</module>
 	</modules>
 
 	<!-- App Engine Goals -->
@@ -22,17 +21,14 @@
 	<!-- Running with Maven -->
 	<!-- mvn clean install -->
 	<!-- mvn appengine:devserver_start - start web server -->
-	<!-- mvn gwt:run-codeserver - start gwt code server -->
 	<!-- goto http://localhost:8080 -->
 	<!-- mvn appengine:devserver_stop - stop web server -->
 
 	<properties>
 		<revision>0v10</revision>
 		
-		<!-- GWT -->
+		<!-- GWT (the shared module is GWT compatible code) -->
 		<gwt.version>2.12.2</gwt.version>
-		<gwt.plugin.version>2.10.0</gwt.plugin.version>
-		<gwt.style>OBF</gwt.style>
 
 		<!-- App Engine -->
 		<appengine.version>1.9.53</appengine.version>
@@ -121,7 +117,6 @@
 
 
 
-			<!-- Ignore GWTTestCases when running JUnit Runner -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -130,9 +125,6 @@
 					<includes>
 						<include>**/*Test.java</include>
 					</includes>
-					<excludes>
-						<exclude>**/*GwtTest.java</exclude>
-					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -20,14 +20,6 @@
 			<version>${revision}</version>
 		</dependency>
 
-        <dependency>
-			<groupId>com.willshex</groupId>
-			<artifactId>blogwt-client</artifactId>
-			<version>${revision}</version>
-            <type>war</type>
-            <scope>runtime</scope>
-		</dependency>
-
 		<!-- Google App Engine -->
 		<dependency>
 			<groupId>com.google.appengine</groupId>
@@ -135,16 +127,6 @@
 							<Implementation-Build>${buildNumber}</Implementation-Build>
 						</manifestEntries>
 					</archive>
-                    <overlays>
-                        <overlay>
-                            <groupId>com.willshex</groupId>
-                            <artifactId>blogwt-client</artifactId>
-                            <type>war</type>
-                            <excludes>
-                                <exclude>WEB-INF/lib/**</exclude>
-                            </excludes>
-                        </overlay>
-                    </overlays>
 				</configuration>
 			</plugin>
 

@@ -1,9 +1,9 @@
-# ![Blogwt](https://raw.githubusercontent.com/billy1380/blogwt/master/src/main/resources/com/willshex/blogwt/client/res/brand.png "Blogwt") Blo(gG)WT
+# Blogwt
 
 Looking for a better name! Let me know if you have one :wink:.
 
 ## Intro
-This project is a blog written in GWT on top of app engine. I started this project because I wanted a blog site for my [willshex.com](http://www.willshex.com "willshex.com") domain. The project does not use gwtrpc, I am using a json based API (or 4 - search, user, blog, and page split by functional area).
+This project is a blog on top of app engine. I started this project because I wanted a blog site for my [willshex.com](http://www.willshex.com "willshex.com") domain. It has a json based API (or 4 - search, user, blog, and page split by functional area). The web and app clients are in [blogwt_flutter_client](https://github.com/WillShex/blogwt-flutter-client).
 
 ## Incomplete
 There are things missing from the project, but I am working on it everyday, and making good progress too.
@@ -53,18 +53,16 @@ Persistence uses [Objectify](https://github.com/objectify/objectify) 6, which ta
    mvn appengine:run
    ```
    Without `DATASTORE_EMULATOR_HOST` the Datastore client has no credentials and every request fails with `Unauthenticated`. The other three variables are needed because the legacy App Engine task queue (used when indexing a user or post) opens its own legacy Datastore handle, which refuses to start with an emulator host set unless it is told to use Cloud Datastore. Without them, logging in fails with an `IllegalStateException` from `DatastoreServiceGlobalConfig`.
-   The site should be accessible at `http://localhost:8888`.
-
-   *Note: To change GWT client code on the fly, you also need to run the code server from the client module (the GWT plugin is only declared there): `cd blogwt-client && mvn gwt:run-codeserver`.*
+   The server is at `http://localhost:8888`. The web app is built in `blogwt_flutter_client` and is not part of this build.
 
 ## Deployment
 To deploy the application to Google App Engine, ensure you have built the project dependencies first.
 
-1. **Build (skipping GWT for speed):**
+1. **Build:**
    ```bash
-   mvn install -Dgwt.compiler.skip=true -DskipTests
+   mvn install -DskipTests
    ```
-   *Note: This installs the parent and shared modules to your local repository. The `-Dgwt.compiler.skip=true` flag saves time by skipping the GWT JavaScript compilation if you don't need to update the client.*
+   *Note: This installs the parent and shared modules to your local repository.*
 
 2. **Deploy:**
    ```bash
@@ -86,7 +84,6 @@ By default the server uses the project's `(default)` Datastore database. To use 
 ## Project Structure
 The project is a multi-module Maven project:
 - **blogwt-shared**: Common code shared between client and server (DTOs, Enums, Utils).
-- **blogwt-client**: GWT client-side code (UI, Layouts, Pages).
 - **blogwt-server**: App Engine server-side code (Servlets, API Actions, Persistence, Objectify logic).
 - **deps**: Folder created by `installdeps.sh` containing cloned dependencies.
 

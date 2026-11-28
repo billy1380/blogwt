@@ -7,12 +7,6 @@ function installfromgit {
     cd ..
 }
 
-mkdir -p ~/.m2/repository/
-mkdir -p ~/.m2/repository/com/googlecode/
-
-cp -r ./nonmavendeps/gwtchismes/ ~/.m2/repository/.
-cp -r ./nonmavendeps/com/googlecode/* ~/.m2/repository/com/googlecode/.
-
 if [ -d ./deps ]; then
     rm -Rf ./deps
 fi
