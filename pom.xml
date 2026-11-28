@@ -27,9 +27,6 @@
 	<properties>
 		<revision>0v10</revision>
 		
-		<!-- GWT (the shared module is GWT compatible code) -->
-		<gwt.version>2.12.2</gwt.version>
-
 		<!-- App Engine -->
 		<appengine.version>1.9.53</appengine.version>
 

@@ -47,18 +47,14 @@
 			<version>1.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
+					<groupId>gson-gwt</groupId>
+					<artifactId>gson-gwt</artifactId>
+				</exclusion>
+				<exclusion>
 					<groupId>com.google.gwt</groupId>
 					<artifactId>gwt-user</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-		
-		<!-- GWT Dependencies that are source only for shared code compilation in GWT -->
-		<dependency>
-			<groupId>org.gwtproject</groupId>
-			<artifactId>gwt-user</artifactId>
-			<version>${gwt.version}</version>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

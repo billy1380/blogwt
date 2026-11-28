@@ -142,4 +142,21 @@ public class PageBootstrapHelperTest {
 				"<link rel=\"canonical\" href=\"https://www.willshex.com/about\">"));
 		assertTrue(pageRes.html.contains("Welcome to WillShex."));
 	}
+
+	@Test
+	public void showsTheTextWhenAPluginBlockFails () {
+		BootstrapData data = baseData();
+		Post part = new Post();
+		part.content = new PostContent();
+		part.content.body = "%%% include src=nowhere\nx\n%%%";
+		data.page = new Page().slug("about").title("About").priority(1.0f);
+		data.page.posts = Collections.singletonList(part);
+
+		RenderResult res = PageBootstrapHelper.renderHtml(TEMPLATE,
+				"https://www.willshex.com", "/about", data);
+
+		assertEquals(HttpServletResponse.SC_OK, res.statusCode);
+		assertTrue(
+				res.html.contains("<section>%%% include src=nowhere"));
+	}
 }

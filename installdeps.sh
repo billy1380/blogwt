@@ -14,7 +14,6 @@ fi
 mkdir ./deps
 cd ./deps
 
-installfromgit https://github.com/billy1380/markdown4j-gwt.git markdown4j-gwt
 installfromgit https://github.com/billy1380/gson-gwt.git gson-gwt
 installfromgit https://github.com/WillShex/willshex-utility.git willshex-utility
 installfromgit https://github.com/WillShex/willshex-gson.git willshex-gson

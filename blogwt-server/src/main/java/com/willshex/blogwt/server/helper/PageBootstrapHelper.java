@@ -26,8 +26,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.markdown4j.server.IncludePlugin;
-import org.markdown4j.server.MarkdownProcessor;
+import org.markdown4j.IncludePlugin;
+import org.markdown4j.Markdown4jProcessor;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -510,7 +510,7 @@ public class PageBootstrapHelper {
 
 	private static String buildSsrBody (String siteTitle, String extendedTitle,
 			Map<String, Property> props, BootstrapData data) {
-		MarkdownProcessor md = new MarkdownProcessor();
+		Markdown4jProcessor md = new Markdown4jProcessor();
 		md.registerPlugins(new IncludePlugin());
 
 		StringBuilder sb = new StringBuilder();
@@ -595,7 +595,8 @@ public class PageBootstrapHelper {
 		return sb.toString();
 	}
 
-	private static void appendPostHtml (StringBuilder sb, MarkdownProcessor md,
+	private static void appendPostHtml (StringBuilder sb,
+			Markdown4jProcessor md,
 			Post post) {
 		sb.append("      <article>\n");
 		sb.append("        <h1>")
@@ -645,7 +646,8 @@ public class PageBootstrapHelper {
 		sb.append("      </article>\n");
 	}
 
-	private static void appendPageHtml (StringBuilder sb, MarkdownProcessor md,
+	private static void appendPageHtml (StringBuilder sb,
+			Markdown4jProcessor md,
 			Page page) {
 		if (page.title != null && !page.title.isEmpty()) {
 			sb.append("      <h1>").append(escapeHtml(page.title))
@@ -667,15 +669,15 @@ public class PageBootstrapHelper {
 		}
 	}
 
-	private static String processMarkdown (MarkdownProcessor md,
+	private static String processMarkdown (Markdown4jProcessor md,
 			String markdown) {
 		if (markdown == null || markdown.isEmpty()) {
 			return "";
 		}
 		try {
 			return md.process(markdown);
-		} catch (IOException e) {
-			LOG.log(Level.FINE, "Markdown rendering failed for SSR fallback",
+		} catch (IOException | RuntimeException | LinkageError e) {
+			LOG.log(Level.WARNING, "Markdown rendering failed for SSR fallback",
 					e);
 			return escapeHtml(markdown);
 		}

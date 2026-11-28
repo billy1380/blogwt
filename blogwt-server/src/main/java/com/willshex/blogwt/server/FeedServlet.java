@@ -17,7 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.markdown4j.server.MarkdownProcessor;
+import org.markdown4j.Markdown4jProcessor;
 
 import com.rometools.rome.feed.synd.SyndContent;
 import com.rometools.rome.feed.synd.SyndContentImpl;
@@ -116,7 +116,7 @@ public class FeedServlet extends ContextAwareServlet {
 		List<SyndEntry> entries = new ArrayList<SyndEntry>();
 		SyndEntry entry;
 		SyndContent description;
-		MarkdownProcessor processor = new MarkdownProcessor();
+		Markdown4jProcessor processor = new Markdown4jProcessor();
 
 		do {
 			posts = PostServiceProvider.provide().getPosts(Boolean.FALSE,
