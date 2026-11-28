@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
+<script type="text/javascript">
+	// this client keeps its location after "#!", so a path link moves there
+	var path = location.pathname.replace(/^\/+|\/+$/g, '');
+	if (path && path !== 'index.html' && !location.hash) {
+		location.replace('/' + location.search + '#!' + path);
+	}
+</script>
 <meta name="theme-color" content="#337ab7">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="fragment" content="!">

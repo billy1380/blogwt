@@ -128,7 +128,7 @@
 				<version>3.0.0-M5</version>
 				<configuration>
 					<includes>
-						<include>**/*test.java</include>
+						<include>**/*Test.java</include>
 					</includes>
 					<excludes>
 						<exclude>**/*GwtTest.java</exclude>

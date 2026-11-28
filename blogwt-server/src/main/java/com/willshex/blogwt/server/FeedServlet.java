@@ -37,7 +37,6 @@ import com.willshex.blogwt.shared.api.datatype.PostSortType;
 import com.willshex.blogwt.shared.api.datatype.Property;
 import com.willshex.blogwt.shared.helper.PagerHelper;
 import com.willshex.blogwt.shared.helper.PropertyHelper;
-import com.willshex.blogwt.shared.page.PageType;
 import com.willshex.server.ContextAwareServlet;
 
 /**
@@ -98,13 +97,18 @@ public class FeedServlet extends ContextAwareServlet {
 	protected SyndFeed getFeed(HttpServletRequest request)
 			throws IOException, FeedException {
 		SyndFeed feed = new SyndFeedImpl();
-		String url = ServletHelper.constructBaseUrl(request);
+		String url = ServletHelper.canonicalBaseUrl(request);
 
-		feed.setTitle(PropertyServiceProvider.provide()
-				.getNamedProperty(PropertyHelper.TITLE).value);
+		Property titleProp = PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.TITLE);
+		Property descProp = PropertyServiceProvider.provide()
+				.getNamedProperty(PropertyHelper.EXTENDED_TITLE);
+
+		feed.setTitle(titleProp == null || titleProp.value == null ? "Blog"
+				: titleProp.value);
 		feed.setLink(url + "/feed");
-		feed.setDescription(PropertyServiceProvider.provide()
-				.getNamedProperty(PropertyHelper.EXTENDED_TITLE).value);
+		feed.setDescription(descProp == null || descProp.value == null ? ""
+				: descProp.value);
 
 		List<Post> posts;
 		Pager pager = PagerHelper.createDefaultPager();
@@ -126,12 +130,12 @@ public class FeedServlet extends ContextAwareServlet {
 				for (Post post : posts) {
 					entry = new SyndEntryImpl();
 					entry.setTitle(post.title);
-					entry.setLink(url + "/#" + PageType.PostDetailPageType
-							.asTargetHistoryToken(post.slug));
+					entry.setLink(url + "/post/" + post.slug);
 					entry.setPublishedDate(post.published);
 					description = new SyndContentImpl();
 					description.setType("text/HTML");
-					description.setValue(processor.process(post.summary));
+					description.setValue(processor.process(
+							post.summary == null ? "" : post.summary));
 					entry.setDescription(description);
 					entries.add(entry);
 

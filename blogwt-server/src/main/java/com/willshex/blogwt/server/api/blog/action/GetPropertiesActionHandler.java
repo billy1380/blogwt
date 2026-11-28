@@ -96,7 +96,7 @@ public final class GetPropertiesActionHandler
 		return cachedBuildVersion;
 	}
 
-	static String readImplementationBuild (InputStream in) throws IOException {
+	public static String readImplementationBuild (InputStream in) throws IOException {
 		if (in == null) {
 			return null;
 		}
@@ -106,7 +106,7 @@ public final class GetPropertiesActionHandler
 		return build == null || build.trim().isEmpty() ? null : build.trim();
 	}
 
-	static void appendBuildVersion (List<Property> properties, Integer start,
+	public static void appendBuildVersion (List<Property> properties, Integer start,
 			String version) {
 		if (properties == null || version == null || version.trim().isEmpty()) {
 			return;

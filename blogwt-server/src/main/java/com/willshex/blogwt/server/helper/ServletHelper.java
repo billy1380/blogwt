@@ -7,6 +7,8 @@
 //
 package com.willshex.blogwt.server.helper;
 
+import java.util.function.UnaryOperator;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,12 +27,21 @@ public class ServletHelper {
 
 	public static final String UTF8 = "UTF-8";
 
+	/** A site's own rule for its base URL, such as apex to www. */
+	public static UnaryOperator<String> baseUrlCanonicalizer;
+
 	/**
 	 * @param request
 	 * @return
 	 */
 	public static String constructBaseUrl (HttpServletRequest request) {
 		return request.getScheme() + "://" + constructBaseAddress(request);
+	}
+
+	public static String canonicalBaseUrl (HttpServletRequest request) {
+		String url = constructBaseUrl(request);
+		return baseUrlCanonicalizer == null ? url
+				: baseUrlCanonicalizer.apply(url);
 	}
 
 	/**
@@ -67,9 +78,13 @@ public class ServletHelper {
 				}
 			}
 
-			if (sessionId != null) {
-				userSession = sessionService
-						.getSession(Long.valueOf(sessionId));
+			if (sessionId != null && !sessionId.isEmpty()) {
+				try {
+					userSession = sessionService
+							.getSession(Long.valueOf(sessionId));
+				} catch (NumberFormatException e) {
+					userSession = null;
+				}
 
 				if (userSession != null) {
 					try {
